@@ -1,0 +1,78 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+.venv/
+virtualenv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Pyenv
+.python-version
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Documentation
+docs/_build/
+
+# IDE specific
+.vscode/
+.idea/
+
+# LLM Models (if downloaded locally)
+models/
+*.gguf
+*.bin
+
+# Environment variables
+.env*
+
+# Llama-cpp-python cache
+.cache/llama-cpp-python/
+
+# MCP Server build artifacts (if built locally)
+servers/ # Assuming MCP servers are cloned into a 'servers' subdir relative to Alpy, adjust if needed
