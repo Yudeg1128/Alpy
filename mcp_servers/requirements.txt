@@ -1,0 +1,2 @@
+grpcio>=1.50.0 # Or a recent compatible version
+grpcio-tools>=1.50.0

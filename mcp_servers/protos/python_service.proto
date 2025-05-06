@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package mcp_python;
+
+// Service to execute Python code snippets
+service PythonExecutor {
+  rpc ExecuteCode (CodeRequest) returns (CodeReply) {}
+}
+
+// Request message containing the Python code to execute
+message CodeRequest {
+  string code = 1;
+}
+
+// Reply message containing the output of the Python code
+message CodeReply {
+  string stdout = 1;
+  string stderr = 2;
+  int32 return_code = 3; // 0 for success, non-zero for issues during execution setup or if Python itself exits non-zero
+}
