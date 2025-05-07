@@ -35,7 +35,7 @@ class PythonInput(BaseModel):
 
 # --- Main Tool Class (Async Version) ---
 class MCPPythonExecutorTool(BaseTool, BaseModel): # Inherit from BaseModel for Pydantic features
-    name: str = "mcp_python_executor"
+    name: str = "MCPPythonExecutor"
     description: str = (
         "Executes a Python code snippet via an MCP server and returns its stdout, stderr, and exit code. "
         "Suitable for running small Python scripts or evaluating expressions."

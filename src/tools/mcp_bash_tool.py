@@ -36,7 +36,7 @@ class MCPBashExecutorTool(BaseTool, BaseModel):
     Output is a string containing the stdout of the command if successful, or a formatted error message
     including stderr and exit code if the command fails or an error occurs during execution.
     """
-    name: str = "mcp_bash_executor_tool"
+    name: str = "MCPBashExecutor"
     description: str = "Executes bash commands or entire multi-line bash scripts via an MCP server and returns their stdout, stderr, and exit code."
     args_schema: Type[BaseModel] = BashInput
     return_direct: bool = False
