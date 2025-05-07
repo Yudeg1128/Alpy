@@ -11,7 +11,7 @@ fi
 # --- Configuration ---
 LLAMA_CPP_BUILD_DIR="/home/me/CascadeProjects/llama.cpp/build"
 LLAMA_SERVER_EXEC="${LLAMA_CPP_BUILD_DIR}/bin/llama-server"
-MODEL_PATH="/home/me/CascadeProjects/Alpy/models/Qwen3-8B-abliterated-q4_k_m.gguf"
+MODEL_PATH="/home/me/CascadeProjects/Alpy/models/Qwen3-4B-abliterated-q6_k_m.gguf"
 ALPY_PROJECT_DIR="/home/me/CascadeProjects/Alpy"
 PYENV_ENV_NAME="alpy_env"
 

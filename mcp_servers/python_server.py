@@ -1,69 +1,86 @@
-from concurrent import futures
-import grpc
-import time
+import asyncio
 import logging
-import io
-import contextlib
-import traceback
+import subprocess
+import sys
 
-# Import the generated classes
-from protos import python_service_pb2
-from protos import python_service_pb2_grpc
+from pydantic import BaseModel, Field
+from mcp.server.fastmcp import FastMCP
 
-logging.basicConfig(level=logging.INFO)
+# Setup logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='[%(asctime)s][%(levelname)s][FastMCPPythonServer] %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S'
+)
 logger = logging.getLogger(__name__)
 
-class PythonExecutorServicer(python_service_pb2_grpc.PythonExecutorServicer):
-    """Provides methods that implement functionality of python executor server."""
+mcp = FastMCP()
 
-    def ExecuteCode(self, request, context):
-        """Executes a Python code snippet and returns its output."""
-        code = request.code
-        logger.info(f"Executing Python code: {code[:200]}...")
-        
-        # Create dedicated stdout and stderr streams
-        stdout_capture = io.StringIO()
-        stderr_capture = io.StringIO()
-        
-        return_code = 0
-        
-        try:
-            # Redirect stdout and stderr using nested with statements
-            with contextlib.redirect_stdout(stdout_capture):
-                with contextlib.redirect_stderr(stderr_capture):
-                    # Execute the code in a restricted scope
-                    exec(code, {'__builtins__': __builtins__}, {})
-        except Exception as e:
-            # If exec itself fails or code within exec raises an unhandled exception
-            # Ensure proper indentation here
-            tb_str = traceback.format_exc()
-            stderr_capture.write(tb_str) # Add traceback to stderr
-            logger.error(f"Error during Python code execution: {e}\n{tb_str}")
-            return_code = 1 # Indicate an error during execution
-        finally:
-            stdout_result = stdout_capture.getvalue()
-            stderr_result = stderr_capture.getvalue()
-            logger.info(f"Python code finished. RC: {return_code}, STDOUT: {stdout_result[:100]}, STDERR: {stderr_result[:100]}")
+class PythonCommandInput(BaseModel):
+    code: str = Field(description="The Python code snippet to execute.")
+    timeout: float | None = Field(default=60.0, description="Timeout in seconds for the Python code execution.")
 
-        return python_service_pb2.CodeReply(
-            stdout=stdout_result,
-            stderr=stderr_result,
-            return_code=return_code
+class PythonCommandOutput(BaseModel):
+    stdout: str
+    stderr: str
+    exit_code: int
+
+def execute_python_code_sync(code: str, timeout: float | None = 60.0) -> PythonCommandOutput:
+    """Synchronously executes Python code using a subprocess."""
+    logger.info(f"Executing Python code (first 100 chars): '{code[:100]}{'...' if len(code) > 100 else ''}' with timeout {timeout}s")
+    try:
+        process = subprocess.run(
+            [sys.executable, "-c", code], # sys.executable ensures we use the same Python interpreter
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+            check=False, # We handle the exit code manually
+        )
+        stdout = process.stdout
+        stderr = process.stderr
+        exit_code = process.returncode
+        logger.info(f"Python code execution finished. Exit code: {exit_code}")
+        return PythonCommandOutput(stdout=stdout, stderr=stderr, exit_code=exit_code)
+    except subprocess.TimeoutExpired:
+        logger.error(f"Python code '{code[:100]}...' timed out after {timeout} seconds.")
+        return PythonCommandOutput(
+            stdout="",
+            stderr=f"Execution timed out after {timeout} seconds.",
+            exit_code=-1 # Using -1 to indicate timeout for Python execution
+        )
+    except Exception as e:
+        logger.error(f"Error executing Python code '{code[:100]}...': {e}", exc_info=True)
+        return PythonCommandOutput(
+            stdout="",
+            stderr=str(e),
+            exit_code=-2 # Using -2 for other general execution errors
         )
 
-def serve():
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    python_service_pb2_grpc.add_PythonExecutorServicer_to_server(PythonExecutorServicer(), server)
-    port = "50052" # Different port from bash server
-    server.add_insecure_port(f'[::]:{port}')
-    server.start()
-    logger.info(f"Python MCP Server started on port {port}")
-    try:
-        while True:
-            time.sleep(86400)  # One day in seconds
-    except KeyboardInterrupt:
-        logger.info("Python MCP Server shutting down.")
-        server.stop(0)
+@mcp.tool(
+    name="execute_python_code",
+    description="Executes a Python code snippet and returns its stdout, stderr, and exit code.",
+    # input_model and output_model are inferred from type hints by FastMCP
+)
+async def execute_python_code_tool(input: PythonCommandInput) -> PythonCommandOutput:
+    """MCP tool to execute Python code."""
+    # Run the synchronous function in a thread pool to avoid blocking the asyncio event loop
+    loop = asyncio.get_event_loop()
+    result = await loop.run_in_executor(
+        None, # Uses the default_executor (a ThreadPoolExecutor)
+        execute_python_code_sync,
+        input.code,
+        input.timeout
+    )
+    return result
 
-if __name__ == '__main__':
-    serve()
+if __name__ == "__main__":
+    logger.info("Starting FastMCP Python Server with mcp.run()...")
+    try:
+        mcp.run() # This will block and run the server
+    except KeyboardInterrupt:
+        logger.info("FastMCP Python Server shutting down due to KeyboardInterrupt.")
+    except Exception as e:
+        logger.critical(f"FastMCP Python Server exited with critical error: {e}", exc_info=True)
+        sys.exit(1)
+    finally:
+        logger.info("FastMCP Python Server has stopped.")
