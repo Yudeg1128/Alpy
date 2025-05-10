@@ -7,7 +7,6 @@ import traceback
 import sys
 from typing import Dict, Any, List, Union, Optional
 
-import httpx
 from langchain_openai import ChatOpenAI
 from langchain.memory import ConversationBufferWindowMemory
 from langchain.agents import AgentExecutor, create_react_agent, BaseSingleActionAgent
@@ -19,8 +18,7 @@ from langchain.agents.agent import AgentOutputParser
 from langchain_core.callbacks.base import BaseCallbackHandler
 from langchain_core.outputs import LLMResult
 from langchain_core.tools import BaseTool
-
-import langchain
+from langchain_google_genai import ChatGoogleGenerativeAI
 
 from . import config
 from .tools.mcp_bash_tool import MCPBashExecutorTool
@@ -380,6 +378,11 @@ class AlpyAgent:
                 if not chosen_model_name or chosen_model_name == "default-openrouter-model-not-set":
                     logger.error("No active OpenRouter model configured in config.py and no override provided.")
                     raise ValueError("Active OpenRouter model name is not properly configured in config.py.")
+            elif self.active_provider == 'google': # New case for Google
+                chosen_model_name = config.ACTIVE_GOOGLE_MODEL
+                if not chosen_model_name or chosen_model_name == "default-google-model-not-set": # Assuming you might add a similar placeholder
+                    logger.error("No active Google model configured in config.py and no override provided.")
+                    raise ValueError("Active Google model name is not properly configured in config.py.")
             else:
                 logger.error(f"Unsupported LLM_PROVIDER: {self.active_provider} during component creation.")
                 self.current_llm_model_name = "error-unknown-provider"
@@ -390,36 +393,58 @@ class AlpyAgent:
         logger.info(f"Setting up LLM with model: '{self.current_llm_model_name}' for provider: '{self.active_provider}'")
 
         try:
-            llm_params = {
+            # Common parameters for OpenAI-compatible APIs
+            openai_compatible_params = {
                 "temperature": config.LLM_TEMPERATURE,
                 "max_tokens": config.LLM_MAX_TOKENS,
                 "top_p": config.LLM_TOP_P,
-                "streaming": True,  # Changed to True
+                "streaming": True,
                 "model_name": self.current_llm_model_name,
-                "stop": ["\nObservation:"]
+                "stop": ["\nObservation:"] # Important for ReAct
             }
 
             if self.active_provider == 'local':
-                llm_params["openai_api_base"] = config.LOCAL_LLM_API_BASE
-                llm_params["openai_api_key"] = config.LOCAL_LLM_API_KEY
+                openai_compatible_params["openai_api_base"] = config.LOCAL_LLM_API_BASE
+                openai_compatible_params["openai_api_key"] = config.LOCAL_LLM_API_KEY
                 logger.info(f"Local LLM params: API_BASE='{config.LOCAL_LLM_API_BASE}', Model='{self.current_llm_model_name}'")
+                self.llm = ChatOpenAI(**openai_compatible_params)
             elif self.active_provider == 'openrouter':
-                llm_params["openai_api_base"] = config.OPENROUTER_API_BASE
-                llm_params["openai_api_key"] = config.OPENROUTER_API_KEY
+                openai_compatible_params["openai_api_base"] = config.OPENROUTER_API_BASE
+                openai_compatible_params["openai_api_key"] = config.OPENROUTER_API_KEY
                 default_headers = {}
                 if config.OPENROUTER_SITE_URL:
                     default_headers["HTTP-Referer"] = config.OPENROUTER_SITE_URL
                 if hasattr(config, 'OPENROUTER_APP_NAME') and config.OPENROUTER_APP_NAME:
                     default_headers["X-Title"] = config.OPENROUTER_APP_NAME
                 if default_headers:
-                    llm_params["default_headers"] = default_headers
+                    openai_compatible_params["default_headers"] = default_headers
                 logger.info(f"OpenRouter LLM params: API_BASE='{config.OPENROUTER_API_BASE}', Model='{self.current_llm_model_name}'")
-                if config.OPENROUTER_API_KEY == "YOUR_OPENROUTER_API_KEY_PLACEHOLDER":
+                if config.OPENROUTER_API_KEY == "YOUR_OPENROUTER_API_KEY_PLACEHOLDER": # Check placeholder
                     logger.warning("OpenRouter API key is a placeholder. Please update it.")
+                self.llm = ChatOpenAI(**openai_compatible_params)
+            elif self.active_provider == 'google': # New block for Google
+                google_llm_params = {
+                    "model": self.current_llm_model_name, # Google uses 'model'
+                    "google_api_key": config.GOOGLE_API_KEY,
+                    "temperature": config.LLM_TEMPERATURE,
+                    "max_output_tokens": config.LLM_MAX_TOKENS, # Google uses 'max_output_tokens'
+                    "top_p": config.LLM_TOP_P,
+                    "top_k": config.LLM_TOP_K, # Google supports top_k
+                    "streaming": True,
+                    # For Google, `stop_sequences` is the parameter if needed, but Langchain might adapt `stop`.
+                    # ReAct's "Observation:" stop might be problematic or handled differently.
+                    # Test carefully. If issues, you might need to adjust prompts or remove stop for Google.
+                    "stop": ["\nObservation:"] 
+                }
+                logger.info(f"Google LLM params: Model='{self.current_llm_model_name}'")
+                if not config.GOOGLE_API_KEY or config.GOOGLE_API_KEY == "YOUR_GOOGLE_API_KEY_PLACEHOLDER": # Check placeholder
+                    logger.warning("Google API key is not set or is a placeholder. Please update it.")
+                self.llm = ChatGoogleGenerativeAI(**google_llm_params)
             
-            self.llm = ChatOpenAI(**llm_params)
-            logger.info(f"LangChain ChatOpenAI (re)initialized successfully for provider: {self.active_provider}, model: {self.current_llm_model_name}.")
-            logger.info(f"DEBUG: self.llm.stop configured to: {self.llm.stop}") # Confirm stop sequence
+            # Common setup for agent and agent_executor after self.llm is set
+            logger.info(f"LangChain {self.llm.__class__.__name__} (re)initialized successfully for provider: {self.active_provider}, model: {self.current_llm_model_name}.")
+            if hasattr(self.llm, 'stop'): # Check if the llm instance has stop attribute after init
+                 logger.info(f"DEBUG: self.llm.stop configured to: {self.llm.stop}")
 
             if not all([hasattr(self, attr) and getattr(self,attr) is not None for attr in ['correct_prompt_for_agent', 'tools', 'output_parser', 'memory', 'rich_streaming_callback_handler']]):
                 logger.error("One or more required attributes (prompt, tools, parser, memory, callback_handler) not set before agent creation.")
@@ -448,33 +473,48 @@ class AlpyAgent:
             logger.error(f"Config attribute missing during LLM/Agent (re)creation: {e}. Check src/config.py.")
             self.llm, self.agent, self.agent_executor = None, None, None
             self.current_llm_model_name = f"error-config-missing-{e}"
-            raise ValueError(f"Failed to (re)initialize ChatOpenAI/Agent due to missing config: {e}") from e
+            raise ValueError(f"Failed to (re)initialize LLM/Agent due to missing config: {e}") from e
         except Exception as e:
-            logger.error(f"Failed to (re)initialize ChatOpenAI/Agent: {e}", exc_info=True)
+            logger.error(f"Failed to (re)initialize LLM/Agent: {e}", exc_info=True)
             self.llm, self.agent, self.agent_executor = None, None, None
             self.current_llm_model_name = f"error-initialization-{e}"
-            raise ValueError(f"Failed to (re)initialize ChatOpenAI/Agent components: {e}") from e
+            raise ValueError(f"Failed to (re)initialize LLM/Agent components: {e}") from e
 
     async def switch_llm_model(self, new_model_identifier: str) -> Dict[str, Any]:
         logger.info(f"Attempting to switch LLM model to: '{new_model_identifier}'")
         
+        valid_models = []
         if self.active_provider == 'local':
             valid_models = config.AVAILABLE_LOCAL_MODELS
             if not valid_models:
                 msg = f"Cannot switch model. No available local models defined in config.py."
                 logger.error(msg)
                 return {"success": False, "message": msg}
-            if new_model_identifier not in valid_models:
-                msg = f"Model '{new_model_identifier}' is not available for local provider. Available models: {valid_models}"
-                logger.warning(msg)
-                return {"success": False, "message": msg}
         elif self.active_provider == 'openrouter':
-            if not config.AVAILABLE_OPENROUTER_MODELS:
-                logger.warning("OpenRouter default model list (AVAILABLE_OPENROUTER_MODELS) is empty in config, but proceeding as user provides model ID.")
-            logger.info(f"For OpenRouter, proceeding with user-provided model ID: {new_model_identifier}")
+            # For OpenRouter, we often allow any model ID, so validation might be less strict
+            # or rely on user knowing valid model IDs.
+            # If you want to restrict to config.AVAILABLE_OPENROUTER_MODELS:
+            # valid_models = config.AVAILABLE_OPENROUTER_MODELS
+            # if not valid_models and new_model_identifier not in config.AVAILABLE_OPENROUTER_MODELS: # Example
+            #     msg = f"Model '{new_model_identifier}' is not listed in AVAILABLE_OPENROUTER_MODELS."
+            #     logger.warning(msg) # Or return error
+            # else: pass
+            pass # Currently allows any model string for OpenRouter
+        elif self.active_provider == 'google': # New case for Google
+            valid_models = config.AVAILABLE_GOOGLE_MODELS
+            if not valid_models:
+                msg = f"Cannot switch model. No available Google models defined in config.py."
+                logger.error(msg)
+                return {"success": False, "message": msg}
         else:
             msg = f"Cannot switch model. Unknown active_provider: '{self.active_provider}'"
             logger.error(msg)
+            return {"success": False, "message": msg}
+
+        # Perform validation if valid_models list was populated for the provider
+        if valid_models and new_model_identifier not in valid_models:
+            msg = f"Model '{new_model_identifier}' is not available for provider '{self.active_provider}'. Available models: {valid_models}"
+            logger.warning(msg)
             return {"success": False, "message": msg}
 
         if new_model_identifier == self.current_llm_model_name:
@@ -507,8 +547,8 @@ class AlpyAgent:
     async def switch_llm_provider(self, new_provider: str) -> Dict[str, Any]:
         logger.info(f"Attempting to switch LLM provider to: '{new_provider}'")
 
-        if new_provider not in ['local', 'openrouter']:
-            msg = f"Invalid provider '{new_provider}'. Must be 'local' or 'openrouter'."
+        if new_provider not in ['local', 'openrouter', 'google']: # Add 'google'
+            msg = f"Invalid provider '{new_provider}'. Must be 'local', 'openrouter', or 'google'."
             logger.warning(msg)
             return {"success": False, "message": msg}
 
@@ -523,7 +563,8 @@ class AlpyAgent:
         self.active_provider = new_provider
 
         try:
-            self._create_llm_and_agent_components()
+            # _create_llm_and_agent_components will now pick the default model for the new provider
+            self._create_llm_and_agent_components() 
             msg = f"Successfully switched provider to: '{self.active_provider}'. Active model: '{self.current_llm_model_name}'."
             logger.info(msg)
             return {"success": True, "message": msg}
