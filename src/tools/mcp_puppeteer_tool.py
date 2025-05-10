@@ -245,7 +245,6 @@ class MCPPuppeteerTool(BaseTool, BaseModel):
 
         env = os.environ.copy()
 
-        # *** ADD THIS SECTION ***
         # --- Attempt to override Chrome path ---
         # Replace this path with the actual path you found in step 1
         found_chrome_path = "/home/me/.cache/puppeteer/chrome/linux-136.0.7103.92/chrome-linux64/chrome" 
@@ -260,7 +259,6 @@ class MCPPuppeteerTool(BaseTool, BaseModel):
                 self._logger_instance.info(f"Setting env PUPPETEER_EXECUTABLE_PATH={system_chrome} (system browser)")
             else:
                 self._logger_instance.warning(f"Could not find Chrome executable at {found_chrome_path} or system path. Relying on default Puppeteer discovery.")
-        # --- End ADDED SECTION ---
 
         return StdioServerParameters(
             command=str(self.npx_executable_path.resolve()),

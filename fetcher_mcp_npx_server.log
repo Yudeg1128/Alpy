@@ -1,0 +1,570 @@
+Error: Could not parse CSS stylesheet
+    at exports.createStylesheet (/home/me/.npm/_npx/66c33ad35b35b3e8/node_modules/jsdom/lib/jsdom/living/helpers/stylesheets.js:37:21)
+    at HTMLStyleElementImpl._updateAStyleBlock (/home/me/.npm/_npx/66c33ad35b35b3e8/node_modules/jsdom/lib/jsdom/living/nodes/HTMLStyleElement-impl.js:68:5)
+    at HTMLStyleElementImpl._poppedOffStackOfOpenElements (/home/me/.npm/_npx/66c33ad35b35b3e8/node_modules/jsdom/lib/jsdom/living/nodes/HTMLStyleElement-impl.js:42:10)
+    at JSDOMParse5Adapter.onItemPop (/home/me/.npm/_npx/66c33ad35b35b3e8/node_modules/jsdom/lib/jsdom/browser/parser/html.js:175:43)
+    at Parser.onItemPop (/home/me/.npm/_npx/66c33ad35b35b3e8/node_modules/parse5/dist/cjs/parser/index.js:176:90)
+    at OpenElementStack.pop (/home/me/.npm/_npx/66c33ad35b35b3e8/node_modules/parse5/dist/cjs/parser/open-element-stack.js:83:22)
+    at endTagInText (/home/me/.npm/_npx/66c33ad35b35b3e8/node_modules/parse5/dist/cjs/parser/index.js:2353:20)
+    at Parser._endTagOutsideForeignContent (/home/me/.npm/_npx/66c33ad35b35b3e8/node_modules/parse5/dist/cjs/parser/index.js:992:17)
+    at Parser.onEndTag (/home/me/.npm/_npx/66c33ad35b35b3e8/node_modules/parse5/dist/cjs/parser/index.js:957:18)
+    at Tokenizer.emitCurrentTagToken (/home/me/.npm/_npx/66c33ad35b35b3e8/node_modules/parse5/dist/cjs/tokenizer/index.js:385:26) 
+    @media screen and (max-width: 2099px) {
+        devsite-toc.devsite-toc,devsite-toc[visible].devsite-toc {
+            display:none
+        }
+        devsite-toc.devsite-toc-embedded:not(:empty) {
+            display: block;
+            margin: 28px 0 24px
+        }
+        body[layout][concierge] devsite-toc.devsite-toc-embedded {
+            display: none
+        }
+        devsite-toc.devsite-toc-embedded:not(:empty)~.devsite-article-body>:first-child {
+            margin-top: 0
+        }
+        body[template=landing] devsite-toc.devsite-toc-embedded:not(:empty) {
+            margin: 20px 40px 24px
+        }
+    }
+
+    body[layout=docs] .devsite-main-content[has-book-nav],
+    body[layout=docs] .devsite-main-content[has-book-nav][has-sidebar],
+    body[layout=docs][concierge] .devsite-main-content[has-book-nav],
+    body[layout=docs][concierge] .devsite-main-content[has-book-nav][has-sidebar] {
+        grid-template-columns: minmax(269px, 1fr) minmax(365px, 1600px) 1fr;
+    }
+    body[layout=docs] devsite-content,
+    body[layout=docs][concierge] devsite-content {
+        width: 100%;
+        max-width: 1600px;
+    }
+    .prototype {
+      code {
+        padding: 0;
+        word-break: break-all;
+      }
+      devsite-selector {
+        font-size: 0.9rem;
+        devsite-tabs tab > a {
+          font-size: 0.9rem;
+        }
+        devsite-selector {
+          margin: 12px -23px 0;
+        }
+      }
+      devsite-code pre {
+        margin: 0;
+        padding-block: 12px;
+        padding-inline: 12px;
+        max-height: 600px;
+        font-size: 0.8rem;
+        code {
+          font-size: 0.8rem;
+        }
+      }
+      devsite-code .devsite-code-buttons-container + pre {
+        padding-block: var(--devsite-code-button-size, 24px) 0;
+      }
+      .endpoint {
+        display: inline-flex;
+        flex-wrap: nowrap;
+        flex-direction: row;
+        align-items: baseline;
+        justify-content: flex-start;
+        column-gap: 12px;
+
+        padding: 4px 8px;
+        color: var(--devsite-ref-palette--grey800, #3c4043);
+        background: var(--devsite-code-background, #f1f3f4);
+        border: 1px solid var(--devsite-ref-palette--grey500, #9aa0a6);
+        border-radius: 4px;
+
+        /* Sys > Typography > Core Composites - Desktop/Overline-s */
+        font-family: Roboto;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 16px; /* 145.455% */
+        letter-spacing: 0.8px;
+
+        .http-method {
+          color: var(--devsite-ref-palette--green600, #1e8e3e);
+          font-size: 12px;
+          text-transform: uppercase;
+        }
+
+        .endpoint-url {
+          display: inline-block;
+        }
+      }
+      .field-entry {
+        display: flex;
+        flex-direction: column;
+        align-items: initial;
+        justify-content: initial;
+        overflow: hidden;
+        margin: 24px 0 0 12px;
+        p {
+          margin: 0;
+          font-family: Roboto;
+          font-size: 14px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: 20px; /* 166.667% */
+        }
+        .signature {
+          display: flex;
+          flex-direction: row;
+          flex-wrap: wrap;
+          align-items: flex-end;
+          justify-content: initial;
+          overflow: hidden;
+          column-gap: 12px;
+          row-gap: 0;
+          .field-name {
+            display: inline-block;
+            padding-block: 2px;
+            padding-inline: 0;
+            font-weight: 500;
+          }
+          .field-type {
+            display: inline-block;
+            padding-block: 2px;
+            padding-inline: 0;
+            opacity: 0.85;
+            font-size: 0.9em;
+          }
+          .field-nessesity {
+              display: inline-block;
+              padding: 2px 0;
+              &.required {
+                color: red;
+              }
+              &.optional {
+                color: rgba(0, 0, 0, 0.66);
+              }
+            }
+          }
+        .field-description {
+            display: inline-block;
+            margin-top: 4px;
+        }
+        &.union-type {
+          .union-type-preamble {
+              display: flex;
+              flex-direction: column;
+              align-items: initial;
+              justify-content: initial;
+              row-gap: 12px;
+          }
+          /* nested field-entry styles */
+          .field-entry {
+              border-left: solid 1px #a8a8a8;
+              padding-inline: 12px 0;
+          }
+        }
+      }
+      .column-container {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: initial;
+        justify-content: initial;
+        max-width: 1600px;
+        gap: 0 24px;
+        .reference {
+          flex: 1 1 0;
+          min-width: 400px;
+        }
+        .second-column {
+          flex: 1 1 0;
+          min-width: 350px;
+          max-width: 600px;
+          position: sticky;
+          top: var(--devsite-js-header-height, 110px);
+          height: 100%;
+        }
+      }
+    }
+    
+Error: Could not parse CSS stylesheet
+    at exports.createStylesheet (/home/me/.npm/_npx/66c33ad35b35b3e8/node_modules/jsdom/lib/jsdom/living/helpers/stylesheets.js:37:21)
+    at HTMLStyleElementImpl._updateAStyleBlock (/home/me/.npm/_npx/66c33ad35b35b3e8/node_modules/jsdom/lib/jsdom/living/nodes/HTMLStyleElement-impl.js:68:5)
+    at HTMLStyleElementImpl._poppedOffStackOfOpenElements (/home/me/.npm/_npx/66c33ad35b35b3e8/node_modules/jsdom/lib/jsdom/living/nodes/HTMLStyleElement-impl.js:42:10)
+    at JSDOMParse5Adapter.onItemPop (/home/me/.npm/_npx/66c33ad35b35b3e8/node_modules/jsdom/lib/jsdom/browser/parser/html.js:175:43)
+    at Parser.onItemPop (/home/me/.npm/_npx/66c33ad35b35b3e8/node_modules/parse5/dist/cjs/parser/index.js:176:90)
+    at OpenElementStack.pop (/home/me/.npm/_npx/66c33ad35b35b3e8/node_modules/parse5/dist/cjs/parser/open-element-stack.js:83:22)
+    at endTagInText (/home/me/.npm/_npx/66c33ad35b35b3e8/node_modules/parse5/dist/cjs/parser/index.js:2353:20)
+    at Parser._endTagOutsideForeignContent (/home/me/.npm/_npx/66c33ad35b35b3e8/node_modules/parse5/dist/cjs/parser/index.js:992:17)
+    at Parser.onEndTag (/home/me/.npm/_npx/66c33ad35b35b3e8/node_modules/parse5/dist/cjs/parser/index.js:957:18)
+    at Tokenizer.emitCurrentTagToken (/home/me/.npm/_npx/66c33ad35b35b3e8/node_modules/parse5/dist/cjs/tokenizer/index.js:385:26) 
+    @media screen and (max-width: 2099px) {
+        devsite-toc.devsite-toc,devsite-toc[visible].devsite-toc {
+            display:none
+        }
+        devsite-toc.devsite-toc-embedded:not(:empty) {
+            display: block;
+            margin: 28px 0 24px
+        }
+        body[layout][concierge] devsite-toc.devsite-toc-embedded {
+            display: none
+        }
+        devsite-toc.devsite-toc-embedded:not(:empty)~.devsite-article-body>:first-child {
+            margin-top: 0
+        }
+        body[template=landing] devsite-toc.devsite-toc-embedded:not(:empty) {
+            margin: 20px 40px 24px
+        }
+    }
+
+    body[layout=docs] .devsite-main-content[has-book-nav],
+    body[layout=docs] .devsite-main-content[has-book-nav][has-sidebar],
+    body[layout=docs][concierge] .devsite-main-content[has-book-nav],
+    body[layout=docs][concierge] .devsite-main-content[has-book-nav][has-sidebar] {
+        grid-template-columns: minmax(269px, 1fr) minmax(365px, 1600px) 1fr;
+    }
+    body[layout=docs] devsite-content,
+    body[layout=docs][concierge] devsite-content {
+        width: 100%;
+        max-width: 1600px;
+    }
+    .prototype {
+      code {
+        padding: 0;
+        word-break: break-all;
+      }
+      devsite-selector {
+        font-size: 0.9rem;
+        devsite-tabs tab > a {
+          font-size: 0.9rem;
+        }
+        devsite-selector {
+          margin: 12px -23px 0;
+        }
+      }
+      devsite-code pre {
+        margin: 0;
+        padding-block: 12px;
+        padding-inline: 12px;
+        max-height: 600px;
+        font-size: 0.8rem;
+        code {
+          font-size: 0.8rem;
+        }
+      }
+      devsite-code .devsite-code-buttons-container + pre {
+        padding-block: var(--devsite-code-button-size, 24px) 0;
+      }
+      .endpoint {
+        display: inline-flex;
+        flex-wrap: nowrap;
+        flex-direction: row;
+        align-items: baseline;
+        justify-content: flex-start;
+        column-gap: 12px;
+
+        padding: 4px 8px;
+        color: var(--devsite-ref-palette--grey800, #3c4043);
+        background: var(--devsite-code-background, #f1f3f4);
+        border: 1px solid var(--devsite-ref-palette--grey500, #9aa0a6);
+        border-radius: 4px;
+
+        /* Sys > Typography > Core Composites - Desktop/Overline-s */
+        font-family: Roboto;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 16px; /* 145.455% */
+        letter-spacing: 0.8px;
+
+        .http-method {
+          color: var(--devsite-ref-palette--green600, #1e8e3e);
+          font-size: 12px;
+          text-transform: uppercase;
+        }
+
+        .endpoint-url {
+          display: inline-block;
+        }
+      }
+      .field-entry {
+        display: flex;
+        flex-direction: column;
+        align-items: initial;
+        justify-content: initial;
+        overflow: hidden;
+        margin: 24px 0 0 12px;
+        p {
+          margin: 0;
+          font-family: Roboto;
+          font-size: 14px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: 20px; /* 166.667% */
+        }
+        .signature {
+          display: flex;
+          flex-direction: row;
+          flex-wrap: wrap;
+          align-items: flex-end;
+          justify-content: initial;
+          overflow: hidden;
+          column-gap: 12px;
+          row-gap: 0;
+          .field-name {
+            display: inline-block;
+            padding-block: 2px;
+            padding-inline: 0;
+            font-weight: 500;
+          }
+          .field-type {
+            display: inline-block;
+            padding-block: 2px;
+            padding-inline: 0;
+            opacity: 0.85;
+            font-size: 0.9em;
+          }
+          .field-nessesity {
+              display: inline-block;
+              padding: 2px 0;
+              &.required {
+                color: red;
+              }
+              &.optional {
+                color: rgba(0, 0, 0, 0.66);
+              }
+            }
+          }
+        .field-description {
+            display: inline-block;
+            margin-top: 4px;
+        }
+        &.union-type {
+          .union-type-preamble {
+              display: flex;
+              flex-direction: column;
+              align-items: initial;
+              justify-content: initial;
+              row-gap: 12px;
+          }
+          /* nested field-entry styles */
+          .field-entry {
+              border-left: solid 1px #a8a8a8;
+              padding-inline: 12px 0;
+          }
+        }
+      }
+      .column-container {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: initial;
+        justify-content: initial;
+        max-width: 1600px;
+        gap: 0 24px;
+        .reference {
+          flex: 1 1 0;
+          min-width: 400px;
+        }
+        .second-column {
+          flex: 1 1 0;
+          min-width: 350px;
+          max-width: 600px;
+          position: sticky;
+          top: var(--devsite-js-header-height, 110px);
+          height: 100%;
+        }
+      }
+    }
+    
+Error: Could not parse CSS stylesheet
+    at exports.createStylesheet (/home/me/.npm/_npx/66c33ad35b35b3e8/node_modules/jsdom/lib/jsdom/living/helpers/stylesheets.js:37:21)
+    at HTMLStyleElementImpl._updateAStyleBlock (/home/me/.npm/_npx/66c33ad35b35b3e8/node_modules/jsdom/lib/jsdom/living/nodes/HTMLStyleElement-impl.js:68:5)
+    at HTMLStyleElementImpl._poppedOffStackOfOpenElements (/home/me/.npm/_npx/66c33ad35b35b3e8/node_modules/jsdom/lib/jsdom/living/nodes/HTMLStyleElement-impl.js:42:10)
+    at JSDOMParse5Adapter.onItemPop (/home/me/.npm/_npx/66c33ad35b35b3e8/node_modules/jsdom/lib/jsdom/browser/parser/html.js:175:43)
+    at Parser.onItemPop (/home/me/.npm/_npx/66c33ad35b35b3e8/node_modules/parse5/dist/cjs/parser/index.js:176:90)
+    at OpenElementStack.pop (/home/me/.npm/_npx/66c33ad35b35b3e8/node_modules/parse5/dist/cjs/parser/open-element-stack.js:83:22)
+    at endTagInText (/home/me/.npm/_npx/66c33ad35b35b3e8/node_modules/parse5/dist/cjs/parser/index.js:2353:20)
+    at Parser._endTagOutsideForeignContent (/home/me/.npm/_npx/66c33ad35b35b3e8/node_modules/parse5/dist/cjs/parser/index.js:992:17)
+    at Parser.onEndTag (/home/me/.npm/_npx/66c33ad35b35b3e8/node_modules/parse5/dist/cjs/parser/index.js:957:18)
+    at Tokenizer.emitCurrentTagToken (/home/me/.npm/_npx/66c33ad35b35b3e8/node_modules/parse5/dist/cjs/tokenizer/index.js:385:26) 
+    @media screen and (max-width: 2099px) {
+        devsite-toc.devsite-toc,devsite-toc[visible].devsite-toc {
+            display:none
+        }
+        devsite-toc.devsite-toc-embedded:not(:empty) {
+            display: block;
+            margin: 28px 0 24px
+        }
+        body[layout][concierge] devsite-toc.devsite-toc-embedded {
+            display: none
+        }
+        devsite-toc.devsite-toc-embedded:not(:empty)~.devsite-article-body>:first-child {
+            margin-top: 0
+        }
+        body[template=landing] devsite-toc.devsite-toc-embedded:not(:empty) {
+            margin: 20px 40px 24px
+        }
+    }
+
+    body[layout=docs] .devsite-main-content[has-book-nav],
+    body[layout=docs] .devsite-main-content[has-book-nav][has-sidebar],
+    body[layout=docs][concierge] .devsite-main-content[has-book-nav],
+    body[layout=docs][concierge] .devsite-main-content[has-book-nav][has-sidebar] {
+        grid-template-columns: minmax(269px, 1fr) minmax(365px, 1600px) 1fr;
+    }
+    body[layout=docs] devsite-content,
+    body[layout=docs][concierge] devsite-content {
+        width: 100%;
+        max-width: 1600px;
+    }
+    .prototype {
+      code {
+        padding: 0;
+        word-break: break-all;
+      }
+      devsite-selector {
+        font-size: 0.9rem;
+        devsite-tabs tab > a {
+          font-size: 0.9rem;
+        }
+        devsite-selector {
+          margin: 12px -23px 0;
+        }
+      }
+      devsite-code pre {
+        margin: 0;
+        padding-block: 12px;
+        padding-inline: 12px;
+        max-height: 600px;
+        font-size: 0.8rem;
+        code {
+          font-size: 0.8rem;
+        }
+      }
+      devsite-code .devsite-code-buttons-container + pre {
+        padding-block: var(--devsite-code-button-size, 24px) 0;
+      }
+      .endpoint {
+        display: inline-flex;
+        flex-wrap: nowrap;
+        flex-direction: row;
+        align-items: baseline;
+        justify-content: flex-start;
+        column-gap: 12px;
+
+        padding: 4px 8px;
+        color: var(--devsite-ref-palette--grey800, #3c4043);
+        background: var(--devsite-code-background, #f1f3f4);
+        border: 1px solid var(--devsite-ref-palette--grey500, #9aa0a6);
+        border-radius: 4px;
+
+        /* Sys > Typography > Core Composites - Desktop/Overline-s */
+        font-family: Roboto;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 16px; /* 145.455% */
+        letter-spacing: 0.8px;
+
+        .http-method {
+          color: var(--devsite-ref-palette--green600, #1e8e3e);
+          font-size: 12px;
+          text-transform: uppercase;
+        }
+
+        .endpoint-url {
+          display: inline-block;
+        }
+      }
+      .field-entry {
+        display: flex;
+        flex-direction: column;
+        align-items: initial;
+        justify-content: initial;
+        overflow: hidden;
+        margin: 24px 0 0 12px;
+        p {
+          margin: 0;
+          font-family: Roboto;
+          font-size: 14px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: 20px; /* 166.667% */
+        }
+        .signature {
+          display: flex;
+          flex-direction: row;
+          flex-wrap: wrap;
+          align-items: flex-end;
+          justify-content: initial;
+          overflow: hidden;
+          column-gap: 12px;
+          row-gap: 0;
+          .field-name {
+            display: inline-block;
+            padding-block: 2px;
+            padding-inline: 0;
+            font-weight: 500;
+          }
+          .field-type {
+            display: inline-block;
+            padding-block: 2px;
+            padding-inline: 0;
+            opacity: 0.85;
+            font-size: 0.9em;
+          }
+          .field-nessesity {
+              display: inline-block;
+              padding: 2px 0;
+              &.required {
+                color: red;
+              }
+              &.optional {
+                color: rgba(0, 0, 0, 0.66);
+              }
+            }
+          }
+        .field-description {
+            display: inline-block;
+            margin-top: 4px;
+        }
+        &.union-type {
+          .union-type-preamble {
+              display: flex;
+              flex-direction: column;
+              align-items: initial;
+              justify-content: initial;
+              row-gap: 12px;
+          }
+          /* nested field-entry styles */
+          .field-entry {
+              border-left: solid 1px #a8a8a8;
+              padding-inline: 12px 0;
+          }
+        }
+      }
+      .column-container {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: initial;
+        justify-content: initial;
+        max-width: 1600px;
+        gap: 0 24px;
+        .reference {
+          flex: 1 1 0;
+          min-width: 400px;
+        }
+        .second-column {
+          flex: 1 1 0;
+          min-width: 350px;
+          max-width: 600px;
+          position: sticky;
+          top: var(--devsite-js-header-height, 110px);
+          height: 100%;
+        }
+      }
+    }
+    

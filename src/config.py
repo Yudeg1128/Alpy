@@ -4,15 +4,15 @@ import os
 
 # --- LLM Provider Configuration ---
 # Choose 'local' for llama.cpp server or 'openrouter' for OpenRouter.ai
-LLM_PROVIDER = os.getenv('LLM_PROVIDER', 'openrouter') # 'local' or 'openrouter'
+LLM_PROVIDER = os.getenv('LLM_PROVIDER', 'google') # 'local' or 'openrouter'
 
 # --- Local LLM Configuration (e.g., llama.cpp server API) ---
 LOCAL_LLM_API_BASE = os.getenv("LOCAL_LLM_API_BASE", "http://127.0.0.1:8080/v1")
 LOCAL_LLM_API_KEY = os.getenv("LOCAL_LLM_API_KEY", "dummy-key") # Typically not needed for local
 AVAILABLE_LOCAL_MODELS = [
+    "Qwen3-8B-abliterated-iq2_xxs.gguf",
     "Qwen3-4B-abliterated-q6_k_m.gguf", 
     "Qwen3-8B-abliterated-q4_k_m.gguf", 
-    "Qwen3-8B-abliterated-iq2_xxs.gguf",
     # Add other local model names here, e.g., "llama3-8b-instruct-gguf"
 ]
 ACTIVE_LOCAL_LLM_MODEL = os.getenv(
@@ -37,7 +37,10 @@ OPENROUTER_APP_NAME = os.getenv("OPENROUTER_APP_NAME", "Alpy") # Recommended: Yo
 # --- Google API Configuration ---
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY", "AIzaSyBN8f_HMB291iGskfw2oePbF9-W_5kIZfo")
 AVAILABLE_GOOGLE_MODELS = [
-    "gemini-2.0-flash",
+    'gemini-2.0-flash-lite', 'gemini-2.5-flash-preview-04-17', 'gemini-2.5-pro-preview-05-06', 'gemini-2.0-flash',     
+    'gemini-2.0-flash-preview-image-generation', 'gemini-1.5-flash',  
+    'gemini-1.5-flash-8b', 'gemini-1.5-pro', 'gemini-embedding-exp', 'text-embedding-004',     
+    'veo-2.0-generate-001', 'gemini-2.0-flash-live-001'
 ]
 ACTIVE_GOOGLE_MODEL = os.getenv("ACTIVE_GOOGLE_MODEL", AVAILABLE_GOOGLE_MODELS[0])
 
@@ -50,7 +53,7 @@ LLM_MAX_TOKENS = int(os.getenv('LLM_MAX_TOKENS', 1024))
 
 # --- Agent Configuration ---
 AGENT_MEMORY_WINDOW_SIZE = int(os.getenv('AGENT_MEMORY_WINDOW_SIZE', 5)) # Number of past interactions to keep in memory
-AGENT_MAX_ITERATIONS = int(os.getenv('AGENT_MAX_ITERATIONS', 10))       # Max steps for ReAct agent before stopping
+AGENT_MAX_ITERATIONS = int(os.getenv('AGENT_MAX_ITERATIONS', 20))       # Max steps for ReAct agent before stopping
 # (Add any agent-specific configs here later)
 
 # --- Logging ---
@@ -64,8 +67,11 @@ PROMPT_TEMPLATES_PATH = "prompts/prompts.yaml"
 BASH_MCP_SERVER_ADDRESS = os.getenv('BASH_MCP_SERVER_ADDRESS', 'localhost:50051')
 PYTHON_MCP_SERVER_ADDRESS = os.getenv('PYTHON_MCP_SERVER_ADDRESS', 'localhost:50052')
 
+print(f"Initializing Alpy with LLM Provider: {LLM_PROVIDER}")
+
+BRAVE_SEARCH_API_KEY = os.getenv("BRAVE_SEARCH_API_KEY", "BSAZcb1kxyIgyqKkA7hj-OohX02D765")
+
 # Update the print statement to reflect the new structure
-print(f"Config loaded. LLM Provider: {LLM_PROVIDER}")
 if LLM_PROVIDER == 'local':
     print(f"  Local LLM API Base: {LOCAL_LLM_API_BASE}")
     print(f"  Available Local Models: {AVAILABLE_LOCAL_MODELS}")
@@ -81,9 +87,7 @@ elif LLM_PROVIDER == 'openrouter':
     elif api_key_display == "YOUR_OPENROUTER_API_KEY_PLACEHOLDER":
         api_key_display = "YOUR_OPENROUTER_API_KEY_PLACEHOLDER (not set)"
     print(f"  OpenRouter API Key: {api_key_display}")
-    BRAVE_SEARCH_API_KEY = os.getenv("BRAVE_SEARCH_API_KEY", "BSAZcb1kxyIgyqKkA7hj-OohX02D765")
 elif LLM_PROVIDER == 'google':
     print(f"  Google API Key: {GOOGLE_API_KEY}")
     print(f"  Available Google Models: {AVAILABLE_GOOGLE_MODELS}")
     print(f"  Active Google Model: {ACTIVE_GOOGLE_MODEL}")
-

@@ -3,13 +3,13 @@ import sys
 import logging
 import re
 import json
-import asyncio # Make sure asyncio is imported
+import asyncio 
 from rich.console import Console
 from rich.panel import Panel
 from rich.text import Text
 from rich.markdown import Markdown
-# import langchain # Not directly used in main, but good if type hinting needs it
 from rich.logging import RichHandler 
+from rich.theme import Theme
 from typing import Optional
 
 import os
@@ -18,82 +18,114 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from . import config
 from .agent import AlpyAgent
 
+# Define a custom theme for log levels
+log_theme = Theme({
+    "logging.level.spam": "dim blue",
+    "logging.level.debug": "dim blue", 
+    "logging.level.info": "green",
+    "logging.level.warning": "yellow",
+    "logging.level.error": "bold red",
+    "logging.level.critical": "bold red blink"
+})
+
+# Create a console with the custom theme
+rich_console_for_logging = Console(theme=log_theme)
+
 logging.basicConfig(
     level=config.LOG_LEVEL, 
     format="%(message)s", 
     datefmt="[%X]", 
-    handlers=[RichHandler(rich_tracebacks=True, show_path=False, keywords=[])]
+    handlers=[RichHandler(
+        console=rich_console_for_logging, 
+        rich_tracebacks=True, 
+        show_path=False, 
+        keywords=[]
+    )]
 )
 logger = logging.getLogger(__name__)
 
 async def amain():
     logger.info(f"Starting Alpy...")
-    alpy_agent: Optional[AlpyAgent] = None # Type hint for clarity
-    console = Console() # Define console here to pass to agent
+    alpy_agent: Optional[AlpyAgent] = None 
+    # Use a new console for UI, separate from the one used for logging to avoid theme conflicts if any
+    ui_console = Console() 
     try:
-        alpy_agent = AlpyAgent(rich_console=console) # Pass console to AlpyAgent
+        alpy_agent = AlpyAgent(rich_console=ui_console) 
     except Exception as e:
-        logger.error(f"Failed to initialize AlpyAgent: {e}", exc_info=True) # Add exc_info
+        logger.error(f"Failed to initialize AlpyAgent: {e}", exc_info=True) 
         print(f"Fatal Error: Could not initialize Alpy. Check logs.", file=sys.stderr)
         sys.exit(1)
     
     welcome_panel = Panel(
         Text("Welcome to Alpy! Ask me anything.\nType 'exit' or 'quit' to end.", justify="center"),
-        title="✨ Alpy AI Assistant ✨",
+        title=" Alpy AI Assistant ",
         border_style="bold green",
         padding=(1, 2)
     )
-    console.print(welcome_panel)
+    ui_console.print(welcome_panel)
 
     # Main interaction loop
     while True:
+        current_agent_task = None 
         try:
             prompt_text = Text("You: ", style="bold bright_blue")
-            # Use asyncio.to_thread for blocking input to keep the event loop responsive
-            user_input = await asyncio.to_thread(console.input, prompt_text)
+            user_input = "" 
+
+            try:
+                user_input = await asyncio.to_thread(ui_console.input, prompt_text)
+            except KeyboardInterrupt:
+                logger.info("KeyboardInterrupt at input prompt. Exiting application.")
+                ui_console.print("\nExiting Alpy...")
+                break 
+            except EOFError:
+                logger.info("EOFError at input prompt. Exiting application.")
+                ui_console.print("\nExiting Alpy...")
+                break 
             
             if user_input.lower() in ["exit", "quit"]:
                 logger.info("User requested exit.")
-                break # Exit the while loop
-            
+                break 
+
             if not user_input:
                 continue
 
+            # Handle commands like /mode, /model, /provider (these are quick)
             if user_input.lower().startswith("/mode "):
                 parts = user_input.lower().split(maxsplit=2)
                 if len(parts) == 2:
                     new_mode = parts[1]
                     mode_set_response = await alpy_agent.set_mode(new_mode)
-                    console.print(Text(mode_set_response, style="yellow"))
+                    ui_console.print(Text(mode_set_response, style="yellow"))
                 else:
-                    console.print(Text("Invalid /mode command. Use /mode agent or /mode chat.", style="red"))
+                    ui_console.print(Text("Invalid /mode command. Use /mode agent or /mode chat.", style="red"))
                 continue 
 
-            # Handle /model command for switching LLMs
             if user_input.lower().startswith("/model "):
-                parts = user_input.split(maxsplit=1) # split into '/model' and 'model_identifier'
+                parts = user_input.split(maxsplit=1)
                 if len(parts) == 2 and parts[1].strip():
                     new_model_identifier = parts[1].strip()
                     logger.info(f"User requested model switch to: '{new_model_identifier}'")
                     if alpy_agent:
                         switch_result = await alpy_agent.switch_llm_model(new_model_identifier)
                         if switch_result.get("success"):
-                            console.print(Panel(Text(f"✅ {switch_result.get('message')}", style="bold green"), title="Model Switch Success", border_style="green"))
-                            console.print(Text(f"Current provider: {config.LLM_PROVIDER}, Active model: {alpy_agent.current_llm_model_name}", style="dim"))
+                            ui_console.print(Panel(Text(f" {switch_result.get('message')}", style="bold green"), title="Model Switch Success", border_style="green"))
+                            ui_console.print(Text(f"Current provider: {alpy_agent.active_provider}, Active model: {alpy_agent.current_llm_model_name}", style="dim")) 
                         else:
-                            console.print(Panel(Text(f"❌ {switch_result.get('message')}", style="bold red"), title="Model Switch Failed", border_style="red"))
+                            ui_console.print(Panel(Text(f" {switch_result.get('message')}", style="bold red"), title="Model Switch Failed", border_style="red"))
                     else:
-                        console.print(Text("Agent not initialized, cannot switch model.", style="red"))
+                        ui_console.print(Text("Agent not initialized, cannot switch model.", style="red"))
                 else:
-                    console.print(Text("Invalid /model command. Usage: /model <model_identifier>", style="red"))
-                    # Optionally list available models
-                    if config.LLM_PROVIDER == 'local':
-                        console.print(Text(f"Available local models: {config.AVAILABLE_LOCAL_MODELS}", style="yellow"))
-                    elif config.LLM_PROVIDER == 'openrouter':
-                        console.print(Text(f"Available OpenRouter models: {config.AVAILABLE_OPENROUTER_MODELS}", style="yellow"))
-                continue # Go to next iteration of while loop
+                    ui_console.print(Text("Invalid /model command. Usage: /model <model_identifier>", style="red"))
+                    if alpy_agent: 
+                        current_provider = alpy_agent.active_provider
+                        if current_provider == 'local':
+                            ui_console.print(Text(f"Available local models: {config.AVAILABLE_LOCAL_MODELS}", style="yellow"))
+                        elif current_provider == 'openrouter':
+                            ui_console.print(Text(f"Available OpenRouter models: {config.AVAILABLE_OPENROUTER_MODELS}", style="yellow"))
+                        elif current_provider == 'google':
+                             ui_console.print(Text(f"Available Google models: {config.AVAILABLE_GOOGLE_MODELS}", style="yellow"))
+                continue
 
-            # Handle /provider command for switching LLM providers
             if user_input.lower().startswith("/provider "):
                 parts = user_input.split(maxsplit=1)
                 if len(parts) == 2 and parts[1].strip():
@@ -102,63 +134,83 @@ async def amain():
                     if alpy_agent:
                         switch_result = await alpy_agent.switch_llm_provider(new_provider_name)
                         if switch_result.get("success"):
-                            console.print(Panel(Text(f"✅ {switch_result.get('message')}", style="bold green"), title="Provider Switch Success", border_style="green"))
-                            # The message from switch_llm_provider already includes new model and provider
+                            ui_console.print(Panel(Text(f" {switch_result.get('message')}", style="bold green"), title="Provider Switch Success", border_style="green"))
                         else:
-                            console.print(Panel(Text(f"❌ {switch_result.get('message')}", style="bold red"), title="Provider Switch Failed", border_style="red"))
+                            ui_console.print(Panel(Text(f" {switch_result.get('message')}", style="bold red"), title="Provider Switch Failed", border_style="red"))
                     else:
-                        console.print(Text("Agent not initialized, cannot switch provider.", style="red"))
+                        ui_console.print(Text("Agent not initialized, cannot switch provider.", style="red"))
                 else:
-                    console.print(Text("Invalid /provider command. Usage: /provider <local|openrouter>", style="red"))
-                continue # Go to next iteration of while loop
+                    ui_console.print(Text("Invalid /provider command. Usage: /provider <local|openrouter|google>", style="red")) 
+                continue
 
-            response_content = await alpy_agent.get_response(user_input) # This should be the final answer string
+            # If it's not a command or exit, it's a prompt for the agent
+            response_content = None
+            try:
+                logger.info("Agent is thinking... (Press Ctrl+C to attempt to cancel)")
+                current_agent_task = asyncio.create_task(alpy_agent.get_response(user_input))
+                response_content = await current_agent_task
+            except asyncio.CancelledError: 
+                logger.info("Agent task was cancelled by an external request (not KeyboardInterrupt here).")
+                if alpy_agent:
+                    ui_console.print(Panel(Text("", justify="center"), title="Operation Cancelled", border_style="yellow"))
+                response_content = None 
+            except KeyboardInterrupt: 
+                logger.warning("KeyboardInterrupt received during active agent operation.")
+                if current_agent_task and not current_agent_task.done():
+                    logger.info("Cancelling the active agent task...")
+                    current_agent_task.cancel()
+                    try:
+                        await current_agent_task 
+                    except asyncio.CancelledError:
+                        logger.info("Agent task successfully processed cancellation due to KeyboardInterrupt.")
+                    ui_console.print(Panel(Text("", justify="center"), title="Operation Interrupted", border_style="yellow"))
+                else: 
+                    ui_console.print(Panel(Text("", justify="center"), title="Operation Interrupted", border_style="yellow"))
+                response_content = None 
+            
+            if response_content is not None:
+                if alpy_agent.mode == "agent":
+                    final_answer_text = response_content.strip() 
+                    alpy_panel_title = f"Alpy (Agent Mode) - Final Answer"
+                    alpy_panel = Panel(
+                        Markdown(final_answer_text),
+                        title=alpy_panel_title,
+                        title_align="left", border_style="magenta", padding=(0,1), expand=True
+                    )
+                    ui_console.print(alpy_panel)
+                elif alpy_agent.mode == "chat":
+                    chat_response_text = response_content.strip() 
+                    alpy_panel_title = f"Alpy (Chat Mode)"
+                    alpy_panel = Panel(
+                        Markdown(chat_response_text),
+                        title=alpy_panel_title,
+                        title_align="left", border_style="magenta", padding=(0,1), expand=False
+                    )
+                    ui_console.print(alpy_panel)
+                else: 
+                    error_text = "Error: Alpy is in an unrecognized mode."
+                    logger.error(f"Alpy in unrecognized mode: {alpy_agent.mode}")
+                    ui_console.print(Text(error_text, style="bold red"))
+            # If response_content is None (due to cancellation), loop continues to next prompt
 
-            if alpy_agent.mode == "agent":
-                # The RichStreamingCallbackHandler now prints thoughts/actions/observations live.
-                # So, we don't need to print the full_trace separately here.
-                final_answer_text = response_content.strip() if response_content else "Agent did not produce a final answer."
-
-                alpy_panel_title = f"Alpy (Agent Mode) - Final Answer"
-                alpy_panel = Panel(
-                    Markdown(final_answer_text),
-                    title=alpy_panel_title,
-                    title_align="left", border_style="magenta", padding=(0,1), expand=True
-                )
-                console.print(alpy_panel)
-
-            elif alpy_agent.mode == "chat":
-                chat_response_text = response_content.strip() if response_content else "No response in chat mode."
-                alpy_panel_title = f"Alpy (Chat Mode)"
-                alpy_panel = Panel(
-                    Markdown(chat_response_text),
-                    title=alpy_panel_title,
-                    title_align="left", border_style="magenta", padding=(0,1), expand=False
-                )
-                console.print(alpy_panel)
-            else: 
-                error_text = "Error: Alpy is in an unrecognized mode."
-                logger.error(f"Alpy in unrecognized mode: {alpy_agent.mode}")
-                console.print(Text(error_text, style="bold red"))
-
-        except KeyboardInterrupt:
-            logger.info("KeyboardInterrupt received during interaction. Exiting loop.")
-            print("\nExiting...")
-            break # Exit the while loop
+        except KeyboardInterrupt: # Catches KI if it happens outside input or agent task handling.
+            logger.info("General KeyboardInterrupt in main loop. Exiting.")
+            ui_console.print("\nExiting Alpy...")
+            break 
         except EOFError: 
-             logger.info("EOFError received during interaction. Exiting loop.")
-             print("\nExiting...")
-             break # Exit the while loop
+             logger.info("General EOFError in main loop. Exiting.")
+             ui_console.print("\nExiting Alpy...")
+             break 
         except Exception as e:
             logger.exception("An unexpected error occurred in the main interaction loop.")
-            console.print_exception(show_locals=False)
-            # Optionally, you might want to 'continue' here to allow further attempts,
-            # or 'break' to exit the application on any error.
-            # For robustness, 'continue' might be better unless error is critical.
-            # For now, let it fall through, and the loop will continue. If fatal, it should be caught higher.
+            if hasattr(ui_console, 'print_exception') and callable(ui_console.print_exception):
+                 ui_console.print_exception(show_locals=False)
+            else:
+                # Fallback if ui_console is not a Rich Console or doesn't have print_exception
+                import traceback
+                traceback.print_exc()
 
-    # This block is executed AFTER the while loop has finished (due to break).
-    if alpy_agent: # Check if agent was successfully initialized
+    if alpy_agent: 
         logger.info("Alpy shutting down. Closing agent and its resources...")
         try:
             await alpy_agent.close()
@@ -172,7 +224,6 @@ if __name__ == "__main__":
     try:
         asyncio.run(amain())
     except KeyboardInterrupt:
-        # This catches Ctrl+C if it happens before amain() loop, or if amain() itself re-raises it.
         logger.info("Application terminated by KeyboardInterrupt at top level.")
     except Exception as e_global:
         logger.critical(f"Global unhandled exception in Alpy: {e_global}", exc_info=True)

@@ -621,6 +621,10 @@ class AlpyAgent:
                 # We only need to return the final answer.
                 return final_answer_from_executor.strip() if final_answer_from_executor else "Agent processed the request but didn't produce a final answer."
 
+            except asyncio.CancelledError:
+                logger.info("Agent get_response operation was cancelled.")
+                raise # Re-raise to allow the caller to know it was cancelled
+
             except OutputParserException as e: 
                 logger.error(f"Output parsing error during agent execution: {e}")
                 error_message_str = str(e)
@@ -659,6 +663,11 @@ class AlpyAgent:
 
                 logger.info(f"Chat mode response: {response_content[:100]}...")
                 return response_content
+
+            except asyncio.CancelledError: # Also handle for chat mode if desired
+                logger.info("Chat get_response operation was cancelled.")
+                raise
+
             except Exception as e:
                 logger.error(f"Error during CHAT mode LLM invocation: {e}")
                 logger.error(f"Traceback: {traceback.format_exc()}")
