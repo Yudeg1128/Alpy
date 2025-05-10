@@ -11,7 +11,7 @@ main: binding port with default address family
 main: HTTP server is listening, hostname: 127.0.0.1, port: 8080, http threads: 11
 main: loading model
 srv    load_model: loading model '/home/me/CascadeProjects/Alpy/models/Qwen3-4B-abliterated-q6_k_m.gguf'
-llama_model_load_from_file_impl: using device CUDA0 (NVIDIA GeForce GTX 1660 Ti) - 5347 MiB free
+llama_model_load_from_file_impl: using device CUDA0 (NVIDIA GeForce GTX 1660 Ti) - 5318 MiB free
 llama_model_loader: loaded meta data with 34 key-value pairs and 398 tensors from /home/me/CascadeProjects/Alpy/models/Qwen3-4B-abliterated-q6_k_m.gguf (version GGUF V3 (latest))
 llama_model_loader: Dumping metadata keys/values. Note: KV overrides do not apply in this output.
 llama_model_loader: - kv   0:                       general.architecture str              = qwen3
@@ -164,3 +164,4 @@ How are you?<|im_end|>
 '
 main: server is listening on http://127.0.0.1:8080 - starting the main loop
 srv  update_slots: all slots are idle
+srv    operator(): operator(): cleaning up before exit...

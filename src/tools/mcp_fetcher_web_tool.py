@@ -85,6 +85,28 @@ class MCPFetcherWebActionInput(RootModel[Union[InnerFetchSingleURLAction, InnerF
     # So, we'll pass the whole model and unpack in _arun, or LangChain does this.
     # The goal is that _arun receives keyword arguments matching the fields of the chosen Union member.
 
+    def __getattr__(self, item: str) -> Any:
+        # Check if 'root' attribute itself exists and is initialized.
+        # object.__getattribute__ is used to prevent recursive calls to __getattr__.
+        try:
+            root_obj = object.__getattribute__(self, 'root')
+        except AttributeError:
+            # 'root' itself doesn't exist yet (e.g. during Pydantic's own initialization),
+            # so defer to Pydantic's __getattr__.
+            return super().__getattr__(item)
+
+        # If 'root' exists and 'item' is a field of the model stored in 'root'.
+        # This check needs to be robust: root_obj might not be fully initialized
+        # or model_fields might not be populated yet in some edge cases of Pydantic internal lifecycle.
+        # A simple `hasattr(root_obj, 'model_fields')` can guard this.
+        if hasattr(root_obj, 'model_fields') and item in root_obj.model_fields:
+            return getattr(root_obj, item)
+        
+        # Otherwise, defer to Pydantic's default __getattr__ behavior (from BaseModel).
+        # This ensures that attributes of RootModel itself (like 'root' or dunder methods)
+        # or any other Pydantic internal attributes are handled correctly.
+        return super().__getattr__(item)
+
 
 # Main Tool Class (Async Version)
 class MCPFetcherWebTool(BaseTool, BaseModel):

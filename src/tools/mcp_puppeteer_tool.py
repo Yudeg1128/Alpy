@@ -8,7 +8,7 @@ import shutil # For shutil.which
 import sys
 import re # For parsing potential complex outputs if needed
 from pathlib import Path
-from typing import Any, Dict, Optional, Type, List, Literal, Union
+from typing import Any, Dict, List, Literal, Optional, Type, Union
 
 from langchain_core.tools import BaseTool, ToolException
 from langchain_core.callbacks.manager import AsyncCallbackManagerForToolRun
@@ -106,6 +106,23 @@ class MCPPuppeteerActionInput(RootModel[Union[
         InnerPuppeteerSelectAction,
         InnerPuppeteerEvaluateAction
     ] = Field(..., discriminator='action')
+
+    def __getattr__(self, item: str) -> Any:
+        # Check if 'root' attribute itself exists and is initialized.
+        # object.__getattribute__ is used to prevent recursive calls to __getattr__.
+        try:
+            root_obj = object.__getattribute__(self, 'root')
+        except AttributeError:
+            # 'root' itself doesn't exist yet (e.g. during Pydantic's own initialization),
+            # so defer to Pydantic's __getattr__.
+            return super().__getattr__(item)
+
+        # If 'root' exists and 'item' is a field of the model stored in 'root'.
+        if hasattr(root_obj, 'model_fields') and item in root_obj.model_fields:
+            return getattr(root_obj, item)
+        
+        # Otherwise, defer to Pydantic's default __getattr__ behavior.
+        return super().__getattr__(item)
 
 
 # Main Tool Class (Async Version)
@@ -311,8 +328,6 @@ class MCPPuppeteerTool(BaseTool, BaseModel):
                 raise MCPPuppeteerToolError(f"Failed to establish valid {self.name} MCP session.")
             self._logger_instance.info(f"{self.name} MCP session is ready.")
         # --- End Standard Readiness Check ---
-
-# In src/tools/mcp_puppeteer_tool.py, inside class MCPPuppeteerTool
 
     def _process_mcp_response(self, response: CallToolResult, action_name: str) -> str:
         """Helper to process MCP response and return a JSON string."""
