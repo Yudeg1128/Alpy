@@ -51,6 +51,13 @@ echo "Launching Alpy application in a new gnome-terminal window..."
 gnome-terminal --working-directory="${ALPY_PROJECT_DIR}" \
                --title="Alpy Assistant" \
                -- bash -c '
+                   trap "" SIGINT # Make this script ignore SIGINT; Python will handle it.
+
+                   # Initialize NVM if it exists
+                   export NVM_DIR="$HOME/.nvm"
+                   [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+                   [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
                    echo "Starting Alpy application using pyenv environment \"${PYENV_ENV_NAME}\" ..."
                    pyenv exec python -m src.main
                    # --- Cleanup after Alpy finishes ---
@@ -67,6 +74,8 @@ gnome-terminal --working-directory="${ALPY_PROJECT_DIR}" \
                    fi
                    echo "Stop command sent."
                    echo "----------------------------------------"
+                   # Restore default SIGINT handling for the new shell
+                   trap - SIGINT
                    # Execute an interactive bash session to keep the terminal open
                    exec bash -i
                ' bash

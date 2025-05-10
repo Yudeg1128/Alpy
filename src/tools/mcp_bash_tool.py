@@ -36,8 +36,15 @@ class MCPBashExecutorTool(BaseTool, BaseModel):
     Output is a string containing the stdout of the command if successful, or a formatted error message
     including stderr and exit code if the command fails or an error occurs during execution.
     """
+    # In MCPBashExecutorTool class definition:
     name: str = "MCPBashExecutor"
-    description: str = "Executes bash commands or entire multi-line bash scripts via an MCP server and returns their stdout, stderr, and exit code."
+    description: str = (
+        "Executes non-interactive bash commands or entire multi-line bash scripts in a secure environment "
+        "and returns their stdout, stderr, and exit code. "
+        "The 'action_input' MUST be a JSON object containing a 'command_to_execute' field " # Changed 'command' to 'command_to_execute'
+        "with the bash command or script.\n"
+        "Example: {\"command_to_execute\": \"echo hello && ls -la\"}" # Corrected example to use 'command_to_execute'
+    )
     args_schema: Type[BaseModel] = BashInput
     return_direct: bool = False
 
@@ -243,6 +250,7 @@ class MCPBashExecutorTool(BaseTool, BaseModel):
 
     async def _arun(self, command_to_execute: str, run_manager: Optional[Any] = None) -> str:
         """Asynchronously executes the bash command."""
+        self._logger.info(f"MCPBashExecutorTool._arun received command_to_execute: {command_to_execute!r}") # Added logging
         if self._is_closed:
             self._logger.warning(f"Attempt to run command on closed tool: {self.name}")
             return "Error: Tool is closed."
@@ -256,118 +264,98 @@ class MCPBashExecutorTool(BaseTool, BaseModel):
                 self._logger.error("MCP session not available for _arun.")
                 return "Error: MCP session not available."
 
-            tool_params_dict = {
-                "input": { # Correctly wrap arguments under 'input'
-                    "command": command_to_execute,
-                    "timeout": self.tool_call_timeout
-                }
+            bash_command_input_dict = {
+                "command": command_to_execute, # This comes from args_schema BashInput's command_to_execute
+                "timeout": int(self.tool_call_timeout)
             }
-            self._logger.debug(f"Calling MCP 'execute_bash_command' with arguments: {tool_params_dict}")
+            # The MCP server tool `execute_bash_command_tool(input: BashCommandInput)`
+            # expects the arguments for BashCommandInput to be under the key 'input'.
+            mcp_server_tool_arguments = {"input": bash_command_input_dict}
 
+            self._logger.debug(f"Calling MCP 'execute_bash_command' with arguments: {mcp_server_tool_arguments}")
             response: CallToolResult = await asyncio.wait_for(
-                self._session.call_tool(name="execute_bash_command", arguments=tool_params_dict),
+                self._session.call_tool(name="execute_bash_command", arguments=mcp_server_tool_arguments),
                 timeout=self.tool_call_timeout
             )
 
-            self._logger.debug(f"_arun: Received response. Type: {type(response)}, isError: {response.isError}")
-            try:
-                self._logger.debug(f"_arun: dir(response): {dir(response)}")
-                self._logger.debug(f"_arun: repr(response): {repr(response)[:1000]}") 
-            except Exception as e_log_resp:
-                self._logger.error(f"_arun: Error during detailed logging of response: {e_log_resp}")
+            self._logger.info(f"MCPBashExecutorTool._arun raw response from MCP server: {response!r}") # Added logging
 
-            stdout_str = ""
-            stderr_str = ""
-            exit_code = -99 # Default for parsing failure or if not found
-
-            if response.isError:
-                self._logger.error(f"_arun: Tool call failed on server (response.isError=True).")
-                error_detail = "Server indicated an error."
-                if response.content and isinstance(response.content, list) and len(response.content) > 0:
-                    first_content_item = response.content[0]
-                    # Check if it's TextContent and has a text attribute
-                    if hasattr(first_content_item, 'text') and isinstance(first_content_item.text, str):
-                        error_detail = first_content_item.text
-                    elif isinstance(first_content_item, str): # Fallback if content item is just a string
-                        error_detail = first_content_item
-                    else:
-                        self._logger.warning(f"_arun: Error response content item is not TextContent or str: {type(first_content_item)}")
-                else:
-                    self._logger.warning("_arun: Error response, but content is empty or not a list.")
-                stderr_str = error_detail
-            
-            elif response.content and isinstance(response.content, list) and len(response.content) > 0:
-                # Successful call, expect BashCommandOutput in content[0]
-                first_content = response.content[0]
-                self._logger.debug(f"_arun: Successful response, first_content type: {type(first_content)}")
-
-                tool_output_data = None
-
-                if isinstance(first_content, TextContent) and first_content.text:
-                    self._logger.debug(f"_arun: first_content is TextContent. Text: {first_content.text[:200]}")
+            # The actual result is in response.content[0].text as a JSON string
+            parsed_result = None
+            if response and response.content and isinstance(response.content, list) and len(response.content) > 0:
+                if isinstance(response.content[0], TextContent) and response.content[0].text:
                     try:
-                        tool_output_data = json.loads(first_content.text)
+                        parsed_result = json.loads(response.content[0].text)
+                        self._logger.debug(f"_arun: Successfully parsed JSON from response.content[0].text: {parsed_result}")
                     except json.JSONDecodeError as e:
-                        self._logger.error(f"_arun: Failed to parse JSON from TextContent: {e}")
-                        stderr_str = f"Failed to parse JSON response from server: {first_content.text}"
-                elif hasattr(first_content, 'data') and first_content.data is not None:
-                    # This would be for ModelContent or similar structured content
-                    self._logger.debug("_arun: first_content has 'data' attribute (e.g., ModelContent).")
-                    tool_output_data = first_content.data
+                        self._logger.error(f"Failed to decode JSON from response.content[0].text: {e}. Raw text: {response.content[0].text!r}")
+                        # Construct an error message similar to how it was handled before
+                        return f"Invalid response: Failed to decode JSON. Details: {e}. Raw text: {response.content[0].text!r}"
                 else:
-                    self._logger.error("_arun: Successful response, but content[0] is not TextContent with text, nor does it have a 'data' attribute.")
-                    stderr_str = "Server returned success, but tool output data was not in expected TextContent or ModelContent structure."
-
-                if tool_output_data:
-                    self._logger.debug(f"_arun: Raw tool_output_data (parsed): {str(tool_output_data)[:500]}")
-                    if isinstance(tool_output_data, dict):
-                        stdout_str = str(tool_output_data.get('stdout', ''))
-                        stderr_str = str(tool_output_data.get('stderr', ''))
-                        exit_code = int(tool_output_data.get('exit_code', -99))
-                    elif hasattr(tool_output_data, 'stdout') and \
-                         hasattr(tool_output_data, 'stderr') and \
-                         hasattr(tool_output_data, 'exit_code'): # Pydantic model-like object
-                        stdout_str = str(tool_output_data.stdout)
-                        stderr_str = str(tool_output_data.stderr)
-                        exit_code = int(tool_output_data.exit_code)
-                    else:
-                        self._logger.warning(f"_arun: tool_output_data (parsed) is not a dict or recognized model. Type: {type(tool_output_data)}")
-                        # Update stderr_str only if it wasn't set by JSONDecodeError
-                        if not stderr_str: 
-                            stderr_str = "Failed to parse tool output data structure after obtaining it."
+                    self._logger.error(f"MCP server response.content[0] is not TextContent or text is empty. Full response: {response!r}")
             else:
-                self._logger.error("_arun: Successful response, but response.content is empty, not a list, or None.")
-                stderr_str = "Server returned success, but response content was empty or malformed."
+                self._logger.error(f"MCP server response.content is missing or empty. Full response: {response!r}")
 
-            self._logger.info(f"_arun: Command processed. Parsed Exit code: {exit_code}")
-            if stdout_str: self._logger.debug(f"_arun: Parsed Stdout: {stdout_str[:200]}{'...' if len(stdout_str) > 200 else ''}")
-            if stderr_str: self._logger.debug(f"_arun: Parsed Stderr: {stderr_str[:200]}{'...' if len(stderr_str) > 200 else ''}")
+            if parsed_result and isinstance(parsed_result, dict):
+                stdout_str = parsed_result.get('stdout', '')
+                stderr_str = parsed_result.get('stderr', '')
+                exit_code = parsed_result.get('exit_code', -99) # Default to -99 if not found
+                self._logger.debug(f"_arun: Parsed Exit code: {exit_code}")
+                if stdout_str: self._logger.debug(f"_arun: Parsed Stdout: {stdout_str[:200]}{'...' if len(stdout_str) > 200 else ''}")
+                if stderr_str: self._logger.debug(f"_arun: Parsed Stderr: {stderr_str[:200]}{'...' if len(stderr_str) > 200 else ''}")
 
-            command_failed = response.isError or (exit_code != 0 and exit_code != -99) or exit_code == -99
+                # Check response.isError as a primary indicator of an issue reported by the server/SDK itself.
+                # Also consider exit_code. If exit_code is -99, it implies parsing failed or key was missing.
+                command_failed = response.isError or (exit_code != 0 and exit_code != -99) or exit_code == -99
 
-            if command_failed:
-                msg_parts = [f"Command failed."]
-                if exit_code != -99: msg_parts.append(f"Exit code: {exit_code}.")
-                else: msg_parts.append("Exit code: Unknown/Parsing_Error.")
+                if command_failed:
+                    msg_parts = [f"Command failed."]
+                    if exit_code != -99: msg_parts.append(f"Exit code: {exit_code}.")
+                    else: msg_parts.append("Exit code: Unknown/Parsing_Error.")
+                    
+                    # Append stdout/stderr if they exist, as they might contain useful info even on failure
+                    if stdout_str: msg_parts.append(f"Stdout:\n{stdout_str}")
+                    if stderr_str: msg_parts.append(f"Stderr:\n{stderr_str}")
+                    elif not stderr_str and response.isError : msg_parts.append("Server error flag set, no specific stderr parsed.")
+                    
+                    return "\n".join(msg_parts)
+                else:
+                    return stdout_str if stdout_str else "Command executed successfully with no output."
+
+            else: # This 'else' now covers cases where parsed_result is None or not a dict
+                self._logger.error(f"MCP server returned an unexpected response structure or content. Full response: {response!r}, Parsed result: {parsed_result!r}")
+                if not response:
+                    return "No response received from server."
                 
-                # Append stdout/stderr if they exist, as they might contain useful info even on failure
-                if stdout_str: msg_parts.append(f"Stdout:\n{stdout_str}")
-                if stderr_str: msg_parts.append(f"Stderr:\n{stderr_str}")
-                elif not stderr_str and response.isError : msg_parts.append("Server error flag set, no specific stderr parsed.")
+                if response.isError:
+                    err_msg = "Server indicated an error."
+                    if response.error and hasattr(response.error, 'message') and response.error.message: # Check MCP RpcError details
+                        err_msg += f" Details: {response.error.message}"
+                    # It's unlikely response.result would be a string if response.content[0].text was the source
+                    # But we can check if parsed_result itself (if not a dict) could be an error string, though less likely now.
+                    elif isinstance(parsed_result, str) and parsed_result: 
+                        err_msg += f" Details from parsed content: {parsed_result}"
+                    return err_msg
+
+                # If not response.isError, but the structure of parsed_result is still not the expected dict:
+                if parsed_result is None: # More specific check
+                    return f"Invalid response: Parsed result was None. Full response: {response!r}"
+                if not isinstance(parsed_result, dict):
+                    type_of_result = type(parsed_result).__name__
+                    return f"Invalid response structure: Parsed result was type '{type_of_result}', expected 'dict'. Full response: {response!r}"
                 
-                return "\n".join(msg_parts)
-            else:
-                return stdout_str if stdout_str else "Command executed successfully with no output."
+                # Fallback for any other unhandled case within this 'else' block
+                return f"Invalid or incomplete response from server (unknown structure issue). Full response: {response!r}"
 
         except asyncio.TimeoutError:
             self._logger.error(f"Timeout executing command: {command_to_execute}")
             return f"Error: Timeout executing command '{command_to_execute}'."
         except McpToolError as e: # This is our custom error for session/init issues
-            self._logger.error(f"_arun: MCPToolError during command execution: {e}")
-            return f"Error executing command: {e}"
+            self._logger.error(f"MCP Tool Error during command execution: {e}")
+            return f"Error: {str(e)}"
         except Exception as e:
-            self._logger.error(f"Unexpected error during command execution: {e}", exc_info=True)
-            return f"Unexpected error: {e}"
+            self._logger.error(f"Unexpected error in _arun: {e}", exc_info=True)
+            return f"Unexpected error: {str(e)}"
 
     async def close(self):
         """Closes the MCP session and stops the server."""

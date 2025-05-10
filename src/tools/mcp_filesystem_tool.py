@@ -367,7 +367,7 @@ class MCPFileSystemTool(BaseTool, BaseModel): # Inherit from BaseModel for Pydan
                 server_tool_params = {"source": src_p, "destination": dst_p}
             elif action == "search_files":
                 actual_tool_name_on_server = "search_files"
-                if not path_arg: return json.dumps({"error": "'uri' or 'path' (for search root) required for search_files"})
+                if not path_arg: return json.dumps({"error": "'uri'/'path' (for search root) required for search_files"})
                 if pattern is None: return json.dumps({"error": "'pattern' required for search_files"})
                 server_tool_params = {"path": path_arg, "pattern": pattern}
                 if exclude_patterns is not None: server_tool_params["excludePatterns"] = exclude_patterns
@@ -406,42 +406,43 @@ class MCPFileSystemTool(BaseTool, BaseModel): # Inherit from BaseModel for Pydan
                 self._logger.error(err_detail)
                 return json.dumps({"error": err_detail})
 
-            # Handle successful response
-            if response.content and isinstance(response.content, list) and len(response.content) > 0:
-                first_content_item = response.content[0]
-                if isinstance(first_content_item, TextContent) and first_content_item.text is not None:
-                    text_payload = first_content_item.text
-                    
-                    if action == "read_file":
-                        self._logger.debug(f"Action '{action}' returning raw file content wrapped in JSON.")
-                        return json.dumps({"content": text_payload})
-                    elif action in ["list_dir", "stat_file", "search_files", "read_multiple_files", "edit_file", "directory_tree"]:
-                        # These actions from the Node.js server are expected to return a JSON string directly in text_payload.
-                        self._logger.debug(f"Action '{action}' returning TextContent as is (expected JSON string from server).")
-                        # Validate if it's actually JSON before returning, or let the caller handle parse error
-                        try:
-                            json.loads(text_payload) # Test if it's valid JSON
-                            return text_payload
-                        except json.JSONDecodeError:
-                            self._logger.error(f"Action '{action}' expected JSON string from server, but got non-JSON: {text_payload[:200]}")
-                            return json.dumps({"error": "Received non-JSON response from server for an action expecting JSON.", "raw_response": text_payload})
-                    elif action == "list_allowed_directories":
-                        lines = [line.strip() for line in text_payload.splitlines() if line.strip()]
-                        if lines and lines[0].lower().startswith("allowed directories:"):
-                            lines.pop(0) 
-                        self._logger.debug(f"Action '{action}' parsed lines to JSON list: {lines}")
-                        return json.dumps(lines) 
-                    else: 
-                        # For actions like create_dir, write_file, delete_file, delete_dir, move_file
-                        # where server sends a simple success message string.
-                        self._logger.debug(f"Action '{action}' returning simple success message wrapped in JSON.")
-                        return json.dumps({"status": "success", "message": text_payload})
-                else: 
-                    self._logger.warning(f"Unexpected successful content structure for '{actual_tool_name_on_server}': {type(first_content_item)}. Content: {str(first_content_item)[:200]}")
-                    return json.dumps({"status": "success", "action": action, "message": "Operation completed with non-standard content format.", "raw_content": str(first_content_item)})
-            
-            self._logger.debug(f"Action '{action}' successful with no specific content items in response from server.")
-            return json.dumps({"status": "success", "action": action, "message": "Operation completed successfully (no specific content items returned)."})
+            if isinstance(response.content, TextContent):
+                text_output = response.content.text
+                try:
+                    # Attempt to parse if the server already sent JSON
+                    json.loads(text_output)
+                    # If successful, it's already a valid JSON string from the server
+                    return text_output 
+                except json.JSONDecodeError:
+                    # Not a JSON string, so it's plain text.
+                    self._logger.info(f"ASYNC: Action '{action}' succeeded with plain text output. Formatting as JSON.")
+                    if action == "list_dir":
+                        # Specific handling for list_dir plain text output
+                        if text_output: # Check if there's any text to split
+                            # Split by newline, filter out potential empty strings from trailing newlines etc.
+                            items = [item for item in text_output.splitlines() if item.strip()] 
+                            return json.dumps(items)
+                        else:
+                            return json.dumps([]) # Return an empty JSON list if plain text was empty
+                    else:
+                        # General handling for other plain text outputs
+                        return json.dumps({
+                            "status": "success", 
+                            "message": f"Action '{action}' completed with plain text output.",
+                            "text_content": text_output
+                        })
+            elif response.content is None:
+                # For actions that might not return content on success (e.g., delete_file)
+                return json.dumps({"status": "success", "message": f"Action '{action}' completed successfully with no content returned."})
+            else:
+                # Should ideally not happen if server adheres to TextContent for string results
+                # or returns None for no content.
+                self._logger.warning(f"ASYNC: Action '{action}' succeeded but content type was unexpected: {type(response.content)}. Returning JSON representation.")
+                return json.dumps({
+                    "status": "warning", 
+                    "message": "Action completed with unexpected content type from server.",
+                    "raw_content_repr": repr(response.content)
+                })
 
         except asyncio.TimeoutError:
             self._logger.error(f"Timeout executing ASYNC action '{action}' for tool '{actual_tool_name_on_server}'.")
