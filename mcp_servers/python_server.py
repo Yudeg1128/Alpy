@@ -4,6 +4,16 @@ import subprocess
 import sys
 
 from pydantic import BaseModel, Field
+
+class PipInstallInput(BaseModel):
+    package: str = Field(description="The name of the package to install, e.g., 'requests' or 'numpy'.")
+    version: str | None = Field(default=None, description="Optional version specifier, e.g., '1.2.3'.")
+
+class PipInstallOutput(BaseModel):
+    stdout: str
+    stderr: str
+    exit_code: int
+
 from mcp.server.fastmcp import FastMCP
 
 # Setup logging
@@ -73,7 +83,32 @@ async def execute_python_code_tool(input: PythonCommandInput) -> PythonCommandOu
     )
     return result
 
+@mcp.tool(
+    name="install_python_package",
+    description="Installs a Python package using pip in the current Python environment (sys.executable). Accepts a package name and optional version.",
+)
+async def install_python_package_tool(input: PipInstallInput) -> PipInstallOutput:
+    """MCP tool to install a Python package using the correct Python environment."""
+    package_spec = input.package if not input.version else f"{input.package}=={input.version}"
+    logger.info(f"Installing Python package: {package_spec}")
+    try:
+        process = await asyncio.create_subprocess_exec(
+            sys.executable, "-m", "pip", "install", package_spec,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
+        )
+        stdout_bytes, stderr_bytes = await process.communicate()
+        stdout = stdout_bytes.decode()
+        stderr = stderr_bytes.decode()
+        exit_code = process.returncode
+        logger.info(f"pip install finished. Exit code: {exit_code}")
+        return PipInstallOutput(stdout=stdout, stderr=stderr, exit_code=exit_code)
+    except Exception as e:
+        logger.error(f"Error during pip install: {e}", exc_info=True)
+        return PipInstallOutput(stdout="", stderr=str(e), exit_code=-2)
+
 if __name__ == "__main__":
+
     logger.info("Starting FastMCP Python Server with mcp.run()...")
     try:
         mcp.run() # This will block and run the server

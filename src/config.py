@@ -10,9 +10,12 @@ LLM_PROVIDER = os.getenv('LLM_PROVIDER', 'google') # 'local' or 'openrouter'
 LOCAL_LLM_API_BASE = os.getenv("LOCAL_LLM_API_BASE", "http://127.0.0.1:8080/v1")
 LOCAL_LLM_API_KEY = os.getenv("LOCAL_LLM_API_KEY", "dummy-key") # Typically not needed for local
 AVAILABLE_LOCAL_MODELS = [
-    "Qwen3-8B-abliterated-iq2_xxs.gguf",
+    "Qwen3-0.6B-abliterated-iq3_xxs.gguf",
     "Qwen3-4B-abliterated-q6_k_m.gguf", 
-    "Qwen3-8B-abliterated-q4_k_m.gguf", 
+    "Qwen3-8B-abliterated-iq2_xxs.gguf",
+    "Qwen3-8B-abliterated-q4_k_m.gguf",
+    "Goekdeniz-Guelmez_Josiefied-Qwen3-8B-abliterated-v1-Q2_K.gguf",
+    "Llama-3.2-1B-Instruct-abliterated.Q2_K.gguf",
     # Add other local model names here, e.g., "llama3-8b-instruct-gguf"
 ]
 ACTIVE_LOCAL_LLM_MODEL = os.getenv(
@@ -91,3 +94,7 @@ elif LLM_PROVIDER == 'google':
     print(f"  Google API Key: {GOOGLE_API_KEY}")
     print(f"  Available Google Models: {AVAILABLE_GOOGLE_MODELS}")
     print(f"  Active Google Model: {ACTIVE_GOOGLE_MODEL}")
+
+
+# dy@emipmongolia.com
+# MidasHYB#1

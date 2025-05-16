@@ -6,6 +6,7 @@ import json
 import traceback
 import sys
 from typing import Dict, Any, List, Union, Optional
+import asyncio
 
 from langchain_openai import ChatOpenAI
 from langchain.memory import ConversationBufferWindowMemory
@@ -28,6 +29,9 @@ from .tools.mcp_brave_search_tool import MCPBraveSearchTool
 from .tools.mcp_media_display_tool import MCPMediaDisplayTool
 from .tools.mcp_fetcher_web_tool import MCPFetcherWebTool
 from .tools.mcp_puppeteer_tool import MCPPuppeteerTool
+from .tools.download_file_tool import DownloadFileTool
+from .tools.otcmn_scraper_tool import OTCMNScraperTool
+from .tools.mcp_playwright_tool import MCPPlaywrightTool
 from rich.console import Console as RichConsole
 from rich.panel import Panel as RichPanel
 from rich.markdown import Markdown as RichMarkdown
@@ -121,6 +125,9 @@ class RichStreamingCallbackHandler(BaseCallbackHandler):
     def get_full_trace(self) -> str:
         return "\n".join(part for part in self.trace if part.strip()).strip()
 
+    def reset_trace(self) -> None:
+        self.trace = []
+        self.action_count = 0
 
 class CustomReActJsonOutputParser(AgentOutputParser):
     def parse(self, text: str) -> Union[AgentAction, AgentFinish]:
@@ -275,17 +282,25 @@ class AlpyAgent:
     def __init__(self, rich_console: Optional[RichConsole] = None):
         self.mode = "agent"  
         logger.info(f"AlpyAgent initializing in '{self.mode}' mode.")
+        self.active_provider: str = config.LLM_PROVIDER
+        self._last_truncated_thought_process: Optional[str] = None
 
         try:
             prompts_path = os.path.join(os.path.dirname(__file__), '..', 'prompts', 'prompts.yaml')
             with open(prompts_path, 'r') as f:
                 prompts_config = yaml.safe_load(f)
-            self.raw_system_prompt_agent = prompts_config.get('system_prompt_react_agent', "You are a helpful ReAct agent. You have access to tools.")
-            self.raw_system_prompt_chat = prompts_config.get('system_prompt_chat_mode', "You are a helpful conversational assistant.")
-            if not prompts_config.get('system_prompt_react_agent'): 
-                logger.warning("system_prompt_react_agent not found in prompts.yaml, using default.")
-            if not prompts_config.get('system_prompt_chat_mode'):
-                logger.warning("system_prompt_chat_mode not found in prompts.yaml, using default.")
+            # Load all prompt variants if present
+            self.prompts_config = prompts_config
+            self.raw_system_prompt_agent_local = prompts_config.get('system_prompt_react_agent_local')
+            self.raw_system_prompt_agent_remote = prompts_config.get('system_prompt_react_agent_remote')
+            self.raw_system_prompt_chat_local = prompts_config.get('system_prompt_chat_mode_local')
+            self.raw_system_prompt_chat_remote = prompts_config.get('system_prompt_chat_mode_remote')
+            # Optionally load generic as fallback
+            self.raw_system_prompt_agent_generic = prompts_config.get('system_prompt_react_agent', "You are a helpful ReAct agent. You have access to tools.")
+            self.raw_system_prompt_chat_generic = prompts_config.get('system_prompt_chat_mode', "You are a helpful conversational assistant.")
+
+            self._select_prompts()
+
         except FileNotFoundError:
             logger.error(f"Prompts file not found at {prompts_path}. Using basic defaults.")
             self.raw_system_prompt_agent = "You are a helpful ReAct agent. You have access to tools."
@@ -302,7 +317,9 @@ class AlpyAgent:
         self.mcp_media_display_tool = MCPMediaDisplayTool(instance_name="AlpyMediaDisplayTool")
         self.mcp_fetcher_web_tool = MCPFetcherWebTool(instance_name="AlpyFetcherWebTool")
         self.mcp_puppeteer_tool = MCPPuppeteerTool(instance_name="AlpyPuppeteerTool")
-
+        self.download_file_tool = DownloadFileTool(instance_name="AlpyDownloadFileTool")
+        self.otcmn_scraper_tool = OTCMNScraperTool(instance_name="AlpyOTCMNScraperTool")
+        self.mcp_playwright_tool = MCPPlaywrightTool(instance_name="AlpyPlaywrightTool")
         self.tools: List[BaseTool] = [
             self.mcp_bash_tool,
             self.mcp_python_tool,
@@ -311,9 +328,20 @@ class AlpyAgent:
             self.mcp_media_display_tool,
             self.mcp_fetcher_web_tool,
             self.mcp_puppeteer_tool,
+            self.download_file_tool,
+            self.otcmn_scraper_tool,
+            self.mcp_playwright_tool
         ]
         self.tools_by_name = {tool.name: tool for tool in self.tools}
         logger.info(f"Tools initialized: {[tool.name for tool in self.tools]}")
+
+        # Always re-select the correct prompt for the active provider
+        if self.active_provider == 'local':
+            self.raw_system_prompt_agent = self.raw_system_prompt_agent_local or self.raw_system_prompt_agent_generic
+            self.raw_system_prompt_chat = self.raw_system_prompt_chat_local or self.raw_system_prompt_chat_generic
+        else:
+            self.raw_system_prompt_agent = self.raw_system_prompt_agent_remote or self.raw_system_prompt_agent_generic
+            self.raw_system_prompt_chat = self.raw_system_prompt_chat_remote or self.raw_system_prompt_chat_generic
 
         final_react_prompt_str = (
             f"{self.raw_system_prompt_agent}\n\n"
@@ -429,12 +457,10 @@ class AlpyAgent:
                     "temperature": config.LLM_TEMPERATURE,
                     "max_output_tokens": config.LLM_MAX_TOKENS, # Google uses 'max_output_tokens'
                     "top_p": config.LLM_TOP_P,
-                    "top_k": config.LLM_TOP_K, # Google supports top_k
-                    "streaming": True,
                     # For Google, `stop_sequences` is the parameter if needed, but Langchain might adapt `stop`.
                     # ReAct's "Observation:" stop might be problematic or handled differently.
                     # Test carefully. If issues, you might need to adjust prompts or remove stop for Google.
-                    "stop": ["\nObservation:"] 
+                    # "stop": ["\nObservation:"] 
                 }
                 logger.info(f"Google LLM params: Model='{self.current_llm_model_name}'")
                 if not config.GOOGLE_API_KEY or config.GOOGLE_API_KEY == "YOUR_GOOGLE_API_KEY_PLACEHOLDER": # Check placeholder
@@ -465,7 +491,8 @@ class AlpyAgent:
                 verbose=False, 
                 handle_parsing_errors=True, 
                 max_iterations=config.AGENT_MAX_ITERATIONS,
-                callbacks=[self.rich_streaming_callback_handler]
+                callbacks=[self.rich_streaming_callback_handler],
+                return_intermediate_steps=True,
             )
             logger.info("AgentExecutor (re)created successfully.")
 
@@ -482,7 +509,7 @@ class AlpyAgent:
 
     async def switch_llm_model(self, new_model_identifier: str) -> Dict[str, Any]:
         logger.info(f"Attempting to switch LLM model to: '{new_model_identifier}'")
-        
+        self._last_truncated_thought_process = None # ADD THIS
         valid_models = []
         if self.active_provider == 'local':
             valid_models = config.AVAILABLE_LOCAL_MODELS
@@ -546,7 +573,7 @@ class AlpyAgent:
 
     async def switch_llm_provider(self, new_provider: str) -> Dict[str, Any]:
         logger.info(f"Attempting to switch LLM provider to: '{new_provider}'")
-
+        self._last_truncated_thought_process = None
         if new_provider not in ['local', 'openrouter', 'google']: # Add 'google'
             msg = f"Invalid provider '{new_provider}'. Must be 'local', 'openrouter', or 'google'."
             logger.warning(msg)
@@ -561,6 +588,7 @@ class AlpyAgent:
         previous_provider = self.active_provider
         previous_model = self.current_llm_model_name
         self.active_provider = new_provider
+        self._select_prompts()
 
         try:
             # _create_llm_and_agent_components will now pick the default model for the new provider
@@ -585,70 +613,156 @@ class AlpyAgent:
 
     async def set_mode(self, new_mode: str):
         if new_mode in ["agent", "chat"]:
+            if self.mode != new_mode:
+                logger.info(f"Mode changed from {self.mode} to {new_mode}. Clearing any pending truncated agent trace.")
+                self._last_truncated_thought_process = None # ADD THIS
             self.mode = new_mode
+            self._select_prompts() # Ensure prompts are updated
             logger.info(f"Alpy mode switched to: {self.mode}")
             return f"Mode switched to {self.mode}."
         else:
             logger.warning(f"Attempted to switch to invalid mode: {new_mode}")
             return f"Invalid mode '{new_mode}'. Valid modes are 'agent' or 'chat'."
 
+    def _select_prompts(self):
+        """Select the correct system prompts for agent and chat mode based on provider and mode, and update prompt templates."""
+        if self.active_provider == 'local':
+            self.raw_system_prompt_agent = self.prompts_config.get('system_prompt_react_agent_local', self.raw_system_prompt_agent_generic)
+            self.raw_system_prompt_chat = self.prompts_config.get('system_prompt_chat_mode_local', self.raw_system_prompt_chat_generic)
+        elif self.active_provider == 'openrouter': # Assuming 'openrouter' implies remote
+            self.raw_system_prompt_agent = self.prompts_config.get('system_prompt_react_agent_remote', self.raw_system_prompt_agent_generic)
+            self.raw_system_prompt_chat = self.prompts_config.get('system_prompt_chat_mode_remote', self.raw_system_prompt_chat_generic)
+        elif self.active_provider == 'google': # Assuming 'google' also implies remote
+            # Using remote as a stand-in if Google-specific aren't defined in YAML, adjust if you have them
+            self.raw_system_prompt_agent = self.prompts_config.get('system_prompt_react_agent_google', 
+                                                            self.prompts_config.get('system_prompt_react_agent_remote', self.raw_system_prompt_agent_generic))
+            self.raw_system_prompt_chat = self.prompts_config.get('system_prompt_chat_mode_google', 
+                                                           self.prompts_config.get('system_prompt_chat_mode_remote', self.raw_system_prompt_chat_generic))
+        else: # Fallback to generic if provider is unknown
+            logger.warning(f"Unknown provider '{self.active_provider}' in _select_prompts. Falling back to generic prompts.")
+            self.raw_system_prompt_agent = self.raw_system_prompt_agent_generic
+            self.raw_system_prompt_chat = self.raw_system_prompt_chat_generic
+
+        logger.info(f"Selected raw system prompt for AGENT mode ({self.active_provider}): '{self.raw_system_prompt_agent[:100]}...' ({len(self.raw_system_prompt_agent)} chars)")
+        logger.info(f"Selected raw system prompt for CHAT mode ({self.active_provider}): '{self.raw_system_prompt_chat[:100]}...' ({len(self.raw_system_prompt_chat)} chars)")
+
+        # Re-initialize chat_mode_prompt
+        self.chat_mode_prompt = ChatPromptTemplate.from_messages([
+            SystemMessagePromptTemplate.from_template(self.raw_system_prompt_chat),
+            MessagesPlaceholder(variable_name="chat_history"),
+            HumanMessagePromptTemplate.from_template("{input}")
+        ])
+        logger.info("Chat mode ChatPromptTemplate updated.")
+
+        # Re-initialize agent_mode_prompt (correct_prompt_for_agent)
+        # Ensure all placeholders required by the agent are present in the string
+        final_react_prompt_str = (
+            f"{self.raw_system_prompt_agent}\n\n"
+            "TOOLS:\n------\n{tools}\n\n"
+            "TOOL NAMES: {tool_names}\n\n"
+            "CONVERSATION HISTORY:\n{chat_history}\n\n"
+            "USER'S INPUT:\n------\n{input}\n\n"
+            "SCRATCHPAD (Thought Process):\n---------------------------\n{agent_scratchpad}"
+        )
+        self.correct_prompt_for_agent = ChatPromptTemplate.from_template(final_react_prompt_str)
+        logger.info("Agent mode ChatPromptTemplate (correct_prompt_for_agent) updated.")
+
+        # This original log line might now be redundant or can be adjusted.
+        # It confirms the raw string for the *current self.mode* after selection.
+        if self.mode == "chat":
+            current_mode_raw_prompt = self.raw_system_prompt_chat
+        elif self.mode == "agent":
+            current_mode_raw_prompt = self.raw_system_prompt_agent
+        else:
+            current_mode_raw_prompt = "Unknown mode, raw prompt not determined for this log."
+        # logger.info(f"Loaded and applied prompt for provider '{self.active_provider}' and current mode '{self.mode}': {current_mode_raw_prompt!r}")
+
     async def get_response(self, user_input: str):
+# Replace the agent mode block:
         if self.mode == "agent":
             logger.info(f"Processing user_input in AGENT mode: {user_input[:100]}...")
             
-            # self.rich_streaming_callback_handler is already initialized in __init__
-            # and passed to the AgentExecutor's callbacks list.
-            # We don't need to instantiate it here or pass it explicitly to ainvoke if
-            # it's already part of the agent_executor's default callbacks.
-            # However, if you want to ensure it's used or add specific callbacks per invoke:
-            # callbacks_for_this_run = [self.rich_streaming_callback_handler]
-            # For simplicity, assuming it's already in self.agent_executor.callbacks
+            self.rich_streaming_callback_handler.reset_trace() # Always reset trace for a new invoke
 
+            input_for_agent = user_input
+            # If a previous run was truncated, prepend its thought process as context
+            if self._last_truncated_thought_process:
+                logger.info("Continuing from previously truncated agent run. Prepending last thought process to current input.")
+                input_for_agent = (
+                    f"Context from your previous incomplete attempt (you were stopped due to reaching maximum steps):\n"
+                    f"### Previous Thought Process Start ###\n"
+                    f"{self._last_truncated_thought_process}\n"
+                    f"### Previous Thought Process End ###\n\n"
+                    f"Based on the above and the original goal, please continue working on the user's request: \"{user_input}\""
+                )
+                # Clear it now that it's being used for this invocation.
+                # If this run also truncates, it will be re-populated.
+                # If this run succeeds, it remains None.
+                self._last_truncated_thought_process = None
+            
             try:
                 response_data = await self.agent_executor.ainvoke(
-                    {"input": user_input}
-                    # If you want to be explicit or override default callbacks:
-                    # config={"callbacks": [self.rich_streaming_callback_handler]} 
-                    # Otherwise, if it's already in agent_executor.callbacks, this is not strictly needed.
-                    # For clarity and ensuring it's used, let's include it:
-                    , config={"callbacks": [self.rich_streaming_callback_handler]}
+                    {"input": input_for_agent},
+                    config={"callbacks": [self.rich_streaming_callback_handler]}
                 )
                 
                 final_answer_from_executor = response_data.get('output', "")
-                logger.info(f"Agent execution finished. Final answer from executor: '{final_answer_from_executor[:100]}...'")
+                intermediate_steps = response_data.get('intermediate_steps', [])
                 
-                # The RichStreamingCallbackHandler has already printed thoughts/actions/observations.
-                # We only need to return the final answer.
+                logger.info(f"Agent execution finished. Final answer: '{final_answer_from_executor[:100]}...'. Intermediate steps: {len(intermediate_steps)}")
+
+                agent_stopped_due_to_iterations = False
+                # Check if the number of intermediate steps equals max_iterations
+                if self.agent_executor.max_iterations is not None and \
+                   len(intermediate_steps) >= self.agent_executor.max_iterations:
+                    agent_stopped_due_to_iterations = True
+
+                if agent_stopped_due_to_iterations:
+                    logger.warning(f"Agent stopped due to max_iterations (executed {len(intermediate_steps)} tool steps). Storing full thought process for potential continuation.")
+                    self._last_truncated_thought_process = self.rich_streaming_callback_handler.get_full_trace()
+                else:
+                    # If the agent finished normally (not due to max_iterations),
+                    # ensure any _last_truncated_thought_process (which should be None if used above,
+                    # but this is a safeguard) is cleared.
+                    if self._last_truncated_thought_process:
+                         self._last_truncated_thought_process = None # Should already be None if it was used
+                
                 return final_answer_from_executor.strip() if final_answer_from_executor else "Agent processed the request but didn't produce a final answer."
 
             except asyncio.CancelledError:
                 logger.info("Agent get_response operation was cancelled.")
-                raise # Re-raise to allow the caller to know it was cancelled
+                self._last_truncated_thought_process = None # Clear on cancellation
+                raise 
 
             except OutputParserException as e: 
                 logger.error(f"Output parsing error during agent execution: {e}")
-                error_message_str = str(e)
-                # The RichStreamingCallbackHandler would have printed thoughts up to the error.
-                # We try to extract a final answer if the parser choked on it.
-                final_answer_in_error = re.search(FINAL_ANSWER_PATTERN, error_message_str, re.DOTALL)
+                self._last_truncated_thought_process = None # Clear on parsing error
+                final_answer_in_error = re.search(FINAL_ANSWER_PATTERN, str(e), re.DOTALL)
                 if final_answer_in_error:
                     logger.info("Extracted Final Answer from parsing error message.")
                     extracted_answer = final_answer_in_error.group(1).strip()
-                    # It's tricky to display this well, main.py expects just the final answer.
-                    # The error itself should have been printed by the callback handler or logged.
                     return f"(Note: Parsing error occurred, but attempting to provide extracted answer)\nFinal Answer: {extracted_answer}"
                 return "I encountered an issue parsing the response. Check logs for details. The thought process should have been displayed above."
             
             except Exception as e:
-                logger.error(f"Error during ReAct AgentExecutor invocation: {e}")
-                logger.error(f"Traceback: {traceback.format_exc()}")
-                # Thoughts/actions up to this point should have been printed by the handler.
+                logger.error(f"Error during ReAct AgentExecutor invocation: {e}", exc_info=True)
+                self._last_truncated_thought_process = None # Clear on general error
                 return "An unexpected error occurred in agent mode. Check logs for details. The thought process leading to the error should have been displayed above."
         
         elif self.mode == "chat":
+            # Ensure trace is cleared if switching from agent mode where it might have been set
+            if self._last_truncated_thought_process:
+                logger.debug("Switched to chat mode, clearing any pending agent truncated thought process.")
+                self._last_truncated_thought_process = None
+            # ... rest of your existing chat mode logic ...
             logger.info(f"Processing user_input in CHAT mode: {user_input[:100]}...")
             try:
                 chat_history_messages = self.memory.chat_memory.messages
+                # Ensure self.llm is not None. It should be initialized by _create_llm_and_agent_components
+                if not self.llm:
+                    logger.error("LLM is not initialized. Cannot proceed in chat mode.")
+                    return "Error: LLM not initialized. Cannot process chat."
+
                 chat_chain = self.chat_mode_prompt | self.llm
                 
                 response_message = await chat_chain.ainvoke({
@@ -656,21 +770,25 @@ class AlpyAgent:
                     "chat_history": chat_history_messages 
                 })
                 
-                response_content = response_message.content.strip()
-                
+                response_content = ""
+                if hasattr(response_message, 'content'):
+                    response_content = response_message.content.strip()
+                else: # Fallback for unexpected response structure
+                    logger.warning(f"Unexpected response structure in chat mode: {response_message}")
+                    response_content = str(response_message).strip()
+
                 self.memory.chat_memory.add_user_message(user_input)
                 self.memory.chat_memory.add_ai_message(response_content)
 
                 logger.info(f"Chat mode response: {response_content[:100]}...")
                 return response_content
 
-            except asyncio.CancelledError: # Also handle for chat mode if desired
+            except asyncio.CancelledError:
                 logger.info("Chat get_response operation was cancelled.")
                 raise
 
             except Exception as e:
-                logger.error(f"Error during CHAT mode LLM invocation: {e}")
-                logger.error(f"Traceback: {traceback.format_exc()}")
+                logger.error(f"Error during CHAT mode LLM invocation: {e}", exc_info=True)
                 return f"An unexpected error occurred in chat mode: {e}"
         else:
             logger.error(f"Invalid mode '{self.mode}' in get_response.")
@@ -690,6 +808,9 @@ class AlpyAgent:
             "Media Display Tool": self.mcp_media_display_tool,
             "Fetcher Web Tool": self.mcp_fetcher_web_tool,
             "Puppeteer Tool": self.mcp_puppeteer_tool,
+            "Download File Tool": self.download_file_tool,
+            "OTCMN Scraper Tool": self.otcmn_scraper_tool,
+            "Playwright Tool": self.mcp_playwright_tool,
         }
 
         for tool_name, tool_instance in tools_to_close.items():

@@ -39,7 +39,7 @@ class MCPBashExecutorTool(BaseTool, BaseModel):
     # In MCPBashExecutorTool class definition:
     name: str = "MCPBashExecutor"
     description: str = (
-        "Executes non-interactive bash commands or entire multi-line bash scripts in a secure environment "
+        "Executes bash commands or entire multi-line bash scripts in a secure environment "
         "and returns their stdout, stderr, and exit code. "
         "The 'action_input' MUST be a JSON object containing a 'command_to_execute' field " # Changed 'command' to 'command_to_execute'
         "with the bash command or script.\n"
