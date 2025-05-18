@@ -1,0 +1,16 @@
+{
+  "Security": "B\n\nBORO-TDB-01-12.3\n\nBoro bond 1",
+  "ISIN": "MN0BORO67220",
+  "Currency": "USD",
+  "Interest Rate": "12.30%",
+  "Maturity Date": "2027-01-06",
+  "Quantity": "43,000",
+  "Price": "$ 1,000",
+  "Total Amount": "$ 43,000,000",
+  "Start Date": "2024-12-06",
+  "End Date": "2024-12-06",
+  "Underwriter": "TDB Securities",
+  "Progress": "100%",
+  "url_id": "95aee690-69ae-4f85-a02f-d33e970e81b0",
+  "detail_url_path": "/securities/detail?id=95aee690-69ae-4f85-a02f-d33e970e81b0"
+}

@@ -1,0 +1,16 @@
+{
+  "Security": "C\n\nTAKA-RIB-01-24\n\nTAK bond 1",
+  "ISIN": "MN0TAKA68793",
+  "Currency": "MNT",
+  "Interest Rate": "24.00%",
+  "Maturity Date": "2027-04-19",
+  "Quantity": "70,000",
+  "Price": "₮ 100,000",
+  "Total Amount": "₮ 7,000,000,000",
+  "Start Date": "2025-04-16",
+  "End Date": "2025-04-17",
+  "Underwriter": "Rhinos Investment",
+  "Progress": "100%",
+  "url_id": "7d420e41-9db4-4f44-8579-9275d5bba201",
+  "detail_url_path": "/securities/detail?id=7d420e41-9db4-4f44-8579-9275d5bba201"
+}

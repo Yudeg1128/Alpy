@@ -1,0 +1,16 @@
+{
+  "Security": "C\n\nTSON-MIB-1.17-12\n\nGem Toson Energy Bond 1.17",
+  "ISIN": "MN0TSON68782",
+  "Currency": "USD",
+  "Interest Rate": "12.00%",
+  "Maturity Date": "2026-10-16",
+  "Quantity": "500",
+  "Price": "$ 1,000",
+  "Total Amount": "$ 500,000",
+  "Start Date": "2025-04-16",
+  "End Date": "2025-04-16",
+  "Underwriter": "MICC",
+  "Progress": "100%",
+  "url_id": "b040a1fd-65ca-4688-9b9b-9b17cb13da7b",
+  "detail_url_path": "/securities/detail?id=b040a1fd-65ca-4688-9b9b-9b17cb13da7b"
+}

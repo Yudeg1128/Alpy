@@ -1,0 +1,16 @@
+{
+  "Security": "B\n\nESTA-01-20\n\nEST bond 1",
+  "ISIN": "MN0ESTA67931",
+  "Currency": "MNT",
+  "Interest Rate": "20.00%",
+  "Maturity Date": "2026-01-29",
+  "Quantity": "5,400",
+  "Price": "₮ 1,000,000",
+  "Total Amount": "₮ 5,400,000,000",
+  "Start Date": "2025-01-29",
+  "End Date": "2025-01-29",
+  "Underwriter": "Net Sec",
+  "Progress": "100%",
+  "url_id": "48ac3f7e-da32-4dba-8076-c9a8c93a910c",
+  "detail_url_path": "/securities/detail?id=48ac3f7e-da32-4dba-8076-c9a8c93a910c"
+}

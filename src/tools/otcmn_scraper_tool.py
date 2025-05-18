@@ -5,14 +5,41 @@ import os
 import re
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Type, Set
+from typing import Any, Dict, List, Optional, Type, Union, Literal, Tuple
 
-import pandas as pd
-from playwright.async_api import async_playwright, Page, Browser, TimeoutError as PlaywrightTimeoutError
+# Playwright imports
+from playwright.async_api import async_playwright, Page, Locator, Browser, TimeoutError as PlaywrightTimeoutError, BrowserContext
 
+# Langchain and Pydantic imports
 from langchain_core.tools import BaseTool, ToolException
 from langchain_core.callbacks.manager import AsyncCallbackManagerForToolRun
-from pydantic import BaseModel, Field, model_validator, PrivateAttr
+from pydantic import BaseModel, Field, model_validator, PrivateAttr, field_validator
+
+# Import from your new otcmn_interaction module
+# Assuming your src directory is in PYTHONPATH or you're running from a place where Python can find 'src'
+try:
+    from src.otcmn_interaction.interactor import OtcmSiteInteractor
+    from src.otcmn_interaction.common import (
+        OtcmInteractionError,
+        PageNavigationError,
+        ElementNotFoundError,
+        DataExtractionError,
+        PageStateError, # <--- ADD THIS
+        ISIN_COLUMN_HEADER_TEXT
+    )
+    from src.otcmn_interaction.listing_page_handler import ListingPageHandler
+except ImportError as e:
+    # This allows the file to be parsed even if the module isn't immediately available during linting/CI in some environments
+    # but it will fail at runtime if the module isn't truly found.
+    print(f"Warning: Could not import from src.otcmn_interaction: {e}. Ensure it's in PYTHONPATH.")
+    OtcmSiteInteractor = None 
+    OtcmInteractionError = ToolException # Fallback to generic ToolException
+    PageNavigationError = ToolException
+    ElementNotFoundError = ToolException
+    DataExtractionError = ToolException
+    ISIN_COLUMN_HEADER_TEXT = "ISIN" # Default fallback
+    ListingPageHandler = None
+
 
 # Module logger
 logger = logging.getLogger(__name__)
@@ -21,72 +48,61 @@ class OTCMNScraperToolError(ToolException):
     """Custom exception for the OTCMNScraperTool."""
     pass
 
-class OTCMNScraperInput(BaseModel):
-    output_directory: str = Field(description="Base directory to save scraped Parquet files and downloaded documents. Will be created if it doesn't exist.")
-    max_listing_pages_per_board: Optional[int] = Field(default=None, description="Maximum number of listing pages to scrape per board category (e.g., Primary-A, Secondary-C). If None or 0, scrapes all available pages for each category. Default: None (all pages).")
-    max_securities_to_process: Optional[int] = Field(default=None, description="Maximum number of unique securities to process from the listings for detailed scraping. If None or 0, processes all found securities. Default: None (all securities).")
-    cdp_endpoint_url: Optional[str] = Field(default=None, description="Optional: CDP endpoint URL for Playwright to connect to an existing browser session. If None, the tool will launch its own browser instance.")
+# --- Pydantic Models for Action Parameters (Unchanged) ---
+class ScrapeBoardsParams(BaseModel):
+    output_directory: str = Field(description="Base directory, e.g., 'otcmn_data'. 'current/' subdir will be used.")
+    max_listing_pages_per_board: Optional[int] = Field(default=None, description="Max listing pages per board. Default: all.")
+
+class FilterSecuritiesParams(BaseModel):
+    output_directory: str = Field(description="Base directory, e.g., 'otcmn_data'. 'filters/' subdir will be used.")
+    filter_output_filename: str = Field(description="Filename for the filter results in 'otcmn_data/filters/', e.g., 'my_filter.json'.")
+    filter_currency: Optional[str] = Field(default=None)
+    filter_interest_rate_min: Optional[float] = Field(default=None)
+    filter_interest_rate_max: Optional[float] = Field(default=None)
+    filter_maturity_cutoff_date: Optional[str] = Field(default=None, description="YYYY-MM-DD format. Securities maturing on or after this date.")
+    filter_underwriter: Optional[str] = Field(default=None)
+
+class ScrapeFilteredDetailsParams(BaseModel):
+    output_directory: str = Field(description="Base directory, e.g., 'otcmn_data'. Details saved under 'current/'.")
+    filter_input_filename: str = Field(description="Filter filename from 'otcmn_data/filters/' to process, e.g., 'my_filter.json'.")
+    max_securities_to_process_from_filter: Optional[int] = Field(default=None, description="Max securities from the filter to scrape details for. Default: all in filter.")
+
+class OTCMNScraperActionInput(BaseModel):
+    action: Literal["scrape_boards", "filter_securities", "scrape_filtered_details"] = Field(description="The operation to perform.")
+    parameters: Union[ScrapeBoardsParams, FilterSecuritiesParams, ScrapeFilteredDetailsParams] = Field(description="Parameters specific to the chosen action.")
+    cdp_endpoint_url: Optional[str] = Field(default=None, description="Optional CDP endpoint for an existing browser.")
 
 
-class OTCMNScraperTool(BaseTool, BaseModel):
-    name: str = "OTCMN_Scraper"
+class OTCMNScraperTool(BaseTool, BaseModel): # type: ignore[misc] # For Pydantic v2 + Langchain if any issues
+    name: str = "OTCMN_Data_Manager"
     description: str = (
-        "Automates the scraping of financial securities data from otc.mn. "
-        "It systematically navigates listing pages, extracts summary tables, then visits individual security detail pages "
-        "to extract detailed information tables and download associated documents (e.g., PDFs, DOCs).\n\n"
-        "**IMPORTANT: MANUAL LOGIN REQUIRED!**\n"
-        "When this tool starts, it will open a web browser. You MUST manually log into otc.mn in that browser. "
-        "After successful login, you need to return to the console where Alpy is running and press Enter to allow the tool to proceed.\n\n"
-        "**Tool `action_input` Structure (JSON Object):**\n"
-        "The `action_input` must be a JSON object with the following fields:\n"
-        "1. `output_directory` (string, required): The local filesystem path where all scraped data (Parquet tables and downloaded documents) will be stored. The tool will create this directory if it doesn't exist. Example: \"/mnt/data/otc_mn_data\".\n"
-        "2. `max_listing_pages_per_board` (integer, optional): Limits how many pages of listings are scraped for each board category (e.g., Primary-Board1, Primary-Board2, etc.). If not provided, 0, or null, the tool attempts to scrape all available pages for each category. Example: `5` (scrape up to 5 pages per board).\n"
-        "3. `max_securities_to_process` (integer, optional): Limits the total number of unique securities for which detailed information and documents are fetched. Securities are collected from the listing pages first. If not provided, 0, or null, the tool attempts to process all unique securities found. Example: `10` (process details for up to 10 securities).\n\n"
-        "**Operational Flow:**\n"
-        "1.  Launches a Playwright-controlled browser and navigates to `https://otc.mn/login`.\n"
-        "2.  Prompts the human user (via console `input()`) to manually log in.\n"
-        "3.  Once login is confirmed by the user (pressing Enter in console), the tool proceeds.\n"
-        "4.  Iterates through predefined listing pages (combinations of 'Primary'/'Secondary' tabs and 'Board 1'/'Board 2'/'Board 3' sub-filters).\n"
-        "    *   For each listing category (e.g., Primary-Board1):\n"
-        "        *   Scrapes the main table of securities. Extracts all columns and rows.\n"
-        "        *   Handles pagination, clicking 'Next Page' up to `max_listing_pages_per_board` or until no more pages.\n"
-        "**Example `action_input`:**\n"
+        "Manages data scraping and filtering for financial securities from otc.mn.\n"
+        "The `action_input` MUST be a JSON object containing 'action' and 'parameters'.\n\n"
+        # ... (rest of description is unchanged) ...
+        "Example `action_input` for 'filter_securities':\n"
         "```json\n"
         "{\n"
-        "  \"output_directory\": \"/tmp/alpy_otc_scrape\",\n"
-        "  \"max_listing_pages_per_board\": 2,\n"
-        "  \"max_securities_to_process\": 3,\n"
-        "  \"cdp_endpoint_url\": \"ws://127.0.0.1:9222/devtools/browser/xxxx\"\n"
+        "  \"action\": \"filter_securities\",\n"
+        "  \"parameters\": {\n"
+        "    \"output_directory\": \"./otcmn_scrape_output\",\n"
+        "    \"filter_output_filename\": \"usd_bonds_filter.json\",\n"
+        "    \"filter_currency\": \"USD\"\n"
+        "  }\n"
         "}\n"
-        "```\n\n"
-        "If `cdp_endpoint_url` is not provided, the tool will launch its own browser and prompt for manual login.\n\n"
-        "**Example Observation (Output from tool):**\n"
-        "```json\n"
-        "{\n"
-        "  \"status\": \"success\",\n"
-        "  \"output_directory\": \"/tmp/alpy_otc_scrape\",\n"
-        "  \"listing_tables_scraped\": 12,\n"
-        "  \"security_details_scraped\": 3,\n"
-        "  \"documents_downloaded\": 7,\n"
-        "  \"errors\": []\n"
-        "}\n"
-        "```\n\n"
-        "**Notes & Cautions:**\n"
-        "*   Successful manual login by the human user is critical for the tool's operation unless using a pre-authenticated CDP session.\n"
-        "*   The scraping process can be time-consuming, especially if not limited by `max_listing_pages_per_board` or `max_securities_to_process`.\n"
-        "*   Ensure the specified `output_directory` is writable by the Alpy application.\n"
-        "*   Requires Playwright and its browser drivers to be installed in the environment where Alpy runs (e.g., `playwright install`)."
+        "```"
     )
-    args_schema: Type[BaseModel] = OTCMNScraperInput
-    return_direct: bool = False
-    handle_tool_error: bool = True
+    args_schema: Type[BaseModel] = OTCMNScraperActionInput
+    return_direct: bool = False # Standard Langchain Tool behavior
+    handle_tool_error: bool = True # Let Langchain handle ToolException
 
-    playwright_channel: str = Field(default="chromium", description="Browser channel: 'chromium', 'firefox', 'webkit'.")
-    login_prompt_timeout: float = Field(default=300.0, description="Seconds to wait for user to confirm manual login via console input.")
-    page_timeout: float = Field(default=60000, description="Default page/navigation/action timeout in milliseconds for Playwright.")
-    # brave-browser --remote-debugging-port=9222
+    # Configuration for Playwright interactions
+    playwright_channel: str = Field(default="chromium")
+    login_prompt_timeout: float = Field(default=300.0) # Timeout for user to press Enter after manual login
+    page_timeout: float = Field(default=60000) # Default timeout for Playwright operations in ms
 
     _logger_instance: logging.Logger = PrivateAttr(default=None)
+    # Changed: _site_interactor now holds an instance of the new OtcmSiteInteractor
+    _site_interactor: Optional['OtcmSiteInteractor'] = PrivateAttr(default=None) # type: ignore
 
     class Config:
         arbitrary_types_allowed = True
@@ -96,943 +112,909 @@ class OTCMNScraperTool(BaseTool, BaseModel):
         if self._logger_instance is None:
             self._logger_instance = logger.getChild(f"{self.name}.{id(self)}")
             if not self._logger_instance.hasHandlers() and not logging.getLogger().hasHandlers():
+                # Basic stdout handler if no root logger is configured
                 _handler = logging.StreamHandler(sys.stdout)
                 _formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - [%(threadName)s] - %(message)s')
                 _handler.setFormatter(_formatter)
                 self._logger_instance.addHandler(_handler)
                 self._logger_instance.propagate = False 
-                if not self._logger_instance.level: 
-                    self._logger_instance.setLevel(logging.INFO) 
-
-        self._logger_instance.info(f"Initialized {self.name} for Playwright channel '{self.playwright_channel}'. Manual login will be required.")
-        self._logger_instance.debug(f"Config: login_prompt_timeout={self.login_prompt_timeout}s, page_timeout={self.page_timeout}ms")
+                # Set level for this tool's logger if not set by higher config
+                if not self._logger_instance.level or self._logger_instance.level == logging.NOTSET:
+                     self._logger_instance.setLevel(logging.INFO)
+        
+        # Check if the interaction module was loaded
+        if OtcmSiteInteractor is None:
+            self._logger_instance.critical("OtcmSiteInteractor from src.otcmn_interaction module was not loaded. Tool will not function.")
+            # No need to raise here, as arun will fail if it's None.
+        
+        self._logger_instance.info(f"Initialized {self.name}. ISIN Header expected: '{ISIN_COLUMN_HEADER_TEXT}'")
         return self
+
+    async def _save_json(self, data: Any, file_path: Path):
+        """Saves data to a JSON file asynchronously."""
+        self._logger_instance.debug(f"Saving JSON to: {file_path}")
+        try:
+            def _write_sync(): # Synchronous part to run in thread
+                file_path.parent.mkdir(parents=True, exist_ok=True)
+                with open(file_path, 'w', encoding='utf-8') as f:
+                    json.dump(data, f, ensure_ascii=False, indent=2)
+            
+            await asyncio.to_thread(_write_sync)
+            # self._logger_instance.info(f"Successfully saved JSON: {file_path}")
+        except Exception as e:
+            self._logger_instance.error(f"Failed to save JSON to {file_path}: {e}", exc_info=True)
+            # Let this exception propagate to be caught by the main error handler in _arun
+            # and added to the summary_log["errors"]
+            raise OTCMNScraperToolError(f"Failed to save JSON to {file_path}: {e}") from e
 
     async def _arun(
         self,
-        output_directory: str,
-        cdp_endpoint_url: Optional[str] = None, # Added CDP endpoint parameter
-        max_listing_pages_per_board: Optional[int] = None,
-        max_securities_to_process: Optional[int] = None,
-        run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
-        **kwargs: Any
+        action: str, 
+        parameters: Union[ScrapeBoardsParams, FilterSecuritiesParams, ScrapeFilteredDetailsParams],
+        cdp_endpoint_url: Optional[str] = None,
+        run_manager: Optional[AsyncCallbackManagerForToolRun] = None, # Langchain callback manager
+        **kwargs: Any # Catches any other args Langchain might pass
     ) -> str:
-        self._logger_instance.info(f"Starting OTCMN scraper. Output directory: {output_directory}")
-        self._logger_instance.info(f"--- _arun CALLED ---") # New log
-        self._logger_instance.info(f"Received cdp_endpoint_url: {cdp_endpoint_url}") # New log
-        self._logger_instance.info(f"Tool's configured playwright_channel: {self.playwright_channel}") # New log
+        if OtcmSiteInteractor is None: # Critical check
+            self._logger_instance.error("OtcmSiteInteractor is not available. Cannot run scraping actions.")
+            return json.dumps({"status": "error", "action": action, "errors": ["Tool dependency OtcmSiteInteractor not loaded."]})
 
-        if cdp_endpoint_url:
-            self._logger_instance.info(f"CDP endpoint provided: {cdp_endpoint_url}")
+        output_dir_param = getattr(parameters, 'output_directory', None)
+        self._logger_instance.info(f"Action '{action}' received. Output base: '{output_dir_param if output_dir_param else 'N/A for this action'}'")
         
-        base_output_path = Path(output_directory)
-        tables_path = base_output_path / "tables"
-        documents_path = base_output_path / "documents"
+        summary_log: Dict[str, Any] = {"status": "success", "action": action, "parameters_used": parameters.model_dump(mode='json'), "errors": []}
         
-        try:
-            base_output_path.mkdir(parents=True, exist_ok=True)
-            tables_path.mkdir(parents=True, exist_ok=True)
-            documents_path.mkdir(parents=True, exist_ok=True)
-            self._logger_instance.debug(f"Ensured output directories exist: {tables_path}, {documents_path}")
-        except Exception as e:
-            self._logger_instance.error(f"Failed to create output directories: {e}")
-            raise OTCMNScraperToolError(f"Failed to create output directories: {e}")
+        # Browser setup only for scraping actions
+        if action in ["scrape_boards", "scrape_filtered_details"]:
+            if not output_dir_param:
+                summary_log["status"] = "error"
+                summary_log["errors"].append(f"Action '{action}' requires 'output_directory' parameter.")
+                return json.dumps(summary_log, default=str)
 
-        summary_log = {
-            "status": "success",
-            "output_directory": str(base_output_path.resolve()),
-            "listing_tables_scraped": 0,
-            "security_details_scraped": 0,
-            "documents_downloaded": 0,
-            "errors": []
-        }
-        all_security_detail_urls: Set[str] = set()
-        
-        browser_connected_via_cdp = False # Flag to manage browser closing behavior
-
-        async with async_playwright() as p_context:
-            browser: Optional[Browser] = None
-            context: Optional[PlaywrightContext] = None
-            page: Optional[Page] = None
-            try:
-                if cdp_endpoint_url:
-                    self._logger_instance.info(f"Attempting to connect to existing browser via CDP: {cdp_endpoint_url}")
-                    try:
+            async with async_playwright() as p_context:
+                browser: Optional[Browser] = None
+                context: Optional[BrowserContext] = None
+                page: Optional[Page] = None
+                browser_connected_via_cdp = False
+                try:
+                    if cdp_endpoint_url:
+                        self._logger_instance.info(f"Attempting to connect to existing browser via CDP: {cdp_endpoint_url}")
                         browser = await p_context.chromium.connect_over_cdp(cdp_endpoint_url, timeout=self.page_timeout)
                         browser_connected_via_cdp = True
-                        self._logger_instance.info(f"Successfully connected to browser via CDP. Assuming manual login is complete.")
+                        self._logger_instance.info("Successfully connected to browser via CDP.")
                         
                         if not browser.contexts:
-                            self._logger_instance.error("No browser contexts found after CDP connect. Cannot proceed.")
-                            raise OTCMNScraperToolError("No browser contexts found via CDP. Ensure the target browser has at least one window/tab open to otc.mn or a related page.")
-                        context = browser.contexts[0] 
+                            # If no contexts, try to create one? Or is this an error state for CDP?
+                            # For now, assume first context or new one.
+                            self._logger_instance.warning("No existing browser contexts found via CDP. Using default or creating new one.")
+                            context = await browser.new_context(user_agent="Mozilla/5.0", viewport={'width': 1920, 'height': 1080})
+                        else:
+                            context = browser.contexts[0] # Use the first available context
                         
-                        # Try to find an existing otc.mn page, otherwise create new or use first available.
-                        otc_page_found = False
+                        # Try to find a relevant page or create one
+                        page_found = False
                         for p_item in context.pages:
+                             # Check if page URL is relevant (otc.mn domain)
                             if "otc.mn" in p_item.url:
                                 page = p_item
                                 await page.bring_to_front()
-                                self._logger_instance.info(f"Using existing otc.mn page from CDP browser: {page.url}")
-                                otc_page_found = True
+                                page_found = True
+                                self._logger_instance.info(f"Reusing existing page from CDP: {page.url}")
                                 break
-                        if not page: # If no otc.mn page, use the first one or create one
-                             if context.pages:
-                                page = context.pages[0]
-                                await page.bring_to_front()
-                                self._logger_instance.info(f"Using first available existing page from CDP browser: {page.url}. Will navigate to otc.mn.")
-                             else:
-                                self._logger_instance.info("No pages in context, creating a new one.")
-                                page = await context.new_page() 
+                        if not page:
+                            page = await context.new_page()
+                            self._logger_instance.info(f"Created new page in CDP browser context.")
                         
-                        context.set_default_timeout(self.page_timeout)
-                        context.set_default_navigation_timeout(self.page_timeout)
+                        self._site_interactor = OtcmSiteInteractor(page, self._logger_instance, self.page_timeout)
+                        # With CDP, login is assumed to be handled externally.
+                        # The interactor's navigation methods will check for login redirection.
+                        self._logger_instance.info("CDP setup: Login is assumed to be handled in the external browser.")
 
-                        self._logger_instance.info("Checking session by navigating to otc.mn dashboard...")
-                        await page.goto("https://otc.mn/dashboard", wait_until="domcontentloaded")
-                        if "/login" in page.url.lower() or "login" in (await page.title()).lower():
-                            self._logger_instance.error("CDP connection successful, but not logged into otc.mn or session invalid. Please log in via the externally launched browser and re-run.")
-                            raise OTCMNScraperToolError("Not logged in or session invalid in CDP browser.")
-                        self._logger_instance.info(f"Session confirmed via CDP. Current page: {page.url}")
+                    else: # Launch new browser
+                        self._logger_instance.info(f"Launching new browser instance (channel: {self.playwright_channel}). Headless=False for manual login.")
+                        browser = await getattr(p_context, self.playwright_channel).launch(headless=False) # Must be False for manual login
+                        context = await browser.new_context(user_agent="Mozilla/5.0", viewport={'width': 1920, 'height': 1080})
+                        page = await context.new_page()
+                        
+                        # Instantiate interactor before login prompt, as it might handle the prompt
+                        self._site_interactor = OtcmSiteInteractor(page, self._logger_instance, self.page_timeout)
+                        await self._site_interactor.ensure_logged_in(
+                            login_prompt_message="MANUAL LOGIN REQUIRED in the newly launched browser.",
+                            login_wait_timeout=self.login_prompt_timeout
+                        )
+                        self._logger_instance.info("Manual login process completed (or skipped if already logged in).")
+                    
+                    if not page: raise OTCMNScraperToolError("Playwright Page object not initialized after browser setup.")
+                    if not self._site_interactor : raise OTCMNScraperToolError("OtcmSiteInteractor not initialized.")
 
-                    except Exception as e_cdp:
-                        self._logger_instance.error(f"Failed to connect or use CDP endpoint '{cdp_endpoint_url}': {e_cdp}", exc_info=True)
-                        summary_log["status"] = "error"
-                        summary_log["errors"].append(f"CDP connection/usage failed: {str(e_cdp)}")
-                        # browser might be None or partially connected, let finally handle it.
-                        raise OTCMNScraperToolError(f"CDP connection/usage failed: {str(e_cdp)}") # Re-raise to stop further execution
-                else:
-                    # --- Original Playwright launch and manual login prompt logic ---
-                    self._logger_instance.info(f"No CDP endpoint provided. Launching new Playwright browser (channel: {self.playwright_channel})...")
-                    browser = await getattr(p_context, self.playwright_channel).launch(headless=False)
-                    context = await browser.new_context(
-                        user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36",
-                        viewport={'width': 1920, 'height': 1080},
-                        ignore_https_errors=True
-                    )
+                    # Set default timeout on the context for all subsequent page operations
                     context.set_default_timeout(self.page_timeout)
-                    context.set_default_navigation_timeout(self.page_timeout)
-                    page = await context.new_page()
-                    self._logger_instance.info("Browser launched. Navigating to login page...")
 
-                    await page.goto("https://otc.mn/login", wait_until="domcontentloaded")
-                    self._logger_instance.info(
-                        f"Browser directed to https://otc.mn/login. Please log in manually in the Playwright browser window. "
-                        f"After successful login, press Enter in THIS CONSOLE to continue. Timeout: {self.login_prompt_timeout} seconds."
-                    )
-                    try:
-                        await asyncio.wait_for(
-                            asyncio.to_thread(input, "Press Enter in this console after logging in: "),
-                            timeout=self.login_prompt_timeout
-                        )
-                    except asyncio.TimeoutError:
-                        self._logger_instance.error("Timeout waiting for manual login confirmation.")
-                        summary_log["status"] = "error"
-                        summary_log["errors"].append("Manual login confirmation timed out.")
-                        raise OTCMNScraperToolError("Manual login confirmation timed out.")
+                    # --- Dispatch to action-specific handlers that need Playwright ---
+                    if action == "scrape_boards":
+                        if not isinstance(parameters, ScrapeBoardsParams): # Should be caught by Pydantic earlier
+                            raise OTCMNScraperToolError("Internal error: Parameters type mismatch for scrape_boards.")
+                        # Pass summary_log to be updated directly by the handler
+                        await self._handle_scrape_boards_action(parameters, summary_log) 
+                    
+                    elif action == "scrape_filtered_details":
+                        if not isinstance(parameters, ScrapeFilteredDetailsParams):
+                             raise OTCMNScraperToolError("Internal error: Parameters type mismatch for scrape_filtered_details.")
+                        # This handler returns its part of the summary
+                        details_summary = await self._handle_scrape_filtered_details_action(parameters)
+                        summary_log.update(details_summary)
 
-                    if "/login" in page.url.lower() or "login" in (await page.title()).lower():
-                        self._logger_instance.warning(f"Login may not have been successful. Current URL: {page.url}, Title: {await page.title()}")
-                        # Depending on policy, you might raise an error here or allow continuation.
-                        # For now, raising error if manual login path seems to have failed.
-                        raise OTCMNScraperToolError(f"Manual login attempt failed or not confirmed. URL: {page.url}")
-                    else:
-                        self._logger_instance.info(f"Login presumed successful. Current URL: {page.url}, Title: {await page.title()}")
-                # --- End of browser/login setup ---
+                except (OtcmInteractionError, PageNavigationError, ElementNotFoundError, DataExtractionError, PageStateError) as otc_e:
+                    self._logger_instance.error(f"otcmn_interaction module error during '{action}': {otc_e}", exc_info=True)
+                    summary_log["status"] = "error"
+                    summary_log["errors"].append(f"Interaction module error in '{action}': {str(otc_e)}")
+                except PlaywrightTimeoutError as pwt_e:
+                    self._logger_instance.error(f"Playwright timeout error during '{action}': {str(pwt_e).splitlines()[0]}", exc_info=False) # Keep log concise
+                    summary_log["status"] = "error"
+                    summary_log["errors"].append(f"Playwright timeout in '{action}': {str(pwt_e).splitlines()[0]}")
+                except OTCMNScraperToolError as tool_e: # Catch custom tool errors (like failed save)
+                    self._logger_instance.error(f"Tool-specific error during '{action}': {tool_e}", exc_info=True)
+                    summary_log["status"] = "error"
+                    summary_log["errors"].append(f"Tool error in '{action}': {str(tool_e)}")
+                except Exception as e: # Catch-all for unexpected issues
+                    self._logger_instance.error(f"Unexpected error during Playwright action '{action}': {e}", exc_info=True)
+                    summary_log["status"] = "error"
+                    summary_log["errors"].append(f"Unexpected error in '{action}': {str(e)}")
+                finally:
+                    if browser and browser.is_connected():
+                        if browser_connected_via_cdp:
+                            # For CDP, we typically don't close the browser itself, just our connection to the page/context if managed that way.
+                            # If we created the context, we could close it.
+                            # For now, if connecting to existing browser, just log disconnection attempt.
+                            self._logger_instance.info("CDP connection: Browser assumed to be managed externally. Not closing browser.")
+                            # If page was created by us: await page.close() if page and not page.is_closed()
+                            # If context was created by us: await context.close() if context
+                        else: # Browser was launched by tool
+                            self._logger_instance.info("Closing browser launched by the tool.")
+                            await browser.close()
+                    self._site_interactor = None # Clear interactor instance
 
-                # Ensure page is not None before proceeding
-                if page is None:
-                    self._logger_instance.error("Page object is None, cannot proceed with scraping.")
-                    raise OTCMNScraperToolError("Failed to initialize page for scraping.")
-
-                # --- Scraping Logic (Common for both paths if login/CDP is successful) ---
-                tabs = ["primary", "secondary"]
-                boards = ["1", "2", "3"] 
-
-                for tab_name in tabs:
-                    for board_id in boards:
-                        # The listing_url is now more for logging/identification
-                        listing_url_stub = f"otc.mn/securities (Tab: {tab_name}, Board: {board_id})"
-                        self._logger_instance.info(f"Processing listing: {listing_url_stub}")
-                        try:
-                            extracted_urls, num_tables = await self._scrape_listing_page_otc(
-                                page, 
-                                listing_url_stub, # For logging
-                                tables_path, 
-                                tab_name, 
-                                board_id, 
-                                max_listing_pages_per_board or 0 
-                            )
-                            all_security_detail_urls.update(extracted_urls)
-                            summary_log["listing_tables_scraped"] += num_tables
-                        except Exception as e:
-                            self._logger_instance.error(f"Error scraping listing {listing_url_stub}: {e}", exc_info=True)
-                            summary_log["errors"].append(f"Failed listing: {listing_url_stub} - {str(e)}")
-                
-                self._logger_instance.info(f"Found {len(all_security_detail_urls)} unique security detail URLs to process.")
-
-                processed_securities_count = 0
-                detail_urls_to_process = list(all_security_detail_urls)
-                if max_securities_to_process and max_securities_to_process > 0:
-                     detail_urls_to_process = detail_urls_to_process[:max_securities_to_process]
-                
-                self._logger_instance.info(f"Will process up to {len(detail_urls_to_process)} security detail pages.")
-
-                for detail_url_path in detail_urls_to_process:
-                    full_detail_url = f"https://otc.mn{detail_url_path}" 
-                    self._logger_instance.info(f"Processing security detail page: {full_detail_url}")
-                    try:
-                        security_id_match = re.search(r"id=([a-f0-9-]+)", detail_url_path, re.IGNORECASE)
-                        security_id = security_id_match.group(1) if security_id_match else "unknown_id_" + str(processed_securities_count).zfill(3)
-                        
-                        num_docs = await self._scrape_security_detail_page_otc(
-                            page, full_detail_url, tables_path, documents_path, security_id
-                        )
-                        summary_log["security_details_scraped"] += 1 
-                        summary_log["documents_downloaded"] += num_docs
-                        processed_securities_count += 1
-                    except Exception as e:
-                        self._logger_instance.error(f"Error scraping detail page {full_detail_url}: {e}", exc_info=True)
-                        summary_log["errors"].append(f"Failed detail: {full_detail_url} - {str(e)}")
-                
-            except PlaywrightTimeoutError as pte:
-                self._logger_instance.error(f"Playwright operation timed out: {pte}", exc_info=True)
+        elif action == "filter_securities": # No Playwright needed
+            try:
+                if not isinstance(parameters, FilterSecuritiesParams):
+                    raise OTCMNScraperToolError("Internal error: Parameters type mismatch for filter_securities.")
+                filter_summary = await self._handle_filter_securities_action(parameters) # Returns its part
+                summary_log.update(filter_summary)
+            except OTCMNScraperToolError as tool_e: # Catch custom tool errors (like failed save)
+                self._logger_instance.error(f"Tool-specific error during 'filter_securities': {tool_e}", exc_info=True)
                 summary_log["status"] = "error"
-                summary_log["errors"].append(f"Playwright timeout: {str(pte)}")
-            except OTCMNScraperToolError: # Re-raise tool-specific errors from login/CDP blocks
-                raise
+                summary_log["errors"].append(f"Tool error in 'filter_securities': {str(tool_e)}")
             except Exception as e:
-                self._logger_instance.error(f"An unexpected error occurred in _arun: {e}", exc_info=True)
+                self._logger_instance.error(f"Error during 'filter_securities' action: {e}", exc_info=True)
                 summary_log["status"] = "error"
-                summary_log["errors"].append(f"Unexpected error: {str(e)}")
-            finally:
-                if browser and browser.is_connected():
-                    if browser_connected_via_cdp:
-                        self._logger_instance.info("Disconnecting from CDP browser (user's browser will remain open)...")
-                        await browser.close() # Disconnects, doesn't close user's browser
-                        self._logger_instance.info("Disconnected from CDP browser.")
-                    else:
-                        self._logger_instance.info("Closing Playwright-launched browser...")
-                        await browser.close()
-                        self._logger_instance.info("Playwright-launched browser closed.")
-        
-        self._logger_instance.info(f"Scraping process finished. Summary: {json.dumps(summary_log, indent=2)}")
-        return json.dumps(summary_log)
+                summary_log["errors"].append(f"Filter action failed: {str(e)}")
+        else:
+            summary_log["status"] = "error"
+            summary_log["errors"].append(f"Unknown action: {action}")
+            self._logger_instance.error(f"Unknown action received by tool: {action}")
 
-    async def _scrape_listing_page_otc(
-        self, page: Page, list_url_stub_for_logging: str,
-        tables_path: Path, 
-        tab_name: str, board_id: str, max_pages: int 
-    ) -> (List[str], int):
-        detail_urls: Set[str] = set()
-        page_num = 1
-        tables_saved_count = 0
+        # If there were any errors, ensure overall status reflects it
+        if summary_log["errors"]:
+            summary_log["status"] = "error"
 
-        self._logger_instance.info(f"[LISTING PAGE START] Tab: '{tab_name}', Board ID: '{board_id}'. Target: {list_url_stub_for_logging}")
-        
-        self._logger_instance.debug(f"[NAV BASE] Navigating to base securities page: https://otc.mn/securities")
+        self._logger_instance.info(f"Action '{action}' finished. Overall status: {summary_log['status']}.")
+        if summary_log["errors"]:
+             self._logger_instance.warning(f"Errors occurred during '{action}': {summary_log['errors']}")
+        # self._logger_instance.debug(f"Full summary for '{action}': {json.dumps(summary_log, indent=2, default=str)}") # For debugging, can be verbose
+        return json.dumps(summary_log, default=str) # Ensure all parts are serializable
+
+# In your OTCMNScraperTool class file (e.g., otcmn_scraper_tool.py)
+
+    async def _handle_scrape_boards_action(self, params: ScrapeBoardsParams, summary_log: Dict[str, Any]) -> None:
+        """
+        Handles the 'scrape_boards' action using the OtcmSiteInteractor.
+        Attempts to reset to page 1 after each board and tab is processed.
+        Modifies summary_log in place.
+        """
+        self._logger_instance.info(f"--- Starting _handle_scrape_boards_action (Output: {params.output_directory}) ---")
+        if not self._site_interactor or not self._site_interactor.listing_handler:
+            self._logger_instance.error("Site interactor or listing handler not initialized. Cannot execute scrape_boards.")
+            summary_log["errors"].append("Critical: Site interactor/listing_handler not available for scrape_boards.")
+            summary_log["status"] = "error"
+            return
+
+        listing_h = self._site_interactor.listing_handler
+
+        summary_log.update({
+            "board_metadata_files_saved": 0,
+            "unique_securities_identified_on_boards": 0,
+            "total_rows_scraped_for_boards": 0,
+            "boards_processed_counts": {}, # E.g., {"primary_board_A": {"pages_scraped": X, "rows": Y}, ...}
+            "pagination_reset_failures": [] # Track if _go_to_first_page_of_listing fails
+        })
+
+        base_output_path = Path(params.output_directory) / "current"
+        all_securities_globally_this_run: Dict[str, Dict[str, Any]] = {} # To count unique ISINs
+
         try:
-            await page.goto("https://otc.mn/securities", wait_until="domcontentloaded", timeout=self.page_timeout)
-            self._logger_instance.debug(f"[NAV BASE SUCCESS] Current URL: {page.url}")
-            await page.wait_for_timeout(3000) 
-        except Exception as e_nav_base:
-            self._logger_instance.error(f"[NAV BASE FAIL] Failed to navigate to base /securities: {e_nav_base}")
-            return list(detail_urls), tables_saved_count
+            await self._site_interactor.navigate_to_securities_listing_page()
+        except PageNavigationError as nav_e:
+            self._logger_instance.error(f"Initial navigation to securities page failed: {nav_e}")
+            summary_log["errors"].append(f"Initial navigation failed: {str(nav_e)}")
+            summary_log["status"] = "error"
+            return
 
-        capitalized_tab_name = tab_name.capitalize()
-        tab_selector_by_text = f"//div[@role='tablist']//div[@role='tab' and normalize-space(.)='{capitalized_tab_name}']"
-        
-        self._logger_instance.debug(f"[CLICK TAB] Attempting to click tab: '{capitalized_tab_name}' using XPath: {tab_selector_by_text}")
-        try:
-            tab_element = page.locator(f"xpath={tab_selector_by_text}")
-            await tab_element.wait_for(state="visible", timeout=self.page_timeout / 2)
-            await tab_element.click(timeout=self.page_timeout / 3)
-            self._logger_instance.info(f"[CLICK TAB SUCCESS] Clicked tab: '{capitalized_tab_name}'. Current URL: {page.url}")
-            
-            active_tab_pane_selector_for_confirm = f"div.ant-tabs-tabpane-active[id*='{tab_name}']"
-            await page.wait_for_selector(active_tab_pane_selector_for_confirm, state="visible", timeout=self.page_timeout / 2)
-            self._logger_instance.debug(f"[CLICK TAB CONFIRM] Active tab pane for '{tab_name}' confirmed by selector: {active_tab_pane_selector_for_confirm}.")
-            await page.wait_for_timeout(3000) 
-        except Exception as e_tab_click:
-            self._logger_instance.error(f"[CLICK TAB FAIL] Failed to click/confirm tab '{capitalized_tab_name}': {e_tab_click}. Current URL: {page.url}")
-            return list(detail_urls), tables_saved_count 
+        tab_keys_to_process: List[Literal["primary", "secondary"]] = ["primary", "secondary"]
+        board_chars_to_process: List[Literal["A", "B", "C"]] = ["A", "B", "C"]
 
-        board_map = {"1": "A", "2": "B", "3": "C", "all": "All Boards"}
-        board_filter_text = board_map.get(board_id)
-
-        if board_filter_text:
-            board_filter_selector = f"//ul[contains(@class, 'sub-menu') and contains(@class, 'custom-menu')]//li[.//span[@class='ant-menu-title-content' and normalize-space(text())='{board_filter_text}']]"
-            self._logger_instance.debug(f"[CLICK BOARD] Attempting to click board filter: '{board_filter_text}' using XPath: {board_filter_selector}")
+        for tab_key in tab_keys_to_process:
+            self._logger_instance.info(f"===== Processing Tab Group: '{listing_h.MAIN_TAB_KEY_TO_SITE_TEXT_MAP.get(tab_key, tab_key)}' ({tab_key}) =====")
             try:
-                board_element = page.locator(f"xpath={board_filter_selector}")
-                await board_element.wait_for(state="visible", timeout=self.page_timeout / 2)
-                await board_element.click(timeout=self.page_timeout / 3)
-                self._logger_instance.info(f"[CLICK BOARD SUCCESS] Clicked board filter: '{board_filter_text}'. Current URL: {page.url}")
+                await listing_h.select_main_tab(tab_key) # This should reset headers and wait for table
+            except Exception as e_tab:
+                self._logger_instance.error(f"Failed to select main tab '{tab_key}': {e_tab}. Skipping this tab group.")
+                summary_log["errors"].append(f"Tab select fail: {tab_key} - {str(e_tab)}")
+                continue
+            
+            # Explicitly go to page 1 after tab selection is complete
+            if not await listing_h._go_to_first_page_of_listing(f"after selecting tab {tab_key}"):
+                self._logger_instance.warning(f"Failed to confirm/reset to Page 1 after selecting tab {tab_key}. Proceeding, but pagination might be off for the first board.")
+                summary_log["pagination_reset_failures"].append(f"Tab: {tab_key}")
+            listing_h.reset_header_cache() # Ensure headers are fresh for the first board of new tab
+
+            for board_char in board_chars_to_process:
+                board_category_name = f"{tab_key}_board_{board_char}"
+                self._logger_instance.info(f"--- Processing Board: '{board_char}' (Category: {board_category_name}) ---")
+                summary_log["boards_processed_counts"][board_category_name] = {"pages_scraped": 0, "rows_on_board": 0}
+                board_output_path = base_output_path / board_category_name
                 
-                expected_url_pattern_part_board = f"board={board_id}"
-                expected_url_pattern_part_tab = f"tab={tab_name}"
                 try:
-                    await page.wait_for_function(
-                        f"document.location.href.includes('{expected_url_pattern_part_tab}') && document.location.href.includes('{expected_url_pattern_part_board}')",
-                        timeout=self.page_timeout / 4 
+                    await listing_h.select_board_filter_exclusively(board_char) # This should reset headers and wait for table
+                except Exception as e_board_filter:
+                    self._logger_instance.error(f"Failed to set filter to '{board_char}' for tab '{tab_key}': {e_board_filter}. Skipping this board.")
+                    summary_log["errors"].append(f"Board filter set fail: {board_category_name} - {str(e_board_filter)}")
+                    continue
+                
+                # Explicitly go to page 1 after board filter selection
+                if not await listing_h._go_to_first_page_of_listing(f"after selecting board {board_char} on tab {tab_key}"):
+                    self._logger_instance.warning(f"Failed to confirm/reset to Page 1 for {board_category_name}. Proceeding, but data might start from wrong page.")
+                    summary_log["pagination_reset_failures"].append(f"Board: {board_category_name}")
+                listing_h.reset_header_cache() # Ensure headers are fresh for this specific board
+
+                current_board_all_rows_for_json: List[Dict[str, Any]] = []
+                page_scrape_count_for_this_board = 0
+
+                while True:
+                    page_scrape_count_for_this_board += 1
+                    summary_log["boards_processed_counts"][board_category_name]["pages_scraped"] = page_scrape_count_for_this_board
+
+                    if params.max_listing_pages_per_board and page_scrape_count_for_this_board > params.max_listing_pages_per_board:
+                        self._logger_instance.info(f"Reached max_listing_pages ({params.max_listing_pages_per_board}) for {board_category_name}.")
+                        break
+                    
+                    self._logger_instance.info(f"Scraping page {page_scrape_count_for_this_board} for {board_category_name}...")
+                    
+                    try:
+                        headers_from_page, rows_as_dicts_from_page = await listing_h.extract_current_page_data()
+                        if not headers_from_page and rows_as_dicts_from_page: # Headers failed but rows came? Unlikely with current logic.
+                             self._logger_instance.error(f"Header extraction failed but rows were returned for {board_category_name} P{page_scrape_count_for_this_board}. Critical error.")
+                             summary_log["errors"].append(f"Header fail but rows found: {board_category_name} P{page_scrape_count_for_this_board}")
+                             break 
+                        if not headers_from_page and not rows_as_dicts_from_page and page_scrape_count_for_this_board == 1:
+                             self._logger_instance.info(f"No headers and no rows on first page attempt for {board_category_name}. Assuming board is empty.")
+                             break
+
+
+                    except DataExtractionError as e_extract:
+                        self._logger_instance.error(f"Data extraction error for {board_category_name}, page {page_scrape_count_for_this_board}: {e_extract}. Stopping this board.")
+                        summary_log["errors"].append(f"Data extraction error: {board_category_name} P{page_scrape_count_for_this_board} - {str(e_extract)}")
+                        break 
+                    except Exception as e_unexp_extract: # Catch any other error during extraction
+                        self._logger_instance.error(f"Unexpected error during data extraction for {board_category_name}, P{page_scrape_count_for_this_board}: {e_unexp_extract}", exc_info=True)
+                        summary_log["errors"].append(f"Unexpected extraction error: {board_category_name} P{page_scrape_count_for_this_board} - {str(e_unexp_extract)}")
+                        break
+
+                    if not rows_as_dicts_from_page and page_scrape_count_for_this_board > 1 : # No more rows on subsequent pages
+                        self._logger_instance.info(f"No more data rows found for {board_category_name} after page {page_scrape_count_for_this_board -1}.")
+                        break 
+                    if not rows_as_dicts_from_page and page_scrape_count_for_this_board == 1 : # No rows on the first page itself
+                        self._logger_instance.info(f"No data rows found on the very first page of {board_category_name}.")
+                        break
+
+
+                    self._logger_instance.debug(f"Processing {len(rows_as_dicts_from_page)} rows from page {page_scrape_count_for_this_board} of {board_category_name}.")
+                    for row_dict in rows_as_dicts_from_page:
+                        current_board_all_rows_for_json.append(row_dict)
+                        summary_log["total_rows_scraped_for_boards"] += 1
+                        summary_log["boards_processed_counts"][board_category_name]["rows_on_board"] +=1
+
+                        isin_value = row_dict.get(ISIN_COLUMN_HEADER_TEXT) 
+                        if isin_value and isinstance(isin_value, str) and isin_value.strip() and isin_value != "0": # Added check for ISIN != "0"
+                            isin_value = isin_value.strip()
+                            security_output_path_isin_dir = board_output_path / isin_value
+                            
+                            security_metadata_content = {**row_dict}
+                            if "_url_id" in security_metadata_content:
+                                security_metadata_content["url_id"] = security_metadata_content.pop("_url_id")
+                            if "_detail_url_path" in security_metadata_content:
+                                security_metadata_content["detail_url_path"] = security_metadata_content.pop("_detail_url_path")
+
+                            try:
+                                await self._save_json(security_metadata_content, security_output_path_isin_dir / "security_metadata.json")
+                                if isin_value not in all_securities_globally_this_run:
+                                     all_securities_globally_this_run[isin_value] = security_metadata_content
+                                     summary_log["unique_securities_identified_on_boards"] += 1
+                            except OTCMNScraperToolError as e_save_sec_meta:
+                                self._logger_instance.error(f"Failed to save security_metadata for ISIN {isin_value} in {board_category_name}: {e_save_sec_meta}")
+                                summary_log["errors"].append(f"Save fail sec_meta ISIN {isin_value} ({board_category_name}): {str(e_save_sec_meta)}")
+                        else:
+                            company_name_guess = row_dict.get(headers_from_page[0] if headers_from_page else "col_0", "Unknown Security")
+                            self._logger_instance.warning(f"No valid ISIN ('{isin_value}') for row '{company_name_guess}' in {board_category_name}, P{page_scrape_count_for_this_board}. Skipping security_metadata save.")
+                    
+                    try:
+                        can_go_next = await listing_h.go_to_next_page()
+                        if not can_go_next:
+                            self._logger_instance.info(f"No more pages for {board_category_name} after page {page_scrape_count_for_this_board}.")
+                            break 
+                    except Exception as e_paginate: # Catch any error from go_to_next_page
+                        self._logger_instance.error(f"Error during pagination for {board_category_name} after P{page_scrape_count_for_this_board}: {e_paginate}", exc_info=True)
+                        summary_log["errors"].append(f"Pagination error: {board_category_name} P{page_scrape_count_for_this_board} - {str(e_paginate)}")
+                        break 
+                
+                # After processing all pages for a board
+                if current_board_all_rows_for_json:
+                    try:
+                        await self._save_json(current_board_all_rows_for_json, board_output_path / "board_metadata.json")
+                        summary_log["board_metadata_files_saved"] += 1
+                    except OTCMNScraperToolError as e_save_board_meta:
+                        summary_log["errors"].append(f"Save fail board_meta for {board_category_name}: {str(e_save_board_meta)}")
+                else:
+                    self._logger_instance.info(f"No data collected for {board_category_name} to save in board_metadata.json.")
+
+                # "Blindly" attempt to go to page 1 after finishing a board, to prepare for the next board filter.
+                # This is done even if max_listing_pages_per_board was hit.
+                self._logger_instance.info(f"Finished processing board {board_category_name}. Attempting reset to page 1.")
+                if not await listing_h._go_to_first_page_of_listing(f"cleanup after board {board_category_name}"):
+                    self._logger_instance.warning(f"Could not confirm Page 1 after board {board_category_name}. Next board might start on an unexpected page if tab remains same.")
+                    summary_log["pagination_reset_failures"].append(f"End of board: {board_category_name}")
+                listing_h.reset_header_cache() # Reset headers before next board on same tab
+            
+            # After processing all boards for a given tab
+            self._logger_instance.info(f"Finished all boards for tab {tab_key}. Attempting reset to page 1 before next tab.")
+            if not await listing_h._go_to_first_page_of_listing(f"cleanup after tab {tab_key}"):
+                 self._logger_instance.warning(f"Could not confirm Page 1 after finishing tab {tab_key}. Next tab might start on an unexpected page.")
+                 summary_log["pagination_reset_failures"].append(f"End of tab: {tab_key}")
+            # Headers will be reset by select_main_tab when it's called for the next tab.
+
+        # Final summary updates
+        summary_log["boards_processed"] = list(summary_log["boards_processed_counts"].keys()) # Keep original for compatibility
+        # pages_scraped_per_board is now within boards_processed_counts
+        
+        if summary_log["errors"] or summary_log["pagination_reset_failures"]:
+            summary_log["status"] = "warning" if not summary_log["errors"] else "error" # Mark as warning if only pagination reset issues
+
+        self._logger_instance.info(f"--- Finished _handle_scrape_boards_action. Status: {summary_log['status']} ---")
+
+
+    async def _handle_filter_securities_action(self, params: FilterSecuritiesParams) -> Dict[str, Any]:
+        # This method does not use Playwright and can remain largely unchanged
+        # except for ensuring it uses the correct ISIN_COLUMN_HEADER_TEXT from common
+        action_summary = {"filters_applied": [], "matching_securities_count": 0, "filter_file_saved_to": ""}
+        
+        # Ensure output_directory exists for "filters" subdir
+        output_dir = Path(params.output_directory)
+        if not output_dir.exists():
+             self._logger_instance.error(f"Base output directory '{output_dir}' does not exist for filtering.")
+             action_summary["error"] = f"Output directory '{params.output_directory}' not found."
+             return action_summary
+
+        current_data_path = output_dir / "current"
+        filters_path = output_dir / "filters"
+        filters_path.mkdir(parents=True, exist_ok=True)
+
+        matching_securities: List[Dict[str, Any]] = []
+
+        if not current_data_path.exists() or not current_data_path.is_dir():
+            self._logger_instance.warning(f"'current' data directory not found or not a directory at {current_data_path}. Cannot filter.")
+            action_summary["error"] = f"Source data directory 'current/' not found at {current_data_path}."
+            return action_summary
+
+        self._logger_instance.info(f"Starting filter operation. Reading from: {current_data_path}")
+        
+        # Iterate through board_category folders, then ISIN folders
+        for board_category_dir in current_data_path.iterdir():
+            if not board_category_dir.is_dir(): continue
+            self._logger_instance.debug(f"Scanning board category: {board_category_dir.name}")
+            for isin_dir in board_category_dir.iterdir():
+                if not isin_dir.is_dir(): continue 
+                
+                sec_meta_file = isin_dir / "security_metadata.json"
+                if sec_meta_file.exists() and sec_meta_file.is_file():
+                    try:
+                        with open(sec_meta_file, 'r', encoding='utf-8') as f:
+                            metadata = json.load(f)
+                        
+                        match = True # Assume match initially
+                        applied_for_this_security = []
+
+                        # Currency Filter
+                        if params.filter_currency:
+                            # The key for currency in security_metadata.json should be consistent
+                            # It's derived from table headers. Let's assume it's "Currency".
+                            # If the table header changes, this key lookup needs to adapt or be robust.
+                            meta_currency = metadata.get("Currency", "").strip()
+                            if not meta_currency or meta_currency.upper() != params.filter_currency.upper():
+                                match = False
+                            else:
+                                applied_for_this_security.append(f"currency={params.filter_currency}")
+                        
+                        # Interest Rate Min Filter
+                        if match and params.filter_interest_rate_min is not None:
+                            # Assuming "Interest Rate" is the header. Value is like "10.00%"
+                            rate_str = metadata.get("Interest Rate", "")
+                            try:
+                                rate_val = float(rate_str.replace('%', '').strip())
+                                if rate_val < params.filter_interest_rate_min:
+                                    match = False
+                                else:
+                                    applied_for_this_security.append(f"interest_rate_min={params.filter_interest_rate_min}")
+                            except ValueError: # Cannot parse rate
+                                self._logger_instance.debug(f"Could not parse interest rate '{rate_str}' for ISIN {metadata.get(ISIN_COLUMN_HEADER_TEXT)}. Filter skipped for this criterion.")
+                                # Decide if unparseable rate means it doesn't match, or skip filter.
+                                # For now, if it's critical, it implies no match.
+                                match = False 
+                        
+                        # Interest Rate Max Filter
+                        if match and params.filter_interest_rate_max is not None:
+                            rate_str = metadata.get("Interest Rate", "")
+                            try:
+                                rate_val = float(rate_str.replace('%', '').strip())
+                                if rate_val > params.filter_interest_rate_max:
+                                    match = False
+                                else:
+                                    applied_for_this_security.append(f"interest_rate_max={params.filter_interest_rate_max}")
+                            except ValueError:
+                                match = False
+                        
+                        # Maturity Cutoff Date Filter
+                        if match and params.filter_maturity_cutoff_date:
+                            # Assuming "Maturity Date" is "YYYY-MM-DD"
+                            maturity_date_str = metadata.get("Maturity Date", "")
+                            try:
+                                # Basic YYYY-MM-DD string comparison works here
+                                if maturity_date_str < params.filter_maturity_cutoff_date:
+                                    match = False
+                                else:
+                                    applied_for_this_security.append(f"maturity_cutoff={params.filter_maturity_cutoff_date}")
+                            except TypeError: # if maturity_date_str is not string
+                                match = False
+
+                        # Underwriter Filter (case-insensitive substring match)
+                        if match and params.filter_underwriter:
+                            # Assuming "Underwriter" is the header
+                            underwriter_str = metadata.get("Underwriter", "").strip()
+                            if params.filter_underwriter.lower() not in underwriter_str.lower():
+                                match = False
+                            else:
+                                 applied_for_this_security.append(f"underwriter_contains='{params.filter_underwriter}'")
+
+
+                        if match:
+                            action_summary["filters_applied"].extend(applied_for_this_security)
+                            # Ensure 'detail_url_path' and 'url_id' were saved by scrape_boards
+                            # The scrape_boards now saves 'detail_url_path' (renamed from _detail_url_path)
+                            # and 'url_id' (renamed from _url_id)
+                            security_isin = metadata.get(ISIN_COLUMN_HEADER_TEXT) # Use the tool's constant
+                            detail_url = metadata.get("detail_url_path") # This should be present
+                            url_id_val = metadata.get("url_id")
+                            
+                            if not security_isin:
+                                self._logger_instance.warning(f"Security metadata file {sec_meta_file} is missing '{ISIN_COLUMN_HEADER_TEXT}'. Cannot reliably include in filter.")
+                                continue
+                            if not detail_url and url_id_val : # Fallback if somehow detail_url_path was missing but url_id is there
+                                from src.otcmn_interaction.common import SECURITY_DETAIL_URL_PATH_TEMPLATE
+                                detail_url = SECURITY_DETAIL_URL_PATH_TEMPLATE.format(url_id_val)
+                                self._logger_instance.debug(f"Reconstructed detail_url_path for ISIN {security_isin} using url_id.")
+                            elif not detail_url and not url_id_val:
+                                self._logger_instance.warning(f"Security ISIN {security_isin} matched filters but missing 'detail_url_path' and 'url_id' in metadata. Cannot include for detail scraping.")
+                                continue
+
+
+                            matching_securities.append({
+                                "isin": security_isin,
+                                "detail_url_path": detail_url, # Essential for scrape_filtered_details
+                                "board_category": board_category_dir.name, # From folder structure
+                                "original_metadata_summary": { # For quick review in the filter file
+                                    # Pick a few key fields. These keys should match actual headers.
+                                    "Security": metadata.get("Security"), 
+                                    "Currency": metadata.get("Currency"),
+                                    "Interest Rate": metadata.get("Interest Rate"),
+                                    "Maturity Date": metadata.get("Maturity Date"),
+                                    ISIN_COLUMN_HEADER_TEXT: security_isin # Ensure this is also here
+                                }
+                            })
+                    except json.JSONDecodeError as e_json:
+                        self._logger_instance.error(f"Error decoding JSON from metadata file {sec_meta_file}: {e_json}")
+                        action_summary.setdefault("file_errors", []).append(f"JSONDecodeError: {sec_meta_file}")
+                    except Exception as e:
+                        self._logger_instance.error(f"Unexpected error processing metadata file {sec_meta_file}: {e}", exc_info=True)
+                        action_summary.setdefault("file_errors", []).append(f"ProcessingError: {sec_meta_file} - {str(e)}")
+        
+        filter_file_path = filters_path / params.filter_output_filename
+        try:
+            await self._save_json(matching_securities, filter_file_path)
+            action_summary["matching_securities_count"] = len(matching_securities)
+            action_summary["filter_file_saved_to"] = str(filter_file_path.resolve())
+            action_summary["filters_applied"] = sorted(list(set(action_summary["filters_applied"]))) # Unique and sorted
+            self._logger_instance.info(f"Filter results saved to {filter_file_path}. Matched {len(matching_securities)} securities.")
+        except OTCMNScraperToolError as e_save: # Error from _save_json
+            self._logger_instance.error(f"Failed to save filter output file {filter_file_path}: {e_save}")
+            action_summary["error"] = f"Failed to save filter output: {str(e_save)}"
+            action_summary["filter_file_saved_to"] = "SAVE_FAILED"
+
+        return action_summary
+
+
+    async def _handle_scrape_filtered_details_action(self, params: ScrapeFilteredDetailsParams) -> Dict[str, Any]:
+        """
+        Handles scraping details for securities listed in a filter file.
+        Uses OtcmSiteInteractor and its DetailPageHandler.
+        """
+        self._logger_instance.info("--- Starting _handle_scrape_filtered_details_action ---")
+        if not self._site_interactor or not self._site_interactor.detail_handler:
+            self._logger_instance.error("Site interactor or detail handler not initialized. Cannot execute scrape_filtered_details.")
+            return {"error": "Critical: Site interactor/detail_handler not available."}
+
+        detail_h = self._site_interactor.detail_handler # Convenience alias
+
+        action_summary = {
+            "securities_from_filter_file": 0,
+            "securities_processed_attempted": 0,
+            "details_successfully_scraped_count": 0, 
+            "documents_downloaded_total_count": 0,
+            "errors_by_isin": {} # Store errors per ISIN
+        }
+        
+        output_dir = Path(params.output_directory)
+        filter_file_path = output_dir / "filters" / params.filter_input_filename
+        current_data_base_path = output_dir / "current" # Where details will be saved
+
+        if not filter_file_path.exists() or not filter_file_path.is_file():
+            self._logger_instance.error(f"Filter file not found: {filter_file_path}")
+            action_summary["error"] = f"Filter file {params.filter_input_filename} not found at {filter_file_path}."
+            return action_summary
+
+        try:
+            with open(filter_file_path, 'r', encoding='utf-8') as f:
+                securities_to_scrape_meta = json.load(f)
+        except json.JSONDecodeError as e_json:
+            self._logger_instance.error(f"Error decoding JSON from filter file {filter_file_path}: {e_json}")
+            action_summary["error"] = f"Invalid JSON in filter file {filter_file_path}."
+            return action_summary
+        
+        action_summary["securities_from_filter_file"] = len(securities_to_scrape_meta)
+        
+        securities_to_process_list = securities_to_scrape_meta
+        if params.max_securities_to_process_from_filter is not None and params.max_securities_to_process_from_filter >= 0:
+            securities_to_process_list = securities_to_scrape_meta[:params.max_securities_to_process_from_filter]
+            self._logger_instance.info(f"Limiting processing to first {len(securities_to_process_list)} securities from filter due to 'max_securities_to_process_from_filter'.")
+
+        self._logger_instance.info(f"Processing details for {len(securities_to_process_list)} securities from filter file {params.filter_input_filename}.")
+
+        for sec_info in securities_to_process_list:
+            action_summary["securities_processed_attempted"] += 1
+            isin = sec_info.get("isin")
+            detail_url_path_segment = sec_info.get("detail_url_path") # E.g., "/securities/detail?id=xxxxx"
+            board_category = sec_info.get("board_category") # E.g., "primary_board_A"
+
+            if not (isin and detail_url_path_segment and board_category):
+                err_msg = f"Skipping security due to missing info in filter entry: ISIN='{isin}', URLPath='{detail_url_path_segment}', Board='{board_category}'. Entry: {sec_info}"
+                self._logger_instance.warning(err_msg)
+                action_summary.setdefault("skipped_securities_filter_format_issue", []).append(err_msg)
+                if isin: action_summary["errors_by_isin"].setdefault(isin, []).append("Missing key data in filter file entry.")
+                continue
+
+            # Extract URL ID from the path segment for navigation if DetailPageHandler expects ID not full path
+            url_id_match = re.search(r"id=([a-f0-9-]+)", detail_url_path_segment, re.IGNORECASE)
+            if not url_id_match:
+                err_msg = f"Could not extract URL ID from detail_url_path '{detail_url_path_segment}' for ISIN {isin}. Skipping."
+                self._logger_instance.error(err_msg)
+                action_summary["errors_by_isin"].setdefault(isin, []).append(err_msg)
+                continue
+            security_url_id = url_id_match.group(1)
+
+            self._logger_instance.info(f"Scraping details for ISIN: {isin}, URL ID: {security_url_id} (from path: {detail_url_path_segment})")
+            
+            # Define output paths for this security's details
+            # Path: <output_directory>/current/<board_category>/<ISIN>/
+            security_output_path_isin_dir = current_data_base_path / board_category / isin
+            security_output_path_isin_dir.mkdir(parents=True, exist_ok=True)
+            
+            documents_output_path_for_isin = security_output_path_isin_dir / "documents"
+            # The DetailPageHandler's download method should create 'documents' if it doesn't exist.
+
+            try:
+                # 1. Navigate to the detail page
+                await self._site_interactor.navigate_to_security_detail_page(security_url_id) # Uses the OtcmSiteInteractor navigation method
+                
+                # 2. Extract all renderable data (tables, descriptions)
+                #    The DetailPageHandler should define what "all_tables_data" means.
+                #    It should be a dictionary where keys are like "security_details", "file_list_metadata", etc.
+                all_page_data_from_detail = await detail_h.extract_all_renderable_data() # Call method on DetailPageHandler
+                
+                for data_key_name, data_content in all_page_data_from_detail.items():
+                    if data_content: # Only save if data was extracted for this key
+                        # Use a consistent naming scheme for the JSON files, e.g., security_info.json, underwriter_info.json
+                        # This assumes data_key_name from extract_all_renderable_data is suitable for filenames.
+                        json_file_name = f"{data_key_name}.json" 
+                        await self._save_json(data_content, security_output_path_isin_dir / json_file_name)
+                        self._logger_instance.debug(f"Saved '{json_file_name}' for ISIN {isin}.")
+                    else:
+                        self._logger_instance.debug(f"No data extracted for key '{data_key_name}' for ISIN {isin}.")
+                
+                # 3. Download documents
+                #    The `extract_all_renderable_data` should have populated a 'file_list_metadata' key
+                #    which `download_documents_from_page` can use.
+                file_list_for_download = all_page_data_from_detail.get("file_list_metadata", [])
+                if isinstance(file_list_for_download, list) and file_list_for_download:
+                    self._logger_instance.info(f"Found {len(file_list_for_download)} files to potentially download for ISIN {isin}.")
+                    downloaded_file_infos = await detail_h.download_documents_from_page(
+                        file_list_meta=file_list_for_download,
+                        download_dir=documents_output_path_for_isin
                     )
-                    self._logger_instance.debug(f"[CLICK BOARD URL CHECK] URL contains '{expected_url_pattern_part_tab}' and '{expected_url_pattern_part_board}'. Current URL: {page.url}")
-                except PlaywrightTimeoutError:
-                     self._logger_instance.warning(f"[CLICK BOARD URL CHECK FAIL] URL did not update with tab & board quickly. Current URL: {page.url}. Relying on content.")
-                
-                self._logger_instance.debug(f"[POST BOARD CLICK] Waiting for potential data load. Initial 5s hard pause then networkidle.")
-                await page.wait_for_timeout(5000) 
-                
-                self._logger_instance.debug(f"[POST BOARD CLICK] Now waiting for network idle.")
-                await page.wait_for_load_state("networkidle", timeout=self.page_timeout) 
-                self._logger_instance.debug(f"[POST BOARD CLICK] Network idle confirmed after extended wait. Current URL: {page.url}")
-
-            except Exception as e_board_click:
-                self._logger_instance.error(f"[CLICK BOARD FAIL] Failed to click board filter '{board_filter_text}': {e_board_click}. Current URL: {page.url}")
-                return list(detail_urls), tables_saved_count
-        else:
-            self._logger_instance.warning(f"[CLICK BOARD SKIP] No mapping for board_id '{board_id}'. Assuming 'All Boards' or current state. Waiting for network idle.")
-            await page.wait_for_load_state("networkidle", timeout=self.page_timeout)
-            self._logger_instance.debug(f"[CLICK BOARD SKIP NET IDLE] Network idle confirmed. Current URL: {page.url}")
-        
-        while True:
-            if max_pages > 0 and page_num > max_pages:
-                self._logger_instance.info(f"[PAGINATION LIMIT] Reached max_listing_pages ({max_pages}) for Tab: {tab_name}, Board: {board_id}.")
-                break
-            
-            self._logger_instance.info(f"[PAGINATION START PAGE {page_num}] Tab: {tab_name}, Board: {board_id}. Current URL: {page.url}")
-            
-            active_tab_pane_locator_str = f"div.ant-tabs-tabpane-active[id*='{tab_name}']"
-            try:
-                await page.locator(active_tab_pane_locator_str).wait_for(state="visible", timeout=self.page_timeout / 2)
-                self._logger_instance.debug(f"[WAIT ACTIVE TABPANE {page_num}] Active tab pane for '{tab_name}' is visible.")
-            except PlaywrightTimeoutError:
-                self._logger_instance.error(f"[WAIT ACTIVE TABPANE FAIL {page_num}] Timeout waiting for active tab pane for '{tab_name}'.")
-                break 
-
-            # More specific path to the tbody, reflecting the Ant Design structure:
-            table_body_selector_primary = (
-                f"{active_tab_pane_locator_str} "
-                "div.ant-table-wrapper " 
-                "div.ant-spin-container " 
-                "div.ant-table-container "
-                "div.ant-table-content "
-                "table > " 
-                "tbody.ant-table-tbody"
-            )
-            table_body_selector_fallback = ( # Omitting spin-container
-                 f"{active_tab_pane_locator_str} "
-                "div.ant-table-wrapper " 
-                "div.ant-table-container "
-                "div.ant-table-content "
-                "table > " 
-                "tbody.ant-table-tbody"
-            )
-            
-            actual_table_body_handle = None
-            used_selector_for_body = ""
-
-            self._logger_instance.debug(f"[WAIT TABLE BODY {page_num}] Waiting for table body using primary selector: {table_body_selector_primary}")
-            try:
-                table_body_locator = page.locator(table_body_selector_primary)
-                await table_body_locator.first.wait_for(state="attached", timeout=self.page_timeout / 2)
-                count = await table_body_locator.count()
-                self._logger_instance.debug(f"Found {count} element(s) for primary table body selector.")
-                if count == 0: raise PlaywrightTimeoutError("Primary table body selector found 0 elements.")
-                await table_body_locator.first.wait_for(state="visible", timeout=self.page_timeout)
-                actual_table_body_handle = table_body_locator.first
-                used_selector_for_body = "primary"
-            except PlaywrightTimeoutError:
-                self._logger_instance.warning(f"[WAIT TABLE BODY {page_num}] Timeout with primary selector. Trying fallback: {table_body_selector_fallback}")
-                try:
-                    table_body_locator = page.locator(table_body_selector_fallback)
-                    await table_body_locator.first.wait_for(state="attached", timeout=self.page_timeout / 2)
-                    count = await table_body_locator.count()
-                    self._logger_instance.debug(f"Found {count} element(s) for fallback table body selector.")
-                    if count == 0: raise PlaywrightTimeoutError("Fallback table body selector found 0 elements.")
-                    await table_body_locator.first.wait_for(state="visible", timeout=self.page_timeout)
-                    actual_table_body_handle = table_body_locator.first
-                    used_selector_for_body = "fallback"
-                except PlaywrightTimeoutError:
-                    self._logger_instance.error(f"[WAIT TABLE BODY FAIL {page_num}] Timeout waiting for table body (both selectors) for Tab: {tab_name}, Board: {board_id}. Page URL: {page.url}")
-                    # --- Start Diagnostic Dump ---
-                    self._logger_instance.info(f"--- DIAGNOSTIC DUMP for {page.url} (Tab: {tab_name}, Board: {board_id}, Page: {page_num}) ---")
-                    screenshot_path = tables_path.parent / f"debug_screenshot_tab_{tab_name}_board_{board_id}_page_{page_num}.png"
-                    try:
-                        await page.screenshot(path=screenshot_path, full_page=True)
-                        self._logger_instance.info(f"Saved debug screenshot: {screenshot_path}")
-                    except Exception as e_ss: self._logger_instance.error(f"Failed to save debug screenshot: {e_ss}")
-                    html_path = tables_path.parent / f"debug_page_html_tab_{tab_name}_board_{board_id}_page_{page_num}.html"
-                    try:
-                        full_html = await page.content()
-                        with open(html_path, "w", encoding="utf-8") as f: f.write(full_html)
-                        self._logger_instance.info(f"Saved debug HTML: {html_path}")
-                    except Exception as e_html: self._logger_instance.error(f"Failed to save debug HTML: {e_html}")
-                    self._logger_instance.info("Checking for 'div.ant-tabs-tabpane-active' elements...")
-                    active_panes = await page.query_selector_all("div.ant-tabs-tabpane-active")
-                    self._logger_instance.info(f"Found {len(active_panes)} element(s) matching 'div.ant-tabs-tabpane-active'.")
-                    for i, pane_handle_diag in enumerate(active_panes): # Renamed to avoid conflict
-                        pane_id = await pane_handle_diag.get_attribute("id")
-                        self._logger_instance.info(f"  Active Pane {i} ID: {pane_id}")
-                        if tab_name in (pane_id or ""):
-                            self._logger_instance.info(f"    Pane ID {pane_id} matches current tab_name '{tab_name}'. Checking for table body with simple query...")
-                            tb_handle_in_pane = await pane_handle_diag.query_selector("div.ant-table-tbody") # Simple query for diagnostics
-                            if tb_handle_in_pane:
-                                self._logger_instance.info(f"    Found 'div.ant-table-tbody' (simple query) within pane ID {pane_id}.")
-                                row_count_in_tbody = await tb_handle_in_pane.eval_on_selector_all("tr.ant-table-row", "nodes => nodes.length")
-                                self._logger_instance.info(f"    Count of 'tr.ant-table-row' in this tbody (simple query): {row_count_in_tbody}")
-                            else: self._logger_instance.warning(f"    'div.ant-table-tbody' (simple query) NOT FOUND within pane ID {pane_id}.")
-                        else: self._logger_instance.info(f"    Pane (ID: {pane_id}) does NOT match tab_name '{tab_name}'.")
-                    self._logger_instance.info(f"--- END DIAGNOSTIC DUMP ---")
-                    # --- End Diagnostic Dump ---
-                    break # Exit pagination loop
-
-            self._logger_instance.debug(f"[WAIT TABLE BODY SUCCESS {page_num}] Table body container is visible using {used_selector_for_body} selector.")
-            
-            populated_row_locator = actual_table_body_handle.locator("tr.ant-table-row:has(td)")
-            
-            self._logger_instance.debug(f"[WAIT POPULATED ROW {page_num}] Waiting for populated data row within identified table body.")
-            try:
-                await populated_row_locator.first.wait_for(state="visible", timeout=self.page_timeout)
-                self._logger_instance.info(f"[WAIT POPULATED ROW SUCCESS {page_num}] At least one populated data row found.")
-            except PlaywrightTimeoutError:
-                self._logger_instance.warning(f"[WAIT POPULATED ROW FAIL {page_num}] Timeout waiting for populated data row. Table might be empty/failed to load. Page URL: {page.url}")
-                no_data_placeholder_selector = ".ant-table-placeholder .ant-empty-description"
-                no_data_element = await actual_table_body_handle.query_selector(no_data_placeholder_selector)
-                if no_data_element and (await no_data_element.is_visible()):
-                    no_data_text = await no_data_element.text_content()
-                    self._logger_instance.info(f"[TABLE EMPTY {page_num}] Table shows 'No data' placeholder (text: '{no_data_text}'). Ending pagination.")
+                    action_summary["documents_downloaded_total_count"] += len(downloaded_file_infos)
+                    if downloaded_file_infos:
+                         self._logger_instance.info(f"Downloaded {len(downloaded_file_infos)} documents for ISIN {isin}.")
                 else:
-                    self._logger_instance.warning(f"[TABLE EMPTY UNKNOWN {page_num}] No populated rows and no clear 'No data' placeholder. Ending pagination.")
-                break 
-            
-            rows_handles = await populated_row_locator.all()
-            if not rows_handles:
-                self._logger_instance.info(f"[NO ROWS {page_num}] No actual data rows found using populated_row_locator. Ending pagination.")
-                break
+                    self._logger_instance.info(f"No files listed or file metadata missing for download for ISIN {isin}.")
 
-            self._logger_instance.debug(f"[EXTRACT ROWS {page_num}] Found {len(rows_handles)} data rows to extract.")
-            page_data = []
-            for i, row_handle_iter in enumerate(rows_handles): # Renamed to avoid conflict
-                cell_locators = row_handle_iter.locator("td")
-                cell_texts = await cell_locators.all_inner_texts() # Gets texts from all matching 'td'
-                row_data = [text.strip() for text in cell_texts]
-                page_data.append(row_data)
-                self._logger_instance.debug(f"[EXTRACT ROW {page_num}-{i+1}] Data: {row_data}")
-                
-                link_locator = row_handle_iter.locator('a[href^="/securities/detail?id="]')
-                if await link_locator.count() > 0: # Check if the locator finds at least one element
-                    href = await link_locator.first.get_attribute("href")
-                    if href:
-                        detail_urls.add(href)
-                        self._logger_instance.debug(f"[EXTRACT URL {page_num}-{i+1}] Found detail URL: {href}")
-            
-            if page_data:
-                try:
-                    columns = []
-                    header_th_elements_loc = page.locator(f"{active_tab_pane_locator_str} div.ant-table-thead tr th") # Target all th in thead row
-                    all_th_handles = await header_th_elements_loc.all()
-                    for idx, th_handle in enumerate(all_th_handles):
-                        # Try to get text from .ant-table-column-title first if it exists
-                        title_span = await th_handle.query_selector(".ant-table-column-title")
-                        text_content = ""
-                        if title_span:
-                            text_content = (await title_span.text_content() or "").strip()
-                        if not text_content: # Fallback to th's direct text if title_span is empty or not found
-                            text_content = (await th_handle.text_content() or "").strip()
-                        
-                        # Only add non-empty headers, or provide a placeholder
-                        if text_content:
-                            columns.append(text_content)
-                        else:
-                            # This column might be for checkboxes or actions, assign a generic name or skip
-                            # For now, let's assign a generic one if it's likely a data column based on data length later
-                            # Or, if we know the number of data columns, we can be smarter.
-                            # For simplicity here, we'll let the mismatch logic handle it if some headers are truly blank.
-                            columns.append(f"HeaderCol_Empty_{idx}") # Placeholder for truly empty headers
-                    
-                    columns = [col for col in columns if col] # Final cleanup
-                    self._logger_instance.debug(f"[SAVE TABLE HEADERS {page_num}] Tentative Headers: {columns}")
-                except Exception as he:
-                    self._logger_instance.warning(f"[SAVE TABLE HEADERS FAIL {page_num}] (Tab: {tab_name}, Board: {board_id}): {he}. Using generic.")
-                    columns = [f"Column_{i_col+1}" for i_col in range(len(page_data[0]))] if page_data else [] # Corrected generic columns
+                action_summary["details_successfully_scraped_count"] += 1
+                self._logger_instance.info(f"Successfully processed details for ISIN {isin}.")
 
-                if columns and len(columns) == len(page_data[0]):
-                    df = pd.DataFrame(page_data, columns=columns)
-                else:
-                    self._logger_instance.warning(f"[SAVE TABLE COL MISMATCH {page_num}] Header count ({len(columns)}) vs data ({len(page_data[0]) if page_data else 0}). Saving with pandas-inferred/generic headers.")
-                    df = pd.DataFrame(page_data, columns=columns if columns and len(columns) == len(page_data[0]) else None) # Use columns if valid, else None
-                
-                parquet_file = tables_path / f"listings_tab_{tab_name}_board_{board_id}_page_{page_num}.parquet"
-                df.to_parquet(parquet_file, index=False)
-                tables_saved_count += 1
-                self._logger_instance.info(f"[SAVE TABLE SUCCESS {page_num}] Saved: {parquet_file} ({len(df)} rows)")
-            else:
-                self._logger_instance.info(f"[SAVE TABLE SKIP {page_num}] No data extracted from rows to save.")
-
-            next_button_selector = "ul.ant-pagination li.ant-pagination-next:not(.ant-pagination-disabled) button"
-            self._logger_instance.debug(f"[PAGINATION NEXT CHECK {page_num}] Looking for next button: {next_button_selector}")
-            next_button_handle = await page.query_selector(next_button_selector) # Renamed
-            
-            if next_button_handle: # Check if handle is not None
-                self._logger_instance.debug(f"[PAGINATION NEXT CLICK {page_num}] Found 'Next Page' button. Clicking...")
-                await next_button_handle.click(timeout=self.page_timeout / 3)
-                self._logger_instance.info(f"[PAGINATION NEXT CLICK SUCCESS {page_num}] Clicked 'Next Page'.")
-                page_num += 1
-                try:
-                    self._logger_instance.debug(f"[PAGINATION WAIT NEW PAGE {page_num}] Waiting for content of page {page_num}...")
-                    # Use the more specific selector for the new page's table body
-                    table_body_locator_for_next_page = page.locator(table_body_selector_primary if used_selector_for_body == "primary" else table_body_selector_fallback)
-                    await table_body_locator_for_next_page.locator("tr.ant-table-row:has(td)").first.wait_for(state="visible", timeout=self.page_timeout)
-                    self._logger_instance.debug(f"[PAGINATION WAIT NEW PAGE SUCCESS {page_num}] Content for page {page_num} loaded.")
-                except PlaywrightTimeoutError:
-                    self._logger_instance.warning(f"[PAGINATION WAIT NEW PAGE FAIL {page_num}] Timeout for page {page_num} content (Tab: {tab_name}, Board: {board_id}). Assuming end of pages.")
-                    break
-            else:
-                self._logger_instance.info(f"[PAGINATION END {page_num}] No 'Next Page' button. End of listings for (Tab: {tab_name}, Board: {board_id}).")
-                break
+            except (PageNavigationError, ElementNotFoundError, DataExtractionError, PageStateError, OtcmInteractionError) as otc_e:
+                err_msg = f"Interaction module error for ISIN {isin}: {str(otc_e)}"
+                self._logger_instance.error(err_msg, exc_info=True) # Log with full traceback for these
+                action_summary["errors_by_isin"].setdefault(isin, []).append(err_msg)
+            except OTCMNScraperToolError as tool_e: # E.g. from _save_json
+                err_msg = f"Tool error during detail scraping for ISIN {isin}: {str(tool_e)}"
+                self._logger_instance.error(err_msg, exc_info=True)
+                action_summary["errors_by_isin"].setdefault(isin, []).append(err_msg)
+            except Exception as e: # Catch-all for unexpected
+                err_msg = f"Unexpected error scraping details for ISIN {isin}: {e}"
+                self._logger_instance.error(err_msg, exc_info=True)
+                action_summary["errors_by_isin"].setdefault(isin, []).append(err_msg)
         
-        self._logger_instance.info(f"[LISTING PAGE END] Finished Tab: '{tab_name}', Board ID: '{board_id}'. Found {len(detail_urls)} URLs, saved {tables_saved_count} tables.")
-        return list(detail_urls), tables_saved_count
-
-    async def _extract_table_data_from_page(
-        self,
-        page: Page,
-        # table_container_xpath: str, # We will use more specific locators now
-        section_locator_strategy: Dict[str, str], # e.g., {"xpath": "//div[header text check]"}
-        table_name: str,
-        security_id: str,
-        tables_path: Path,
-        is_key_value_style: bool = False,
-        # New parameter to define how to find the actual table(s) within the section
-        # 'columns': implies looking for md:w-1/2 divs, then a table in each
-        # 'direct_wrapper': implies looking for .ant-table-wrapper directly in the section
-        table_layout_type: str = 'direct_wrapper' # 'columns' or 'direct_wrapper'
-    ):
-        self._logger_instance.info(f"[EXTRACT TABLE START] Security ID: {security_id}, Table Name: '{table_name}', Layout: '{table_layout_type}'.")
-
-        # 1. Locate the main section container
-        section_container_loc = None
-        if "xpath" in section_locator_strategy:
-            xpath_str = section_locator_strategy["xpath"]
-            self._logger_instance.debug(f"Attempting to locate section container for '{table_name}' using XPath: {xpath_str}")
-            section_container_loc = page.locator(f"xpath={xpath_str}")
-        # Add other strategies like "css" if needed
-        else:
-            self._logger_instance.error(f"No valid locator strategy provided for section '{table_name}'.")
-            return
-
-        try:
-            await section_container_loc.first.wait_for(state="visible", timeout=self.page_timeout / 2)
-            self._logger_instance.info(f"Section container for '{table_name}' is visible.")
-        except PlaywrightTimeoutError:
-            self._logger_instance.error(f"Timeout waiting for section container for '{table_name}' (ID: {security_id}). Strategy: {section_locator_strategy}")
-            return
-        except Exception as e_sec_vis:
-            self._logger_instance.error(f"Error ensuring section visibility for '{table_name}': {e_sec_vis}")
-            return
-
-        # 2. Identify the "table contexts" based on layout_type
-        table_contexts = []
-        if table_layout_type == 'columns':
-            # This layout is specific to "Security Details" type where content is in side-by-side columns
-            # The section_container_loc should point to the div.rounded-lg... holding the flex-row
-            row_layout_div_locator = section_container_loc.locator("div.flex.flex-col.md\\:flex-row") # Escaped : for CSS if needed
-            try:
-                await row_layout_div_locator.first.wait_for(state="visible", timeout=self.page_timeout / 3)
-                # Get direct children that are columns: div.w-full.md:w-1/2
-                column_div_locators = row_layout_div_locator.locator("> div.w-full.md\\:w-1\\/2") # Direct children, escaped / and :
-                
-                count = await column_div_locators.count()
-                if count == 0:
-                    self._logger_instance.warning(f"Layout type is 'columns' for '{table_name}', but no 'md:w-1/2' column divs found within its row layout.")
-                else:
-                    self._logger_instance.debug(f"Found {count} column(s) for '{table_name}'.")
-                    all_cols = await column_div_locators.all()
-                    for col_loc in all_cols:
-                        # Each column div is a context that should contain one ant-table-wrapper
-                        table_wrapper_in_col = col_loc.locator("div.ant-table-wrapper")
-                        if await table_wrapper_in_col.count() > 0:
-                            table_contexts.append(table_wrapper_in_col.first) # Add the Locator
-                        else:
-                            self._logger_instance.warning(f"Column found for '{table_name}', but no 'div.ant-table-wrapper' within it.")
-            except PlaywrightTimeoutError:
-                self._logger_instance.warning(f"Timeout finding column layout structure for '{table_name}' of type 'columns'.")
-            except Exception as e_cols:
-                self._logger_instance.error(f"Error processing 'columns' layout for '{table_name}': {e_cols}")
-
-        elif table_layout_type == 'direct_wrapper':
-            # For "File List", "Transaction History", "Underwriter Info" (single table directly in section wrapper)
-            # section_container_loc points to the div.ant-col... or div.rounded-lg...
-            wrapper_locator = section_container_loc.locator("div.ant-table-wrapper")
-            try:
-                await wrapper_locator.first.wait_for(state="attached", timeout=self.page_timeout / 3)
-                count = await wrapper_locator.count()
-                if count > 0:
-                    self._logger_instance.debug(f"Found {count} 'div.ant-table-wrapper'(s) for '{table_name}' with 'direct_wrapper' layout. Processing first/primary.")
-                    # If multiple, this assumes the first one is the target or that the section_locator_strategy was specific enough.
-                    # For truly multiple distinct tables not in columns, the strategy might need adjustment or multiple calls.
-                    table_contexts.append(wrapper_locator.first) # Add the Locator
-                else:
-                    self._logger_instance.warning(f"No 'div.ant-table-wrapper' found for '{table_name}' with 'direct_wrapper' layout.")
-            except PlaywrightTimeoutError:
-                self._logger_instance.warning(f"Timeout finding 'div.ant-table-wrapper' for '{table_name}' of type 'direct_wrapper'.")
-            except Exception as e_direct:
-                self._logger_instance.error(f"Error processing 'direct_wrapper' layout for '{table_name}': {e_direct}")
-        else:
-            self._logger_instance.error(f"Unknown table_layout_type: '{table_layout_type}' for table '{table_name}'.")
-            return
-
-        if not table_contexts:
-            self._logger_instance.warning(f"No valid table contexts found to process for '{table_name}' (ID: {security_id}).")
-            return
-        
-        self._logger_instance.info(f"Identified {len(table_contexts)} table context(s) to process for '{table_name}'.")
-
-        # 3. Process each identified table context
-        all_key_value_data_rows = []
-        tables_successfully_parsed_count = 0
-
-        for context_index, table_wrapper_handle_loc in enumerate(table_contexts): # table_wrapper_handle_loc is a Locator
-            self._logger_instance.info(f"[PROCESS CONTEXT #{context_index+1}/{len(table_contexts)}] For '{table_name}', Security ID: {security_id}")
-            
-            current_instance_data_rows = []
-            try:
-                # Ensure the table wrapper itself (which is our context) is visible
-                await table_wrapper_handle_loc.wait_for(state="visible", timeout=self.page_timeout / 2)
-                self._logger_instance.debug(f"Table context (wrapper) #{context_index+1} is visible.")
-
-                # Hierarchically target tbody.ant-table-tbody
-                # Path: .ant-table-wrapper -> .ant-spin-container (optional but good to be aware of) -> .ant-table -> .ant-table-container -> .ant-table-content -> table -> tbody.ant-table-tbody
-                # A more direct locator from the wrapper:
-                target_tbody_loc = table_wrapper_handle_loc.locator("table > tbody.ant-table-tbody")
-
-                if await target_tbody_loc.count() == 0:
-                    self._logger_instance.warning(f"No 'tbody.ant-table-tbody' found within table context #{context_index+1} for '{table_name}'. Skipping this context.")
-                    continue
-                
-                self._logger_instance.debug(f"Waiting for populated rows (tr.ant-table-row-level-0:has(td)) in tbody of context #{context_index+1}...")
-                # Use :has(td) to ensure it's a data row, not an empty/measure row.
-                # 'ant-table-row-level-0' is common, but 'ant-table-row' might be more general if level changes.
-                # For File List example, it's 'ant-table-row ant-table-row-level-0'
-                populated_row_loc = target_tbody_loc.locator("tr.ant-table-row:has(td)") # General for any row with cells
-
-                try:
-                    await populated_row_loc.first.wait_for(state="visible", timeout=self.page_timeout / 2)
-                    self._logger_instance.info(f"Populated data rows found in tbody of context #{context_index+1}.")
-                except PlaywrightTimeoutError:
-                    no_data_placeholder_loc = table_wrapper_handle_loc.locator(".ant-empty-description")
-                    if await no_data_placeholder_loc.count() > 0 and await no_data_placeholder_loc.is_visible():
-                        no_data_text = (await no_data_placeholder_loc.text_content() or "").strip()
-                        self._logger_instance.info(f"Table context #{context_index+1} shows 'No data' (text: '{no_data_text}'). Skipping.")
-                    else:
-                        self._logger_instance.warning(f"Timeout waiting for populated rows in table context #{context_index+1} and no clear 'No data' placeholder. Skipping.")
-                    continue
-
-                all_tr_handles_in_instance = await populated_row_loc.all()
-                if not all_tr_handles_in_instance: # Should not happen if wait_for succeeded, but as a safeguard
-                    self._logger_instance.info(f"No data rows to extract from table context #{context_index+1} despite visibility. Skipping.")
-                    continue
-
-                self._logger_instance.debug(f"Extracting {len(all_tr_handles_in_instance)} rows from table context #{context_index+1}.")
-                for r_idx, row_handle_loc in enumerate(all_tr_handles_in_instance): # row_handle_loc is a Locator
-                    cell_locators = row_handle_loc.locator("td")
-                    if await cell_locators.count() == 0:
-                        self._logger_instance.debug(f"Row {r_idx+1} in context #{context_index+1} has no 'td' cells. Skipping.")
-                        continue
-                    
-                    cell_texts = await cell_locators.all_inner_texts()
-                    cleaned_row_data = [text.strip() for text in cell_texts]
-                    
-                    if any(cleaned_row_data):
-                        current_instance_data_rows.append(cleaned_row_data)
-                    else:
-                        self._logger_instance.debug(f"Row {r_idx+1} in context #{context_index+1} was all empty after strip.")
-                
-                if not current_instance_data_rows:
-                    self._logger_instance.info(f"No actual data extracted from rows of table context #{context_index+1}.")
-                    continue
-
-                if is_key_value_style:
-                    all_key_value_data_rows.extend(current_instance_data_rows)
-                    self._logger_instance.debug(f"Added {len(current_instance_data_rows)} K/V rows from table context #{context_index+1}.")
-                else: # Regular table, save it individually
-                    headers = []
-                    # Headers are in the thead of the table within this context
-                    header_th_locators = table_wrapper_handle_loc.locator("table > thead tr th")
-                    all_th_handles_loc = await header_th_locators.all() # List of Locators
-                    self._logger_instance.debug(f"Found {len(all_th_handles_loc)} 'th' elements for regular table context #{context_index+1}.")
-
-                    for th_idx, th_loc in enumerate(all_th_handles_loc):
-                        title_span_loc = th_loc.locator(".ant-table-column-title")
-                        text_content = ""
-                        if await title_span_loc.count() > 0:
-                            text_content = (await title_span_loc.first.text_content() or "").strip()
-                        if not text_content: # Fallback
-                            text_content = (await th_loc.text_content() or "").strip()
-                        headers.append(text_content if text_content else f"Header_Empty_{th_idx}")
-                    
-                    df = pd.DataFrame(current_instance_data_rows)
-                    if headers and len(headers) == df.shape[1]:
-                        df.columns = headers
-                    elif headers:
-                        self._logger_instance.warning(f"Header count ({len(headers)}) mismatch with data columns ({df.shape[1]}) for regular table context #{context_index+1}. Pandas will infer/adjust.")
-                        try: df.columns = headers[:df.shape[1]] if df.shape[1] <= len(headers) else headers + [f"Unnamed_{c}" for c in range(df.shape[1] - len(headers))]
-                        except: self._logger_instance.error(f"Failed to reconcile headers for regular table context #{context_index+1}.")
-                    
-                    # For regular tables, if there are multiple contexts (unlikely for File List/Transaction History but possible if 'columns' was misused)
-                    # we save them as parts.
-                    file_suffix = f"_part{context_index}" if len(table_contexts) > 1 and table_layout_type == 'columns' else ""
-                    parquet_file = tables_path / f"{table_name.lower().replace(' ', '_')}_{security_id}{file_suffix}.parquet"
-                    try:
-                        df.to_parquet(parquet_file, index=False)
-                        self._logger_instance.info(f"[SAVE SUCCESS] Saved regular table data: {parquet_file} ({len(df)} rows)")
-                        tables_successfully_parsed_count += 1
-                    except Exception as e_save_reg:
-                        self._logger_instance.error(f"Failed to save regular table {parquet_file}: {e_save_reg}")
-            
-            except PlaywrightTimeoutError as pte_context:
-                self._logger_instance.error(f"Timeout processing table context #{context_index+1} for '{table_name}': {pte_context}")
-            except Exception as e_context:
-                self._logger_instance.error(f"Unexpected error processing table context #{context_index+1} for '{table_name}': {e_context}", exc_info=True)
-
-        # 4. Final save for accumulated key-value style table
-        if is_key_value_style:
-            if all_key_value_data_rows:
-                self._logger_instance.info(f"Processing {len(all_key_value_data_rows)} accumulated K/V rows for '{table_name}'.")
-                valid_kv_data = [row for row in all_key_value_data_rows if len(row) >= 2]
-                if valid_kv_data:
-                    max_cols = max(len(row) for row in valid_kv_data)
-                    kv_columns = ["Key", "Value"] + [f"ExtraCol_{i+1}" for i in range(max_cols - 2)]
-                    padded_kv_data = [row + [None] * (max_cols - len(row)) for row in valid_kv_data]
-
-                    df_kv = pd.DataFrame(padded_kv_data, columns=kv_columns)
-                    parquet_file_kv = tables_path / f"{table_name.lower().replace(' ', '_')}_{security_id}.parquet"
-                    try:
-                        df_kv.to_parquet(parquet_file_kv, index=False)
-                        self._logger_instance.info(f"[SAVE SUCCESS] Saved combined K/V table data: {parquet_file_kv} ({len(df_kv)} rows)")
-                        tables_successfully_parsed_count += 1
-                    except Exception as e_save_kv:
-                        self._logger_instance.error(f"Failed to save combined K/V table {parquet_file_kv}: {e_save_kv}")
-                else:
-                    self._logger_instance.warning(f"No valid K/V data (min 2 columns per row) after processing all contexts for '{table_name}', Security ID: {security_id}.")
-            else:
-                self._logger_instance.warning(f"No K/V data accumulated after processing all contexts for '{table_name}', Security ID: {security_id}.")
-
-        if tables_successfully_parsed_count == 0 and len(table_contexts) > 0 : # Check if any contexts were identified
-            self._logger_instance.warning(f"[EXTRACT TABLE - NO DATA SAVED] No table data was ultimately saved for '{table_name}' (ID: {security_id}) despite identifying {len(table_contexts)} table context(s).")
-        
-        self._logger_instance.info(f"[EXTRACT TABLE END] Finished processing for '{table_name}', Security ID: {security_id}. Saved {tables_successfully_parsed_count} Parquet file(s).")
-
-    async def _scrape_security_detail_page_otc(
-        self, page: Page, detail_url: str, tables_path: Path, documents_path: Path, security_id: str
-    ) -> int:
-        documents_downloaded_count = 0
-        self._logger_instance.debug(f"Navigating to detail page: {detail_url} for ID: {security_id}")
-        # INCREASE PAGE LOAD TIMEOUT HERE if initial page elements are slow
-        await page.goto(detail_url, wait_until="domcontentloaded", timeout=self.page_timeout * 1.5) # e.g., 90s
-        await page.wait_for_timeout(2000) # Small static wait for JS to settle after DOM load
-
-        # --- Security Details ---
-        sec_details_header_xpath_base = "//div[contains(@class,'text-lg') and normalize-space(.)='Security Details']"
-        sec_details_content_block_xpath = f"{sec_details_header_xpath_base}/ancestor::div[contains(@class, 'ant-space-item')][1]/following-sibling::div[contains(@class, 'ant-space-item')][1]/div[contains(@class, 'rounded-lg')]"
-        await self._extract_table_data_from_page(
-            page,
-            section_locator_strategy={"xpath": sec_details_content_block_xpath},
-            table_name="Security_Details",
-            security_id=security_id,
-            tables_path=tables_path,
-            is_key_value_style=True,
-            table_layout_type='columns'
-        )
-
-        # --- Underwriter Info ---
-        underwriter_header_xpath_base = "//div[contains(@class,'text-lg') and normalize-space(.)='Underwriter Info']"
-        underwriter_content_block_xpath = f"{underwriter_header_xpath_base}/ancestor::div[contains(@class, 'ant-space-item')][1]/following-sibling::div[contains(@class, 'ant-space-item')][1]/div[contains(@class, 'rounded-lg')]"
-        await self._extract_table_data_from_page(
-            page,
-            section_locator_strategy={"xpath": underwriter_content_block_xpath},
-            table_name="Underwriter_Info",
-            security_id=security_id,
-            tables_path=tables_path,
-            is_key_value_style=True,
-            table_layout_type='direct_wrapper'
-        )
-
-        # --- Transaction History ---
-        tx_history_header_xpath_base = "//div[contains(@class,'text-lg') and normalize-space(.)='Transaction History']"
-        tx_history_content_container_xpath = f"{tx_history_header_xpath_base}/ancestor::div[contains(@class, 'ant-space-item')][1]/following-sibling::div[contains(@class, 'ant-space-item')][1]"
-        await self._extract_table_data_from_page(
-            page,
-            section_locator_strategy={"xpath": tx_history_content_container_xpath},
-            table_name="Transaction_History",
-            security_id=security_id,
-            tables_path=tables_path,
-            is_key_value_style=False,
-            table_layout_type='direct_wrapper'
-        )
-        
-        # --- File List --- (Using the previously working XPath for its section container)
-        # This XPath points to the ant-col that contains the File List table wrapper.
-        file_list_section_container_xpath = "//div[div/div[contains(text(), 'File List')]]/ancestor::div[contains(@class, 'ant-col')][1]"
-        await self._extract_table_data_from_page(
-            page,
-            section_locator_strategy={"xpath": file_list_section_container_xpath},
-            table_name="File_List",
-            security_id=security_id,
-            tables_path=tables_path,
-            is_key_value_style=False,
-            table_layout_type='direct_wrapper'
-        )
-
-        # --- Document Downloading using HTTP GET ---
-        self._logger_instance.info(f"Processing 'File List' for document downloads for security {security_id}")
-        # XPath to the ant-col that contains the File List table wrapper
-        file_list_links_section_xpath = "//div[div/div[contains(text(), 'File List')]]/ancestor::div[contains(@class, 'ant-col')][1]"
-        
-        try:
-            file_list_links_container_loc = page.locator(f"xpath={file_list_links_section_xpath}")
-            # We expect the table wrapper to be inside this ant-col
-            actual_table_wrapper_for_links = file_list_links_container_loc.locator("div.ant-table-wrapper")
-            
-            await actual_table_wrapper_for_links.wait_for(state="visible", timeout=self.page_timeout/2)
-            
-            file_link_locators = actual_table_wrapper_for_links.locator("table > tbody tr td a[href]")
-            link_count = await file_link_locators.count()
-            self._logger_instance.info(f"Found {link_count} file links for document download for security {security_id}.")
-            
-            if link_count > 0:
-                security_docs_path = documents_path / security_id
-                security_docs_path.mkdir(parents=True, exist_ok=True)
-                all_link_locs = await file_link_locators.all() # Get all Locator objects
-
-                for link_loc in all_link_locs: # Iterate through Locators
-                    file_href = await link_loc.get_attribute("href")
-                    file_name_text = (await link_loc.inner_text() or "unknown_file").strip()
-                    
-                    if not file_href:
-                        self._logger_instance.warning(f"Found a file link element without an href: {file_name_text}")
-                        continue
-                    
-                    # Sanitize the filename obtained from link text or a potential query parameter
-                    # This part might need adjustment if filename isn't in link_text
-                    # For S3 URLs like this, the filename is usually in response-content-disposition
-                    # or as the last part of the path if not for a CDN.
-                    # Here, we'll use file_name_text as a base and sanitize it.
-                    safe_filename = re.sub(r'[^\w\.\- ()]', '_', file_name_text)
-                    if not Path(safe_filename).suffix and ".pdf" in file_href.lower(): # Basic suffix guess
-                        safe_filename += ".pdf"
-                    # A more robust way might be to parse filename from query params if available
-                    # from urllib.parse import urlparse, parse_qs
-                    # parsed_url = urlparse(file_href)
-                    # query_params = parse_qs(parsed_url.query)
-                    # if 'filename' in query_params.get('response-content-disposition', [''])[0]:
-                    #     # Complex parsing needed here for "inline; filename=..."
-                    #     pass
+        self._logger_instance.info(f"--- Finished _handle_scrape_filtered_details_action ---")
+        return action_summary
 
 
-                    save_path = security_docs_path / safe_filename
-                    
-                    self._logger_instance.debug(f"Attempting to download file: '{safe_filename}' via HTTP GET from {file_href}")
-                    try:
-                        # Use Playwright's APIRequestContext for the GET request
-                        # It will use the browser's cookies and context if page.request is used.
-                        # For external S3, context.request might be cleaner if cookies aren't needed.
-                        api_request_context = page.request 
-                        # Or, for a new context without page's cookies:
-                        # playwright_instance = page.context.browser.playwright
-                        # api_request_context = playwright_instance.request.new_context(ignore_https_errors=True)
-                        
-                        response = await api_request_context.get(file_href, timeout=self.page_timeout * 3) # Increased timeout for download
-
-                        if response.ok:
-                            file_bytes = await response.body()
-                            with open(save_path, "wb") as f:
-                                f.write(file_bytes)
-                            self._logger_instance.info(f"Successfully downloaded and saved: {save_path} ({len(file_bytes)} bytes)")
-                            documents_downloaded_count += 1
-                        else:
-                            self._logger_instance.error(f"Failed to download file '{safe_filename}'. Status: {response.status} {response.status_text}. URL: {file_href}")
-                            self._logger_instance.debug(f"Response headers: {response.headers_array()}")
-                            # try:
-                            #     self._logger_instance.debug(f"Response text: {await response.text()}")
-                            # except: pass
-
-
-                    except PlaywrightTimeoutError: # This timeout is for the HTTP request itself
-                        self._logger_instance.error(f"Timeout during HTTP GET for file '{safe_filename}' from {file_href}", exc_info=True)
-                    except Exception as e_download:
-                        self._logger_instance.error(f"Failed to download file '{safe_filename}' via HTTP GET from {file_href}: {e_download}", exc_info=True)
-            else:
-                self._logger_instance.info(f"No file links found to download for security {security_id} after processing locators.")
-
-        except PlaywrightTimeoutError:
-             self._logger_instance.info(f"Timeout waiting for 'File List' links container for security {security_id}. XPath: {file_list_links_section_xpath}")
-        except Exception as e_file_list_dl:
-            self._logger_instance.error(f"Error processing 'File List' (for downloads) for security {security_id}: {e_file_list_dl}", exc_info=True)
-            
-        return documents_downloaded_count
-
+    # _run method for synchronous execution (Langchain standard, though we are async-first)
     def _run(self, *args: Any, **kwargs: Any) -> str:
-        raise NotImplementedError(f"{self.name} is async-native. Use its `_arun` method.")
+        """Synchronous execution is not recommended for this async-native tool."""
+        self._logger_instance.warning(f"{self.name} is async-native. Using `_run` is not recommended and may block.")
+        # A simple way to run async code from sync, but can have issues in some event loops.
+        # For proper sync execution, one might need to manage an event loop explicitly.
+        # LangChain's default tool execution might handle this if it calls arun from a loop.
+        try:
+            loop = asyncio.get_event_loop()
+            if loop.is_running():
+                # If in an existing loop (e.g. Jupyter), create a task.
+                # This is a simplified approach; consider nest_asyncio if issues arise.
+                self._logger_instance.debug("Event loop is running, creating task for _arun.")
+                future = asyncio.ensure_future(self.arun(*args, **kwargs)) # arun is the public Langchain method
+                # This will not block here in a running loop, but the caller of _run might not get the result immediately.
+                # This is generally problematic for LangChain's sync _run expectations.
+                return "Async task created. Result will be available when the task completes. (Sync _run is not ideal)"
+            else:
+                self._logger_instance.debug("No event loop running, using asyncio.run for _arun.")
+                return loop.run_until_complete(self.arun(*args, **kwargs))
+        except RuntimeError as e:
+            if "cannot be called from a running event loop" in str(e) or "no current event loop" in str(e):
+                 self._logger_instance.error(f"Event loop issue in _run: {e}. Consider using `arun` directly or nest_asyncio if in Jupyter.")
+                 raise NotImplementedError(f"{self.name}._run() encountered an event loop issue. Use `arun` or ensure proper async context.") from e
+            raise
+        
+    async def close(self): # Optional, if any resources need explicit cleanup not handled by Playwright context manager
+        self._logger_instance.debug(f"{self.name} close() called. Currently no specific resources to clean other than Playwright context.")
 
-    async def close(self):
-        self._logger_instance.debug(f"{self.name} close() called. Playwright resources are managed within _arun per call.")
-
+    # __del__ can be problematic with async resources if not careful.
+    # Playwright browser/context closure is best handled by its async context manager in _arun.
     def __del__(self):
          if hasattr(self, '_logger_instance') and self._logger_instance: 
-              self._logger_instance.debug(f"{self.name} (ID: {id(self)}) instance deleted.")
+              self._logger_instance.debug(f"{self.name} (ID: {id(self)}) instance being deleted.")
+
+# [Previous code from OTCMNScraperTool class and imports remains above]
+# ...
+# class OTCMNScraperTool(BaseTool, BaseModel):
+# ... (all the code for the tool class itself) ...
 
 async def main_test_otcmn_scraper_tool():
-    log_level_str = os.getenv("LOG_LEVEL_TOOL_TEST", "DEBUG").upper()
-    log_level = getattr(logging, log_level_str, logging.DEBUG)
+    # --- Logging Setup ---
+    # Choose a default log level for testing. Can be overridden by environment variable.
+    default_log_level_str = "INFO" # Use INFO for less verbose board scrape, DEBUG for more detail
+    log_level_str = os.getenv("LOG_LEVEL_TOOL_TEST", default_log_level_str).upper()
     
+    try:
+        log_level = getattr(logging, log_level_str)
+    except AttributeError:
+        print(f"Warning: Invalid LOG_LEVEL_TOOL_TEST '{log_level_str}'. Defaulting to {default_log_level_str}.")
+        log_level = getattr(logging, default_log_level_str)
+
+    # Configure root logger - this will affect all loggers unless they have specific handlers/levels
     logging.basicConfig(
         level=log_level, 
-        format='%(asctime)s - %(name)s - %(levelname)s - [%(process)d:%(threadName)s] - %(message)s', # Added process ID
-        stream=sys.stdout
+        format='%(asctime)s - %(name)s - %(levelname)s - [%(process)d:%(threadName)s] - %(message)s',
+        stream=sys.stdout, # Ensure logs go to stdout for visibility
+        force=True # Override any existing basicConfig
     )
-    logging.getLogger("playwright").setLevel(logging.INFO) # Quieter Playwright logs
     
-    test_logger = logging.getLogger(__name__ + ".OTCMNScraperTool_Test")
-    test_logger.info(f"Starting OTCMN_Scraper standalone async test with log level {log_level_str}...")
+    # Specifically control Playwright's noisy logs unless we are deep debugging Playwright itself.
+    # If main log level is DEBUG, Playwright logs at INFO. Otherwise, WARNING.
+    playwright_log_level = logging.INFO if log_level == logging.DEBUG else logging.WARNING
+    logging.getLogger("playwright").setLevel(playwright_log_level)
 
-    test_output_dir = Path("./test_otcmn_scraper_output_tool") # Changed dir name
-    test_logger.info(f"Test output will be saved to: {test_output_dir.resolve()}")
-    if test_output_dir.exists():
-        test_logger.warning(f"Test output directory {test_output_dir} already exists. Files may be overwritten.")
+    # Logger for this test function
+    test_logger = logging.getLogger(__name__ + ".OTCMNScraperTool_TestRunner")
+    test_logger.setLevel(log_level) # Ensure this logger also respects the chosen level
+    # test_logger.propagate = False # if you want to stop it from going to root, but usually not needed if root is configured.
     
+    test_logger.info(f"--- Starting OTCMNScraperTool Standalone Test Runner ---")
+    test_logger.info(f"Global Log Level set to: {logging.getLevelName(log_level)}")
+    test_logger.info(f"Playwright Log Level set to: {logging.getLevelName(playwright_log_level)}")
+    test_logger.info(f"Test Runner Log Level set to: {logging.getLevelName(test_logger.level)}")
+
+
+    # --- Test Configuration ---
+    # Using a relative path for test output. Ensure this script is run from a context where this path makes sense.
+    test_base_output_dir = Path("./otcmn_tool_test_output") 
+    
+    # Optional: Clean up test directory for a completely fresh run (be careful with this)
+    # import shutil
+    # if test_base_output_dir.exists():
+    #     test_logger.warning(f"Removing existing test output directory: {test_base_output_dir.resolve()}")
+    #     shutil.rmtree(test_base_output_dir)
+    
+    try:
+        test_base_output_dir.mkdir(parents=True, exist_ok=True)
+        test_logger.info(f"Test output will be saved in: {test_base_output_dir.resolve()}")
+    except Exception as e_dir:
+        test_logger.error(f"Could not create test output directory {test_base_output_dir}: {e_dir}", exc_info=True)
+        return # Cannot proceed without output directory
+
+    # --- CDP Endpoint ---
+    # Get CDP endpoint from command line argument if provided, otherwise it's None.
+    cdp_arg = None
+    if len(sys.argv) > 1 and sys.argv[1].startswith("ws://"):
+        cdp_arg = sys.argv[1]
+        test_logger.info(f"Using CDP endpoint from command line argument: {cdp_arg}")
+    else:
+        test_logger.info("No CDP endpoint provided via command line argument. Tool will launch its own browser for scraping actions.")
+
     tool_instance: Optional[OTCMNScraperTool] = None
     try:
+        # Instantiate the tool
         tool_instance = OTCMNScraperTool()
-        if tool_instance._logger_instance:
-             tool_instance._logger_instance.setLevel(log_level) # Ensure tool instance logger respects test level
-
-        test_logger.info("\n--- [Test Case: Full Scrape (limited pages/securities for test)] ---")
-        result_scrape = await tool_instance._arun(
-            output_directory=str(test_output_dir),
-            cdp_endpoint_url=tool_instance.cdp_endpoint_url,
-            max_listing_pages_per_board=1, 
-            max_securities_to_process=1    # Further reduced for quicker test
-        )
         
-        test_logger.info(f"Scraping Result (JSON):")
+        # Ensure the tool's internal logger also respects the desired log level for the test run
+        if tool_instance._logger_instance:
+            tool_instance._logger_instance.setLevel(log_level)
+            # The OtcmSiteInteractor and its handlers get their logger from the tool's logger,
+            # so their log levels will also be influenced by this.
+            test_logger.debug(f"Tool's internal logger level set to: {logging.getLevelName(tool_instance._logger_instance.level)}")
+
+
+        # --- [TEST CASE 1: scrape_boards] ---
+        test_logger.info("\n--- [Test Case: scrape_boards action] ---")
+        scrape_boards_params = ScrapeBoardsParams(
+            output_directory=str(test_base_output_dir), # Pass the Path object as string
+            max_listing_pages_per_board=2 # Limit pages for quicker testing; set to None or higher for full scrape
+        )
+        scrape_boards_action_input_dict = OTCMNScraperActionInput(
+            action="scrape_boards",
+            parameters=scrape_boards_params,
+            cdp_endpoint_url=cdp_arg
+        ).model_dump(mode='json') # Use .model_dump() for Pydantic v2
+
+        test_logger.info(f"Tool input for 'scrape_boards': {json.dumps(scrape_boards_action_input_dict, indent=2)}")
+        
+        # Call arun using dictionary unpacking for the arguments
+        result_boards_str = await tool_instance.arun(tool_input=scrape_boards_action_input_dict)
+        
+        test_logger.info(f"'scrape_boards' action raw result string:\n{result_boards_str}")
         try:
-            parsed_result = json.loads(result_scrape)
-            print(json.dumps(parsed_result, indent=2)) 
-            if parsed_result.get("status") != "success" or (parsed_result.get("errors") and len(parsed_result["errors"]) > 0) : # Check if errors list is non-empty
-                 test_logger.error("Scraping process reported errors or did not complete successfully.")
+            result_boards_json = json.loads(result_boards_str)
+            test_logger.info(f"'scrape_boards' action parsed JSON result:\n{json.dumps(result_boards_json, indent=2, ensure_ascii=False)}")
+            if result_boards_json.get("status") != "success" or result_boards_json.get("errors"):
+                test_logger.error(f"'scrape_boards' action reported status '{result_boards_json.get('status')}' or errors: {result_boards_json.get('errors')}")
         except json.JSONDecodeError:
-            test_logger.error(f"Failed to parse result as JSON: {result_scrape}")
+            test_logger.error(f"Failed to parse 'scrape_boards' result as JSON: {result_boards_str}")
+
+
+        # --- [TEST CASE 2: filter_securities] ---
+        # This test assumes scrape_boards has run and populated some data.
+        test_logger.info("\n--- [Test Case: filter_securities action] ---")
+        filter_params = FilterSecuritiesParams(
+            output_directory=str(test_base_output_dir),
+            filter_output_filename="test_filter_mnt_bonds.json",
+            filter_currency="MNT", # Example filter: MNT currency bonds
+            # filter_interest_rate_min=15.0 # Example: interest rate >= 15%
+        )
+        filter_action_input_dict = OTCMNScraperActionInput(
+            action="filter_securities",
+            parameters=filter_params,
+            cdp_endpoint_url=None # Not used by filter_securities
+        ).model_dump(mode='json')
+
+        test_logger.info(f"Tool input for 'filter_securities': {json.dumps(filter_action_input_dict, indent=2)}")
+        result_filter_str = await tool_instance.arun(tool_input=filter_action_input_dict)
+
+        test_logger.info(f"'filter_securities' action raw result string:\n{result_filter_str}")
+        try:
+            result_filter_json = json.loads(result_filter_str)
+            test_logger.info(f"'filter_securities' action parsed JSON result:\n{json.dumps(result_filter_json, indent=2, ensure_ascii=False)}")
+            if result_filter_json.get("status") != "success" or result_filter_json.get("errors"):
+                 test_logger.error(f"'filter_securities' action reported status '{result_filter_json.get('status')}' or errors: {result_filter_json.get('errors')}")
+            elif result_filter_json.get("matching_securities_count", 0) == 0 and params.filter_currency == "MNT":
+                 test_logger.warning("Filter action succeeded but found 0 matching MNT securities. This might be expected if no MNT securities were scraped or matched.")
+
+        except json.JSONDecodeError:
+            test_logger.error(f"Failed to parse 'filter_securities' result as JSON: {result_filter_str}")
+
+        
+        # --- [TEST CASE 3: scrape_filtered_details] ---
+        # This test assumes a filter file (e.g., 'test_filter_mnt_bonds.json') exists from the previous step.
+        test_logger.info("\n--- [Test Case: scrape_filtered_details action] ---")
+        
+        # Check if the filter file from the previous step exists and has content
+        filter_file_to_use = test_base_output_dir / "filters" / "test_filter_mnt_bonds.json"
+        if not filter_file_to_use.exists():
+            test_logger.warning(f"Filter file '{filter_file_to_use}' not found. Skipping 'scrape_filtered_details' test.")
+        else:
+            try:
+                with open(filter_file_to_use, 'r') as f_check:
+                    if not json.load(f_check): # Check if file is empty list
+                        test_logger.warning(f"Filter file '{filter_file_to_use}' is empty. Skipping 'scrape_filtered_details' as there's nothing to scrape.")
+                        # Optionally delete the empty filter file if it causes issues for re-runs
+                        # filter_file_to_use.unlink() 
+                    else:
+                        scrape_details_params = ScrapeFilteredDetailsParams(
+                            output_directory=str(test_base_output_dir),
+                            filter_input_filename="test_filter_mnt_bonds.json", # Must match filename from filter_securities
+                            max_securities_to_process_from_filter=2 # Limit for testing; None for all
+                        )
+                        scrape_details_action_input_dict = OTCMNScraperActionInput(
+                            action="scrape_filtered_details",
+                            parameters=scrape_details_params,
+                            cdp_endpoint_url=cdp_arg # CDP might be needed again
+                        ).model_dump(mode='json')
+
+                        test_logger.info(f"Tool input for 'scrape_filtered_details': {json.dumps(scrape_details_action_input_dict, indent=2)}")
+                        result_details_str = await tool_instance.arun(tool_input=scrape_details_action_input_dict)
+                        
+                        test_logger.info(f"'scrape_filtered_details' action raw result string:\n{result_details_str}")
+                        try:
+                            result_details_json = json.loads(result_details_str)
+                            test_logger.info(f"'scrape_filtered_details' action parsed JSON result:\n{json.dumps(result_details_json, indent=2, ensure_ascii=False)}")
+                            if result_details_json.get("status") != "success" or result_details_json.get("errors_by_isin"):
+                                test_logger.error(f"'scrape_filtered_details' action reported status '{result_details_json.get('status')}' or errors: {result_details_json.get('errors_by_isin')}")
+                        except json.JSONDecodeError:
+                            test_logger.error(f"Failed to parse 'scrape_filtered_details' result as JSON: {result_details_str}")
+            except json.JSONDecodeError:
+                 test_logger.error(f"Filter file '{filter_file_to_use}' seems to be invalid JSON. Skipping 'scrape_filtered_details'.")
+            except Exception as e_read_filter:
+                 test_logger.error(f"Error reading filter file '{filter_file_to_use}': {e_read_filter}. Skipping 'scrape_filtered_details'.")
+
 
     except Exception as e:
-        test_logger.error(f"An error occurred during the OTCMN_Scraper test: {e}", exc_info=True)
+        test_logger.error(f"An unexpected error occurred during the OTCMNScraperTool test run: {e}", exc_info=True)
     finally:
         if tool_instance:
-            test_logger.info(f"Closing OTCMNScraperTool (if applicable)...")
-            await tool_instance.close() 
-            test_logger.info(f"OTCMNScraperTool close called.")
-        test_logger.info(f"OTCMNScraperTool standalone async test finished.")
+            await tool_instance.close() # Though close currently does little, it's good practice for future resource cleanup
+        test_logger.info(f"--- OTCMNScraperTool Standalone Test Runner Finished ---")
+
 
 if __name__ == "__main__":
+    # To run this test from the directory containing the tool file (e.g., your_project_root/src/tools/):
+    # Example: python otcmn_scraper_tool_file.py 
+    # Or with CDP: python otcmn_scraper_tool_file.py ws://127.0.0.1:9222/devtools/browser/your-cdp-id
+    # Ensure your PYTHONPATH is set up correctly if src.otcmn_interaction is not found.
+    # e.g., export PYTHONPATH="${PYTHONPATH}:/path/to/your_project_root" (if running from outside src)
+    # or run as a module from project root: python -m src.tools.otcmn_scraper_tool_file <cdp_arg_if_any>
+    
+    # Python's asyncio.run is a good way to run the main async function
     asyncio.run(main_test_otcmn_scraper_tool())

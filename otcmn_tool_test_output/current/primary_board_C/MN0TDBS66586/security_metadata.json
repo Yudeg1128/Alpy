@@ -1,0 +1,16 @@
+{
+  "Security": "C\n\nTDBS-01-11\n\nTDBS bond",
+  "ISIN": "MN0TDBS66586",
+  "Currency": "MNT",
+  "Interest Rate": "11.00%",
+  "Maturity Date": "2025-04-07",
+  "Quantity": "5,000",
+  "Price": "₮ 1,000,000",
+  "Total Amount": "₮ 5,000,000,000",
+  "Start Date": "2024-10-07",
+  "End Date": "2024-10-07",
+  "Underwriter": "TDB Securities",
+  "Progress": "100%",
+  "url_id": "f1b54cc1-822f-4e0f-96c3-d74532b12fb8",
+  "detail_url_path": "/securities/detail?id=f1b54cc1-822f-4e0f-96c3-d74532b12fb8"
+}

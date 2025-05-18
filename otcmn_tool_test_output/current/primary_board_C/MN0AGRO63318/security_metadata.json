@@ -1,0 +1,16 @@
+{
+  "Security": "C\n\nAGRO-TCB-01-20\n\nАгро Бонд",
+  "ISIN": "MN0AGRO63318",
+  "Currency": "MNT",
+  "Interest Rate": "20.00%",
+  "Maturity Date": "2025-09-22",
+  "Quantity": "25,000",
+  "Price": "₮ 100,000",
+  "Total Amount": "₮ 2,500,000,000",
+  "Start Date": "2023-09-22",
+  "End Date": "2023-09-22",
+  "Underwriter": "Tenger Capital",
+  "Progress": "100%",
+  "url_id": "460b5681-fee6-471e-b10f-414df010ea1e",
+  "detail_url_path": "/securities/detail?id=460b5681-fee6-471e-b10f-414df010ea1e"
+}

@@ -1,0 +1,4118 @@
+[
+  {
+    "isin": "MN00DBM60772",
+    "detail_url_path": "/securities/detail?id=1ad8aac0-520b-46c0-83c6-47d707b4dc29",
+    "board_category": "secondary_board_A",
+    "original_metadata_summary": {
+      "Security": "A\n\nDBMB-2_12.6\n\nDBM Bond 2",
+      "Currency": "MNT",
+      "Interest Rate": "12.60%",
+      "Maturity Date": "2025-05-05",
+      "ISIN": "MN00DBM60772"
+    }
+  },
+  {
+    "isin": "MN0HALT66501",
+    "detail_url_path": "/securities/detail?id=fb062d61-7627-4f07-8d6e-bca761f71b5c",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nHALT-GCB-2.1-20\n\nKhan Altai bond 2.1",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2026-03-26",
+      "ISIN": "MN0HALT66501"
+    }
+  },
+  {
+    "isin": "MN0SHJA67844",
+    "detail_url_path": "/securities/detail?id=cbc93ba3-6ffd-43ca-b9d3-cbd67f5e5de1",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nSHJA-GCB-2.3-18.5\n\nShijir bond 2.3",
+      "Currency": "MNT",
+      "Interest Rate": "18.50%",
+      "Maturity Date": "2026-01-22",
+      "ISIN": "MN0SHJA67844"
+    }
+  },
+  {
+    "isin": "MN0TBFI67523",
+    "detail_url_path": "/securities/detail?id=d5337139-b11d-4f68-869d-aa2534ca2e55",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nTBFI-TBC-04-18\n\nTBFI bond 4",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2025-12-25",
+      "ISIN": "MN0TBFI67523"
+    }
+  },
+  {
+    "isin": "MN0GSBA67397",
+    "detail_url_path": "/securities/detail?id=316fbf71-6d3d-4e5e-adaa-41f6903650c2",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nGSBA-SGB-6.1-18\n\nGSB bond 6.1",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2025-12-22",
+      "ISIN": "MN0GSBA67397"
+    }
+  },
+  {
+    "isin": "MN0BJTB68296",
+    "detail_url_path": "/securities/detail?id=4ce52dcf-b852-4a04-8df7-c37fe6b77433",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nBJTB-GCB-2.10-18\n\nBuuruljuut bond 2.10",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2027-02-24",
+      "ISIN": "MN0BJTB68296"
+    }
+  },
+  {
+    "isin": "MN0CRDA68202",
+    "detail_url_path": "/securities/detail?id=80738488-1676-4e5d-83cd-5a43070674ac",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nCRDA-MCB-3.3-19\n\nCredit bond 3.3",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2026-08-19",
+      "ISIN": "MN0CRDA68202"
+    }
+  },
+  {
+    "isin": "MN0GSBC65090",
+    "detail_url_path": "/securities/detail?id=4aa3ac0e-6458-466f-a218-f69b79b965af",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nGSBC-TCB-4.3-18\n\nGSB bond 4.3",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2025-11-03",
+      "ISIN": "MN0GSBC65090"
+    }
+  },
+  {
+    "isin": "MN0BJTB67868",
+    "detail_url_path": "/securities/detail?id=75faf9eb-f805-492e-aa33-3ad93d772dbf",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nBJTB-GCB-2.6-18\n\nBuuruljuut bond 2.6",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2027-01-22",
+      "ISIN": "MN0BJTB67868"
+    }
+  },
+  {
+    "isin": "MN0BRSA68848",
+    "detail_url_path": "/securities/detail?id=6524ae49-f623-4bbf-a449-1174dc0089ab",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nBRSA-TCB-6.1-20\n\nBers bond 6.1",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2026-04-20",
+      "ISIN": "MN0BRSA68848"
+    }
+  },
+  {
+    "isin": "MN0NUMR67804",
+    "detail_url_path": "/securities/detail?id=83706d27-a142-4ef2-8860-a346366a162e",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nNUMR-GCB-6.9-19\n\nNumur bond 6.9",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2026-01-15",
+      "ISIN": "MN0NUMR67804"
+    }
+  },
+  {
+    "isin": "MN0GSBC66254",
+    "detail_url_path": "/securities/detail?id=17c71b0b-788d-436e-bb09-d26db02edb07",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nGSBC-TCB-4.6-18\n\nGSB bond 4.6",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2026-03-02",
+      "ISIN": "MN0GSBC66254"
+    }
+  },
+  {
+    "isin": "MN0SONA69111",
+    "detail_url_path": "/securities/detail?id=370d774c-a968-4eaa-95ea-cef8d6e62f13",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nSONA-GCB-6.3-20\n\nSono bond 6.3",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2026-05-08",
+      "ISIN": "MN0SONA69111"
+    }
+  },
+  {
+    "isin": "MN0SONA67917",
+    "detail_url_path": "/securities/detail?id=291b270d-cbcb-4003-96f2-bdbf1b628c1d",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nSONA-GCB-6.1-19.5\n\nSono bond 6.1",
+      "Currency": "MNT",
+      "Interest Rate": "19.50%",
+      "Maturity Date": "2026-01-28",
+      "ISIN": "MN0SONA67917"
+    }
+  },
+  {
+    "isin": "MN0URBA68448",
+    "detail_url_path": "/securities/detail?id=747e255e-3a2c-4f80-a653-eb91b29d9916",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nURBA-TBC-5.1-20\n\nUrban bond 5.1",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2026-03-11",
+      "ISIN": "MN0URBA68448"
+    }
+  },
+  {
+    "isin": "MN0SHJA67760",
+    "detail_url_path": "/securities/detail?id=25eaab21-700f-478d-abf6-a2d481a7fdd8",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nSHJA-GCB-2.2-18.5\n\nShijir bond 2.2",
+      "Currency": "MNT",
+      "Interest Rate": "18.50%",
+      "Maturity Date": "2026-01-12",
+      "ISIN": "MN0SHJA67760"
+    }
+  },
+  {
+    "isin": "MN0BYAN66062",
+    "detail_url_path": "/securities/detail?id=62bfa44b-c40b-4fdb-aab3-b6e31ab46f81",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nBYAN-ACB-3.4-20\n\nBayn bond 3.4",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2026-02-16",
+      "ISIN": "MN0BYAN66062"
+    }
+  },
+  {
+    "isin": "MN0BJTB67595",
+    "detail_url_path": "/securities/detail?id=fcf9ab5a-ce18-40cf-9979-f65dc562a669",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nBJTB-GCB-2.2-19\n\nBuuruljuut bond 2.2",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2026-12-31",
+      "ISIN": "MN0BJTB67595"
+    }
+  },
+  {
+    "isin": "MN0NCPA65334",
+    "detail_url_path": "/securities/detail?id=2b40173d-a18d-496c-8a40-6666f0dfb54c",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nNCPA-MCB-3.1-18.5\n\nNet Auto bond 3.1",
+      "Currency": "MNT",
+      "Interest Rate": "18.50%",
+      "Maturity Date": "2025-06-02",
+      "ISIN": "MN0NCPA65334"
+    }
+  },
+  {
+    "isin": "MN0TLST68439",
+    "detail_url_path": "/securities/detail?id=a87ca376-1059-4e6c-9a1a-5946e58d291a",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nTLST-ACB-1.2-20\n\nTalst tower bond 1.2",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2026-09-11",
+      "ISIN": "MN0TLST68439"
+    }
+  },
+  {
+    "isin": "MN0CRDT65059",
+    "detail_url_path": "/securities/detail?id=aea13c12-ef34-49f7-90f7-897442fd5868",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nCRDT-MCB-2.3-19\n\nCredit bond 2.3",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2025-04-30",
+      "ISIN": "MN0CRDT65059"
+    }
+  },
+  {
+    "isin": "MN0NCPA65383",
+    "detail_url_path": "/securities/detail?id=5349ac8f-c5c6-43e8-b662-ffe745695561",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nNCPA-MCB-3.2-18.5\n\nNet Auto bond 3.2",
+      "Currency": "MNT",
+      "Interest Rate": "18.50%",
+      "Maturity Date": "2025-06-06",
+      "ISIN": "MN0NCPA65383"
+    }
+  },
+  {
+    "isin": "MN0TBFI67242",
+    "detail_url_path": "/securities/detail?id=c4f7c119-91ac-49aa-8698-ce609b68cf5f",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nTBFI-TBC-02-18\n\nTBFI bond 2",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2025-12-08",
+      "ISIN": "MN0TBFI67242"
+    }
+  },
+  {
+    "isin": "MN0BYAN66138",
+    "detail_url_path": "/securities/detail?id=e7eec51a-0c87-4cf0-b1dd-4c5fe2878b80",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nBYAN-ACB-3.5-20\n\nBayn bond 3.5",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2026-02-23",
+      "ISIN": "MN0BYAN66138"
+    }
+  },
+  {
+    "isin": "MN0NTCP67298",
+    "detail_url_path": "/securities/detail?id=00e05b5d-8217-42a4-abc6-cb02e7630292",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nNTCP-TDB-2.8-19\n\nNet Bond 2.8",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2025-12-10",
+      "ISIN": "MN0NTCP67298"
+    }
+  },
+  {
+    "isin": "MN0LUXA65979",
+    "detail_url_path": "/securities/detail?id=7816a9c7-d516-47c2-987e-e3cd071d74fe",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nLUXA-TBC-1.2-21\n\nLux bond 1.2",
+      "Currency": "MNT",
+      "Interest Rate": "21.00%",
+      "Maturity Date": "2025-07-31",
+      "ISIN": "MN0LUXA65979"
+    }
+  },
+  {
+    "isin": "MN0LUXA65797",
+    "detail_url_path": "/securities/detail?id=b12328cc-28ae-4c09-b7c0-12327363f685",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nLUXA-TBC-1.1-21\n\nLux bond 1.1",
+      "Currency": "MNT",
+      "Interest Rate": "21.00%",
+      "Maturity Date": "2025-07-09",
+      "ISIN": "MN0LUXA65797"
+    }
+  },
+  {
+    "isin": "MN0BYAN66443",
+    "detail_url_path": "/securities/detail?id=7045b273-f04c-4ed1-993c-d29d33c98857",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nBYAN-ACB-3.9-20\n\nBayn bond 3.9",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2026-03-19",
+      "ISIN": "MN0BYAN66443"
+    }
+  },
+  {
+    "isin": "MN0BIDD63620",
+    "detail_url_path": "/securities/detail?id=8d295ff8-ede5-4492-a35c-dad225bcadab",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nBIDD-TBB-4.1-19.3\n\nBid Bond 4.1",
+      "Currency": "MNT",
+      "Interest Rate": "19.30%",
+      "Maturity Date": "2025-05-21",
+      "ISIN": "MN0BIDD63620"
+    }
+  },
+  {
+    "isin": "MN0BJTB67561",
+    "detail_url_path": "/securities/detail?id=89dd1d7d-7beb-46aa-871c-ac460e698793",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nBJTB-GCB-2.1-19\n\nBuuruljuut bond 2.1",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2026-12-28",
+      "ISIN": "MN0BJTB67561"
+    }
+  },
+  {
+    "isin": "MN0ZLLY65908",
+    "detail_url_path": "/securities/detail?id=adac906f-346a-47e5-8f02-fa3bb855a34a",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nZLLY-SIB-3.3-21\n\nZeely Bond 3.3",
+      "Currency": "MNT",
+      "Interest Rate": "21.00%",
+      "Maturity Date": "2025-07-24",
+      "ISIN": "MN0ZLLY65908"
+    }
+  },
+  {
+    "isin": "MN0TSON67321",
+    "detail_url_path": "/securities/detail?id=cc9cb468-d673-4284-8b55-11e60d03779d",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nTSON-MIB-1.8-19\n\nGem toson energy bond 1.8",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2026-06-16",
+      "ISIN": "MN0TSON67321"
+    }
+  },
+  {
+    "isin": "MN0TSON65226",
+    "detail_url_path": "/securities/detail?id=e2a1db2c-012f-4f29-a955-c7f7ec7e06c4",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nTSON-MIB-1.1-19\n\nGem toson energy bond 1.1",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2025-11-17",
+      "ISIN": "MN0TSON65226"
+    }
+  },
+  {
+    "isin": "MN0BYAN66245",
+    "detail_url_path": "/securities/detail?id=71b96e6b-aa87-4416-a5f3-419247a20a6c",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nBYAN-ACB-3.7-20\n\nBayn bond 3.7",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2026-03-02",
+      "ISIN": "MN0BYAN66245"
+    }
+  },
+  {
+    "isin": "MN00SHJ67570",
+    "detail_url_path": "/securities/detail?id=6eb15744-316c-4947-908f-9a63d69ad00a",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nSHJA-GCB-2.1-19.5\n\nShijir bond 2.1",
+      "Currency": "MNT",
+      "Interest Rate": "19.50%",
+      "Maturity Date": "2026-06-29",
+      "ISIN": "MN00SHJ67570"
+    }
+  },
+  {
+    "isin": "MN0EATO67039",
+    "detail_url_path": "/securities/detail?id=1797d935-b3f3-4789-b0ca-fef4e0630dc0",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nEATO-BDS-01-22\n\nEatopia bond 1",
+      "Currency": "MNT",
+      "Interest Rate": "22.00%",
+      "Maturity Date": "2026-02-18",
+      "ISIN": "MN0EATO67039"
+    }
+  },
+  {
+    "isin": "MN0GSBC65280",
+    "detail_url_path": "/securities/detail?id=cee406a7-aef3-4d26-911d-af3b2104e0b0",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nGSBC-TCB-4.4-18\n\nGSB bond 4.4",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2025-11-24",
+      "ISIN": "MN0GSBC65280"
+    }
+  },
+  {
+    "isin": "MN0SONF67304",
+    "detail_url_path": "/securities/detail?id=352bfb06-be1c-4cde-9390-1905095d69ba",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nSONF-GCB-4.9-20\n\nSono bond 4.9",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2025-12-15",
+      "ISIN": "MN0SONF67304"
+    }
+  },
+  {
+    "isin": "MN0TRUS67139",
+    "detail_url_path": "/securities/detail?id=0c3617ec-61ff-4a34-a0f2-af5b00255df3",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nTRUS-MCB-3.2-20\n\nTrust bond 3.2",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2025-11-24",
+      "ISIN": "MN0TRUS67139"
+    }
+  },
+  {
+    "isin": "MN0TSON65812",
+    "detail_url_path": "/securities/detail?id=bc1a1c22-a00d-4cd2-8bac-f776fbe54144",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nTSON-MIB-1.5-19\n\nGem toson energy bond 1.5",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2026-01-09",
+      "ISIN": "MN0TSON65812"
+    }
+  },
+  {
+    "isin": "MN0LUXA66084",
+    "detail_url_path": "/securities/detail?id=a0a0668c-fcdd-4327-98fb-dc7e43a6420a",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nLUXA-TBC-1.3-21\n\nLux bond 1.3",
+      "Currency": "MNT",
+      "Interest Rate": "21.00%",
+      "Maturity Date": "2025-08-18",
+      "ISIN": "MN0LUXA66084"
+    }
+  },
+  {
+    "isin": "MN0PCKT66619",
+    "detail_url_path": "/securities/detail?id=518e6473-cfe1-463a-a6c5-1e7fb474272e",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nPCKT-INB-1.1-19\n\nPocket bond 1.1",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2025-10-09",
+      "ISIN": "MN0PCKT66619"
+    }
+  },
+  {
+    "isin": "MN0MTUA65827",
+    "detail_url_path": "/securities/detail?id=ef6f2198-2349-44fa-92be-436f28930066",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nMTUA-GCB-6.2-20.4\n\nMaster Bond 6.2",
+      "Currency": "MNT",
+      "Interest Rate": "20.40%",
+      "Maturity Date": "2025-07-17",
+      "ISIN": "MN0MTUA65827"
+    }
+  },
+  {
+    "isin": "MN0SLMN68098",
+    "detail_url_path": "/securities/detail?id=7321c1db-6ab2-4b68-8d49-808a6d7d86c2",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nSLMN-INB-1.2-19\n\nM bond 1.2",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2026-02-11",
+      "ISIN": "MN0SLMN68098"
+    }
+  },
+  {
+    "isin": "MN0LUXA68908",
+    "detail_url_path": "/securities/detail?id=c55daced-9043-405f-a302-b655031a178a",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nLUXA-TBC-1.6-21\n\nLux bond 1.6",
+      "Currency": "MNT",
+      "Interest Rate": "21.00%",
+      "Maturity Date": "2026-04-24",
+      "ISIN": "MN0LUXA68908"
+    }
+  },
+  {
+    "isin": "MN0SONF64889",
+    "detail_url_path": "/securities/detail?id=3e3690b6-e1f7-43e0-b504-35f60f79778c",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nSONF-GCB-4.4-20\n\nSono bond 4.4",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2025-04-10",
+      "ISIN": "MN0SONF64889"
+    }
+  },
+  {
+    "isin": "MN0UNET65116",
+    "detail_url_path": "/securities/detail?id=e2a39085-b4bb-4376-8ab4-6e9392295fb0",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nUNET-INB-1.3-19\n\nUnet bond 1.3",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2025-05-07",
+      "ISIN": "MN0UNET65116"
+    }
+  },
+  {
+    "isin": "MN0TLST67621",
+    "detail_url_path": "/securities/detail?id=18cc0bf7-f984-473c-a05b-d0411c2a44cf",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nTLST-ACB-1.1-20\n\nTalst tower bond 1.1",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2026-07-01",
+      "ISIN": "MN0TLST67621"
+    }
+  },
+  {
+    "isin": "MN0PCKT66718",
+    "detail_url_path": "/securities/detail?id=8bf28455-f51c-4c13-8cc4-931beec0d117",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nPCKT-INB-1.2-18\n\nPocket bond 1.2",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2025-10-20",
+      "ISIN": "MN0PCKT66718"
+    }
+  },
+  {
+    "isin": "MN0SHHK65841",
+    "detail_url_path": "/securities/detail?id=68154c0f-bc0f-49fc-a0d9-2bc9b11b5544",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nSHHK-GCB-3.3-17\n\nShunkhlai Bond 3.3",
+      "Currency": "MNT",
+      "Interest Rate": "17.00%",
+      "Maturity Date": "2025-07-21",
+      "ISIN": "MN0SHHK65841"
+    }
+  },
+  {
+    "isin": "MN0URMI67143",
+    "detail_url_path": "/securities/detail?id=bb90af7b-23a1-4cdf-8c4c-4068f2a487c9",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nURMI-INB-01-20\n\nUrmini bond 1",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2025-11-25",
+      "ISIN": "MN0URMI67143"
+    }
+  },
+  {
+    "isin": "MN0BAYN64174",
+    "detail_url_path": "/securities/detail?id=414ce753-ae52-46d0-9726-59d28d7a197b",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nBAYN-APB-2.4-20.5\n\nBayn bond 2.4",
+      "Currency": "MNT",
+      "Interest Rate": "20.50%",
+      "Maturity Date": "2026-01-16",
+      "ISIN": "MN0BAYN64174"
+    }
+  },
+  {
+    "isin": "MN0GSBC65660",
+    "detail_url_path": "/securities/detail?id=38f0bb6c-10aa-4710-a761-11b5783ea1f1",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nGSBC-TCB-4.5-18\n\nGSB bond 4.5",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2026-01-05",
+      "ISIN": "MN0GSBC65660"
+    }
+  },
+  {
+    "isin": "MN0NUMR66863",
+    "detail_url_path": "/securities/detail?id=56b20cd8-bc55-4e15-bfd4-c1933eb56ebf",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nNUMR-GCB-6.7-20\n\nNumur bond 6.7",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2025-10-31",
+      "ISIN": "MN0NUMR66863"
+    }
+  },
+  {
+    "isin": "MN0BYAN66146",
+    "detail_url_path": "/securities/detail?id=d48e82da-52d0-44c9-98cf-a792634f5eaa",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nBYAN-ACB-3.6-20\n\nBayn bond 3.6",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2026-02-23",
+      "ISIN": "MN0BYAN66146"
+    }
+  },
+  {
+    "isin": "MN0MTSU66330",
+    "detail_url_path": "/securities/detail?id=4f926798-f3a2-40b0-8df3-c695487ebda9",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nMTSU-INB-2.2-19\n\nMatsuya bond 2.2",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2025-09-09",
+      "ISIN": "MN0MTSU66330"
+    }
+  },
+  {
+    "isin": "MN0TSST67907",
+    "detail_url_path": "/securities/detail?id=df12cac3-2d1e-4b25-bca0-6cd40fa1ef87",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nTSST-GCB-1.2-21\n\nTsast bond 1.2",
+      "Currency": "MNT",
+      "Interest Rate": "21.00%",
+      "Maturity Date": "2027-01-28",
+      "ISIN": "MN0TSST67907"
+    }
+  },
+  {
+    "isin": "MN0MGNA66884",
+    "detail_url_path": "/securities/detail?id=dc41f706-c7c5-4514-8841-3f3afa0b5623",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nMGNA-MCB-1.4-19\n\nMagna bond 1.4",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2025-10-31",
+      "ISIN": "MN0MGNA66884"
+    }
+  },
+  {
+    "isin": "MN0SLMN65185",
+    "detail_url_path": "/securities/detail?id=d90dfaa9-def2-4a0a-a36e-ba95a2d63ba5",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nSLMN-INB-01-20\n\nM bond",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2025-05-13",
+      "ISIN": "MN0SLMN65185"
+    }
+  },
+  {
+    "isin": "MN0NMRR67875",
+    "detail_url_path": "/securities/detail?id=e929a988-866d-4802-b695-954f3de5bf81",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nNMRR-GCB-7.1-19\n\nNumur bond 7.1",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2026-01-27",
+      "ISIN": "MN0NMRR67875"
+    }
+  },
+  {
+    "isin": "MN0PCKT66759",
+    "detail_url_path": "/securities/detail?id=6bc1e879-bcb7-4b0e-b323-d5ef30097ac1",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nPCKT-INB-1.3-18\n\nPocket bond 1.3",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2025-10-24",
+      "ISIN": "MN0PCKT66759"
+    }
+  },
+  {
+    "isin": "MN0TSST66685",
+    "detail_url_path": "/securities/detail?id=dc12279c-2279-4a8d-8ac6-988268b800c1",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nTSST-GCB-01-21\n\nTsast bond 1",
+      "Currency": "MNT",
+      "Interest Rate": "21.00%",
+      "Maturity Date": "2026-10-19",
+      "ISIN": "MN0TSST66685"
+    }
+  },
+  {
+    "isin": "MN0ZUVV66282",
+    "detail_url_path": "/securities/detail?id=a65ef5f5-b1b6-4589-a403-f289235595a4",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nZUVV-TDB-1.2-16.5\n\nZUV bond 1.2",
+      "Currency": "MNT",
+      "Interest Rate": "16.50%",
+      "Maturity Date": "2025-09-04",
+      "ISIN": "MN0ZUVV66282"
+    }
+  },
+  {
+    "isin": "MN0BJTB67983",
+    "detail_url_path": "/securities/detail?id=85066bc5-a6a3-4600-91d0-2fb2f8a92a4e",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nBJTB-GCB-2.8-19\n\nBuuruljuut bond 2.8",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2027-02-03",
+      "ISIN": "MN0BJTB67983"
+    }
+  },
+  {
+    "isin": "MN0GSBC64838",
+    "detail_url_path": "/securities/detail?id=9ff55110-a5db-4cb7-9512-95a1c70d59d3",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nGSBC-TCB-4.2-18\n\nGSB bond 4.2",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2025-10-03",
+      "ISIN": "MN0GSBC64838"
+    }
+  },
+  {
+    "isin": "MN0TBFI68125",
+    "detail_url_path": "/securities/detail?id=55875127-632f-420b-bdd0-4a6f41c420f6",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nTBFI-TBC-06-18\n\nTBFI bond 6",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2026-02-13",
+      "ISIN": "MN0TBFI68125"
+    }
+  },
+  {
+    "isin": "MN0HALT66519",
+    "detail_url_path": "/securities/detail?id=62839ee2-de16-4cbf-a44f-a5ace30c33fc",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nHALT-GCB-2.2-20\n\nKhan Altai bond 2.2",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2026-03-26",
+      "ISIN": "MN0HALT66519"
+    }
+  },
+  {
+    "isin": "MN0UNET65041",
+    "detail_url_path": "/securities/detail?id=61cfac94-ccd9-42a5-8384-29331f442cd4",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nUNET-INB-1.1-19\n\nUnet bond 1.1",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2025-04-30",
+      "ISIN": "MN0UNET65041"
+    }
+  },
+  {
+    "isin": "MN0BGFI67850",
+    "detail_url_path": "/securities/detail?id=29e96dae-366c-4b48-8331-c36f1b8b9cbb",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nBGFI-TDB-2.3-19\n\nBG bond 2.3",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2026-01-22",
+      "ISIN": "MN0BGFI67850"
+    }
+  },
+  {
+    "isin": "MN0TRUS66966",
+    "detail_url_path": "/securities/detail?id=a5fcc0ce-4a11-4a7e-837b-d16750126429",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nTRUS-MCB-3.1-20\n\nTrust bond 3.1",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2025-11-10",
+      "ISIN": "MN0TRUS66966"
+    }
+  },
+  {
+    "isin": "MN0NUMR66160",
+    "detail_url_path": "/securities/detail?id=0e6d7e6c-6163-4f5e-a050-1fce20f57694",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nNUMR-GCB-6.2-19\n\nNumur bond 6.2",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2025-08-22",
+      "ISIN": "MN0NUMR66160"
+    }
+  },
+  {
+    "isin": "MN0NUMR66178",
+    "detail_url_path": "/securities/detail?id=04f1019a-2701-450d-91b2-4ffa19887ffc",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nNUMR-GCB-6.3-19\n\nNumur bond 6.3",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2025-08-25",
+      "ISIN": "MN0NUMR66178"
+    }
+  },
+  {
+    "isin": "MN0IVNC66093",
+    "detail_url_path": "/securities/detail?id=15cbcc68-ff8e-4264-8fb1-9f14d96b1e56",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nIVNC-GCB-2.10-18\n\nInvescore A bond 2.10",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2025-08-18",
+      "ISIN": "MN0IVNC66093"
+    }
+  },
+  {
+    "isin": "MN0OMZA69191",
+    "detail_url_path": "/securities/detail?id=82fbb81b-6f5f-4583-8c06-6475154eaa88",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nOMZA-TBC-1.1-18.5\n\nOMZ bond 1.1",
+      "Currency": "MNT",
+      "Interest Rate": "18.50%",
+      "Maturity Date": "2026-05-13",
+      "ISIN": "MN0OMZA69191"
+    }
+  },
+  {
+    "isin": "MN0KKHN66950",
+    "detail_url_path": "/securities/detail?id=2fe3fed1-1ad3-47bd-b05a-7f9d02d0a045",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nKKHN-ACB-4.2-20\n\nKhan bond 4.2",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2025-11-10",
+      "ISIN": "MN0KKHN66950"
+    }
+  },
+  {
+    "isin": "MN0OMND65595",
+    "detail_url_path": "/securities/detail?id=a2215666-bd4a-4be5-ae81-478eb6204a6b",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nOMND-MCB-4.1-19\n\nOmni Bond 4.1",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2025-12-29",
+      "ISIN": "MN0OMND65595"
+    }
+  },
+  {
+    "isin": "MN0ACTV66345",
+    "detail_url_path": "/securities/detail?id=30c04591-b6c9-4398-88d1-e36f05d14f90",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nACTV-INB-2.2-18\n\nActive bond 2.2",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2026-03-09",
+      "ISIN": "MN0ACTV66345"
+    }
+  },
+  {
+    "isin": "MN0CRDA67279",
+    "detail_url_path": "/securities/detail?id=67d5fa38-9d4a-4bc3-b774-2988552b57fa",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nCRDA-MCB-3.1-19\n\nCredit bond 3.1",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2026-06-08",
+      "ISIN": "MN0CRDA67279"
+    }
+  },
+  {
+    "isin": "MN0UNET65074",
+    "detail_url_path": "/securities/detail?id=8a8f8924-8ff6-4397-9cb7-056a2a0982b6",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nUNET-INB-1.2-19\n\nUnet bond 1.2",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2025-05-02",
+      "ISIN": "MN0UNET65074"
+    }
+  },
+  {
+    "isin": "MN0OMND66551",
+    "detail_url_path": "/securities/detail?id=5ddc16bb-d8d3-4ef6-bcc0-4d263170298b",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nOMND-MCB-4.3-19\n\nOmni Bond 4.3",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2026-03-27",
+      "ISIN": "MN0OMND66551"
+    }
+  },
+  {
+    "isin": "MN0NUMR66673",
+    "detail_url_path": "/securities/detail?id=6e7ff740-0d58-4272-bf66-f67a3ffd9e2a",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nNUMR-GCB-6.6-19\n\nNumur bond 6.6",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2025-10-16",
+      "ISIN": "MN0NUMR66673"
+    }
+  },
+  {
+    "isin": "MN0BJTB67678",
+    "detail_url_path": "/securities/detail?id=ba915dc4-c3b2-4c54-88a3-3aab0f7e8e63",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nBJTB-GCB-2.4-19\n\nBuuruljuut bond 2.4",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2027-01-07",
+      "ISIN": "MN0BJTB67678"
+    }
+  },
+  {
+    "isin": "MN00NET67478",
+    "detail_url_path": "/securities/detail?id=ede01960-19aa-4d6e-9ba4-4b557ea459d6",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nNET-TDB-18-19\n\nNet Bond 18",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2025-12-23",
+      "ISIN": "MN00NET67478"
+    }
+  },
+  {
+    "isin": "MN0TLST68512",
+    "detail_url_path": "/securities/detail?id=2148f81c-cefd-4213-a0f6-2e040aa87801",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nTLST-ACB-1.3-20\n\nTalst tower bond 1.3",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2026-09-18",
+      "ISIN": "MN0TLST68512"
+    }
+  },
+  {
+    "isin": "MN0CRDA67899",
+    "detail_url_path": "/securities/detail?id=c1cb60ea-c05e-4bb2-b7a2-ae01deb446d9",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nCRDA-MCB-3.2-19\n\nCredit bond 3.2",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2026-07-28",
+      "ISIN": "MN0CRDA67899"
+    }
+  },
+  {
+    "isin": "MN0SIMP65681",
+    "detail_url_path": "/securities/detail?id=65a3cb00-a35d-4e44-b7ad-1c57042399fe",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nSIMP-MCB-04-18\n\nSimple bond 4",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2026-01-05",
+      "ISIN": "MN0SIMP65681"
+    }
+  },
+  {
+    "isin": "MN0SIMM67742",
+    "detail_url_path": "/securities/detail?id=b6f2a232-ac4d-4f48-a0cd-c29616dc6c88",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nSIMM-MCB-5.2-18\n\nSimple Bond 5.2",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2026-07-10",
+      "ISIN": "MN0SIMM67742"
+    }
+  },
+  {
+    "isin": "MN0MGNA66025",
+    "detail_url_path": "/securities/detail?id=044118b9-115a-4a02-bb3d-14b1a6cfa520",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nMGNA-MCB-1.2-19\n\nMagna bond 1.2",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2025-08-07",
+      "ISIN": "MN0MGNA66025"
+    }
+  },
+  {
+    "isin": "MN0MTSU66009",
+    "detail_url_path": "/securities/detail?id=66c51722-e560-4345-b4a9-9764160b9362",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nMTSU-INB-2.1-19\n\nMatsuya bond 2.1",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2025-08-06",
+      "ISIN": "MN0MTSU66009"
+    }
+  },
+  {
+    "isin": "MN0KKHN66729",
+    "detail_url_path": "/securities/detail?id=9e2adb95-0ad3-4335-9ea8-117e3ff3d5e1",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nKKHN-ACB-4.1-20\n\nKhan bond 4.1",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2025-10-21",
+      "ISIN": "MN0KKHN66729"
+    }
+  },
+  {
+    "isin": "MN0NUMR66400",
+    "detail_url_path": "/securities/detail?id=6d66833a-77d3-4eaf-a01e-398a7a2cd63b",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nNUMR-GCB-6.5-19\n\nNumur bond 6.5",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2025-09-15",
+      "ISIN": "MN0NUMR66400"
+    }
+  },
+  {
+    "isin": "MN0BYAN65643",
+    "detail_url_path": "/securities/detail?id=08c1564d-ae46-4fb2-8112-6253c6279ee2",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nBYAN-ACB-3.2-20\n\nBayn bond 3.2",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2026-01-05",
+      "ISIN": "MN0BYAN65643"
+    }
+  },
+  {
+    "isin": "MN0BAYN65452",
+    "detail_url_path": "/securities/detail?id=9e648bfc-9168-4c18-9fef-16dd8589ef44",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nBYAN-ACB-3.1-20\n\nBayn bond 3.1",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2025-12-15",
+      "ISIN": "MN0BAYN65452"
+    }
+  },
+  {
+    "isin": "MN0GSBC64796",
+    "detail_url_path": "/securities/detail?id=c4b9bc6c-29b6-43c5-803e-a0a4c31db146",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nGSBC-TCB-4.1-18\n\nGSB bond 4.1",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2025-09-29",
+      "ISIN": "MN0GSBC64796"
+    }
+  },
+  {
+    "isin": "MN0AMUU68217",
+    "detail_url_path": "/securities/detail?id=1bf302a9-7993-4998-9b47-79398e4799c5",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nAMUU-SGC-1.2-19\n\nAmu bond 1.2",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2026-08-19",
+      "ISIN": "MN0AMUU68217"
+    }
+  },
+  {
+    "isin": "MN0MTSY65342",
+    "detail_url_path": "/securities/detail?id=a3ec6f8d-09cc-4ea4-aa5d-7757cd00eaa8",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nMTSY-INB-1.2-19\n\nMatsuya bond 1.2",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2025-06-02",
+      "ISIN": "MN0MTSY65342"
+    }
+  },
+  {
+    "isin": "MN0MBBX67120",
+    "detail_url_path": "/securities/detail?id=28dc7b15-5817-41f2-b947-542761d87dce",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nMBBX-GCB-2.1-19.5\n\nMoneybox bond 2.1",
+      "Currency": "MNT",
+      "Interest Rate": "19.50%",
+      "Maturity Date": "2025-11-24",
+      "ISIN": "MN0MBBX67120"
+    }
+  },
+  {
+    "isin": "MN0GLOB64234",
+    "detail_url_path": "/securities/detail?id=2da3b3b6-afe8-44af-85de-8af572a5edd4",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nGLOB-TCB-1.2-19\n\nGlobal town bond 1.2",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2026-01-19",
+      "ISIN": "MN0GLOB64234"
+    }
+  },
+  {
+    "isin": "MN0SIMM66736",
+    "detail_url_path": "/securities/detail?id=5e6202e9-133a-4dce-9a5b-521b67e21541",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nSIMM-MCB-5.1-18\n\nSimple Bond 5.1",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2026-04-21",
+      "ISIN": "MN0SIMM66736"
+    }
+  },
+  {
+    "isin": "MN0CTMA67458",
+    "detail_url_path": "/securities/detail?id=bc2857da-9117-4b65-9716-4bc25a32241a",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nCTMA-ACB-04-19.5\n\nCTM bond 4",
+      "Currency": "MNT",
+      "Interest Rate": "19.50%",
+      "Maturity Date": "2026-06-22",
+      "ISIN": "MN0CTMA67458"
+    }
+  },
+  {
+    "isin": "MN0MAGN68112",
+    "detail_url_path": "/securities/detail?id=c8c361c1-6a45-4b14-903e-daab8f47e798",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nMAGN-MCB-2.2-19.5\n\nMagna bond 2.2",
+      "Currency": "MNT",
+      "Interest Rate": "19.50%",
+      "Maturity Date": "2026-02-13",
+      "ISIN": "MN0MAGN68112"
+    }
+  },
+  {
+    "isin": "MN0CTMK65196",
+    "detail_url_path": "/securities/detail?id=d401bf13-4a29-46e6-86f2-73fd74ed758c",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nCTMK-SIB-03-20.5\n\nCTM bond 3",
+      "Currency": "MNT",
+      "Interest Rate": "20.50%",
+      "Maturity Date": "2025-11-14",
+      "ISIN": "MN0CTMK65196"
+    }
+  },
+  {
+    "isin": "MN0TBFI67044",
+    "detail_url_path": "/securities/detail?id=9215675a-6fbf-4e9b-99ab-969cdda35b43",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nTBFI-TBC-01-18\n\nTBFI bond 1",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2025-11-18",
+      "ISIN": "MN0TBFI67044"
+    }
+  },
+  {
+    "isin": "MN0BAYN64133",
+    "detail_url_path": "/securities/detail?id=f429d36a-540b-46b0-b531-e5e95acd3d3a",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nBAYN-APB-2.3-20.5\n\nBayn bond 2.3",
+      "Currency": "MNT",
+      "Interest Rate": "20.50%",
+      "Maturity Date": "2026-01-15",
+      "ISIN": "MN0BAYN64133"
+    }
+  },
+  {
+    "isin": "MN0BAYN64075",
+    "detail_url_path": "/securities/detail?id=be5752d3-d001-434c-8970-26a3b3391deb",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nBAYN-APB-2.2-20.5\n\nBayn bond 2.2",
+      "Currency": "MNT",
+      "Interest Rate": "20.50%",
+      "Maturity Date": "2026-01-09",
+      "ISIN": "MN0BAYN64075"
+    }
+  },
+  {
+    "isin": "MN0ZUVV65631",
+    "detail_url_path": "/securities/detail?id=a6d616f1-eef0-4026-8121-f9da02d10e86",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nZUVV-TDB-1.1-16.5\n\nZUV bond 1.1",
+      "Currency": "MNT",
+      "Interest Rate": "16.50%",
+      "Maturity Date": "2025-07-07",
+      "ISIN": "MN0ZUVV65631"
+    }
+  },
+  {
+    "isin": "MN0TERB68004",
+    "detail_url_path": "/securities/detail?id=57095806-b5f7-420b-b5e2-3d3b771d52a1",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nTERB-GCB-4.1-20\n\nTera bond 4.1",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2026-08-03",
+      "ISIN": "MN0TERB68004"
+    }
+  },
+  {
+    "isin": "MN0KARA68383",
+    "detail_url_path": "/securities/detail?id=b7bcfe41-0fac-4836-8309-77f5c53e2098",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nKARA-TCB-3.1-19\n\nKhan altai bond 3.1",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2027-03-01",
+      "ISIN": "MN0KARA68383"
+    }
+  },
+  {
+    "isin": "MN0NTCP67116",
+    "detail_url_path": "/securities/detail?id=1adddd0e-9ab9-433c-bcde-df60310f8877",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nNTCP-TDB-2.6-19\n\nNET Bond 2.6",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2025-11-21",
+      "ISIN": "MN0NTCP67116"
+    }
+  },
+  {
+    "isin": "MN0NUMR66293",
+    "detail_url_path": "/securities/detail?id=1a969319-e039-45d1-b716-bb5c5d8dc35c",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nNUMR-GCB-6.4-19\n\nNumur bond 6.4",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2025-09-04",
+      "ISIN": "MN0NUMR66293"
+    }
+  },
+  {
+    "isin": "MN0MGLA68405",
+    "detail_url_path": "/securities/detail?id=7efffd3c-6d3f-41ce-8bc2-8c036163a3a7",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nMGLA-GCB-02-20.5\n\nMongol TV bond 2",
+      "Currency": "MNT",
+      "Interest Rate": "20.50%",
+      "Maturity Date": "2026-09-07",
+      "ISIN": "MN0MGLA68405"
+    }
+  },
+  {
+    "isin": "MN0BIDD63943",
+    "detail_url_path": "/securities/detail?id=96b6abe9-6832-420a-874e-634c4321657c",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nBIDD-TBB-4.2-19.3\n\nBid Bond 4.2",
+      "Currency": "MNT",
+      "Interest Rate": "19.30%",
+      "Maturity Date": "2025-06-23",
+      "ISIN": "MN0BIDD63943"
+    }
+  },
+  {
+    "isin": "MN0MTUA65694",
+    "detail_url_path": "/securities/detail?id=26baf76a-8cd2-41ed-ab4c-efaadb1b0f6b",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nMTUA-GCB-6.1-20.4\n\nMaster Bond 6.1",
+      "Currency": "MNT",
+      "Interest Rate": "20.40%",
+      "Maturity Date": "2025-07-07",
+      "ISIN": "MN0MTUA65694"
+    }
+  },
+  {
+    "isin": "MN0NUMR67283",
+    "detail_url_path": "/securities/detail?id=33e14665-e609-43d9-8b4e-b64b82cb249d",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nNUMR-GCB-6.8-19.5\n\nNumur bond 6.8",
+      "Currency": "MNT",
+      "Interest Rate": "19.50%",
+      "Maturity Date": "2025-12-09",
+      "ISIN": "MN0NUMR67283"
+    }
+  },
+  {
+    "isin": "MN0PCKT66890",
+    "detail_url_path": "/securities/detail?id=861bb954-bdd4-4cbd-b23c-5593159f6ec7",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nPCKT-INB-1.5-18\n\nPocket bond 1.5",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2025-11-03",
+      "ISIN": "MN0PCKT66890"
+    }
+  },
+  {
+    "isin": "MN0NRTA67348",
+    "detail_url_path": "/securities/detail?id=75a34010-4a19-4a49-8372-0a30e6a88d59",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nNRTA-MCB-1.2-19\n\nNRT bond 1.2",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2025-12-16",
+      "ISIN": "MN0NRTA67348"
+    }
+  },
+  {
+    "isin": "MN0BGFB66048",
+    "detail_url_path": "/securities/detail?id=5aac4692-e357-4f24-b0f0-ce7b4cd0a2ba",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nBGFB-TDB-3.2-19\n\nBG bond 3.2",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2025-08-13",
+      "ISIN": "MN0BGFB66048"
+    }
+  },
+  {
+    "isin": "MN0SONF65134",
+    "detail_url_path": "/securities/detail?id=d08cc959-2a9c-4c9d-8620-b6fc5c89b37f",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nSONF-GCB-4.6-20\n\nSono bond 4.6",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2025-05-08",
+      "ISIN": "MN0SONF65134"
+    }
+  },
+  {
+    "isin": "MN0UIZA68073",
+    "detail_url_path": "/securities/detail?id=3d3d3d96-bccc-460a-bcdb-9b723dfbe9cd",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nUIZA-GCB-02-20\n\nUizen bond 2",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2026-08-10",
+      "ISIN": "MN0UIZA68073"
+    }
+  },
+  {
+    "isin": "MN0MBBX68052",
+    "detail_url_path": "/securities/detail?id=f57ba796-ebf1-4b10-ace8-bfd4e50dc9a2",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nMBBX-GCB-2.2-19.5\n\nMoneybox bond 2.2",
+      "Currency": "MNT",
+      "Interest Rate": "19.50%",
+      "Maturity Date": "2026-02-09",
+      "ISIN": "MN0MBBX68052"
+    }
+  },
+  {
+    "isin": "MN0ZLLY65718",
+    "detail_url_path": "/securities/detail?id=c2fb1da4-f450-4ca2-89e3-80ff5c5a9abd",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nZLLY-SIB-3.1-21\n\nZeely Bond 3.1",
+      "Currency": "MNT",
+      "Interest Rate": "21.00%",
+      "Maturity Date": "2025-07-09",
+      "ISIN": "MN0ZLLY65718"
+    }
+  },
+  {
+    "isin": "MN0IVNC66192",
+    "detail_url_path": "/securities/detail?id=442173de-5e09-407c-9449-c322809d988c",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nIVNC-GCB-2.11-18\n\nInvescore A bond 2.11",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2025-08-25",
+      "ISIN": "MN0IVNC66192"
+    }
+  },
+  {
+    "isin": "MN0KARA68839",
+    "detail_url_path": "/securities/detail?id=7339775a-8b35-4e27-b65a-ac2725f81e9f",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nKARA-TCB-3.3-19\n\nKhan altai bond 3.3",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2027-04-19",
+      "ISIN": "MN0KARA68839"
+    }
+  },
+  {
+    "isin": "MN0TBFI67408",
+    "detail_url_path": "/securities/detail?id=59a88c51-8c15-4ed8-83e6-c5f91df1d807",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nTBFI-TBC-03-18\n\nTBFI bond 3",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2025-12-22",
+      "ISIN": "MN0TBFI67408"
+    }
+  },
+  {
+    "isin": "MN0MGNA66371",
+    "detail_url_path": "/securities/detail?id=647e295f-b3a9-4943-b226-ddfa08a25362",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nMGNA-MCB-1.3-19\n\nMagna bond 1.3",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2025-09-09",
+      "ISIN": "MN0MGNA66371"
+    }
+  },
+  {
+    "isin": "MN00NET66108",
+    "detail_url_path": "/securities/detail?id=d6f27354-189a-44c3-84f0-033733126b19",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nNET-TDB-16-19\n\nNET Bond 16",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2025-08-18",
+      "ISIN": "MN00NET66108"
+    }
+  },
+  {
+    "isin": "MN0SONF66926",
+    "detail_url_path": "/securities/detail?id=90b5424e-8e34-497b-9f47-d427d23fd587",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nSONF-GCB-4.8-20\n\nSono bond 4.8",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2025-11-04",
+      "ISIN": "MN0SONF66926"
+    }
+  },
+  {
+    "isin": "MN0ATRR66697",
+    "detail_url_path": "/securities/detail?id=d2d875e3-9de5-4734-a81b-291dee2d027c",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nATRR-ASB-02-22\n\nAtmor bond 2",
+      "Currency": "MNT",
+      "Interest Rate": "22.00%",
+      "Maturity Date": "2025-10-17",
+      "ISIN": "MN0ATRR66697"
+    }
+  },
+  {
+    "isin": "MN0MTSY65201",
+    "detail_url_path": "/securities/detail?id=0a2cb78a-f6a9-4fdc-b754-e6963086a1dd",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nMTSY-INB-1.1-19\n\nMatsuya bond 1.1",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2025-05-15",
+      "ISIN": "MN0MTSY65201"
+    }
+  },
+  {
+    "isin": "MN0TBFI69081",
+    "detail_url_path": "/securities/detail?id=55de44f2-da1f-4d34-8300-0e0281faae56",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nTBFI-TBC-09-18\n\nTBFI bond 9",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2026-05-05",
+      "ISIN": "MN0TBFI69081"
+    }
+  },
+  {
+    "isin": "MN0PCKT66783",
+    "detail_url_path": "/securities/detail?id=011fb060-6793-43ac-8054-8887077e9706",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nPCKT-INB-1.4-18.5\n\nPocket bond 1.4",
+      "Currency": "MNT",
+      "Interest Rate": "18.50%",
+      "Maturity Date": "2025-10-27",
+      "ISIN": "MN0PCKT66783"
+    }
+  },
+  {
+    "isin": "MN00NET67189",
+    "detail_url_path": "/securities/detail?id=fc744d26-5794-405b-a99f-3796ad348ca3",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nNET-TDB-17-19\n\nNET Bond 17",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2025-11-27",
+      "ISIN": "MN00NET67189"
+    }
+  },
+  {
+    "isin": "MN0BLJT66489",
+    "detail_url_path": "/securities/detail?id=1480aedc-280e-441e-8cae-27f970ee671a",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nBLJT-GCB-1.15-19\n\nBuuruljuut bond 1.15",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2026-09-22",
+      "ISIN": "MN0BLJT66489"
+    }
+  },
+  {
+    "isin": "MN0BYAN65700",
+    "detail_url_path": "/securities/detail?id=12d4cff8-8209-4f40-b7ee-de0deb9b983d",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nBYAN-ACB-3.3-20\n\nBayn bond 3.3",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2026-01-08",
+      "ISIN": "MN0BYAN65700"
+    }
+  },
+  {
+    "isin": "MN0SHHK65767",
+    "detail_url_path": "/securities/detail?id=e515388b-65ba-4463-8e51-83c888548973",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nSHHK-GCB-3.2-17\n\nShunkhlai Bond 3.2",
+      "Currency": "MNT",
+      "Interest Rate": "17.00%",
+      "Maturity Date": "2025-07-09",
+      "ISIN": "MN0SHHK65767"
+    }
+  },
+  {
+    "isin": "MN0BYAN66435",
+    "detail_url_path": "/securities/detail?id=6a7ee1f1-ca9e-4dcf-823e-6cc6e312811c",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nBYAN-ACB-3.8-20\n\nBayn bond 3.8",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2026-03-18",
+      "ISIN": "MN0BYAN66435"
+    }
+  },
+  {
+    "isin": "MN0SONA68147",
+    "detail_url_path": "/securities/detail?id=6f994557-aec8-43de-a3f5-1bf9dd5a5dc8",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nSONA-GCB-6.2-19.5\n\nSono bond 6.2",
+      "Currency": "MNT",
+      "Interest Rate": "19.50%",
+      "Maturity Date": "2026-02-16",
+      "ISIN": "MN0SONA68147"
+    }
+  },
+  {
+    "isin": "MN0TBFI67606",
+    "detail_url_path": "/securities/detail?id=0c2f35ad-9de2-4461-9f4d-2e3ba59a89d4",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nTBFI-TBC-05-18\n\nTBFI bond 5",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2025-12-30",
+      "ISIN": "MN0TBFI67606"
+    }
+  },
+  {
+    "isin": "MN0BAYN63994",
+    "detail_url_path": "/securities/detail?id=5b8a8964-cd3f-4518-8927-e5bd7c8129ba",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nBAYN-APB-2.1-20.5\n\nBayn bond 2.1",
+      "Currency": "MNT",
+      "Interest Rate": "20.50%",
+      "Maturity Date": "2025-12-26",
+      "ISIN": "MN0BAYN63994"
+    }
+  },
+  {
+    "isin": "MN0TSON68154",
+    "detail_url_path": "/securities/detail?id=9f4ca689-9e8e-4314-a678-18518c8da34e",
+    "board_category": "secondary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nTSON-MIB-1.13-19\n\nGem Toson Energy Bond 1.13",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2026-08-14",
+      "ISIN": "MN0TSON68154"
+    }
+  },
+  {
+    "isin": "MN0FNTC67372",
+    "detail_url_path": "/securities/detail?id=2068c10a-c1bb-4f55-bc87-3e6e3347d46b",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nFNTC-GCB-1.6-20.4\n\nFintec bond 1.6",
+      "Currency": "MNT",
+      "Interest Rate": "20.40%",
+      "Maturity Date": "2025-12-17",
+      "ISIN": "MN0FNTC67372"
+    }
+  },
+  {
+    "isin": "MN0SNNO66706",
+    "detail_url_path": "/securities/detail?id=e7b28ca7-a2bb-481f-830f-c55cb21411ae",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nSNNO-GCB-5.2-20\n\nSono bond 5.2",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2025-10-20",
+      "ISIN": "MN0SNNO66706"
+    }
+  },
+  {
+    "isin": "MN0ABTS67945",
+    "detail_url_path": "/securities/detail?id=a2adbdab-a374-49aa-9eb5-efbaf57b342d",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nABTS-TCB-02-20\n\nABTS bond 2",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2026-07-30",
+      "ISIN": "MN0ABTS67945"
+    }
+  },
+  {
+    "isin": "MN0MTUB66906",
+    "detail_url_path": "/securities/detail?id=8123ff56-1d54-470e-a5b0-a1bfc79e8a6f",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nMTUB-GCB-7.1-20\n\nMaster bond 7.1",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2025-11-04",
+      "ISIN": "MN0MTUB66906"
+    }
+  },
+  {
+    "isin": "MN0DMGA68410",
+    "detail_url_path": "/securities/detail?id=e4c0b420-d9b1-4a85-8ced-9bf751bcef64",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nDMGA-ACB-4.2-19\n\nDomog bond 4.2",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2026-03-06",
+      "ISIN": "MN0DMGA68410"
+    }
+  },
+  {
+    "isin": "MN0DMGA69061",
+    "detail_url_path": "/securities/detail?id=eaaace2b-34c4-454b-bb3c-b007bfb359a6",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nDMGA-ACB-4.4-19\n\nDomog bond 4.4",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2026-05-04",
+      "ISIN": "MN0DMGA69061"
+    }
+  },
+  {
+    "isin": "MN0KAMG66773",
+    "detail_url_path": "/securities/detail?id=0221f6ba-2196-4168-a587-92f37d9ecb40",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nKAMG-GCB-2.5-21\n\nKA bond 2.5",
+      "Currency": "MNT",
+      "Interest Rate": "21.00%",
+      "Maturity Date": "2026-10-26",
+      "ISIN": "MN0KAMG66773"
+    }
+  },
+  {
+    "isin": "MN0KAMG66989",
+    "detail_url_path": "/securities/detail?id=9df7b266-2aff-4be6-989d-a4f84cf66839",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nKAMG-GCB-2.8-21\n\nKA bond 2.8",
+      "Currency": "MNT",
+      "Interest Rate": "21.00%",
+      "Maturity Date": "2026-11-11",
+      "ISIN": "MN0KAMG66989"
+    }
+  },
+  {
+    "isin": "MN0NTCP67199",
+    "detail_url_path": "/securities/detail?id=847b3837-e767-4a68-8c3f-d6931da112f9",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nNTCP-TDB-2.7-19\n\nNet Bond 2.7",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2025-11-28",
+      "ISIN": "MN0NTCP67199"
+    }
+  },
+  {
+    "isin": "MN0NWTS67514",
+    "detail_url_path": "/securities/detail?id=97ac902c-e4ca-414f-9b1a-c4b71f6f559a",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nNWTS-ACB-3.10-20\n\nNVTS Trade bond 3.10",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2026-06-25",
+      "ISIN": "MN0NWTS67514"
+    }
+  },
+  {
+    "isin": "MN0DMGA69178",
+    "detail_url_path": "/securities/detail?id=d7b3eb6e-03f1-4622-9967-f76b52b71ffa",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nDMGA-ACB-4.5-19\n\nDomog bond 4.5",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2026-05-12",
+      "ISIN": "MN0DMGA69178"
+    }
+  },
+  {
+    "isin": "MN0DMGA68485",
+    "detail_url_path": "/securities/detail?id=cb5025ed-34e6-4a79-90e0-847183cd5f29",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nDMGA-ACB-4.3-19\n\nDomog bond 4.3",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2026-03-17",
+      "ISIN": "MN0DMGA68485"
+    }
+  },
+  {
+    "isin": "MN0INVE68889",
+    "detail_url_path": "/securities/detail?id=664e2cc9-b3da-495b-be15-8be74aeb22da",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nINVE-TBC-1.3-18\n\nINVE bond 1.3",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2026-04-23",
+      "ISIN": "MN0INVE68889"
+    }
+  },
+  {
+    "isin": "MN0DAUR68691",
+    "detail_url_path": "/securities/detail?id=6e461e3f-3885-46ec-a56b-9fe8ae179fae",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nDAUR-TCB-1.3-20\n\nDarkhan urguu bond 1.3",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2026-10-12",
+      "ISIN": "MN0DAUR68691"
+    }
+  },
+  {
+    "isin": "MN0DMGA68329",
+    "detail_url_path": "/securities/detail?id=4ff3ab93-029b-4970-ad08-4443eb714446",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nDMGA-ACB-4.1-19\n\nDomog bond 4.1",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2026-02-25",
+      "ISIN": "MN0DMGA68329"
+    }
+  },
+  {
+    "isin": "MN0BJTB68577",
+    "detail_url_path": "/securities/detail?id=0eae9bf1-5377-44bf-985e-d58ca6ec2c74",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nBJTB-GCB-2.12-19\n\nBuuruljuut bond 2.12",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2027-03-29",
+      "ISIN": "MN0BJTB68577"
+    }
+  },
+  {
+    "isin": "MN0INVE68335",
+    "detail_url_path": "/securities/detail?id=c1f3b2a6-5e22-47d0-aadc-559675063caf",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nINVE-TBC-1.2-17.5\n\nINVE bond 1.2",
+      "Currency": "MNT",
+      "Interest Rate": "17.50%",
+      "Maturity Date": "2026-02-26",
+      "ISIN": "MN0INVE68335"
+    }
+  },
+  {
+    "isin": "MN0LNDA66628",
+    "detail_url_path": "/securities/detail?id=b5a2391f-d7bc-48d6-9e97-5904b504eb9d",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nLNDA-TCB-2.6-18.5\n\nLend bond 2.6",
+      "Currency": "MNT",
+      "Interest Rate": "18.50%",
+      "Maturity Date": "2026-10-09",
+      "ISIN": "MN0LNDA66628"
+    }
+  },
+  {
+    "isin": "MN0TLCP69181",
+    "detail_url_path": "/securities/detail?id=ce1752d3-247f-46ee-99c1-5a1b34038efb",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nTLCP-ACB-01-20.5\n\nTalst capital bond 1",
+      "Currency": "MNT",
+      "Interest Rate": "20.50%",
+      "Maturity Date": "2026-05-13",
+      "ISIN": "MN0TLCP69181"
+    }
+  },
+  {
+    "isin": "MN0TSBN69217",
+    "detail_url_path": "/securities/detail?id=1a5a4fda-9592-4082-9efc-e85cf9faba6d",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nTSBN-ACB-1.1-20.5\n\nTSBON bond 1.1",
+      "Currency": "MNT",
+      "Interest Rate": "20.50%",
+      "Maturity Date": "2026-11-16",
+      "ISIN": "MN0TSBN69217"
+    }
+  },
+  {
+    "isin": "MN0TBNK67267",
+    "detail_url_path": "/securities/detail?id=e9d6ad6a-3c61-4034-893c-d7863c46ca26",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nTBNK-BDS-01-16\n\nState bank green bond 1",
+      "Currency": "MNT",
+      "Interest Rate": "16.00%",
+      "Maturity Date": "2025-12-09",
+      "ISIN": "MN0TBNK67267"
+    }
+  },
+  {
+    "isin": "MN0SNDA68314",
+    "detail_url_path": "/securities/detail?id=fa9b7eee-69ad-4a59-bb3a-037f0b2472f6",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nSNDA-INB-2.1-19\n\nSendmn bond 2.1",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2027-02-24",
+      "ISIN": "MN0SNDA68314"
+    }
+  },
+  {
+    "isin": "MN0GSBC67708",
+    "detail_url_path": "/securities/detail?id=93a4ced6-0111-4d61-90fa-ab33b234f39c",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nGSBC-TCB-4.7-18\n\nGSB bond 4.7",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2026-07-09",
+      "ISIN": "MN0GSBC67708"
+    }
+  },
+  {
+    "isin": "MN0NWTS67159",
+    "detail_url_path": "/securities/detail?id=f394e152-a82d-4ed2-a9fb-8d6f6284eed8",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nNWTS-ACB-3.8-20\n\nNVTS Trade bond 3.8",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2026-05-25",
+      "ISIN": "MN0NWTS67159"
+    }
+  },
+  {
+    "isin": "MN0LNDB68358",
+    "detail_url_path": "/securities/detail?id=1766b462-4144-4005-9fe1-110f7b9e13e6",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nLNDB-TBC-3.1-18.5\n\nLend bond 3.1",
+      "Currency": "MNT",
+      "Interest Rate": "18.50%",
+      "Maturity Date": "2026-02-26",
+      "ISIN": "MN0LNDB68358"
+    }
+  },
+  {
+    "isin": "MN0INVD66802",
+    "detail_url_path": "/securities/detail?id=dc335daa-5e00-4dd8-8c4d-ef0271c402dc",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nINVD-TBC-3.4-18\n\nInvescore INVD bond 3.4",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2025-10-27",
+      "ISIN": "MN0INVD66802"
+    }
+  },
+  {
+    "isin": "MN0MNDL67019",
+    "detail_url_path": "/securities/detail?id=461b7313-12e5-4140-9639-9547372caeee",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nMNDL-INB-1.1-19\n\nMandal bond 1.1",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2025-11-13",
+      "ISIN": "MN0MNDL67019"
+    }
+  },
+  {
+    "isin": "MN0NCFA68941",
+    "detail_url_path": "/securities/detail?id=5b8d4725-568e-4d02-92ba-f1a5b417d6a6",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nNCFB-MCB-6.1-18.5\n\nNC bond 6.1",
+      "Currency": "MNT",
+      "Interest Rate": "18.50%",
+      "Maturity Date": "2026-04-27",
+      "ISIN": "MN0NCFA68941"
+    }
+  },
+  {
+    "isin": "MN0BRRS66648",
+    "detail_url_path": "/securities/detail?id=7f5aa188-ea83-4508-a223-fcf1c670df0e",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nBRRS-GCB-5.1-19.5\n\nBers bond 5.1",
+      "Currency": "MNT",
+      "Interest Rate": "19.50%",
+      "Maturity Date": "2025-10-10",
+      "ISIN": "MN0BRRS66648"
+    }
+  },
+  {
+    "isin": "MN0INVE67816",
+    "detail_url_path": "/securities/detail?id=fc6fa35a-e927-4c0f-8a69-ccd9a734d184",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nINVE-TBC-1.1-17.5\n\nINVE bond 1.1",
+      "Currency": "MNT",
+      "Interest Rate": "17.50%",
+      "Maturity Date": "2026-01-15",
+      "ISIN": "MN0INVE67816"
+    }
+  },
+  {
+    "isin": "MN0BGFI67975",
+    "detail_url_path": "/securities/detail?id=81b3da21-b6ad-4b3d-8f92-6ffc658331f7",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nBGFI-TDB-2.4-19\n\nBG bond 2.4",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2026-02-03",
+      "ISIN": "MN0BGFI67975"
+    }
+  },
+  {
+    "isin": "MN0DAUR69020",
+    "detail_url_path": "/securities/detail?id=369bc862-36cd-47b4-9bdd-866ffdb42379",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nDAUR-TCB-1.4-20\n\nDarkhan urguu bond 1.4",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2026-10-30",
+      "ISIN": "MN0DAUR69020"
+    }
+  },
+  {
+    "isin": "MN0LNDB68390",
+    "detail_url_path": "/securities/detail?id=4d04bb55-ec73-4665-b577-cc0ec9ac14f6",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nLNDB-TBC-3.2-12\n\nLend bond 3.2",
+      "Currency": "MNT",
+      "Interest Rate": "12.00%",
+      "Maturity Date": "2026-03-02",
+      "ISIN": "MN0LNDB68390"
+    }
+  },
+  {
+    "isin": "MN0LNDA66859",
+    "detail_url_path": "/securities/detail?id=0c2dbb77-65a8-468c-aa46-c63c7beca6ec",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nLNDA-TCB-2.7-18.5\n\nLend bond 2.7",
+      "Currency": "MNT",
+      "Interest Rate": "18.50%",
+      "Maturity Date": "2026-10-30",
+      "ISIN": "MN0LNDA66859"
+    }
+  },
+  {
+    "isin": "MN0MTUB67540",
+    "detail_url_path": "/securities/detail?id=1823e38d-666a-4da1-8335-c25740a68b48",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nMTUB-GCB-7.2-20\n\nMaster bond 7.2",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2025-12-29",
+      "ISIN": "MN0MTUB67540"
+    }
+  },
+  {
+    "isin": "MN0KAMG66815",
+    "detail_url_path": "/securities/detail?id=37c1cf34-324d-4391-bc2a-d90c85b21d0c",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nKAMG-GCB-2.6-21\n\nKA bond 2.6",
+      "Currency": "MNT",
+      "Interest Rate": "21.00%",
+      "Maturity Date": "2026-10-26",
+      "ISIN": "MN0KAMG66815"
+    }
+  },
+  {
+    "isin": "MN0MNDL67258",
+    "detail_url_path": "/securities/detail?id=8997e0fb-beb3-4f24-b4b0-cd73f89bc7d5",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nMNDL-INB-1.3-19\n\nMandal bond 1.3",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2025-12-08",
+      "ISIN": "MN0MNDL67258"
+    }
+  },
+  {
+    "isin": "MN0KAMG67086",
+    "detail_url_path": "/securities/detail?id=090edfab-e634-4996-a007-db0716ba2845",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nKAMG-GCB-2.9-21\n\nKA bond 2.9",
+      "Currency": "MNT",
+      "Interest Rate": "21.00%",
+      "Maturity Date": "2026-11-23",
+      "ISIN": "MN0KAMG67086"
+    }
+  },
+  {
+    "isin": "MN0NWTS67589",
+    "detail_url_path": "/securities/detail?id=308891e4-45cb-47ed-9338-1cb68b280696",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nNWTS-ACB-3.11-20\n\nNVTS Trade bond 3.11",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2026-06-30",
+      "ISIN": "MN0NWTS67589"
+    }
+  },
+  {
+    "isin": "MN0ULMJ67557",
+    "detail_url_path": "/securities/detail?id=b633f073-f305-4405-bd54-84cbbd1e5f3c",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nULMJ-INB-01-20\n\nUlemj bond 1",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2025-12-29",
+      "ISIN": "MN0ULMJ67557"
+    }
+  },
+  {
+    "isin": "MN0KARA68730",
+    "detail_url_path": "/securities/detail?id=56e0b487-47e5-4419-b5d2-c0b06b5000dc",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nKARA-TCB-3.2-19\n\nKhan altai bond 3.2",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2027-04-14",
+      "ISIN": "MN0KARA68730"
+    }
+  },
+  {
+    "isin": "MN0NCPA67736",
+    "detail_url_path": "/securities/detail?id=2b218b88-1bbd-46ac-9cd3-8ffc8bace402",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nNCPA-MCB-3.3-18.5\n\nNet Auto bond 3.3",
+      "Currency": "MNT",
+      "Interest Rate": "18.50%",
+      "Maturity Date": "2026-01-12",
+      "ISIN": "MN0NCPA67736"
+    }
+  },
+  {
+    "isin": "MN0FNTC67364",
+    "detail_url_path": "/securities/detail?id=5b146874-1b03-4daf-9fce-f46dc93af0c7",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nFNTC-GCB-1.5-20.4\n\nFintec bond 1.5",
+      "Currency": "MNT",
+      "Interest Rate": "20.40%",
+      "Maturity Date": "2025-12-17",
+      "ISIN": "MN0FNTC67364"
+    }
+  },
+  {
+    "isin": "MN0GSCP67310",
+    "detail_url_path": "/securities/detail?id=10eba4c5-a612-45d3-acf2-55ba8358b8ae",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nGSCP-MCB-5.3-18\n\nGSB bond 5.3",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2025-12-15",
+      "ISIN": "MN0GSCP67310"
+    }
+  },
+  {
+    "isin": "MN0BRRS67067",
+    "detail_url_path": "/securities/detail?id=8081205e-f383-48cc-8d36-65b3e5d7bb61",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nBRRS-GCB-5.2-19.5\n\nBers bond 5.2",
+      "Currency": "MNT",
+      "Interest Rate": "19.50%",
+      "Maturity Date": "2025-11-19",
+      "ISIN": "MN0BRRS67067"
+    }
+  },
+  {
+    "isin": "MN0NWTS67357",
+    "detail_url_path": "/securities/detail?id=833b26b6-1217-4a4a-91f4-aaad0ba8b970",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nNWTS-ACB-3.9-20\n\nNVTS Trade bond 3.9",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2026-06-16",
+      "ISIN": "MN0NWTS67357"
+    }
+  },
+  {
+    "isin": "MN0NWTS66797",
+    "detail_url_path": "/securities/detail?id=1457c927-77d4-4b49-a413-4b5c66b3dc63",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nNWTS-ACB-3.7-20\n\nNVTS Trade bond 3.7",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2026-04-27",
+      "ISIN": "MN0NWTS66797"
+    }
+  },
+  {
+    "isin": "MN0NCMA68301",
+    "detail_url_path": "/securities/detail?id=b5c27347-a0d4-4ea3-b954-561b180f680b",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nNCMA-TBC-1.2-18\n\nNC Mobile bond 1.2",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2026-02-24",
+      "ISIN": "MN0NCMA68301"
+    }
+  },
+  {
+    "isin": "MN0DAUR68675",
+    "detail_url_path": "/securities/detail?id=379fc379-b1e1-4a18-a7b0-3071b78d7521",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nDAUR-TCB-1.2-21\n\nDarkhan urguu bond 1.2",
+      "Currency": "MNT",
+      "Interest Rate": "21.00%",
+      "Maturity Date": "2027-04-09",
+      "ISIN": "MN0DAUR68675"
+    }
+  },
+  {
+    "isin": "MN0TBFI68547",
+    "detail_url_path": "/securities/detail?id=d07f6775-409a-457d-a71a-6c613c1e3275",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nTBFI-TBC-08-18\n\nTBFI bond 8",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2025-03-21",
+      "ISIN": "MN0TBFI68547"
+    }
+  },
+  {
+    "isin": "MN0GERL67713",
+    "detail_url_path": "/securities/detail?id=04733822-27ff-4383-b17b-62a374464fa5",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nGERL-TBC-06-20.5\n\nGerel finance bond 6",
+      "Currency": "MNT",
+      "Interest Rate": "20.50%",
+      "Maturity Date": "2026-07-10",
+      "ISIN": "MN0GERL67713"
+    }
+  },
+  {
+    "isin": "MN0PCKA68490",
+    "detail_url_path": "/securities/detail?id=8f7fb339-73ea-4218-96e0-32e78ff76975",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nPCKA-GCB-2.4-18.5\n\nPocket bond 2.4",
+      "Currency": "MNT",
+      "Interest Rate": "18.50%",
+      "Maturity Date": "2026-03-18",
+      "ISIN": "MN0PCKA68490"
+    }
+  },
+  {
+    "isin": "MN0BLCD66876",
+    "detail_url_path": "/securities/detail?id=55c0c9d8-b709-4010-9d3f-d2d47920df9e",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nBLCD-ACB-1.1-20\n\nBalanced credit bond 1.1",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2025-11-03",
+      "ISIN": "MN0BLCD66876"
+    }
+  },
+  {
+    "isin": "MN0ZOOS67888",
+    "detail_url_path": "/securities/detail?id=8ffd1450-d68e-4cdf-a46b-a151153a2b14",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nZOOS-GCB-1.1-20\n\nZoos bond 1.1",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2026-01-28",
+      "ISIN": "MN0ZOOS67888"
+    }
+  },
+  {
+    "isin": "MN0PCKA68342",
+    "detail_url_path": "/securities/detail?id=2ac962f1-1e33-4e91-a1db-adb68d3f8d2f",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nPCKA-GCB-2.2-18.5\n\nPocket bond 2.2",
+      "Currency": "MNT",
+      "Interest Rate": "18.50%",
+      "Maturity Date": "2026-02-26",
+      "ISIN": "MN0PCKA68342"
+    }
+  },
+  {
+    "isin": "MN0BLCD67650",
+    "detail_url_path": "/securities/detail?id=cfdc861e-37c7-4e43-a78d-458135daaf86",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nBLCD-ACB-1.2-20\n\nBalanced credit bond 1.2",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2026-01-02",
+      "ISIN": "MN0BLCD67650"
+    }
+  },
+  {
+    "isin": "MN0NCMA69051",
+    "detail_url_path": "/securities/detail?id=e129db49-4009-4e47-97cc-c44f59b3e7ce",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nNCMA-TBC-1.6-18\n\nNC Mobile bond 1.6",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2026-05-01",
+      "ISIN": "MN0NCMA69051"
+    }
+  },
+  {
+    "isin": "MN0PCKA68474",
+    "detail_url_path": "/securities/detail?id=d05a5538-ea8a-4194-a1ab-2b05dee6939c",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nPCKA-GCB-2.3-18.5\n\nPocket bond 2.3",
+      "Currency": "MNT",
+      "Interest Rate": "18.50%",
+      "Maturity Date": "2026-03-16",
+      "ISIN": "MN0PCKA68474"
+    }
+  },
+  {
+    "isin": "MN0KHUS66974",
+    "detail_url_path": "/securities/detail?id=a0d877e5-9ab3-48c5-b737-3b702d00a4b2",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nKHUS-INB-02-20\n\nKhushkhan bond 2",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2025-11-11",
+      "ISIN": "MN0KHUS66974"
+    }
+  },
+  {
+    "isin": "MN0NCMA68194",
+    "detail_url_path": "/securities/detail?id=25c9e622-8901-4164-8f7a-e5c5f30eace3",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nNCMA-TBC-1.1-18\n\nNC Mobile bond 1.1",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2026-02-19",
+      "ISIN": "MN0NCMA68194"
+    }
+  },
+  {
+    "isin": "MN0GEMD68925",
+    "detail_url_path": "/securities/detail?id=5d504a4c-3df6-4917-9aa4-5628f515ce9a",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nGEMD-MIB-3.3-19.5\n\nGem trade bond 3.3",
+      "Currency": "MNT",
+      "Interest Rate": "19.50%",
+      "Maturity Date": "2026-10-26",
+      "ISIN": "MN0GEMD68925"
+    }
+  },
+  {
+    "isin": "MN0BUUL68423",
+    "detail_url_path": "/securities/detail?id=97fb1966-130f-49dd-9b6c-1811cad20d99",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nBUUL-MCB-5.3-19\n\nBull bond 5.3",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2026-03-10",
+      "ISIN": "MN0BUUL68423"
+    }
+  },
+  {
+    "isin": "MN0PCKA68284",
+    "detail_url_path": "/securities/detail?id=90c8f70c-6c4a-4c56-bcb1-fc6ad0e0d8d0",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nPCKA-GCB-2.1-18\n\nPocket bond 2.1",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2026-02-23",
+      "ISIN": "MN0PCKA68284"
+    }
+  },
+  {
+    "isin": "MN0TAZA69013",
+    "detail_url_path": "/securities/detail?id=5954e386-c7f3-4fd1-a876-4d9930a681c7",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nTAZA-ACB-2.2-19.5\n\nTAZ bond 2.2",
+      "Currency": "MNT",
+      "Interest Rate": "19.50%",
+      "Maturity Date": "2026-04-30",
+      "ISIN": "MN0TAZA69013"
+    }
+  },
+  {
+    "isin": "MN0DAUR68667",
+    "detail_url_path": "/securities/detail?id=917b9ae1-671b-493c-af13-0cf8324fc45e",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nDAUR-TCB-1.1-20\n\nDarkhan urguu bond 1.1",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2026-09-09",
+      "ISIN": "MN0DAUR68667"
+    }
+  },
+  {
+    "isin": "MN0TSON67784",
+    "detail_url_path": "/securities/detail?id=3fa20599-af92-4b94-ae61-8d2722f16b78",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nTSON-MIB-1.10-19\n\nGem Toson Energy Bond 1.10",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2026-07-14",
+      "ISIN": "MN0TSON67784"
+    }
+  },
+  {
+    "isin": "MN0GEMD68594",
+    "detail_url_path": "/securities/detail?id=3b91919a-1684-4be0-a7a2-4ca80361ac79",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nGEMD-MIB-3.1-19.5\n\nGem trade bond 3.1",
+      "Currency": "MNT",
+      "Interest Rate": "19.50%",
+      "Maturity Date": "2026-09-28",
+      "ISIN": "MN0GEMD68594"
+    }
+  },
+  {
+    "isin": "MN0NCPA68015",
+    "detail_url_path": "/securities/detail?id=f091208f-96c0-4e86-b9d7-f3feb06e913b",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nNCPA-MCB-3.4-18.5\n\nNet Auto bond 3.4",
+      "Currency": "MNT",
+      "Interest Rate": "18.50%",
+      "Maturity Date": "2026-02-05",
+      "ISIN": "MN0NCPA68015"
+    }
+  },
+  {
+    "isin": "MN0TRUS67691",
+    "detail_url_path": "/securities/detail?id=ea70f83c-4213-4adb-aec8-f0b1bed60594",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nTRUS-MCB-3.3-20\n\nTrust Bond 3.3",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2026-01-08",
+      "ISIN": "MN0TRUS67691"
+    }
+  },
+  {
+    "isin": "MN0BLJT62801",
+    "detail_url_path": "/securities/detail?id=983ed80f-3752-4958-8afa-2ba2564e8b34",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nBLJT-GCB-1.1-19\n\nBuuruljuut bond 1.1",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2026-10-14",
+      "ISIN": "MN0BLJT62801"
+    }
+  },
+  {
+    "isin": "MN0SONF67791",
+    "detail_url_path": "/securities/detail?id=084a1c21-1c6e-4b73-aadc-96a6aa30c60c",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nSONF-GCB-4.10-19.5\n\nSono bond 4.10",
+      "Currency": "MNT",
+      "Interest Rate": "19.50%",
+      "Maturity Date": "2026-01-14",
+      "ISIN": "MN0SONF67791"
+    }
+  },
+  {
+    "isin": "MN0HUSH66590",
+    "detail_url_path": "/securities/detail?id=d93f35a3-2f77-4cb3-b02f-d0a88f6d0947",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nHUSH-INB-1.3-21\n\nHushkhan bond 1.3",
+      "Currency": "MNT",
+      "Interest Rate": "21.00%",
+      "Maturity Date": "2025-10-08",
+      "ISIN": "MN0HUSH66590"
+    }
+  },
+  {
+    "isin": "MN0PCKT66932",
+    "detail_url_path": "/securities/detail?id=fa93a019-f018-4764-bf04-33cdabf29b16",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nPCKT-INB-1.6-18\n\nPocket bond 1.6",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2025-11-04",
+      "ISIN": "MN0PCKT66932"
+    }
+  },
+  {
+    "isin": "MN0NCMA68368",
+    "detail_url_path": "/securities/detail?id=d7456f83-d2f5-40b3-9457-709e3769885e",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nNCMA-TBC-1.3-18\n\nNC Mobile bond 1.3",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2026-02-27",
+      "ISIN": "MN0NCMA68368"
+    }
+  },
+  {
+    "isin": "MN0SNNO66631",
+    "detail_url_path": "/securities/detail?id=a67d0bdc-8a0f-4b3a-8640-e125c52099a6",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nSNNO-GCB-5.1-20\n\nSono bond 5.1",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2025-10-10",
+      "ISIN": "MN0SNNO66631"
+    }
+  },
+  {
+    "isin": "MN0MNDL67423",
+    "detail_url_path": "/securities/detail?id=b07e92d6-0809-4ca2-abb4-994c9edced9f",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nMNDL-INB-1.4-19\n\nMandal bond 1.4",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2025-12-22",
+      "ISIN": "MN0MNDL67423"
+    }
+  },
+  {
+    "isin": "MN0TAZA68809",
+    "detail_url_path": "/securities/detail?id=4f771c6c-0d48-495d-b340-9dfda9aff759",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nTAZA-ACB-2.1-19.5\n\nTAZ bond 2.1",
+      "Currency": "MNT",
+      "Interest Rate": "19.50%",
+      "Maturity Date": "2026-04-17",
+      "ISIN": "MN0TAZA68809"
+    }
+  },
+  {
+    "isin": "MN0GSBC68060",
+    "detail_url_path": "/securities/detail?id=5dfc32b2-23f2-49ec-b6bb-1df51a092c28",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nGSBC-TCB-4.8-18\n\nGSB bond 4.8",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2026-08-10",
+      "ISIN": "MN0GSBC68060"
+    }
+  },
+  {
+    "isin": "MN0SNNO66912",
+    "detail_url_path": "/securities/detail?id=fd1b9f40-988f-4b95-8231-1870abe7688a",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nSNNO-GCB-5.3-20\n\nSono bond 5.3",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2025-11-04",
+      "ISIN": "MN0SNNO66912"
+    }
+  },
+  {
+    "isin": "MN0SDLY67617",
+    "detail_url_path": "/securities/detail?id=eb0cc476-35d1-49ed-b699-692cbeb54c85",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nSDLY-SGB-01-20\n\nSendly bond 1",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2026-12-30",
+      "ISIN": "MN0SDLY67617"
+    }
+  },
+  {
+    "isin": "MN0MNDL67092",
+    "detail_url_path": "/securities/detail?id=4d238fe6-ba8a-4b4f-9a52-2b7c8d162ba7",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nMNDL-INB-1.2-19\n\nMandal bond 1.2",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2025-11-21",
+      "ISIN": "MN0MNDL67092"
+    }
+  },
+  {
+    "isin": "MN0TUSB68776",
+    "detail_url_path": "/securities/detail?id=7f647b70-878d-4a5c-80da-8cbe4213f2ce",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nTUSB-UCB-2.1-20.5\n\nTus bond 2.1",
+      "Currency": "MNT",
+      "Interest Rate": "20.50%",
+      "Maturity Date": "2026-04-16",
+      "ISIN": "MN0TUSB68776"
+    }
+  },
+  {
+    "isin": "MN0MAGN67957",
+    "detail_url_path": "/securities/detail?id=d9ed752a-a447-4fc6-8c86-5a1c08f2c74f",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nMAGN-MCB-2.1-19.5\n\nMagna bond 2.1",
+      "Currency": "MNT",
+      "Interest Rate": "19.50%",
+      "Maturity Date": "2026-01-30",
+      "ISIN": "MN0MAGN67957"
+    }
+  },
+  {
+    "isin": "MN0TUSB69204",
+    "detail_url_path": "/securities/detail?id=74cfb7e5-e9e7-4024-8e89-169b863a1279",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nTUSB-UCB-2.3-20.5\n\nTus bond 2.3",
+      "Currency": "MNT",
+      "Interest Rate": "20.50%",
+      "Maturity Date": "2026-05-14",
+      "ISIN": "MN0TUSB69204"
+    }
+  },
+  {
+    "isin": "MN0GREL67234",
+    "detail_url_path": "/securities/detail?id=1b402f8b-753c-4697-952a-b3a8b0ac1c9d",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nGREL-TBC-05-19.5\n\nGerel finance bond 5",
+      "Currency": "MNT",
+      "Interest Rate": "19.50%",
+      "Maturity Date": "2025-12-08",
+      "ISIN": "MN0GREL67234"
+    }
+  },
+  {
+    "isin": "MN0MNPL67211",
+    "detail_url_path": "/securities/detail?id=68c4d890-1b24-40aa-aa40-bb3970ca95bd",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nMNPL-INB-01-14\n\nMonplast bond 1",
+      "Currency": "MNT",
+      "Interest Rate": "14.00%",
+      "Maturity Date": "2028-12-05",
+      "ISIN": "MN0MNPL67211"
+    }
+  },
+  {
+    "isin": "MN0URBA68505",
+    "detail_url_path": "/securities/detail?id=84710427-591e-40ce-b538-c778cc6f28cd",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nURBA-TBC-5.2-21\n\nUrban bond 5.2",
+      "Currency": "MNT",
+      "Interest Rate": "21.00%",
+      "Maturity Date": "2026-09-18",
+      "ISIN": "MN0URBA68505"
+    }
+  },
+  {
+    "isin": "MN0CECI67025",
+    "detail_url_path": "/securities/detail?id=e1754476-111f-4ba5-8910-87b727181da7",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nCECI-GCB-01-18\n\nCECI bond 1",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2026-11-18",
+      "ISIN": "MN0CECI67025"
+    }
+  },
+  {
+    "isin": "MN0ZUVV68585",
+    "detail_url_path": "/securities/detail?id=f15ef016-12c1-4677-b336-b53555cf23a7",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nZUVV-TDB-1.3-18\n\nZUV bond 1.3",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2026-03-30",
+      "ISIN": "MN0ZUVV68585"
+    }
+  },
+  {
+    "isin": "MN0SONF65951",
+    "detail_url_path": "/securities/detail?id=726639f6-0141-4723-a8e4-8baf98519bf1",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nSONF-GCB-4.7-20\n\nSono bond 4.7",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2025-07-30",
+      "ISIN": "MN0SONF65951"
+    }
+  },
+  {
+    "isin": "MN0UNET69167",
+    "detail_url_path": "/securities/detail?id=f8d2bdf6-52e5-46f7-9424-5f41b9e4d201",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nUNET-INB-1.4-20\n\nUnet bond 1.4",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2027-05-12",
+      "ISIN": "MN0UNET69167"
+    }
+  },
+  {
+    "isin": "MN0ERAY65606",
+    "detail_url_path": "/securities/detail?id=d9a283e8-f9e9-4b28-8ee7-a5c510e1504f",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nERAY-SIB-1.3-24\n\nRAY bond 1.3",
+      "Currency": "MNT",
+      "Interest Rate": "24.00%",
+      "Maturity Date": "2027-07-02",
+      "ISIN": "MN0ERAY65606"
+    }
+  },
+  {
+    "isin": "MN0MAND68747",
+    "detail_url_path": "/securities/detail?id=e21cb452-1660-4f7f-b0c0-006904c8b952",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nMAND-INB-2.2-19\n\nMandal bond 2.2",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2026-04-15",
+      "ISIN": "MN0MAND68747"
+    }
+  },
+  {
+    "isin": "MN0NTCP67108",
+    "detail_url_path": "/securities/detail?id=39c0f719-1947-4b22-a5ce-090cf89d31a5",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nNTCP-TDB-2.5-17\n\nNET Bond 2.5",
+      "Currency": "MNT",
+      "Interest Rate": "17.00%",
+      "Maturity Date": "2025-11-21",
+      "ISIN": "MN0NTCP67108"
+    }
+  },
+  {
+    "isin": "MN0USUH69092",
+    "detail_url_path": "/securities/detail?id=c76ce3e6-12cc-46b7-a043-40be7e6d6dd0",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nUSUH-ICB-01-21.6\n\nUsukh arvai bond 1",
+      "Currency": "MNT",
+      "Interest Rate": "21.60%",
+      "Maturity Date": "2026-05-08",
+      "ISIN": "MN0USUH69092"
+    }
+  },
+  {
+    "isin": "MN0NCFA68271",
+    "detail_url_path": "/securities/detail?id=c6bdfff0-d1f1-493b-83c2-286ce37820d1",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nNCFA-5.2-18.5\n\nNC bond 5.2",
+      "Currency": "MNT",
+      "Interest Rate": "18.50%",
+      "Maturity Date": "2026-02-20",
+      "ISIN": "MN0NCFA68271"
+    }
+  },
+  {
+    "isin": "MN0SONF64970",
+    "detail_url_path": "/securities/detail?id=bb6e9aaf-3ec0-4790-b5d4-85f1453006d7",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nSONF-GCB-4.5-20\n\nSono bond 4.5",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2025-04-21",
+      "ISIN": "MN0SONF64970"
+    }
+  },
+  {
+    "isin": "MN0LFLN68964",
+    "detail_url_path": "/securities/detail?id=3214c797-0afb-4d32-91bb-a90c497a7714",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nLFLN-MPB-1.1-21\n\nLifeline bond 1.1",
+      "Currency": "MNT",
+      "Interest Rate": "21.00%",
+      "Maturity Date": "2026-04-28",
+      "ISIN": "MN0LFLN68964"
+    }
+  },
+  {
+    "isin": "MN0DMOG68049",
+    "detail_url_path": "/securities/detail?id=cd6d1031-1568-4d35-94e7-d90c3fe14492",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nDMOG-ACB-03-19\n\nDomog bond 3",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2026-02-09",
+      "ISIN": "MN0DMOG68049"
+    }
+  },
+  {
+    "isin": "MN0OMNI65859",
+    "detail_url_path": "/securities/detail?id=248e5f4a-25f7-4768-815b-53c523687239",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nOMND-MCB-4.2-19\n\nOmni Bond 4.2",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2026-01-22",
+      "ISIN": "MN0OMNI65859"
+    }
+  },
+  {
+    "isin": "MN0LUXA68767",
+    "detail_url_path": "/securities/detail?id=a01d3b5b-7129-4222-bb17-4d6b3b2bb73b",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nLUXA-TBC-1.5-21\n\nLux bond 1.5",
+      "Currency": "MNT",
+      "Interest Rate": "21.00%",
+      "Maturity Date": "2026-04-15",
+      "ISIN": "MN0LUXA68767"
+    }
+  },
+  {
+    "isin": "MN0AMUU68084",
+    "detail_url_path": "/securities/detail?id=aabab358-9997-4be7-b6fa-5ec74460a717",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nAMUU-SGC-1.1-18.5\n\nAmu bond 1.1",
+      "Currency": "MNT",
+      "Interest Rate": "18.50%",
+      "Maturity Date": "2026-02-11",
+      "ISIN": "MN0AMUU68084"
+    }
+  },
+  {
+    "isin": "MN0NCFA68263",
+    "detail_url_path": "/securities/detail?id=e9b48cea-97f2-4500-9225-97656812d43c",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nNCFA-5.1-19.5\n\nNC bond 5.1",
+      "Currency": "MNT",
+      "Interest Rate": "19.50%",
+      "Maturity Date": "2026-02-20",
+      "ISIN": "MN0NCFA68263"
+    }
+  },
+  {
+    "isin": "MN0TDBS66586",
+    "detail_url_path": "/securities/detail?id=f1b54cc1-822f-4e0f-96c3-d74532b12fb8",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nTDBS-01-11\n\nTDBS bond",
+      "Currency": "MNT",
+      "Interest Rate": "11.00%",
+      "Maturity Date": "2025-04-07",
+      "ISIN": "MN0TDBS66586"
+    }
+  },
+  {
+    "isin": "MN0EKMN64222",
+    "detail_url_path": "/securities/detail?id=533538b9-3f5e-4ff9-818d-e8a275f4de95",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nEKMN-INB-01-18\n\nEKM bond 1",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2028-01-19",
+      "ISIN": "MN0EKMN64222"
+    }
+  },
+  {
+    "isin": "MN0ZLLY65742",
+    "detail_url_path": "/securities/detail?id=a81a4541-6d09-479c-9e32-636b05e61fd3",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nZLLY-SIB-3.2-21\n\nZeely Bond 3.2",
+      "Currency": "MNT",
+      "Interest Rate": "21.00%",
+      "Maturity Date": "2025-07-09",
+      "ISIN": "MN0ZLLY65742"
+    }
+  },
+  {
+    "isin": "MN0KHHN66071",
+    "detail_url_path": "/securities/detail?id=9b2c8432-ba84-47f5-841d-98adec658b57",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nKHHN-ACB-3.2-20\n\nKhan bond 3.2",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2025-08-15",
+      "ISIN": "MN0KHHN66071"
+    }
+  },
+  {
+    "isin": "MN0ADVB67174",
+    "detail_url_path": "/securities/detail?id=28dbbd77-91e9-4693-8843-2458cadb26e7",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nADVB-SIB-03-20\n\nAdvance bond 3",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2025-11-28",
+      "ISIN": "MN0ADVB67174"
+    }
+  },
+  {
+    "isin": "MN0AUTO66821",
+    "detail_url_path": "/securities/detail?id=5ed4c23d-a08f-431c-8f73-93706582a843",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nAUTO-INB-01-14\n\nAutomart bond 1",
+      "Currency": "MNT",
+      "Interest Rate": "14.00%",
+      "Maturity Date": "2028-10-30",
+      "ISIN": "MN0AUTO66821"
+    }
+  },
+  {
+    "isin": "MN0SLNG62150",
+    "detail_url_path": "/securities/detail?id=e817f173-e0c3-46a2-a630-af522b351e99",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nSLNG-SIB-01-9\n\nSolongo bond 1",
+      "Currency": "MNT",
+      "Interest Rate": "9.00%",
+      "Maturity Date": "2026-01-23",
+      "ISIN": "MN0SLNG62150"
+    }
+  },
+  {
+    "isin": "MN0KING66766",
+    "detail_url_path": "/securities/detail?id=2ce2bfbc-1294-4752-bd46-7692ee7872a4",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nKING-MCB-01-19\n\nKingdom bond 1",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2025-10-24",
+      "ISIN": "MN0KING66766"
+    }
+  },
+  {
+    "isin": "MN0TERB68020",
+    "detail_url_path": "/securities/detail?id=9009a9a6-a615-4406-a7e3-81dbff7f95dc",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nTERB-GCB-4.2-20\n\nTera bond 4.2",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2026-08-06",
+      "ISIN": "MN0TERB68020"
+    }
+  },
+  {
+    "isin": "MN0LUXA68726",
+    "detail_url_path": "/securities/detail?id=3d29aca9-17b4-436b-ae57-5de480bfda5b",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nLUXA-TBC-1.4-21\n\nLux bond 1.4",
+      "Currency": "MNT",
+      "Interest Rate": "21.00%",
+      "Maturity Date": "2026-04-13",
+      "ISIN": "MN0LUXA68726"
+    }
+  },
+  {
+    "isin": "MN0GRDA68104",
+    "detail_url_path": "/securities/detail?id=bf4669c5-a615-4652-bea8-af6f3587bb42",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nGRDA-UCB-01-18.5\n\nGRD bond 1",
+      "Currency": "MNT",
+      "Interest Rate": "18.50%",
+      "Maturity Date": "2025-11-12",
+      "ISIN": "MN0GRDA68104"
+    }
+  },
+  {
+    "isin": "MN0BJTB68866",
+    "detail_url_path": "/securities/detail?id=12ae1ab8-7679-4aec-898f-8335cad09024",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nBJTB-GCB-2.17-19\n\nBuuruljuut bond 2.17",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2027-04-19",
+      "ISIN": "MN0BJTB68866"
+    }
+  },
+  {
+    "isin": "MN0HYZA68895",
+    "detail_url_path": "/securities/detail?id=e45b4b21-b579-4036-ade6-d86da5be6a9e",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nHYZA-ICB-02-25\n\nIS bond 2",
+      "Currency": "MNT",
+      "Interest Rate": "25.00%",
+      "Maturity Date": "2026-04-23",
+      "ISIN": "MN0HYZA68895"
+    }
+  },
+  {
+    "isin": "MN0META66944",
+    "detail_url_path": "/securities/detail?id=2910e734-fd74-4aa9-bee7-2f9750a2f0ad",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nMETA-01-19.2\n\nMeta bond 1",
+      "Currency": "MNT",
+      "Interest Rate": "19.20%",
+      "Maturity Date": "2026-05-06",
+      "ISIN": "MN0META66944"
+    }
+  },
+  {
+    "isin": "MN0ERAY65127",
+    "detail_url_path": "/securities/detail?id=eee52f0e-97d5-42c9-8d99-83919a47a819",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nERAY-SIB-1.1-24\n\nRAY bond 1.1",
+      "Currency": "MNT",
+      "Interest Rate": "24.00%",
+      "Maturity Date": "2027-05-10",
+      "ISIN": "MN0ERAY65127"
+    }
+  },
+  {
+    "isin": "MN0BJTB68858",
+    "detail_url_path": "/securities/detail?id=683d11a4-92ef-40b7-83be-e1cce1db0121",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nBJTB-GCB-2.16-19\n\nBuuruljuut bond 2.16",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2027-04-19",
+      "ISIN": "MN0BJTB68858"
+    }
+  },
+  {
+    "isin": "MN0NWST65948",
+    "detail_url_path": "/securities/detail?id=029711d1-0543-4ad2-97ba-4636f7c42d8c",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nNWST-01-19\n\nWST bond",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2025-07-29",
+      "ISIN": "MN0NWST65948"
+    }
+  },
+  {
+    "isin": "MN0MNFP64772",
+    "detail_url_path": "/securities/detail?id=ff170c52-d51c-4361-bd03-546d9689ea92",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nMNFP-GCB-01-19.2\n\nMongolian financial bond",
+      "Currency": "MNT",
+      "Interest Rate": "19.20%",
+      "Maturity Date": "2025-04-02",
+      "ISIN": "MN0MNFP64772"
+    }
+  },
+  {
+    "isin": "MN0NCAP64857",
+    "detail_url_path": "/securities/detail?id=99fbb542-f148-46cc-b12e-85e1a53f5eee",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nNCAP-03-19\n\nNC Bond 3",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2025-04-07",
+      "ISIN": "MN0NCAP64857"
+    }
+  },
+  {
+    "isin": "MN0TAKA68793",
+    "detail_url_path": "/securities/detail?id=7d420e41-9db4-4f44-8579-9275d5bba201",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nTAKA-RIB-01-24\n\nTAK bond 1",
+      "Currency": "MNT",
+      "Interest Rate": "24.00%",
+      "Maturity Date": "2027-04-19",
+      "ISIN": "MN0TAKA68793"
+    }
+  },
+  {
+    "isin": "MN0BYLG65545",
+    "detail_url_path": "/securities/detail?id=17ae76dd-5df2-411b-82f9-3b91e3edc596",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nBYLG-1.1-19.2\n\nBaylag bond 1.1",
+      "Currency": "MNT",
+      "Interest Rate": "19.20%",
+      "Maturity Date": "2026-06-25",
+      "ISIN": "MN0BYLG65545"
+    }
+  },
+  {
+    "isin": "MN0NUMR66152",
+    "detail_url_path": "/securities/detail?id=7b900c71-b1c2-4b41-9d82-5df418e8525b",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nNUMR-GCB-6.1-20\n\nNumur bond 6.1",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2025-08-22",
+      "ISIN": "MN0NUMR66152"
+    }
+  },
+  {
+    "isin": "MN0BYSH66215",
+    "detail_url_path": "/securities/detail?id=3fccb3b7-c3a4-4a05-98c3-a7a8b8de6a2c",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nBYSH-MCB-03-18\n\nBaysakh bond 3",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2025-08-26",
+      "ISIN": "MN0BYSH66215"
+    }
+  },
+  {
+    "isin": "MN0BTSB65558",
+    "detail_url_path": "/securities/detail?id=5e7c3b8c-a1bb-4fa3-8188-6278aeb07465",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nBTSB-GCB-2.1-14.44\n\nBuuruljuut power plant bond 2.1",
+      "Currency": "MNT",
+      "Interest Rate": "14.44%",
+      "Maturity Date": "2027-06-25",
+      "ISIN": "MN0BTSB65558"
+    }
+  },
+  {
+    "isin": "MN0BJTB67728",
+    "detail_url_path": "/securities/detail?id=7e5a041a-ca32-4a3b-945a-e36beb4c35c2",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nBJTB-GCB-2.5-19\n\nBuuruljuut bond 2.5",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2027-01-11",
+      "ISIN": "MN0BJTB67728"
+    }
+  },
+  {
+    "isin": "MN0ERAY65150",
+    "detail_url_path": "/securities/detail?id=4b725112-e85a-43c6-8375-9ed3cd7d2b60",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nERAY-SIB-1.2-24\n\nRAY bond 1.2",
+      "Currency": "MNT",
+      "Interest Rate": "24.00%",
+      "Maturity Date": "2027-05-13",
+      "ISIN": "MN0ERAY65150"
+    }
+  },
+  {
+    "isin": "MN0MAND68630",
+    "detail_url_path": "/securities/detail?id=5674d53c-c25d-4578-85b5-7c9be9499968",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nMAND-INB-2.1-19\n\nMandal bond 2.1",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2026-04-03",
+      "ISIN": "MN0MAND68630"
+    }
+  },
+  {
+    "isin": "MN0SUVD66053",
+    "detail_url_path": "/securities/detail?id=69cff225-e264-40d9-b6b4-7fd62ba7242b",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nSUVD-SIB-1.1-21\n\nSuvd bond 1.1",
+      "Currency": "MNT",
+      "Interest Rate": "21.00%",
+      "Maturity Date": "2025-08-18",
+      "ISIN": "MN0SUVD66053"
+    }
+  },
+  {
+    "isin": "MN0MOFI68750",
+    "detail_url_path": "/securities/detail?id=f95836d8-b92d-4f5c-be19-33a67eee510a",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nMOFI-GCB-2.1-19.2\n\nMongolian Financial bond 2.1",
+      "Currency": "MNT",
+      "Interest Rate": "19.20%",
+      "Maturity Date": "2027-04-15",
+      "ISIN": "MN0MOFI68750"
+    }
+  },
+  {
+    "isin": "MN0WSTA67206",
+    "detail_url_path": "/securities/detail?id=3cab771a-ad7e-4796-96f0-f3ee5b902516",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nWSTA-02-20\n\nWST bond 2",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2025-12-01",
+      "ISIN": "MN0WSTA67206"
+    }
+  },
+  {
+    "isin": "MN0KAIA68879",
+    "detail_url_path": "/securities/detail?id=12d66a50-3832-4af2-a7c0-9da0d060386a",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nKAIA-ICB-01-25\n\nKaidu bond 1",
+      "Currency": "MNT",
+      "Interest Rate": "25.00%",
+      "Maturity Date": "2026-04-22",
+      "ISIN": "MN0KAIA68879"
+    }
+  },
+  {
+    "isin": "MN0GSBA67538",
+    "detail_url_path": "/securities/detail?id=2a842969-4dee-46b9-bf0c-cb821bf3b75c",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nGSBA-SGB-6.2-18\n\nGSB bond 6.2",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2025-12-26",
+      "ISIN": "MN0GSBA67538"
+    }
+  },
+  {
+    "isin": "MN0ASHI67051",
+    "detail_url_path": "/securities/detail?id=3c40c7ad-fc3a-4220-8339-a727a5d59ac7",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nASHI-03-19.2\n\nAshid bond 3",
+      "Currency": "MNT",
+      "Interest Rate": "19.20%",
+      "Maturity Date": "2026-05-19",
+      "ISIN": "MN0ASHI67051"
+    }
+  },
+  {
+    "isin": "MN0AIRE69155",
+    "detail_url_path": "/securities/detail?id=15d376c4-6213-4862-9fb0-2a6aa8d01ea4",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nAIRE-ICB-1.1-15\n\nAiree bond 1.1",
+      "Currency": "MNT",
+      "Interest Rate": "15.00%",
+      "Maturity Date": "2029-05-14",
+      "ISIN": "MN0AIRE69155"
+    }
+  },
+  {
+    "isin": "MN0MFBD68550",
+    "detail_url_path": "/securities/detail?id=996d79c0-7335-40ae-bd7a-a26a517b7e24",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nMFBD-TDB-1.5-18\n\nMFBD bond 1.5",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2027-03-22",
+      "ISIN": "MN0MFBD68550"
+    }
+  },
+  {
+    "isin": "MN0LFLN69046",
+    "detail_url_path": "/securities/detail?id=2fc8468c-4f12-457d-ba2d-3a8f23df4382",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nLFLN-MPB-1.2-21\n\nLifeline bond 1.2",
+      "Currency": "MNT",
+      "Interest Rate": "21.00%",
+      "Maturity Date": "2026-05-01",
+      "ISIN": "MN0LFLN69046"
+    }
+  },
+  {
+    "isin": "MN0NMRR67925",
+    "detail_url_path": "/securities/detail?id=d2f10177-37cf-4f7e-9965-f4c7b065b735",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nNMRR-GCB-7.2-20\n\nNumur bond 7.2",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2026-01-29",
+      "ISIN": "MN0NMRR67925"
+    }
+  },
+  {
+    "isin": "MN0INSS65170",
+    "detail_url_path": "/securities/detail?id=55286c57-8fc1-4e4d-85f2-a77d90a89b3f",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nINSS-TBC-03-22\n\nINSA bond 3",
+      "Currency": "MNT",
+      "Interest Rate": "22.00%",
+      "Maturity Date": "2025-05-13",
+      "ISIN": "MN0INSS65170"
+    }
+  },
+  {
+    "isin": "MN0BIID67489",
+    "detail_url_path": "/securities/detail?id=c1e8be12-74d0-4c25-bd24-6c3587b49599",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nBIID-TBC-6-18.2\n\nBid Bond 6",
+      "Currency": "MNT",
+      "Interest Rate": "18.20%",
+      "Maturity Date": "2025-12-24",
+      "ISIN": "MN0BIID67489"
+    }
+  },
+  {
+    "isin": "MN0BYLG66113",
+    "detail_url_path": "/securities/detail?id=8890c7ee-9271-4961-aefb-a267bc6032e0",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nBYLG-1.2-19.2\n\nBaylag bond 1.2",
+      "Currency": "MNT",
+      "Interest Rate": "19.20%",
+      "Maturity Date": "2026-08-24",
+      "ISIN": "MN0BYLG66113"
+    }
+  },
+  {
+    "isin": "MN0ERAY65911",
+    "detail_url_path": "/securities/detail?id=f1aa7681-d024-4978-97a3-81c735d5c96f",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nERAY-SIB-1.4-24\n\nRAY bond 1.4",
+      "Currency": "MNT",
+      "Interest Rate": "24.00%",
+      "Maturity Date": "2027-07-26",
+      "ISIN": "MN0ERAY65911"
+    }
+  },
+  {
+    "isin": "MN0TRVL67835",
+    "detail_url_path": "/securities/detail?id=acb8e4b8-1a8b-4ee6-a246-8b024e621833",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nTRVL-GSB-01-22\n\nTravel bond 1",
+      "Currency": "MNT",
+      "Interest Rate": "22.00%",
+      "Maturity Date": "2026-01-21",
+      "ISIN": "MN0TRVL67835"
+    }
+  },
+  {
+    "isin": "MN0NRTA67330",
+    "detail_url_path": "/securities/detail?id=e75e0cb7-1a72-4d51-9755-4c31eb0448c9",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nNRTA-MCB-1.1-18\n\nNRT bond 1.1",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2025-12-16",
+      "ISIN": "MN0NRTA67330"
+    }
+  },
+  {
+    "isin": "MN0BBID66494",
+    "detail_url_path": "/securities/detail?id=9c68f225-1696-45b7-a47c-dacef66bf84f",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nBBID-5.1-18\n\nBid Bond 5.1",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2026-03-26",
+      "ISIN": "MN0BBID66494"
+    }
+  },
+  {
+    "isin": "MN0ORCH68972",
+    "detail_url_path": "/securities/detail?id=c186dda7-543d-4be3-ad34-d5d50c4c4b61",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nORCH-SIB-1.1-21\n\nOrchlon bond 1.1",
+      "Currency": "MNT",
+      "Interest Rate": "21.00%",
+      "Maturity Date": "2026-05-04",
+      "ISIN": "MN0ORCH68972"
+    }
+  },
+  {
+    "isin": "MN0AGRO63318",
+    "detail_url_path": "/securities/detail?id=460b5681-fee6-471e-b10f-414df010ea1e",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nAGRO-TCB-01-20\n\nАгро Бонд",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2025-09-22",
+      "ISIN": "MN0AGRO63318"
+    }
+  },
+  {
+    "isin": "MN0FNCO66466",
+    "detail_url_path": "/securities/detail?id=8d78d223-a814-4b28-99f4-6009b4433d85",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nFNCO-GCB-01-19.5\n\nFinco capital bond 1",
+      "Currency": "MNT",
+      "Interest Rate": "19.50%",
+      "Maturity Date": "2025-09-22",
+      "ISIN": "MN0FNCO66466"
+    }
+  },
+  {
+    "isin": "MN0NCFF66035",
+    "detail_url_path": "/securities/detail?id=6467f19d-d325-4e94-a5dc-acaf5fa60b91",
+    "board_category": "primary_board_C",
+    "original_metadata_summary": {
+      "Security": "C\n\nNCFF-04-20.5\n\nNC bond 4",
+      "Currency": "MNT",
+      "Interest Rate": "20.50%",
+      "Maturity Date": "2025-08-08",
+      "ISIN": "MN0NCFF66035"
+    }
+  },
+  {
+    "isin": "MN00ACG62097",
+    "detail_url_path": "/securities/detail?id=5f6fca88-11b2-476f-a1d3-253113671872",
+    "board_category": "primary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nACG-INB-04_18\n\nActive Bond 4",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2024-07-26",
+      "ISIN": "MN00ACG62097"
+    }
+  },
+  {
+    "isin": "MN0INVE68988",
+    "detail_url_path": "/securities/detail?id=cb4a09ef-a85b-46e2-a8ae-2c9cbd566776",
+    "board_category": "primary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nINVE-TBC-1.4-18\n\nINVE bond 1.4",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2026-04-30",
+      "ISIN": "MN0INVE68988"
+    }
+  },
+  {
+    "isin": "MN0OORI68173",
+    "detail_url_path": "/securities/detail?id=e2d3fb83-4b44-497b-a67a-4f84596f8d25",
+    "board_category": "primary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nOORI-ASB-2.4-21\n\nOri bond 2.4",
+      "Currency": "MNT",
+      "Interest Rate": "21.00%",
+      "Maturity Date": "2027-02-18",
+      "ISIN": "MN0OORI68173"
+    }
+  },
+  {
+    "isin": "MN0TOSK61908",
+    "detail_url_path": "/securities/detail?id=c22f7a98-3f16-4eb9-86cd-b5a9dbabd52e",
+    "board_category": "primary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nTOSK-TBB-8.5\n\nTOSK",
+      "Currency": "MNT",
+      "Interest Rate": "8.50%",
+      "Maturity Date": "2027-12-21",
+      "ISIN": "MN0TOSK61908"
+    }
+  },
+  {
+    "isin": "MN0BLJT64898",
+    "detail_url_path": "/securities/detail?id=7a907118-ae8c-43f5-8d6f-df1d0172c3f4",
+    "board_category": "primary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nBLJT-GCB-1.7-18\n\nBuuruljuut bond 1.7",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2026-04-13",
+      "ISIN": "MN0BLJT64898"
+    }
+  },
+  {
+    "isin": "MN0OMND67419",
+    "detail_url_path": "/securities/detail?id=2e07b6e6-492c-4efe-a4c2-20ef65d9af37",
+    "board_category": "primary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nOMND-MCB-4.4-19\n\nOmni bond 4.4",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2026-06-22",
+      "ISIN": "MN0OMND67419"
+    }
+  },
+  {
+    "isin": "MN0TERA62561",
+    "detail_url_path": "/securities/detail?id=8aea1ddc-5306-4c05-9d3b-f2a0a8aa1bb5",
+    "board_category": "primary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nTERA-SIB-2.8-19\n\nTera Bond 2.8",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2025-04-21",
+      "ISIN": "MN0TERA62561"
+    }
+  },
+  {
+    "isin": "MN0TUSB69030",
+    "detail_url_path": "/securities/detail?id=c4031a4c-4725-44ef-a3e7-cb8e5022fdbc",
+    "board_category": "primary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nTUSB-UCB-2.2-20.5\n\nTus bond 2.2",
+      "Currency": "MNT",
+      "Interest Rate": "20.50%",
+      "Maturity Date": "2026-05-01",
+      "ISIN": "MN0TUSB69030"
+    }
+  },
+  {
+    "isin": "MN0GERL68182",
+    "detail_url_path": "/securities/detail?id=af8dfc43-635b-4e23-95f0-130c488a81c4",
+    "board_category": "primary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nGERL-TBC-6.2-19.5\n\nGerel finance bond 6.2",
+      "Currency": "MNT",
+      "Interest Rate": "19.50%",
+      "Maturity Date": "2026-08-18",
+      "ISIN": "MN0GERL68182"
+    }
+  },
+  {
+    "isin": "MN0TOKK65021",
+    "detail_url_path": "/securities/detail?id=442decc8-3777-4a0e-b7ba-0321e9af74bc",
+    "board_category": "primary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nTOKK-UCB-02-13\n\nToki bond 2",
+      "Currency": "MNT",
+      "Interest Rate": "13.00%",
+      "Maturity Date": "2026-04-24",
+      "ISIN": "MN0TOKK65021"
+    }
+  },
+  {
+    "isin": "MN0TERA63072",
+    "detail_url_path": "/securities/detail?id=b5f1ad48-db86-4753-86f7-4e604af6649b",
+    "board_category": "primary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nTERA-SIB-2.9-19\n\nTera Bond 2.9",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2025-08-04",
+      "ISIN": "MN0TERA63072"
+    }
+  },
+  {
+    "isin": "MN0GEMD69238",
+    "detail_url_path": "/securities/detail?id=87f4c264-f5bd-42b9-bb14-ab16b00cf408",
+    "board_category": "primary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nGEMD-MIB-3.4-19.5\n\nGem trade bond 3.4",
+      "Currency": "MNT",
+      "Interest Rate": "19.50%",
+      "Maturity Date": "2026-11-16",
+      "ISIN": "MN0GEMD69238"
+    }
+  },
+  {
+    "isin": "MN0RIVR65755",
+    "detail_url_path": "/securities/detail?id=cab8aa0e-b2b2-4358-8f3d-09bf0bb2d2ed",
+    "board_category": "primary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nRIVR-GCB-1.4-20\n\nRiver town bond 1.4",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2026-07-09",
+      "ISIN": "MN0RIVR65755"
+    }
+  },
+  {
+    "isin": "MN0KAMG66849",
+    "detail_url_path": "/securities/detail?id=690fd95c-9d6e-4f9b-b397-bba36896d44d",
+    "board_category": "primary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nKAMG-GCB-2.7-21\n\nKA bond 2.7",
+      "Currency": "MNT",
+      "Interest Rate": "21.00%",
+      "Maturity Date": "2026-10-30",
+      "ISIN": "MN0KAMG66849"
+    }
+  },
+  {
+    "isin": "MN0INVE69077",
+    "detail_url_path": "/securities/detail?id=aac935c2-0642-4c13-9f2d-abb6a91d5298",
+    "board_category": "primary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nINVE-TBC-1.5-18\n\nINVE bond 1.5",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2026-05-05",
+      "ISIN": "MN0INVE69077"
+    }
+  },
+  {
+    "isin": "MN0BLJT64922",
+    "detail_url_path": "/securities/detail?id=0b3b02f8-92fe-4ccd-a3e7-83372c121535",
+    "board_category": "primary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nBLJT-GCB-1.10-18\n\nBuuruljuut bond 1.10",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2026-04-15",
+      "ISIN": "MN0BLJT64922"
+    }
+  },
+  {
+    "isin": "MN0TERA62165",
+    "detail_url_path": "/securities/detail?id=1d1518a8-8def-495b-b90a-61cc8b27842c",
+    "board_category": "primary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nTERA-SIB-2.5-19\n\nТera Bond 2.5",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2025-01-23",
+      "ISIN": "MN0TERA62165"
+    }
+  },
+  {
+    "isin": "MN0NCMA68954",
+    "detail_url_path": "/securities/detail?id=d8ff7b01-0ee6-4f7d-8219-c4510b89c40b",
+    "board_category": "primary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nNCMA-TBC-1.5-18\n\nNC Mobile bond 1.5",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2026-04-27",
+      "ISIN": "MN0NCMA68954"
+    }
+  },
+  {
+    "isin": "MN0OORI67647",
+    "detail_url_path": "/securities/detail?id=576575c6-80b1-41c6-a886-2702dd50048f",
+    "board_category": "primary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nOORI-ASB-2.3-18\n\nOri bond 2.3",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2026-12-31",
+      "ISIN": "MN0OORI67647"
+    }
+  },
+  {
+    "isin": "MN0OORI66524",
+    "detail_url_path": "/securities/detail?id=54b880fd-0299-40fe-b594-1818c4ad4d0a",
+    "board_category": "primary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nOORI-ASB-2.1-19\n\nOri bond 2.1",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2026-09-30",
+      "ISIN": "MN0OORI66524"
+    }
+  },
+  {
+    "isin": "MN0CITY64784",
+    "detail_url_path": "/securities/detail?id=c379e056-ed86-4df2-a8b1-4c219d9d3cec",
+    "board_category": "primary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nCITY-BDS-1.2-20\n\nCity bond 1.2",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2025-09-29",
+      "ISIN": "MN0CITY64784"
+    }
+  },
+  {
+    "isin": "MN0BRRS67075",
+    "detail_url_path": "/securities/detail?id=0950c7bb-634a-4e41-b636-239c283cff0d",
+    "board_category": "primary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nBRRS-GCB-5.3-19.5\n\nBers bond 5.3",
+      "Currency": "MNT",
+      "Interest Rate": "19.50%",
+      "Maturity Date": "2025-11-20",
+      "ISIN": "MN0BRRS67075"
+    }
+  },
+  {
+    "isin": "MN0NCMA69101",
+    "detail_url_path": "/securities/detail?id=18b28a92-e485-453e-9bc1-c944f1a55cdd",
+    "board_category": "primary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nNCMA-TBC-1.7-18\n\nNC Mobile bond 1.7",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2026-05-07",
+      "ISIN": "MN0NCMA69101"
+    }
+  },
+  {
+    "isin": "MN0OMND67773",
+    "detail_url_path": "/securities/detail?id=fcca9adf-bddb-4669-bed8-a0dbcc03bcd1",
+    "board_category": "primary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nOMND-MCB-4.5-19\n\nOmni bond 4.5",
+      "Currency": "MNT",
+      "Interest Rate": "19.00%",
+      "Maturity Date": "2026-07-14",
+      "ISIN": "MN0OMND67773"
+    }
+  },
+  {
+    "isin": "MN0MFBD66992",
+    "detail_url_path": "/securities/detail?id=8d564289-d6a4-4398-9d44-8c345a858f67",
+    "board_category": "primary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nMFBD-TDB-1.3-17\n\nMFBD bond 1.3",
+      "Currency": "MNT",
+      "Interest Rate": "17.00%",
+      "Maturity Date": "2026-11-11",
+      "ISIN": "MN0MFBD66992"
+    }
+  },
+  {
+    "isin": "MN0KNGA67431",
+    "detail_url_path": "/securities/detail?id=ac8b7609-3526-4298-a85f-aa36d576ba16",
+    "board_category": "primary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nKNGA-MCB-02-20\n\nKingdom bond 2",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2025-12-22",
+      "ISIN": "MN0KNGA67431"
+    }
+  },
+  {
+    "isin": "MN0NCMA68657",
+    "detail_url_path": "/securities/detail?id=433d250b-8508-4899-bab5-49ff8ff2a2c9",
+    "board_category": "primary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nNCMA-TBC-1.4-18\n\nNC Mobile bond 1.4",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2026-04-06",
+      "ISIN": "MN0NCMA68657"
+    }
+  },
+  {
+    "isin": "MN0ZOOS68563",
+    "detail_url_path": "/securities/detail?id=e1f6a5b5-425f-4346-a6cc-deaf1e40ef47",
+    "board_category": "primary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nZOOS-GCB-1.2-20\n\nZoos bond 1.2",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2026-03-25",
+      "ISIN": "MN0ZOOS68563"
+    }
+  },
+  {
+    "isin": "MN0AXIS68999",
+    "detail_url_path": "/securities/detail?id=215443b5-4847-44b5-9249-fc91037f27df",
+    "board_category": "primary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nAXIS-MCB-01-20\n\nAxis bond 1",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2027-04-30",
+      "ISIN": "MN0AXIS68999"
+    }
+  },
+  {
+    "isin": "MN0DTNO66838",
+    "detail_url_path": "/securities/detail?id=f3764794-7480-408c-83a2-1f850fd720d0",
+    "board_category": "primary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nDTNO-ACB-01-20\n\nDotno bond 1",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2025-10-29",
+      "ISIN": "MN0DTNO66838"
+    }
+  },
+  {
+    "isin": "MN0KMIA69138",
+    "detail_url_path": "/securities/detail?id=412a5b8b-6a4f-4375-b614-ce7b9f4742b5",
+    "board_category": "primary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nKMIA-MCB-1.1-20\n\nKMI bond 1.1",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2026-05-11",
+      "ISIN": "MN0KMIA69138"
+    }
+  },
+  {
+    "isin": "MN0BERS64872",
+    "detail_url_path": "/securities/detail?id=da588cc8-c6fc-4dd3-af91-280547580a28",
+    "board_category": "primary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nBERS-GCB-4.2-20\n\nBers bond 4.2",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2025-04-07",
+      "ISIN": "MN0BERS64872"
+    }
+  },
+  {
+    "isin": "MN0MFBD67750",
+    "detail_url_path": "/securities/detail?id=7a05c470-ba2e-4329-9729-9adf08c3949e",
+    "board_category": "primary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nMFBD-TDB-1.4-17\n\nMFBD bond 1.4",
+      "Currency": "MNT",
+      "Interest Rate": "17.00%",
+      "Maturity Date": "2027-01-13",
+      "ISIN": "MN0MFBD67750"
+    }
+  },
+  {
+    "isin": "MN0OORI67639",
+    "detail_url_path": "/securities/detail?id=d7701bba-4724-4423-b4a9-e660c5d5b55e",
+    "board_category": "primary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nOORI-ASB-2.2-20\n\nOri bond 2.2",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2026-12-30",
+      "ISIN": "MN0OORI67639"
+    }
+  },
+  {
+    "isin": "MN0SHJR65008",
+    "detail_url_path": "/securities/detail?id=ca858960-1cc5-4307-aba9-f83ddb58212f",
+    "board_category": "primary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nSHJR-UCB-1.3-20\n\nShijir bond 1.3",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2025-10-23",
+      "ISIN": "MN0SHJR65008"
+    }
+  },
+  {
+    "isin": "MN0GEMD68818",
+    "detail_url_path": "/securities/detail?id=f7d05ba8-7611-4e2f-a7bd-49253585aaf3",
+    "board_category": "primary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nGEMD-MIB-3.2-19.5\n\nGem trade bond 3.2",
+      "Currency": "MNT",
+      "Interest Rate": "19.50%",
+      "Maturity Date": "2026-10-19",
+      "ISIN": "MN0GEMD68818"
+    }
+  },
+  {
+    "isin": "MN0ESTA67931",
+    "detail_url_path": "/securities/detail?id=48ac3f7e-da32-4dba-8076-c9a8c93a910c",
+    "board_category": "primary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nESTA-01-20\n\nEST bond 1",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2026-01-29",
+      "ISIN": "MN0ESTA67931"
+    }
+  },
+  {
+    "isin": "0",
+    "detail_url_path": "/securities/detail?id=26a03909-445b-4d50-9bfd-22efdb2b0ca2",
+    "board_category": "primary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nTSBN-ACB-1.2-20.5\n\nTSBON bond 1.2",
+      "Currency": "MNT",
+      "Interest Rate": "20.50%",
+      "Maturity Date": "2026-11-19",
+      "ISIN": "0"
+    }
+  },
+  {
+    "isin": "MN0RIVR65615",
+    "detail_url_path": "/securities/detail?id=3416ccf7-1ffb-47bd-9b3d-3099549a3f71",
+    "board_category": "primary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nRIVR-GCB-1.3-20\n\nRiver town bond 1.3",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2026-07-02",
+      "ISIN": "MN0RIVR65615"
+    }
+  },
+  {
+    "isin": "MN00BSX61643",
+    "detail_url_path": "/securities/detail?id=34c506c4-41d0-4f46-bef3-23de6ddef29b",
+    "board_category": "primary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nBSX-MCB-01_17\n\nBayasakh Bond 1",
+      "Currency": "MNT",
+      "Interest Rate": "17.00%",
+      "Maturity Date": "2023-10-31",
+      "ISIN": "MN00BSX61643"
+    }
+  },
+  {
+    "isin": "MN0BERS64864",
+    "detail_url_path": "/securities/detail?id=0a3a3335-daa8-4d0d-ba31-5e673c4c6f20",
+    "board_category": "primary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nBERS-GCB-4.1-20\n\nBers bond 4.1",
+      "Currency": "MNT",
+      "Interest Rate": "20.00%",
+      "Maturity Date": "2025-04-07",
+      "ISIN": "MN0BERS64864"
+    }
+  },
+  {
+    "isin": "MN0ECOO67820",
+    "detail_url_path": "/securities/detail?id=fa0b09d9-75ba-4a14-a256-7dd2279ce21a",
+    "board_category": "primary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nECOO-MCB-01-21\n\nEco credit bond 1",
+      "Currency": "MNT",
+      "Interest Rate": "21.00%",
+      "Maturity Date": "2027-01-15",
+      "ISIN": "MN0ECOO67820"
+    }
+  },
+  {
+    "isin": "MN0STIN67380",
+    "detail_url_path": "/securities/detail?id=8ccbf5f9-a81b-4e84-94b1-238275444d9f",
+    "board_category": "primary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nSTIN-SIB-01-16\n\nSTIN bond 1",
+      "Currency": "MNT",
+      "Interest Rate": "16.00%",
+      "Maturity Date": "2025-12-22",
+      "ISIN": "MN0STIN67380"
+    }
+  },
+  {
+    "isin": "MN0TBFI68372",
+    "detail_url_path": "/securities/detail?id=6278573a-a803-422d-8e7e-0a1d19f501d0",
+    "board_category": "primary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nTBFI-TBC-07-18\n\nTBFI bond 7",
+      "Currency": "MNT",
+      "Interest Rate": "18.00%",
+      "Maturity Date": "2026-02-27",
+      "ISIN": "MN0TBFI68372"
+    }
+  },
+  {
+    "isin": "MN00BSX61668",
+    "detail_url_path": "/securities/detail?id=9d26870a-10e1-434b-bb32-a4619b4d1b19",
+    "board_category": "primary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nBSX-MCB-03_17\n\nBayasakh Bond 3",
+      "Currency": "MNT",
+      "Interest Rate": "17.00%",
+      "Maturity Date": "2023-11-03",
+      "ISIN": "MN00BSX61668"
+    }
+  },
+  {
+    "isin": "MN00BSX61650",
+    "detail_url_path": "/securities/detail?id=42bb1ecb-8536-4d0d-8dd7-f672cefb4dec",
+    "board_category": "primary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nBSX-MCB-02_17\n\nBayasakh Bond 2",
+      "Currency": "MNT",
+      "Interest Rate": "17.00%",
+      "Maturity Date": "2023-09-04",
+      "ISIN": "MN00BSX61650"
+    }
+  },
+  {
+    "isin": "MN0TUSS65230",
+    "detail_url_path": "/securities/detail?id=0534e66c-0db6-4489-bd7c-26da80c7d7e1",
+    "board_category": "primary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nTUSS-TBC-1.3-19.5\n\nTus bond 1.3",
+      "Currency": "MNT",
+      "Interest Rate": "19.50%",
+      "Maturity Date": "2025-05-19",
+      "ISIN": "MN0TUSS65230"
+    }
+  },
+  {
+    "isin": "MN00DBM62919",
+    "detail_url_path": "/securities/detail?id=8eca8a83-bf8c-4322-b3f6-2002c66cfe42",
+    "board_category": "primary_board_A",
+    "original_metadata_summary": {
+      "Security": "A\n\nDBMN-3.2_16.25\n\nDBM bond 3.2",
+      "Currency": "MNT",
+      "Interest Rate": "16.25%",
+      "Maturity Date": "2027-06-28",
+      "ISIN": "MN00DBM62919"
+    }
+  },
+  {
+    "isin": "MN0UBHT67508",
+    "detail_url_path": "/securities/detail?id=2a15b00c-264c-4677-bfd4-6c2ea52aec07",
+    "board_category": "primary_board_A",
+    "original_metadata_summary": {
+      "Security": "A\n\nUBHT-02-2\n\nUlaanbaatar hot EHHS bond 2",
+      "Currency": "MNT",
+      "Interest Rate": "5.67%",
+      "Maturity Date": "2029-12-17",
+      "ISIN": "MN0UBHT67508"
+    }
+  },
+  {
+    "isin": "MN0DBMF66745",
+    "detail_url_path": "/securities/detail?id=ea8dbea6-be31-4caa-94dd-7a677ca48ccb",
+    "board_category": "primary_board_A",
+    "original_metadata_summary": {
+      "Security": "A\n\nDBMF-05-4.15\n\nDBM bond 5",
+      "Currency": "MNT",
+      "Interest Rate": "4.15%",
+      "Maturity Date": "2031-10-24",
+      "ISIN": "MN0DBMF66745"
+    }
+  },
+  {
+    "isin": "MN00DBM62646",
+    "detail_url_path": "/securities/detail?id=98cb92da-86e3-4a39-b89f-1be6a1301180",
+    "board_category": "primary_board_A",
+    "original_metadata_summary": {
+      "Security": "A\n\nDBMN-3.1_16.25\n\nDBM bond 3.1",
+      "Currency": "MNT",
+      "Interest Rate": "16.25%",
+      "Maturity Date": "2027-05-14",
+      "ISIN": "MN00DBM62646"
+    }
+  },
+  {
+    "isin": "MN0UBHT67490",
+    "detail_url_path": "/securities/detail?id=f34fe900-cea0-4b55-9421-d9bd6eede57f",
+    "board_category": "primary_board_A",
+    "original_metadata_summary": {
+      "Security": "A\n\nUBHT-01-3.73\n\nUlaanbaatar hot EHHS bond 1",
+      "Currency": "MNT",
+      "Interest Rate": "7.40%",
+      "Maturity Date": "2029-12-17",
+      "ISIN": "MN0UBHT67490"
+    }
+  }
+]

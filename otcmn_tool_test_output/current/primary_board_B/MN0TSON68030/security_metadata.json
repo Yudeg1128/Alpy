@@ -1,0 +1,16 @@
+{
+  "Security": "B\n\nTSON-MIB-1.12-12\n\nGem Toson Energy Bond 1.12",
+  "ISIN": "MN0TSON68030",
+  "Currency": "USD",
+  "Interest Rate": "12.00%",
+  "Maturity Date": "2026-08-06",
+  "Quantity": "120",
+  "Price": "$ 1,000",
+  "Total Amount": "$ 120,000",
+  "Start Date": "2025-02-06",
+  "End Date": "2025-02-06",
+  "Underwriter": "MICC",
+  "Progress": "100%",
+  "url_id": "9aca9350-a7a1-407d-8c3b-94806334e075",
+  "detail_url_path": "/securities/detail?id=9aca9350-a7a1-407d-8c3b-94806334e075"
+}

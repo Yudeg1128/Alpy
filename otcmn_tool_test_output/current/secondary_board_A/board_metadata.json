@@ -1,0 +1,26 @@
+[
+  {
+    "Security": "A\n\nDBMD-4.1-8.5\n\nDBM bond 4.1",
+    "ISIN": "MN0DBMD63903",
+    "Currency": "USD",
+    "Interest Rate": "8.50%",
+    "Maturity Date": "2025-12-22",
+    "Price": "$ 100,000",
+    "Total Amount": "$ 2,000,000",
+    "Underwriter": "DBM",
+    "_detail_url_path": "/securities/detail?id=c7ce7f34-e37c-4394-a576-174481c1e97d",
+    "_url_id": "c7ce7f34-e37c-4394-a576-174481c1e97d"
+  },
+  {
+    "Security": "A\n\nDBMB-2_12.6\n\nDBM Bond 2",
+    "ISIN": "MN00DBM60772",
+    "Currency": "MNT",
+    "Interest Rate": "12.60%",
+    "Maturity Date": "2025-05-05",
+    "Price": "₮ 306,122,000",
+    "Total Amount": "₮ 76,530,500,000",
+    "Underwriter": "DBM",
+    "_detail_url_path": "/securities/detail?id=1ad8aac0-520b-46c0-83c6-47d707b4dc29",
+    "_url_id": "1ad8aac0-520b-46c0-83c6-47d707b4dc29"
+  }
+]

@@ -1,0 +1,16 @@
+{
+  "Security": "C\n\nNCAP-03-19\n\nNC Bond 3",
+  "ISIN": "MN0NCAP64857",
+  "Currency": "MNT",
+  "Interest Rate": "19.00%",
+  "Maturity Date": "2025-04-07",
+  "Quantity": "3,000",
+  "Price": "₮ 1,000,000",
+  "Total Amount": "₮ 3,000,000,000",
+  "Start Date": "2024-04-04",
+  "End Date": "2024-04-05",
+  "Underwriter": "Net Sec",
+  "Progress": "100%",
+  "url_id": "99fbb542-f148-46cc-b12e-85e1a53f5eee",
+  "detail_url_path": "/securities/detail?id=99fbb542-f148-46cc-b12e-85e1a53f5eee"
+}

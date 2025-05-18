@@ -1,0 +1,16 @@
+{
+  "Security": "C\n\nSLNG-SIB-01-9\n\nSolongo bond 1",
+  "ISIN": "MN0SLNG62150",
+  "Currency": "MNT",
+  "Interest Rate": "9.00%",
+  "Maturity Date": "2026-01-23",
+  "Quantity": "10,000",
+  "Price": "₮ 70,000",
+  "Total Amount": "₮ 700,000,000",
+  "Start Date": "2023-01-23",
+  "End Date": "2023-01-20",
+  "Underwriter": "Standard Investment",
+  "Progress": "100%",
+  "url_id": "e817f173-e0c3-46a2-a630-af522b351e99",
+  "detail_url_path": "/securities/detail?id=e817f173-e0c3-46a2-a630-af522b351e99"
+}

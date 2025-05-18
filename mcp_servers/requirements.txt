@@ -1,8 +1,10 @@
-fastapi>=0.110.0
-uvicorn[standard]>=0.29.0
-mcp>=1.7.0 # Ensure this is compatible with your intended SDK usage
-
-# Keep these for now, mcp SDK or proto generation might still rely on parts
-grpcio>=1.50.0
-grpcio-tools>=1.50.0 
-protobuf>=5.26.0 # Often a dependency for gRPC or mcp model parts
+fastapi
+uvicorn[standard]
+mcp
+grpcio
+grpcio-tools
+protobuf
+pdfplumber
+PyMuPDF
+Pillow
+pytesseract

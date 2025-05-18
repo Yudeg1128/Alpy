@@ -1,0 +1,16 @@
+{
+  "Security": "C\n\nCECI-GCB-01-18\n\nCECI bond 1",
+  "ISIN": "MN0CECI67025",
+  "Currency": "MNT",
+  "Interest Rate": "18.00%",
+  "Maturity Date": "2026-11-18",
+  "Quantity": "20,000",
+  "Price": "₮ 100,000",
+  "Total Amount": "₮ 2,000,000,000",
+  "Start Date": "2024-11-15",
+  "End Date": "2024-11-18",
+  "Underwriter": "Golomt Capital",
+  "Progress": "100%",
+  "url_id": "e1754476-111f-4ba5-8910-87b727181da7",
+  "detail_url_path": "/securities/detail?id=e1754476-111f-4ba5-8910-87b727181da7"
+}

@@ -1,0 +1,315 @@
+{
+    "model_metadata": {
+      "model_name": "Debt Instrument Issuer Financial Model",
+      "version": "1.1_debt_focused_clean",
+      "target_company_name": null,
+      "ticker_symbol": null,
+      "currency": "USD",
+      "fiscal_year_end": "MM-DD",
+      "historical_periods_count": 5,
+      "projection_periods_count": 5,
+      "analyst_name": "AI Financial Modeler Agent (Debt Focus)",
+      "date_created": "YYYY-MM-DDTHH:MM:SSZ",
+      "ai_instructions_general": "This model is designed for credit analysis of a debt issuer. Populate all 'value: null' fields. Pay close attention to 'calculation_logic_description' and 'ai_instructions' for each item. Report confidence scores where requested. Prioritize data from official filings (10-K, 10-Q, Bond Prospectus). Historical data should be normalized for non-recurring items where identifiable and material.",
+      "model_focus": "Fixed Income Securities Analysis"
+    },
+    "global_assumptions": [
+      {
+        "assumption_name": "Base Risk-Free Rate",
+        "value": null,
+        "unit": "percentage",
+        "data_type": "percentage_rate",
+        "source_guidance": "e.g., Relevant sovereign 10-Year bond yield (e.g., US Treasury).",
+        "ai_instructions": "Input the current yield for the benchmark risk-free rate corresponding to the currency of the issuer's debt.",
+        "notes": "Foundation for discount rates and benchmark for issuer's cost of debt."
+      },
+      {
+        "assumption_name": "Relevant Credit Spread Benchmark",
+        "value": null,
+        "unit": "basis_points",
+        "data_type": "numeric_value",
+        "source_guidance": "e.g., Average spread for comparable industry/rating bonds, CDS market data.",
+        "ai_instructions": "Input a benchmark credit spread. This may be used to estimate market cost of new debt or as a general market sentiment indicator.",
+        "notes": "Context for issuer's specific credit spread."
+      },
+      {
+        "assumption_name": "Inflation Rate Forecast (Relevant Economy)",
+        "value_array_projection_periods": [],
+        "unit": "percentage",
+        "data_type": "percentage_rate",
+        "source_guidance": "Central bank forecasts, consensus economist estimates for the primary economy the issuer operates in.",
+        "ai_instructions": "Input projected inflation rates for each projection period into 'value_array_projection_periods' as an array of objects: [{ \"period_label\": \"FY_Proj_1\", \"value\": null }].",
+        "notes": "Impacts nominal growth and costs."
+      }
+    ],
+    "company_specific_assumptions_debt_focus": {
+      "section_description": "Core operational and financial assumptions driving the issuer's projections, with a focus on debt service capacity.",
+      "ai_instructions_section": "Determine these assumptions based on historical performance, management guidance (if available from earnings calls/reports), industry trends, and your independent analysis. Document rationale for key projections. Arrays of 'periods' should be populated with objects for each projection period, e.g., { \"period_label\": \"FY_Proj_1\", \"value\": null, \"unit\": \"...\", \"data_type\": \"...\", \"rationale\": null, \"ai_instructions\": \"...\" }.",
+      "revenue_drivers": [
+        {
+          "segment_name": "Overall Revenue",
+          "driver_type": "Annual Growth Rate",
+          "periods": []
+        }
+      ],
+      "cost_and_margin_drivers": [
+        {
+          "cost_category": "COGS (or Cost of Services)",
+          "driver_type": "Percentage of Revenue",
+          "periods": []
+        },
+        {
+          "cost_category": "SG&A Expenses",
+          "driver_type": "Percentage of Revenue or Fixed Growth Rate",
+          "periods": []
+        },
+        {
+          "cost_category": "EBITDA Margin Target (Implied or Explicit)",
+          "driver_type": "Percentage of Revenue",
+          "periods": []
+        }
+      ],
+      "working_capital_drivers": [
+        { "item_name": "Days Sales Outstanding (DSO)", "periods": [] },
+        { "item_name": "Days Inventory Outstanding (DIO)", "periods": [] },
+        { "item_name": "Days Payables Outstanding (DPO)", "periods": [] }
+      ],
+      "capital_expenditure_and_asset_drivers": [
+        {
+          "item_name": "Maintenance Capital Expenditures (as % of Revenue or PP&E)",
+          "periods": []
+        },
+        {
+          "item_name": "Growth Capital Expenditures (if any)",
+          "periods": []
+        },
+        {
+          "item_name": "Depreciation & Amortization (as % of Avg. Gross PP&E or other method)",
+          "periods": []
+        }
+      ],
+      "financing_and_debt_assumptions": {
+        "existing_debt_refinancing_strategy": null,
+        "new_debt_issuance_plans": [],
+        "assumed_interest_rate_on_new_debt": null,
+        "dividend_policy_and_payout_ratio": [],
+        "share_repurchases_policy": [],
+        "debt_paydown_priority": null,
+        "cash_sweep_mechanism_for_excess_cash_flow": null,
+        "minimum_cash_balance_target": null
+      },
+      "tax_assumptions": {
+        "effective_tax_rate": [],
+        "cash_tax_rate_if_different": []
+      }
+    },
+    "financial_statements_core": {
+      "section_description": "Standardized historical and projected financial statements. AI to populate historicals and then project based on assumptions and linkages. For line items, 'periods' arrays should contain objects: { \"period_label\": \"string\", \"value\": null_or_data_type_value }.",
+      "historical_period_labels": [],
+      "projected_period_labels": [],
+      "income_statement": {
+        "ai_instructions_statement": "Ensure all calculations are logical. EBITDA and EBIT are key metrics for debt analysis.",
+        "line_items": [
+          { "name": "Revenue", "data_type": "currency_value", "periods": [], "source_guidance_historical": "Reported Net Revenue from 10-K/Q.", "ai_instructions_projected": "Driven by revenue_drivers assumptions." },
+          { "name": "Cost of Goods Sold (COGS)", "data_type": "currency_value", "periods": [], "source_guidance_historical": "Reported COGS.", "ai_instructions_projected": "Driven by COGS % of Revenue assumption." },
+          { "name": "Gross Profit", "data_type": "currency_value", "is_calculated": true, "calculation_logic_description": "Revenue - COGS", "periods": [] },
+          { "name": "SG&A Expenses", "data_type": "currency_value", "periods": [], "source_guidance_historical": "Reported SG&A.", "ai_instructions_projected": "Driven by SG&A assumption." },
+          { "name": "Other Operating Expenses/Income", "data_type": "currency_value", "periods": [], "source_guidance_historical": "Reported. Normalize for non-recurring items if material.", "ai_instructions_projected": "Typically projected based on historical trend or specific guidance." },
+          { "name": "EBITDA (Earnings Before Interest, Taxes, Depreciation & Amortization)", "data_type": "currency_value", "is_calculated": true, "calculation_logic_description": "Gross Profit - SG&A - Other Operating Expenses (excluding D&A). Or Revenue - COGS - Cash OpEx. Explicitly define if non-GAAP adjustments are included.", "periods": [], "notes": "Crucial for leverage and coverage ratios." },
+          { "name": "Depreciation & Amortization (D&A)", "data_type": "currency_value", "periods": [], "source_guidance_historical": "From CFS or BS roll-forward.", "ai_instructions_projected": "Driven by D&A assumption, links from PP&E and Intangibles schedules." },
+          { "name": "EBIT (Earnings Before Interest & Taxes)", "data_type": "currency_value", "is_calculated": true, "calculation_logic_description": "EBITDA - D&A", "periods": [], "notes": "Key for interest coverage." },
+          { "name": "Interest Expense", "data_type": "currency_value", "periods": [], "source_guidance_historical": "Reported Interest Expense.", "ai_instructions_projected": "Calculated in Debt Schedule based on average debt balance and interest rates." },
+          { "name": "Interest Income", "data_type": "currency_value", "periods": [], "source_guidance_historical": "Reported.", "ai_instructions_projected": "Project based on average cash balance and assumed interest rate on cash." },
+          { "name": "EBT (Earnings Before Tax)", "data_type": "currency_value", "is_calculated": true, "calculation_logic_description": "EBIT - Interest Expense + Interest Income", "periods": [] },
+          { "name": "Income Tax Expense", "data_type": "currency_value", "periods": [], "source_guidance_historical": "Reported Tax Expense.", "ai_instructions_projected": "EBT * Effective Tax Rate assumption. Consider NOL usage." },
+          { "name": "Net Income", "data_type": "currency_value", "is_calculated": true, "calculation_logic_description": "EBT - Income Tax Expense", "periods": [] }
+        ]
+      },
+      "balance_sheet": {
+        "ai_instructions_statement": "Ensure Assets = Liabilities + Equity for ALL periods. Changes in BS accounts drive the CFS.",
+        "assets": {
+          "current_assets": [
+            { "name": "Cash & Cash Equivalents", "data_type": "currency_value", "periods": [], "ai_instructions_projected": "Plug: Calculated from CFS (Ending Cash)." },
+            { "name": "Accounts Receivable", "data_type": "currency_value", "periods": [], "ai_instructions_projected": "Calculated from DSO assumption and Revenue." },
+            { "name": "Inventory", "data_type": "currency_value", "periods": [], "ai_instructions_projected": "Calculated from DIO assumption and COGS." }
+          ],
+          "non_current_assets": [
+            { "name": "Net PP&E", "data_type": "currency_value", "periods": [], "ai_instructions_projected": "Roll-forward from PP&E Schedule." },
+            { "name": "Goodwill", "data_type": "currency_value", "periods": [], "ai_instructions_projected": "Typically held constant unless acquisitions/impairments are explicitly modeled." },
+            { "name": "Intangible Assets (Net)", "data_type": "currency_value", "periods": [], "ai_instructions_projected": "Roll-forward, considering amortization and new intangibles from acquisitions." }
+          ],
+          "total_assets": { "name": "Total Assets", "data_type": "currency_value", "is_calculated": true, "calculation_logic_description": "Sum of all asset accounts.", "periods": [] }
+        },
+        "liabilities_and_equity": {
+          "current_liabilities": [
+            { "name": "Accounts Payable", "data_type": "currency_value", "periods": [], "ai_instructions_projected": "Calculated from DPO assumption and COGS." },
+            { "name": "Short-Term Debt & Current Portion of LTD", "data_type": "currency_value", "periods": [], "ai_instructions_projected": "Links from Debt Schedule." }
+          ],
+          "non_current_liabilities": [
+            { "name": "Long-Term Debt", "data_type": "currency_value", "periods": [], "ai_instructions_projected": "Links from Debt Schedule (Total Debt - Short-Term Debt)." }
+          ],
+          "total_liabilities": { "name": "Total Liabilities", "data_type": "currency_value", "is_calculated": true, "calculation_logic_description": "Sum of all liability accounts.", "periods": [] },
+          "equity": [
+            { "name": "Common Stock & APIC", "data_type": "currency_value", "periods": [], "ai_instructions_projected": "Roll-forward: Prior period + new equity issued." },
+            { "name": "Retained Earnings", "data_type": "currency_value", "periods": [], "ai_instructions_projected": "Roll-forward: Prior period + Net Income - Dividends Paid." },
+            { "name": "Total Equity", "data_type": "currency_value", "is_calculated": true, "calculation_logic_description": "Sum of all equity accounts.", "periods": [] }
+          ],
+          "total_liabilities_and_equity": { "name": "Total Liabilities & Equity", "data_type": "currency_value", "is_calculated": true, "calculation_logic_description": "Total Liabilities + Total Equity.", "periods": [] }
+        },
+        "balance_sheet_check": { "name": "Balance Sheet Check (Assets - L&E)", "target_value": 0, "tolerance": 1, "unit":"currency_value", "is_calculated": true, "calculation_logic_description": "Total Assets - Total Liabilities & Equity. Should be zero or very close due to rounding.", "periods": [], "ai_instructions": "Flag if this check exceeds tolerance." }
+      },
+      "cash_flow_statement": {
+        "ai_instructions_statement": "Derived from Income Statement and changes in Balance Sheet accounts. Ending cash must reconcile to BS Cash.",
+        "cash_flow_from_operations_cfo": [
+          { "name": "Net Income", "data_type": "currency_value", "periods": [], "ai_instructions": "Link from Income Statement." },
+          { "name": "Depreciation & Amortization", "data_type": "currency_value", "periods": [], "ai_instructions": "Link from Income Statement or PP&E/Intangibles schedules." },
+          { "name": "Changes in Accounts Receivable", "data_type": "currency_value", "is_calculated": true, "calculation_logic_description": "Prior Period AR - Current Period AR. (Increase in AR is a use of cash, so negative).", "periods": [] },
+          { "name": "Changes in Inventory", "data_type": "currency_value", "is_calculated": true, "calculation_logic_description": "Prior Period Inv - Current Period Inv. (Increase in Inv is a use of cash).", "periods": [] },
+          { "name": "Changes in Accounts Payable", "data_type": "currency_value", "is_calculated": true, "calculation_logic_description": "Current Period AP - Prior Period AP. (Increase in AP is a source of cash).", "periods": [] },
+          { "name": "Net Cash Flow from Operations", "data_type": "currency_value", "is_calculated": true, "calculation_logic_description": "Sum of all CFO items.", "periods": [], "notes": "Critical for assessing debt repayment capacity." }
+        ],
+        "cash_flow_from_investing_cfi": [
+          { "name": "Capital Expenditures (Capex)", "data_type": "currency_value", "periods": [], "ai_instructions": "Link from Capex assumptions. Should be negative (outflow).", "calculation_logic_description": "-(Maintenance Capex + Growth Capex)"},
+          { "name": "Net Cash Flow from Investing", "data_type": "currency_value", "is_calculated": true, "calculation_logic_description": "Sum of all CFI items.", "periods": [] }
+        ],
+        "cash_flow_from_financing_cff": [
+          { "name": "Net Debt Issued/(Repaid)", "data_type": "currency_value", "periods": [], "ai_instructions": "Link from Debt Schedule (Net change in total debt). Issuance is positive, repayment negative." },
+          { "name": "Net Equity Issued/(Repurchased)", "data_type": "currency_value", "periods": [], "ai_instructions": "Link from Equity assumptions. Issuance positive, repurchase negative." },
+          { "name": "Dividends Paid", "data_type": "currency_value", "periods": [], "ai_instructions": "Link from Dividend assumptions. Should be negative (outflow)." },
+          { "name": "Net Cash Flow from Financing", "data_type": "currency_value", "is_calculated": true, "calculation_logic_description": "Sum of all CFF items.", "periods": [] }
+        ],
+        "net_change_in_cash": { "name": "Net Change in Cash", "data_type": "currency_value", "is_calculated": true, "calculation_logic_description": "Net CFO + Net CFI + Net CFF.", "periods": [] },
+        "cash_beginning_of_period": { "name": "Cash at Beginning of Period", "data_type": "currency_value", "periods": [], "ai_instructions": "Links to prior period's Ending Cash." },
+        "cash_end_of_period": { "name": "Cash at End of Period", "data_type": "currency_value", "is_calculated": true, "calculation_logic_description": "Cash at Beginning of Period + Net Change in Cash. Must match BS Cash.", "periods": [] }
+      }
+    },
+    "supporting_schedules_debt_focus": {
+      "section_description": "Detailed calculations supporting the main financial statements, critical for understanding debt dynamics. AI to populate arrays with objects per described structure.",
+      "debt_schedule": {
+        "ai_instructions_schedule": "This is a cornerstone for debt analysis. Track each material debt tranche if possible. Calculate interest expense accurately. Model mandatory and optional repayments. Populate 'existing_debt_tranches' and 'new_debt_issuances_details' with arrays of objects describing each tranche and its periodic movements.",
+        "existing_debt_tranches": [],
+        "new_debt_issuances_details": [],
+        "revolving_credit_facility_rcf": {
+          "facility_size": null,
+          "drawn_amount_start_of_model": null,
+          "undrawn_availability_start_of_model": null,
+          "interest_rate_on_drawn": null,
+          "commitment_fee_on_undrawn": null,
+          "calculated_periodic_movements": []
+        },
+        "summary_debt_rollforward": [
+          { "name": "Total Debt (Beginning of Period)", "data_type": "currency_value", "is_calculated": true, "periods": [] },
+          { "name": "New Debt Issued (Tranches + RCF)", "data_type": "currency_value", "is_calculated": true, "periods": [] },
+          { "name": "Debt Repayments (Mandatory + Optional)", "data_type": "currency_value", "is_calculated": true, "periods": [] },
+          { "name": "Total Debt (End of Period)", "data_type": "currency_value", "is_calculated": true, "calculation_logic_description": "Beginning Debt + New Debt - Repayments. Links to BS.", "periods": [] },
+          { "name": "Total Interest Expense (All Debt)", "data_type": "currency_value", "is_calculated": true, "calculation_logic_description": "Sum of interest from all tranches and RCF. Links to IS.", "periods": [] },
+          { "name": "Weighted Average Cost of Debt (Projected)", "data_type": "percentage_rate", "is_calculated": true, "calculation_logic_description": "Total Interest Expense / Average Total Debt.", "periods": [] }
+        ]
+      },
+      "ppe_schedule": {
+         "ai_instructions_schedule": "Populate with standard PP&E roll-forward line items (Beginning Gross PP&E, Capex, Disposals, Ending Gross PP&E, Beginning Acc. Depr., Depr. Expense, Ending Acc. Depr., Net PP&E). 'periods' arrays should be populated for each line item.",
+         "line_items": []
+      },
+      "working_capital_schedule": {
+         "ai_instructions_schedule": "Populate with standard Working Capital roll-forward line items (AR, Inventory, AP, Net Working Capital, Change in NWC). 'periods' arrays should be populated for each line item, driven by DSO/DIO/DPO.",
+         "line_items": []
+      }
+    },
+    "credit_analysis_metrics_and_ratios": {
+      "section_description": "Key ratios and metrics for assessing creditworthiness. Calculated for historical and projected periods. 'periods' arrays for each ratio should contain objects: { \"period_label\": \"string\", \"value\": null_or_calculated_value }.",
+      "ai_instructions_section": "Calculate these ratios accurately. Highlight trends and covenant proximity if applicable.",
+      "leverage_ratios": [
+        { "name": "Total Debt / EBITDA", "unit": "x_multiple", "data_type": "ratio", "is_calculated": true, "calculation_logic_description": "Total Debt (from Debt Schedule) / EBITDA (from IS).", "periods": [], "notes": "Primary leverage metric." },
+        { "name": "Net Debt / EBITDA", "unit": "x_multiple", "data_type": "ratio", "is_calculated": true, "calculation_logic_description": "(Total Debt - Cash & Cash Equivalents) / EBITDA.", "periods": [], "notes": "Leverage net of cash." },
+        { "name": "Total Debt / Capitalization", "unit": "percentage", "data_type": "percentage_rate", "is_calculated": true, "calculation_logic_description": "Total Debt / (Total Debt + Total Equity).", "periods": [] }
+      ],
+      "coverage_ratios": [
+        { "name": "EBITDA / Interest Expense", "unit": "x_multiple", "data_type": "ratio", "is_calculated": true, "calculation_logic_description": "EBITDA / Total Interest Expense.", "periods": [], "notes": "Interest coverage from cash flow proxy." },
+        { "name": "EBIT / Interest Expense", "unit": "x_multiple", "data_type": "ratio", "is_calculated": true, "calculation_logic_description": "EBIT / Total Interest Expense.", "periods": [], "notes": "Traditional interest coverage." },
+        { "name": "(EBITDA - Capex) / Interest Expense", "unit": "x_multiple", "data_type": "ratio", "is_calculated": true, "calculation_logic_description": "(EBITDA - Total Capex) / Total Interest Expense.", "periods": [], "notes": "Coverage after essential reinvestment." },
+        { "name": "Cash Flow from Operations / Total Debt", "unit": "percentage_or_x_multiple", "data_type": "percentage_rate_or_ratio", "is_calculated": true, "calculation_logic_description": "Net CFO / Total Debt.", "periods": [], "notes": "Debt payback capacity from operations." },
+        { "name": "Fixed Charge Coverage Ratio (FCC_R)", "unit": "x_multiple", "data_type": "ratio", "is_calculated": true, "calculation_logic_description": "(EBIT + Lease Payments) / (Interest Expense + Lease Payments + Preferred Dividends before tax). Define 'Lease Payments' carefully if material.", "periods": [], "notes": "Broader coverage metric, often specified in indentures." }
+      ],
+      "cash_flow_metrics_for_debt_service": [
+          { "name": "Free Cash Flow (FCF) pre-Debt Service", "data_type": "currency_value", "is_calculated": true, "calculation_logic_description": "Net CFO - Capex. Represents cash available before any debt payments.", "periods": [] },
+          { "name": "Free Cash Flow (FCF) post-Mandatory Debt Service", "data_type": "currency_value", "is_calculated": true, "calculation_logic_description": "FCF pre-Debt Service - Mandatory Debt Principal Repayments - Total Interest Expense. Cash available for discretionary use/optional prepayments.", "periods": [] },
+          { "name": "Cash Interest Paid", "data_type": "currency_value", "is_calculated": true, "calculation_logic_description": "Typically same as Interest Expense unless there's significant PIK interest or capitalized interest.", "periods": [] }
+      ],
+      "liquidity_ratios": [
+        { "name": "Current Ratio", "unit": "x_multiple", "data_type": "ratio", "is_calculated": true, "calculation_logic_description": "Current Assets / Current Liabilities.", "periods": [] },
+        { "name": "Quick Ratio (Acid Test)", "unit": "x_multiple", "data_type": "ratio", "is_calculated": true, "calculation_logic_description": "(Cash & Cash Equivalents + Accounts Receivable) / Current Liabilities.", "periods": [] }
+      ],
+      "profitability_and_efficiency_context": [
+          { "name": "EBITDA Margin", "unit": "percentage", "data_type": "percentage_rate", "is_calculated": true, "calculation_logic_description": "EBITDA / Revenue.", "periods": [] },
+          { "name": "Net Debt / (Net Debt + Market Cap of Equity)", "unit": "percentage", "data_type": "percentage_rate", "ai_instructions": "Requires market cap input if company is public. If private, use book equity as a proxy or make explicit assumption about enterprise value.", "periods": [], "notes": "Market-value based leverage."}
+      ]
+    },
+    "valuation_context_for_debt": {
+      "section_description": "Valuation metrics to provide context for asset coverage and recovery prospects.",
+      "enterprise_value_estimation": {
+        "dcf_for_ev": {
+          "ai_instructions": "Perform a basic DCF to estimate Enterprise Value. This EV serves as a proxy for asset value available to all capital providers. 'free_cash_flow_to_firm_fcff' array to be populated with objects: { \"period_label\": \"FY_Proj_1\", \"value\": null, \"is_calculated\": true, \"calculation_logic_description\": \"...\" }.",
+          "wacc_calculation_inputs": [
+            { "name": "Cost of Equity (Ke)", "value": null, "unit": "percentage", "ai_instructions": "Estimate using CAPM: Rf + Beta * ERP. Beta can be sourced from comparables or calculated if stock is traded." },
+            { "name": "Company Beta (Levered)", "value": null, "unit": "numeric_value", "source_guidance": "Bloomberg, Refinitiv, or calculated." },
+            { "name": "Cost of Debt (Kd) (Pre-tax)", "value": null, "unit": "percentage", "ai_instructions": "Use Weighted Average Cost of Debt from Debt Schedule or current market yield on company's debt." },
+            { "name": "Market Value of Equity (E)", "value": null, "unit": "currency_value", "ai_instructions": "Current market capitalization if public. If private, estimate or use book value as a highly cautious proxy." },
+            { "name": "Market Value of Debt (D)", "value": null, "unit": "currency_value", "ai_instructions": "Use book value of debt from Debt Schedule as proxy, or market value if traded debt prices available." },
+            { "name": "WACC", "value": null, "unit": "percentage", "is_calculated": true, "calculation_logic_description": "(E/(D+E))*Ke + (D/(D+E))*Kd*(1-Tax Rate)" }
+          ],
+          "free_cash_flow_to_firm_fcff": [],
+          "terminal_value_fcff_gordon_growth": { "growth_rate_assumption": null, "value": null, "is_calculated": true },
+          "terminal_value_fcff_exit_multiple": { "ev_ebitda_multiple_assumption": null, "value": null, "is_calculated": true },
+          "estimated_enterprise_value_dcf": { "value": null, "is_calculated": true }
+        },
+        "multiples_based_ev_estimation": {
+          "comparable_companies_data": [],
+          "selected_ev_ebitda_multiple": null,
+          "estimated_enterprise_value_multiples": { "value": null, "is_calculated": true, "calculation_logic_description": "Projected EBITDA (e.g., FY_Proj_1) * Selected EV/EBITDA Multiple" }
+        }
+      },
+      "asset_coverage_and_recovery_indicators": [
+        { "name": "Enterprise Value / Total Debt", "unit": "x_multiple", "data_type": "ratio", "is_calculated": true, "calculation_logic_description": "Estimated EV / Total Debt. Indicates how many times total assets (proxied by EV) cover total debt.", "periods": [] },
+        { "name": "Implied Recovery Rate (Conceptual)", "ai_instructions": "If possible, briefly describe factors influencing recovery for different debt tranches (e.g., security, seniority). A quantitative estimate is complex and scenario-dependent." }
+      ]
+    },
+    "sensitivity_and_scenario_analysis_debt_focus": {
+      "section_description": "Assessing impact of key variable changes on credit metrics.",
+      "key_sensitivities": [
+        { "variable_name": "Revenue Growth Rate", "impact_on_metrics": ["Debt/EBITDA", "EBITDA/Interest Expense", "FCF post-Mandatory Debt Service"] },
+        { "variable_name": "EBITDA Margin", "impact_on_metrics": ["Debt/EBITDA", "EBITDA/Interest Expense", "FCF post-Mandatory Debt Service"] },
+        { "variable_name": "Interest Rate on New/Floating Debt", "impact_on_metrics": ["EBITDA/Interest Expense", "FCF post-Mandatory Debt Service"] }
+      ],
+      "sensitivity_tables_placeholder": { "ai_instructions": "AI to generate 2-way sensitivity tables for key credit metrics based on +/- changes in core assumptions (e.g., Revenue Growth vs. EBITDA Margin affecting Debt/EBITDA)." },
+      "stress_test_scenarios": [
+        {
+          "scenario_name": "Base Case",
+          "description": "As per primary assumptions."
+        },
+        {
+          "scenario_name": "Recession Stress (e.g., -X% Revenue, -Y bps Margin)",
+          "description": "Simulates impact of an economic downturn.",
+          "assumption_overrides": [],
+          "key_metric_results_placeholder": {}
+        },
+        {
+          "scenario_name": "Interest Rate Shock (e.g., +Z bps on floating/new debt)",
+          "description": "Simulates impact of rising interest rates.",
+          "assumption_overrides": [],
+          "key_metric_results_placeholder": {}
+        }
+      ],
+      "covenant_compliance_analysis_placeholder": {
+        "ai_instructions": "If specific financial covenants are known (e.g., from bond prospectus or credit agreement), list them here in 'known_covenants' array and project compliance headroom/breach for each scenario. E.g., Max Debt/EBITDA < 4.0x; Min Interest Coverage > 2.5x.",
+        "known_covenants": []
+      }
+    },
+    "ai_agent_summary_and_confidence_debt_focus": {
+      "overall_credit_assessment_summary_placeholder": null,
+      "data_quality_and_availability_assessment": null,
+      "key_assumptions_and_judgment_points": [],
+      "confidence_scores_for_key_projections": [],
+      "data_sources_used_primarily": [],
+      "limitations_of_the_model": null
+    }
+  }

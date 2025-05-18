@@ -1,0 +1,16 @@
+{
+  "Security": "C\n\nTRVL-GSB-01-22\n\nTravel bond 1",
+  "ISIN": "MN0TRVL67835",
+  "Currency": "MNT",
+  "Interest Rate": "22.00%",
+  "Maturity Date": "2026-01-21",
+  "Quantity": "100",
+  "Price": "₮ 1,000,000",
+  "Total Amount": "₮ 100,000,000",
+  "Start Date": "2025-01-21",
+  "End Date": "2025-01-21",
+  "Underwriter": "Good Sec",
+  "Progress": "100%",
+  "url_id": "acb8e4b8-1a8b-4ee6-a246-8b024e621833",
+  "detail_url_path": "/securities/detail?id=acb8e4b8-1a8b-4ee6-a246-8b024e621833"
+}

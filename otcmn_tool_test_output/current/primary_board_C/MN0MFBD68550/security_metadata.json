@@ -1,0 +1,16 @@
+{
+  "Security": "C\n\nMFBD-TDB-1.5-18\n\nMFBD bond 1.5",
+  "ISIN": "MN0MFBD68550",
+  "Currency": "MNT",
+  "Interest Rate": "18.00%",
+  "Maturity Date": "2027-03-22",
+  "Quantity": "3,000",
+  "Price": "₮ 1,000,000",
+  "Total Amount": "₮ 3,000,000,000",
+  "Start Date": "2025-03-21",
+  "End Date": "2025-03-21",
+  "Underwriter": "TDB Securities",
+  "Progress": "100%",
+  "url_id": "996d79c0-7335-40ae-bd7a-a26a517b7e24",
+  "detail_url_path": "/securities/detail?id=996d79c0-7335-40ae-bd7a-a26a517b7e24"
+}

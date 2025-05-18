@@ -1,0 +1,7 @@
+[2025-05-16 20:10:02,261][INFO][MCPDocumentParserServer] Tesseract OK. 'mon' available. All languages: ['eng', 'mon', 'osd']
+[2025-05-16 20:10:02,267][INFO][MCPDocumentParserServer] Starting MCPDocumentParserServer. Initial Tesseract Check: Tesseract OK, 'mon' available. (Status: OK)
+[2025-05-16 20:10:02,275][INFO][MCPDocumentParserServer] Processing request of type CallToolRequest
+[2025-05-16 20:10:02,282][WARNING][MCPDocumentParserServer] CropBox missing from /Page, defaulting to MediaBox
+[2025-05-16 20:10:02,282][WARNING][MCPDocumentParserServer] CropBox missing from /Page, defaulting to MediaBox
+[2025-05-16 20:10:02,288][WARNING][MCPDocumentParserServer] CropBox missing from /Page, defaulting to MediaBox
+[2025-05-16 20:10:02,288][WARNING][MCPDocumentParserServer] CropBox missing from /Page, defaulting to MediaBox

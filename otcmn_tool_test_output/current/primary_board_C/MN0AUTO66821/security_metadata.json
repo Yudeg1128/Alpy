@@ -1,0 +1,16 @@
+{
+  "Security": "C\n\nAUTO-INB-01-14\n\nAutomart bond 1",
+  "ISIN": "MN0AUTO66821",
+  "Currency": "MNT",
+  "Interest Rate": "14.00%",
+  "Maturity Date": "2028-10-30",
+  "Quantity": "400",
+  "Price": "₮ 1,000,000",
+  "Total Amount": "₮ 400,000,000",
+  "Start Date": "2024-10-28",
+  "End Date": "2024-10-29",
+  "Underwriter": "Invescore Capital",
+  "Progress": "100%",
+  "url_id": "5ed4c23d-a08f-431c-8f73-93706582a843",
+  "detail_url_path": "/securities/detail?id=5ed4c23d-a08f-431c-8f73-93706582a843"
+}

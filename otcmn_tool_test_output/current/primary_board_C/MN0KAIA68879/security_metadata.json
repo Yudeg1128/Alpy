@@ -1,0 +1,16 @@
+{
+  "Security": "C\n\nKAIA-ICB-01-25\n\nKaidu bond 1",
+  "ISIN": "MN0KAIA68879",
+  "Currency": "MNT",
+  "Interest Rate": "25.00%",
+  "Maturity Date": "2026-04-22",
+  "Quantity": "2,000",
+  "Price": "₮ 1,000,000",
+  "Total Amount": "₮ 2,000,000,000",
+  "Start Date": "2025-04-22",
+  "End Date": "2025-04-22",
+  "Underwriter": "Invescore Capital",
+  "Progress": "100%",
+  "url_id": "12d66a50-3832-4af2-a7c0-9da0d060386a",
+  "detail_url_path": "/securities/detail?id=12d66a50-3832-4af2-a7c0-9da0d060386a"
+}

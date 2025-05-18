@@ -1,0 +1,16 @@
+{
+  "Security": "C\n\nWSTA-02-20\n\nWST bond 2",
+  "ISIN": "MN0WSTA67206",
+  "Currency": "MNT",
+  "Interest Rate": "20.00%",
+  "Maturity Date": "2025-12-01",
+  "Quantity": "4,350",
+  "Price": "₮ 1,000,000",
+  "Total Amount": "₮ 4,350,000,000",
+  "Start Date": "2024-11-28",
+  "End Date": "2024-11-29",
+  "Underwriter": "Net Sec",
+  "Progress": "100%",
+  "url_id": "3cab771a-ad7e-4796-96f0-f3ee5b902516",
+  "detail_url_path": "/securities/detail?id=3cab771a-ad7e-4796-96f0-f3ee5b902516"
+}

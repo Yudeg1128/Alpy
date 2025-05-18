@@ -1,0 +1,16 @@
+{
+  "Security": "C\n\nNCFA-5.2-18.5\n\nNC bond 5.2",
+  "ISIN": "MN0NCFA68271",
+  "Currency": "MNT",
+  "Interest Rate": "18.50%",
+  "Maturity Date": "2026-02-20",
+  "Quantity": "2,000",
+  "Price": "₮ 1,000,000",
+  "Total Amount": "₮ 2,000,000,000",
+  "Start Date": "2025-02-20",
+  "End Date": "2025-02-20",
+  "Underwriter": "Net Sec",
+  "Progress": "100%",
+  "url_id": "c6bdfff0-d1f1-493b-83c2-286ce37820d1",
+  "detail_url_path": "/securities/detail?id=c6bdfff0-d1f1-493b-83c2-286ce37820d1"
+}

@@ -1,0 +1,219 @@
+# prompts/financial_modeling_prompts.yaml
+
+metadata_extraction:
+  prompt_template: |
+    From the provided cover page text and initial sections of the financial document (likely a {document_type} in Mongolian), extract the following metadata for the company:
+    1. Target Company Name (target_company_name)
+    2. Ticker Symbol (ticker_symbol), if available
+    3. Primary Currency of Reporting (currency) - e.g., MNT, USD.
+    4. Fiscal Year End (fiscal_year_end) in MM-DD format.
+
+    Respond strictly in the following JSON format, using null if a value is not found or cannot be determined. Do not include any conversational text outside this JSON structure.
+    ```json
+    {{
+      "target_company_name": "string_or_null",
+      "ticker_symbol": "string_or_null",
+      "currency": "string_or_null",
+      "fiscal_year_end": "MM-DD_or_null"
+    }}
+    ```
+
+    Document Excerpts:
+    ---
+    {context}
+    ---
+
+historical_period_identification:
+  prompt_template: |
+    From the financial statement excerpts provided (likely from a {document_type} in Mongolian), identify the distinct historical financial periods reported consistently.
+    Standardize them (e.g., "FY2023", "FY2022", "H1-2023", "2023 Q1").
+    List them in chronological order, with the most recent period first.
+
+    Respond strictly in the following JSON format. Do not include any conversational text outside this JSON structure.
+    ```json
+    {{
+      "historical_period_labels": ["string", "string", ...]
+    }}
+    ```
+
+    Document Excerpts:
+    ---
+    {context}
+    ---
+
+single_line_item_extraction:
+  # This prompt template will be formatted by the PhaseAOrchestrator.
+  # Placeholders like {period_label}, {line_item_english_name}, {line_item_mongolian_name},
+  # {line_item_definition}, and {context} will be filled dynamically.
+  prompt_template: |
+    Objective: Extract a specific financial data point from Mongolian document excerpts.
+
+    Target Information:
+    - Financial Period: '{period_label}'
+    - Line Item (English): '{line_item_english_name}'
+    - Line Item (Mongolian): '{line_item_mongolian_name}'
+    - Definition/Guidance: '{line_item_definition}'
+
+    Instructions:
+    1.  Carefully review the provided Mongolian financial document excerpts (text and table data) for the reporting period '{period_label}'.
+    2.  Identify the precise numerical value for the line item.
+    3.  Determine the reported currency (e.g., 'MNT', 'USD', 'EUR'). If not directly with the number, infer from page/table context.
+    4.  Determine the unit of the value (e.g., 'actuals', 'thousands', 'millions', 'мян.₮', 'сая.₮'). If numbers are in thousands/millions, state this. Use 'actuals' if no scaling is apparent.
+    5.  Provide a brief source reference (e.g., "Page X, Table Y, Row Z", "Page A, paragraph B", "Financial Statements section, Item Q").
+    6.  If the data point is explicitly zero, use 0 for 'value'.
+    7.  If the data is not found, not applicable (N/A), or cannot be reliably determined:
+        - Set 'value', 'currency', and 'unit' to null.
+        - Set 'status' to "CONFIRMED_NOT_FOUND".
+    8.  If the data is successfully extracted:
+        - Set 'status' to "EXTRACTED_SUCCESSFULLY".
+
+    Output Format: Respond STRICTLY with a single JSON object. No conversational text outside this JSON.
+    ```json
+    {{
+      "value": <number_or_null>,
+      "currency": "<string_or_null>",
+      "unit": "<string_or_null>",
+      "source_reference": "<string_description_of_source_or_null>",
+      "status": "<EXTRACTED_SUCCESSFULLY_OR_CONFIRMED_NOT_FOUND>"
+    }}
+    ```
+
+    Document Excerpts (for period '{period_label}', relevant to '{line_item_english_name}'):
+    ---
+    {context}
+    ---
+
+# Prompts for re-attempting extraction based on specific failure modes from the previous LLM attempt.
+# The PhaseAOrchestrator will select and format the appropriate re-prompt.
+
+re_prompt_invalid_json:
+  prompt_template: |
+    Your previous response for '{line_item_english_name}' (period '{period_label}') was not valid JSON.
+    Please re-attempt the extraction using the same document excerpts below.
+    It is crucial that your entire response is a single, valid JSON object matching the specified format.
+    Do not include any text before or after the JSON structure.
+
+    Target Information:
+    - Financial Period: '{period_label}'
+    - Line Item (English): '{line_item_english_name}'
+    - Line Item (Mongolian): '{line_item_mongolian_name}'
+    - Definition/Guidance: '{line_item_definition}'
+
+    Output Format:
+    ```json
+    {{
+      "value": <number_or_null>,
+      "currency": "<string_or_null>",
+      "unit": "<string_or_null>",
+      "source_reference": "<string_description_of_source_or_null>",
+      "status": "<EXTRACTED_SUCCESSFULLY_OR_CONFIRMED_NOT_FOUND>"
+    }}
+    ```
+
+    Document Excerpts (for period '{period_label}', relevant to '{line_item_english_name}'):
+    ---
+    {context}
+    ---
+
+re_prompt_missing_keys:
+  prompt_template: |
+    Your previous JSON response for '{line_item_english_name}' (period '{period_label}') was missing one or more required keys.
+    The required keys are: "value", "currency", "unit", "source_reference", "status".
+    Please re-attempt the extraction. Ensure all these keys are present in your JSON response.
+    If a value for a key is not found or not applicable, use null for that key's value.
+
+    Target Information:
+    - Financial Period: '{period_label}'
+    - Line Item (English): '{line_item_english_name}'
+    - Line Item (Mongolian): '{line_item_mongolian_name}'
+    - Definition/Guidance: '{line_item_definition}'
+
+    Output Format:
+    ```json
+    {{
+      "value": <number_or_null>,
+      "currency": "<string_or_null>",
+      "unit": "<string_or_null>",
+      "source_reference": "<string_description_of_source_or_null>",
+      "status": "<EXTRACTED_SUCCESSFULLY_OR_CONFIRMED_NOT_FOUND>"
+    }}
+    ```
+
+    Document Excerpts (for period '{period_label}', relevant to '{line_item_english_name}'):
+    ---
+    {context}
+    ---
+
+re_prompt_implausible_value:
+  prompt_template: |
+    The value previously extracted for '{line_item_english_name}' (period '{period_label}') seemed implausible, had an incorrect data type, or the 'status' was inconsistent with the 'value'.
+    Please carefully re-verify the numerical value, its currency, and unit from the provided document excerpts.
+    Pay close attention to signs (positive/negative), data types (number or null for 'value'), and scaling factors (thousands, millions).
+    Ensure the 'status' field accurately reflects whether the data was found or not.
+
+    Target Information:
+    - Financial Period: '{period_label}'
+    - Line Item (English): '{line_item_english_name}'
+    - Line Item (Mongolian): '{line_item_mongolian_name}'
+    - Definition/Guidance: '{line_item_definition}'
+
+    Output Format:
+    ```json
+    {{
+      "value": <number_or_null>,
+      "currency": "<string_or_null>",
+      "unit": "<string_or_null>",
+      "source_reference": "<string_description_of_source_or_null>",
+      "status": "<EXTRACTED_SUCCESSFULLY_OR_CONFIRMED_NOT_FOUND>"
+    }}
+    ```
+
+    Document Excerpts (for period '{period_label}', relevant to '{line_item_english_name}'):
+    ---
+    {context}
+    ---
+
+# Optional prompt for the QualityChecker's LLM-assisted discrepancy review (Phase A, Step 7.C)
+quality_checker_discrepancy_review:
+  prompt_template: |
+    A financial sanity check has failed based on previously extracted data from a Mongolian financial document.
+    Sanity Check Details:
+    - Period: '{period_label}'
+    - Check Name: '{check_name}' (e.g., Assets = Liabilities + Equity)
+    - Expected Outcome: '{expected_outcome_description}' (e.g., Difference should be zero)
+    - Actual Discrepancy: '{mismatch_description}' (e.g., Assets - (L+E) = 150 MNT)
+
+    Relevant Extracted Data Points and Their Sources:
+    {discrepancy_items_and_sources_details}
+    # This will be a formatted string like:
+    # - Item: 'Total Assets', Value: 1000 MNT (Source: Page 10, Table 3, Row 5)
+    #   Excerpt: "..."
+    # - Item: 'Total Liabilities', Value: 600 MNT (Source: Page 12, Summary)
+    #   Excerpt: "..."
+    # - Item: 'Total Equity', Value: 250 MNT (Source: Page 12, Equity Section)
+    #   Excerpt: "..."
+
+    Task:
+    Review the provided excerpts carefully.
+    1.  Identify if there's a clear misinterpretation or error in any of the original extractions that would explain the discrepancy.
+    2.  Note if there's any disclosed reconciling item, footnote, or specific accounting treatment mentioned in the excerpts that might explain why the standard check doesn't balance.
+    3.  If a misinterpretation is likely, suggest the corrected value(s) and provide reasoning based *only* on the provided excerpts.
+
+    Respond strictly in the following JSON format. Do not include conversational text outside this structure.
+    ```json
+    {{
+      "discrepancy_cause_identified": <true_false_or_null_if_uncertain>,
+      "cause_type": "<Misinterpretation_ReconcilingItem_Unclear_NotFound_or_null>",
+      "misinterpreted_item_details": {{
+        "item_name": "<string_name_of_item_thought_to_be_misinterpreted_or_null>",
+        "original_value_details": "<string_original_value_and_source_or_null>",
+        "suggested_corrected_value": <number_or_null>,
+        "suggested_currency": "<string_or_null>",
+        "suggested_unit": "<string_or_null>",
+        "reason_for_correction": "<string_or_null>"
+      }},
+      "reconciling_item_explanation": "<string_explanation_if_found_or_null>",
+      "confidence_in_analysis": "<High_Medium_Low_or_null>",
+      "overall_reasoning": "<string_detailed_explanation_of_your_findings>"
+    }}
+    ```

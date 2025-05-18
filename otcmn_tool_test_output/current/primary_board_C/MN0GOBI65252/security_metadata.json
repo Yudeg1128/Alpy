@@ -1,0 +1,16 @@
+{
+  "Security": "C\n\nGOBI-TBC-2.3-8.5\n\nGobi bond 2.3",
+  "ISIN": "MN0GOBI65252",
+  "Currency": "USD",
+  "Interest Rate": "8.50%",
+  "Maturity Date": "2025-05-22",
+  "Quantity": "400",
+  "Price": "$ 1,000",
+  "Total Amount": "$ 400,000",
+  "Start Date": "2024-05-21",
+  "End Date": "2024-05-22",
+  "Underwriter": "Tavan Bogd Capital",
+  "Progress": "100%",
+  "url_id": "9c375cc0-2fcd-43e7-aff5-7fc08ee0dad3",
+  "detail_url_path": "/securities/detail?id=9c375cc0-2fcd-43e7-aff5-7fc08ee0dad3"
+}

@@ -1,0 +1,16 @@
+{
+  "Security": "B\n\nSTIN-SIB-01-16\n\nSTIN bond 1",
+  "ISIN": "MN0STIN67380",
+  "Currency": "MNT",
+  "Interest Rate": "16.00%",
+  "Maturity Date": "2025-12-22",
+  "Quantity": "500",
+  "Price": "₮ 1,000,000",
+  "Total Amount": "₮ 500,000,000",
+  "Start Date": "2024-12-19",
+  "End Date": "2024-12-20",
+  "Underwriter": "Standard Investment",
+  "Progress": "100%",
+  "url_id": "8ccbf5f9-a81b-4e84-94b1-238275444d9f",
+  "detail_url_path": "/securities/detail?id=8ccbf5f9-a81b-4e84-94b1-238275444d9f"
+}
