@@ -1,6 +1,10 @@
 [
   {
-    "file_name": "prospectus.pdf",
-    "download_url_segment": "/path/to/doc.pdf"
+    "file_name": "I. Албан бичиг DBM.pdf",
+    "download_href": "https://app-production-private.s3-ap-southeast-1.amazonaws.com/3a093aee-d3ac-4067-8637-699812eb537d?response-content-disposition=inline%3B%20filename%3D%22I.%2520%25D0%2590%25D0%25BB%25D0%25B1%25D0%25B0%25D0%25BD%2520%25D0%25B1%25D0%25B8%25D1%2587%25D0%25B8%25D0%25B3%2520DBM.pdf%22&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAV2HEJUYUA7ZE5TK2%2F20240221%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Date=20240221T064353Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&X-Amz-Signature=9e546beffe2486b2987d8a2754b3e60a341c2cf30b3eb4b283fe91141c1e7cd7"
+  },
+  {
+    "file_name": "II. ҮЦТТ DBM.pdf",
+    "download_href": "https://app-production-private.s3-ap-southeast-1.amazonaws.com/dc9c3f3e-797b-47ed-92d4-a7e53087747e?response-content-disposition=inline%3B%20filename%3D%22II.%2520%25D2%25AE%25D0%25A6%25D0%25A2%25D0%25A2%2520DBM.pdf%22&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAV2HEJUYUA7ZE5TK2%2F20240221%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Date=20240221T064353Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&X-Amz-Signature=575bcd685ce35630d4fab02f87ca7c902dfa402b9a4867d3b3bb5bdca7ee1c16"
   }
 ]

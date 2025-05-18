@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Debt Instrument Issuer Financial Model Schema",
-  "description": "Schema for a comprehensive financial model (v2.2 - fully schema-driven, no comments, expanded placeholders).",
+  "description": "Schema for a comprehensive financial model (v2.3 - Mongolian names integrated, focus on better context gathering).",
   "type": "object",
   "$defs": {
     "period_object_value_only": {
@@ -43,7 +43,8 @@
     "financial_line_item_base_schema": {
       "type": "object",
       "properties": {
-        "name": { "type": "string", "description": "Name of the financial line item." },
+        "name": { "type": "string", "description": "Name of the financial line item (English)." },
+        "name_mn": { "type": ["string", "null"], "description": "Name of the financial line item (Mongolian)." },
         "data_type": { "type": "string", "default": "currency_value", "description": "Semantic data type." },
         "periods": {
           "type": "array", "default": [],
@@ -66,6 +67,7 @@
         "description": "Detailed information for a specific debt tranche.",
         "properties": {
             "tranche_name": {"type": "string"},
+            "name_mn": {"type": ["string", "null"], "description": "Нэрийн бичиг баримтын нэр (Монгол)"},
             "original_principal": {"type": ["number", "null"]},
             "outstanding_principal_start_of_model": {"type": ["number", "null"]},
             "issue_date": {"type": ["string", "null"], "format": "date"},
@@ -105,6 +107,7 @@
         "type": "object",
         "properties": {
             "name": {"type": "string"},
+            "name_mn": {"type": ["string", "null"]},
             "value": {"type": ["number", "null"]},
             "unit": {"type": "string"},
             "ai_instructions": {"type": ["string", "null"]},
@@ -121,7 +124,7 @@
             "is_calculated": {"type": "boolean", "default": true},
             "calculation_logic_description": {"type": ["string", "null"]}
         },
-        "required": ["value", "is_calculated"]
+        "required": ["is_calculated"] 
     },
     "assumption_override_item_schema": {
         "type": "object",
@@ -136,6 +139,7 @@
         "type": "object",
         "properties": {
             "covenant_name": {"type": "string"},
+            "name_mn": {"type": ["string", "null"]},
             "metric_definition": {"type": "string"},
             "threshold_condition": {"type": "string"},
             "compliance_status_projection": {
@@ -149,6 +153,7 @@
         "type": "object",
         "properties": {
             "projection_item_name": {"type": "string"},
+            "name_mn": {"type": ["string", "null"]},
             "confidence_score_percentage": {"type": ["number", "null"], "minimum": 0, "maximum": 100},
             "reasoning": {"type": ["string", "null"]}
         },
@@ -160,16 +165,16 @@
         "type": "object",
         "properties": {
           "model_name": { "type": "string", "default": "Debt Instrument Issuer Financial Model" },
-          "version": { "type": "string", "default": "2.2_fully_expanded" },
+          "version": { "type": "string", "default": "2.3_mongolian_names" },
           "target_company_name": { "type": ["string", "null"] },
           "ticker_symbol": { "type": ["string", "null"] },
-          "currency": { "type": "string", "default": "USD" },
+          "currency": { "type": "string", "default": "MNT" },
           "fiscal_year_end": { "type": "string", "pattern": "^(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$" },
-          "historical_periods_count": { "type": "integer", "minimum": 0, "default": 3 },
+          "historical_periods_count": { "type": "integer", "minimum": 0, "default": 2 },
           "projection_periods_count": { "type": "integer", "minimum": 0, "default": 3 },
           "analyst_name": { "type": "string", "default": "AI Financial Modeler Agent" },
           "date_created": { "type": "string", "format": "date-time" },
-          "ai_instructions_general": { "type": "string" },
+          "ai_instructions_general": { "type": "string", "default": "This model is for debt analysis. Pay attention to Mongolian financial reporting standards if context implies." },
           "model_focus": { "type": "string", "default": "Fixed Income Securities Analysis" }
         },
         "required": [
@@ -185,11 +190,12 @@
     "company_specific_assumptions_debt_focus": {
         "type": "object", "default": {},
         "properties": {
-          "section_description": { "type": "string" }, "ai_instructions_section": { "type": "string" },
-          "revenue_drivers": { "type": "array", "default": [], "items": { "type": "object", "properties": { "segment_name": { "type": "string" }, "driver_type": { "type": "string" }, "periods": { "type": "array", "items": { "$ref": "#/$defs/assumption_period_object" } } }, "required": ["segment_name", "driver_type", "periods"]} },
-          "cost_and_margin_drivers": { "type": "array", "default": [], "items": { "type": "object", "properties": { "cost_category": { "type": "string" }, "driver_type": { "type": "string" }, "periods": { "type": "array", "items": { "$ref": "#/$defs/assumption_period_object" } } }, "required": ["cost_category", "driver_type", "periods"]} },
-          "working_capital_drivers": { "type": "array", "default": [], "items": { "type": "object", "properties": { "item_name": { "type": "string" }, "periods": { "type": "array", "items": { "$ref": "#/$defs/assumption_period_object" } } }, "required": ["item_name", "periods"]} },
-          "capital_expenditure_and_asset_drivers": { "type": "array", "default": [], "items": { "type": "object", "properties": { "item_name": { "type": "string" }, "periods": { "type": "array", "items": { "$ref": "#/$defs/assumption_period_object" } } }, "required": ["item_name", "periods"]} },
+          "section_description": { "type": "string", "default": "Компанийн тусгай таамаглалууд (өрийн төвлөрөл)" }, 
+          "ai_instructions_section": { "type": "string", "default": "Түүхэн мэдээлэл болон баримт бичгийн агуулгад үндэслэн таамаглал боловсруулна уу." },
+          "revenue_drivers": { "type": "array", "default": [], "items": { "type": "object", "properties": { "segment_name": { "type": "string" }, "name_mn": { "type": ["string", "null"] }, "driver_type": { "type": "string" }, "periods": { "type": "array", "items": { "$ref": "#/$defs/assumption_period_object" } } }, "required": ["segment_name", "driver_type", "periods"]} },
+          "cost_and_margin_drivers": { "type": "array", "default": [], "items": { "type": "object", "properties": { "cost_category": { "type": "string" }, "name_mn": { "type": ["string", "null"] }, "driver_type": { "type": "string" }, "periods": { "type": "array", "items": { "$ref": "#/$defs/assumption_period_object" } } }, "required": ["cost_category", "driver_type", "periods"]} },
+          "working_capital_drivers": { "type": "array", "default": [], "items": { "type": "object", "properties": { "item_name": { "type": "string" }, "name_mn": { "type": ["string", "null"] }, "periods": { "type": "array", "items": { "$ref": "#/$defs/assumption_period_object" } } }, "required": ["item_name", "periods"]} },
+          "capital_expenditure_and_asset_drivers": { "type": "array", "default": [], "items": { "type": "object", "properties": { "item_name": { "type": "string" }, "name_mn": { "type": ["string", "null"] }, "periods": { "type": "array", "items": { "$ref": "#/$defs/assumption_period_object" } } }, "required": ["item_name", "periods"]} },
           "financing_and_debt_assumptions": { "type": "object", "default": {}, "properties": { "existing_debt_refinancing_strategy": { "type": ["string", "null"] }, "new_debt_issuance_plans": { "type": "array", "default": [], "items": { "$ref": "#/$defs/debt_tranche_detail_schema" }}, "assumed_interest_rate_on_new_debt": { "type": ["number", "null"] }, "dividend_policy_and_payout_ratio": { "type": "array", "default": [], "items": { "$ref": "#/$defs/assumption_period_object" } }, "share_repurchases_policy": { "type": "array", "default": [], "items": { "$ref": "#/$defs/assumption_period_object" } }, "debt_paydown_priority": { "type": ["string", "null"] }, "cash_sweep_mechanism_for_excess_cash_flow": { "type": ["string", "null"] }, "minimum_cash_balance_target": { "type": ["number", "null"] } } },
           "tax_assumptions": { "type": "object", "default": {}, "properties": { "effective_tax_rate": { "type": "array", "default": [], "items": { "$ref": "#/$defs/assumption_period_object" } }, "cash_tax_rate_if_different": { "type": "array", "default": [], "items": { "$ref": "#/$defs/assumption_period_object" } } } }
         },
@@ -198,29 +204,29 @@
     "financial_statements_core": {
       "type": "object", "default": {},
       "properties": {
-        "section_description": { "type": "string", "default": "Core financial statements." },
+        "section_description": { "type": "string", "default": "Үндсэн санхүүгийн тайлангууд." },
         "historical_period_labels": { "type": "array", "items": { "type": "string" }, "default": [] },
         "projected_period_labels": { "type": "array", "items": { "type": "string" }, "default": [] },
         "income_statement": {
           "type": "object", "default": {},
           "properties": {
-            "ai_instructions_statement": { "type": "string", "default": "Extract and project income statement line items." },
+            "ai_instructions_statement": { "type": "string", "default": "Орлогын тайлангийн зүйлсийг гаргаж, төсөөлөл боловсруулна уу. Монгол тайланд COGS, SG&A, EBITDA, EBIT, EBT зэрэг англи товчлол ашиглагдаж болзошгүйг анхаарна уу." },
             "line_items": {
               "type": "array", "default": [],
               "items": [
-                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Revenue"}, "is_calculated": {"const": false}, "source_guidance_historical": {"default": "Reported Net Revenue from 10-K/Q."}} },
-                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Cost of Goods Sold (COGS)"}, "is_calculated": {"const": false}, "source_guidance_historical": {"default": "Reported COGS."}} },
-                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Gross Profit"}, "is_calculated": {"const": true}, "calculation_logic_description": {"default": "Revenue - COGS"}} },
-                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "SG&A Expenses"}, "is_calculated": {"const": false}, "source_guidance_historical": {"default": "Reported SG&A."}} },
-                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Other Operating Expenses/Income"}, "is_calculated": {"const": false}, "source_guidance_historical": {"default": "Reported. Normalize."}} },
-                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "EBITDA (Earnings Before Interest, Taxes, Depreciation & Amortization)"}, "is_calculated": {"const": true}, "calculation_logic_description": {"default": "Gross Profit - SG&A - Other OpEx (excl. D&A)."}} },
-                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Depreciation & Amortization (D&A)"}, "is_calculated": {"const": false}, "source_guidance_historical": {"default": "From CFS or BS roll-forward."}} },
-                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "EBIT (Earnings Before Interest & Taxes)"}, "is_calculated": {"const": true}, "calculation_logic_description": {"default": "EBITDA - D&A"}} },
-                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Interest Expense"}, "is_calculated": {"const": false}, "source_guidance_historical": {"default": "Reported Interest Expense."}} },
-                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Interest Income"}, "is_calculated": {"const": false}, "source_guidance_historical": {"default": "Reported Interest Income."}} },
-                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "EBT (Earnings Before Tax)"}, "is_calculated": {"const": true}, "calculation_logic_description": {"default": "EBIT - Interest Expense + Interest Income"}} },
-                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Income Tax Expense"}, "is_calculated": {"const": false}, "source_guidance_historical": {"default": "Reported Tax Expense."}} },
-                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Net Income"}, "is_calculated": {"const": true}, "calculation_logic_description": {"default": "EBT - Income Tax Expense"}} }
+                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Revenue"}, "name_mn": {"const": "Орлого"}, "is_calculated": {"const": false}, "source_guidance_historical": {"default": "Reported Net Revenue from 10-K/Q. / Тайлант цэвэр орлого."}} },
+                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Cost of Goods Sold (COGS)"}, "name_mn": {"const": "Борлуулсан барааны өртөг"}, "is_calculated": {"const": false}, "source_guidance_historical": {"default": "Reported COGS. / Тайлант ББӨ."}} },
+                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Gross Profit"}, "name_mn": {"const": "Нийт ашиг"}, "is_calculated": {"const": true}, "calculation_logic_description": {"default": "Revenue - COGS / Орлого - ББӨ"}} },
+                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "SG&A Expenses"}, "name_mn": {"const": "Худалдан борлуулалт, ерөнхий ба захиргааны зардал"}, "is_calculated": {"const": false}, "source_guidance_historical": {"default": "Reported SG&A."}} },
+                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Other Operating Expenses/Income"}, "name_mn": {"const": "Бусад үйл ажиллагааны орлого, зардал"}, "is_calculated": {"const": false}, "source_guidance_historical": {"default": "Reported. Normalize."}} },
+                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "EBITDA (Earnings Before Interest, Taxes, Depreciation & Amortization)"}, "name_mn": {"const": "Хүү, татвар, элэгдэл, хорогдлын өмнөх ашиг"}, "is_calculated": {"const": true}, "calculation_logic_description": {"default": "Gross Profit - SG&A - Other OpEx (excl. D&A). EBITDA abbreviation may be used."}} },
+                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Depreciation & Amortization (D&A)"}, "name_mn": {"const": "Элэгдэл ба хорогдол"}, "is_calculated": {"const": false}, "source_guidance_historical": {"default": "From CFS or BS roll-forward."}} },
+                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "EBIT (Earnings Before Interest & Taxes)"}, "name_mn": {"const": "Хүү, татварын өмнөх ашиг"}, "is_calculated": {"const": true}, "calculation_logic_description": {"default": "EBITDA - D&A. EBIT abbreviation may be used."}} },
+                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Interest Expense"}, "name_mn": {"const": "Хүүгийн зардал"}, "is_calculated": {"const": false}, "source_guidance_historical": {"default": "Reported Interest Expense."}} },
+                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Interest Income"}, "name_mn": {"const": "Хүүгийн орлого"}, "is_calculated": {"const": false}, "source_guidance_historical": {"default": "Reported Interest Income."}} },
+                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "EBT (Earnings Before Tax)"}, "name_mn": {"const": "Татварын өмнөх ашиг"}, "is_calculated": {"const": true}, "calculation_logic_description": {"default": "EBIT - Interest Expense + Interest Income. EBT abbreviation may be used."}} },
+                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Income Tax Expense"}, "name_mn": {"const": "Орлогын татварын зардал"}, "is_calculated": {"const": false}, "source_guidance_historical": {"default": "Reported Tax Expense."}} },
+                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Net Income"}, "name_mn": {"const": "Цэвэр ашиг"}, "is_calculated": {"const": true}, "calculation_logic_description": {"default": "EBT - Income Tax Expense"}} }
               ]
             }
           }, "required": ["line_items"], "additionalProperties": false
@@ -228,70 +234,70 @@
         "balance_sheet": {
           "type": "object", "default": {},
           "properties": {
-            "ai_instructions_statement": { "type": "string", "default": "Ensure Assets = Liabilities + Equity." },
+            "ai_instructions_statement": { "type": "string", "default": "Хөрөнгө = Өр төлбөр + Эздийн өмч гэдгийг баталгаажуулна уу. Монгол тайланд PP&E зэрэг англи товчлол ашиглагдаж болзошгүй." },
             "assets": {
               "type": "object", "default": {},
               "properties": {
                 "current_assets": { "type": "array", "default": [], "items": [
-                  { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Cash & Cash Equivalents"}, "is_calculated": {"const": false}} },
-                  { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Accounts Receivable"}, "is_calculated": {"const": false}} },
-                  { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Inventory"}, "is_calculated": {"const": false}} }
+                  { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Cash & Cash Equivalents"}, "name_mn": {"const": "Мөнгөн хөрөнгө ба түүнтэй адилтгах хөрөнгө"}, "is_calculated": {"const": false}} },
+                  { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Accounts Receivable"}, "name_mn": {"const": "Авлагын данс"}, "is_calculated": {"const": false}} },
+                  { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Inventory"}, "name_mn": {"const": "Бараа материал"}, "is_calculated": {"const": false}} }
                 ]},
                 "non_current_assets": { "type": "array", "default": [], "items": [
-                  { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Net PP&E"}, "is_calculated": {"const": false}} },
-                  { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Goodwill"}, "is_calculated": {"const": false}} },
-                  { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Intangible Assets (Net)"}, "is_calculated": {"const": false}} }
+                  { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Net PP&E"}, "name_mn": {"const": "Үндсэн хөрөнгө, цэвэр дүнгээр"}, "is_calculated": {"const": false}, "source_guidance_historical": {"default": "Net Property, Plant & Equipment. PP&E abbreviation may be used."}} },
+                  { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Goodwill"}, "name_mn": {"const": "Гүүдвил"}, "is_calculated": {"const": false}} },
+                  { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Intangible Assets (Net)"}, "name_mn": {"const": "Биет бус хөрөнгө, цэвэр дүнгээр"}, "is_calculated": {"const": false}} }
                 ]},
-                "total_assets": { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Total Assets"}, "is_calculated": {"const": true}} }
+                "total_assets": { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Total Assets"}, "name_mn": {"const": "Нийт хөрөнгө"}, "is_calculated": {"const": true}} }
               }, "required": ["current_assets", "non_current_assets", "total_assets"], "additionalProperties": false
             },
             "liabilities_and_equity": {
               "type": "object", "default": {},
               "properties": {
                 "current_liabilities": { "type": "array", "default": [], "items": [
-                  { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Accounts Payable"}, "is_calculated": {"const": false}} },
-                  { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Short-Term Debt & Current Portion of LTD"}, "is_calculated": {"const": false}} }
+                  { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Accounts Payable"}, "name_mn": {"const": "Өглөгийн данс"}, "is_calculated": {"const": false}} },
+                  { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Short-Term Debt & Current Portion of LTD"}, "name_mn": {"const": "Богино хугацаат өр төлбөр ба УХӨТ-ийн эргэн төлөгдөх хэсэг"}, "is_calculated": {"const": false}} }
                 ]},
                 "non_current_liabilities": { "type": "array", "default": [], "items": [
-                  { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Long-Term Debt"}, "is_calculated": {"const": false}} }
+                  { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Long-Term Debt"}, "name_mn": {"const": "Урт хугацаат өр төлбөр"}, "is_calculated": {"const": false}} }
                 ]},
-                "total_liabilities": { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Total Liabilities"}, "is_calculated": {"const": true}} },
+                "total_liabilities": { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Total Liabilities"}, "name_mn": {"const": "Нийт өр төлбөр"}, "is_calculated": {"const": true}} },
                 "equity": { "type": "array", "default": [], "items": [
-                  { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Common Stock & APIC"}, "is_calculated": {"const": false}} },
-                  { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Retained Earnings"}, "is_calculated": {"const": false}} }
+                  { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Common Stock & APIC"}, "name_mn": {"const": "Энгийн хувьцаа ба Нэмж төлөгдсөн капитал"}, "is_calculated": {"const": false}} },
+                  { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Retained Earnings"}, "name_mn": {"const": "Хуримтлагдсан ашиг"}, "is_calculated": {"const": false}} }
                 ]},
-                "total_equity": { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Total Equity"}, "is_calculated": {"const": true}} },
-                "total_liabilities_and_equity": { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Total Liabilities & Equity"}, "is_calculated": {"const": true}} }
+                "total_equity": { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Total Equity"}, "name_mn": {"const": "Нийт эзэмшигчдийн өмч"}, "is_calculated": {"const": true}} },
+                "total_liabilities_and_equity": { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Total Liabilities & Equity"}, "name_mn": {"const": "Нийт өр төлбөр ба эзэмшигчдийн өмч"}, "is_calculated": {"const": true}} }
               }, "required": ["current_liabilities", "non_current_liabilities", "total_liabilities", "equity", "total_equity", "total_liabilities_and_equity"], "additionalProperties": false
             },
-            "balance_sheet_check": { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Balance Sheet Check (Assets - L&E)"}, "is_calculated": {"const": true}, "target_value": {"type":"number", "const": 0}, "tolerance": {"type":"number", "default": 1}} }
+            "balance_sheet_check": { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Balance Sheet Check (Assets - L&E)"}, "name_mn": {"const": "Тэнцлийн шалгалт (Хөрөнгө - ӨТ ба ЭӨ)"}, "is_calculated": {"const": true}, "target_value": {"type":"number", "const": 0}, "tolerance": {"type":"number", "default": 1}} }
           }, "required": ["assets", "liabilities_and_equity", "balance_sheet_check"], "additionalProperties": false
         },
         "cash_flow_statement": {
           "type": "object", "default": {},
           "properties": {
-            "ai_instructions_statement": { "type": "string", "default": "Derived from IS and BS changes." },
+            "ai_instructions_statement": { "type": "string", "default": "Орлогын тайлан ба тайлан балансын өөрчлөлтөөс гаргана. Монгол тайланд Capex зэрэг англи товчлол ашиглагдаж болзошгүй." },
             "cash_flow_from_operations_cfo": { "type": "array", "default": [], "items": [
-              { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Net Income"}, "is_calculated": {"const": false} } },
-              { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Depreciation & Amortization"}, "is_calculated": {"const": false}} },
-              { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Changes in Accounts Receivable"}, "is_calculated": {"const": true}} },
-              { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Changes in Inventory"}, "is_calculated": {"const": true}} },
-              { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Changes in Accounts Payable"}, "is_calculated": {"const": true}} },
-              { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Net Cash Flow from Operations"}, "is_calculated": {"const": true}} }
+              { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Net Income"}, "name_mn": {"const": "Цэвэр ашиг"}, "is_calculated": {"const": false} } },
+              { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Depreciation & Amortization"}, "name_mn": {"const": "Элэгдэл ба хорогдол"}, "is_calculated": {"const": false}} },
+              { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Changes in Accounts Receivable"}, "name_mn": {"const": "Авлагын өөрчлөлт"}, "is_calculated": {"const": true}} },
+              { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Changes in Inventory"}, "name_mn": {"const": "Бараа материалын өөрчлөлт"}, "is_calculated": {"const": true}} },
+              { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Changes in Accounts Payable"}, "name_mn": {"const": "Өглөгийн өөрчлөлт"}, "is_calculated": {"const": true}} },
+              { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Net Cash Flow from Operations"}, "name_mn": {"const": "Үндсэн үйл ажиллагааны цэвэр мөнгөн гүйлгээ"}, "is_calculated": {"const": true}} }
             ]},
             "cash_flow_from_investing_cfi": { "type": "array", "default": [], "items": [
-              { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Capital Expenditures (Capex)"}, "is_calculated": {"const": false}, "calculation_logic_description": {"default": "-(Maintenance Capex + Growth Capex)"}} },
-              { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Net Cash Flow from Investing"}, "is_calculated": {"const": true}} }
+              { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Capital Expenditures (Capex)"}, "name_mn": {"const": "Капитал зардал (Capex)"}, "is_calculated": {"const": false}, "calculation_logic_description": {"default": "-(Maintenance Capex + Growth Capex)"}} },
+              { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Net Cash Flow from Investing"}, "name_mn": {"const": "Хөрөнгө оруулалтын үйл ажиллагааны цэвэр мөнгөн гүйлгээ"}, "is_calculated": {"const": true}} }
             ]},
             "cash_flow_from_financing_cff": { "type": "array", "default": [], "items": [
-              { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Net Debt Issued/(Repaid)"}, "is_calculated": {"const": false}} },
-              { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Net Equity Issued/(Repurchased)"}, "is_calculated": {"const": false}} },
-              { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Dividends Paid"}, "is_calculated": {"const": false}} },
-              { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Net Cash Flow from Financing"}, "is_calculated": {"const": true}} }
+              { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Net Debt Issued/(Repaid)"}, "name_mn": {"const": "Цэвэр татан төвлөрүүлсэн/(эргэн төлсөн) зээл"}, "is_calculated": {"const": false}} },
+              { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Net Equity Issued/(Repurchased)"}, "name_mn": {"const": "Цэвэр гаргасан/(эргүүлэн худалдаж авсан) хувьцаа"}, "is_calculated": {"const": false}} },
+              { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Dividends Paid"}, "name_mn": {"const": "Төлсөн ногдол ашиг"}, "is_calculated": {"const": false}} },
+              { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Net Cash Flow from Financing"}, "name_mn": {"const": "Санхүүгийн үйл ажиллагааны цэвэр мөнгөн гүйлгээ"}, "is_calculated": {"const": true}} }
             ]},
-            "net_change_in_cash": { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Net Change in Cash"}, "is_calculated": {"const": true}} },
-            "cash_beginning_of_period": { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Cash at Beginning of Period"}, "is_calculated": {"const": false}} },
-            "cash_end_of_period": { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Cash at End of Period"}, "is_calculated": {"const": true}} }
+            "net_change_in_cash": { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Net Change in Cash"}, "name_mn": {"const": "Мөнгөн хөрөнгийн цэвэр өөрчлөлт"}, "is_calculated": {"const": true}} },
+            "cash_beginning_of_period": { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Cash at Beginning of Period"}, "name_mn": {"const": "Эхний үлдэгдэл мөнгөн хөрөнгө"}, "is_calculated": {"const": false}} },
+            "cash_end_of_period": { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Cash at End of Period"}, "name_mn": {"const": "Эцсийн үлдэгдэл мөнгөн хөрөнгө"}, "is_calculated": {"const": true}} }
           }, "required": ["cash_flow_from_operations_cfo", "cash_flow_from_investing_cfi", "cash_flow_from_financing_cff", "net_change_in_cash", "cash_beginning_of_period", "cash_end_of_period"], "additionalProperties": false
         }
       },
@@ -301,61 +307,62 @@
     "supporting_schedules_debt_focus": {
       "type": "object", "default": {},
       "properties": {
-        "section_description": { "type": "string" },
-        "debt_schedule": { "type": "object", "default": {}, "properties": { "ai_instructions_schedule": { "type": "string" }, "existing_debt_tranches": { "type": "array", "default": [], "items": { "$ref": "#/$defs/debt_tranche_detail_schema" } }, "new_debt_issuances_details": { "type": "array", "default": [], "items": { "$ref": "#/$defs/debt_tranche_detail_schema" } }, "revolving_credit_facility_rcf": { "type": "object", "default": {}, "properties": { "facility_size": { "type": ["number", "null"] }, "drawn_amount_start_of_model": { "type": ["number", "null"] }, "undrawn_availability_start_of_model": { "type": ["number", "null"] }, "interest_rate_on_drawn": { "type": ["string", "null"] }, "commitment_fee_on_undrawn": { "type": ["string", "null"] }, "calculated_periodic_movements": { "type": "array", "default": [], "items": { "$ref": "#/$defs/debt_tranche_detail_schema/properties/periodic_movements/items" } } } }, "summary_debt_rollforward": { "type": "array", "default": [], "items": [
-          { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Total Debt (Beginning of Period)"}, "is_calculated": {"const": true}}},
-          { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "New Debt Issued (Tranches + RCF)"}, "is_calculated": {"const": true}}},
-          { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Debt Repayments (Mandatory + Optional)"}, "is_calculated": {"const": true}}},
-          { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Total Debt (End of Period)"}, "is_calculated": {"const": true}}},
-          { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Total Interest Expense (All Debt)"}, "is_calculated": {"const": true}}},
-          { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Weighted Average Cost of Debt (Projected)"}, "is_calculated": {"const": true}, "data_type": {"const": "percentage_rate"}}}
+        "section_description": { "type": "string", "default": "Өрийн төвлөрөлтэй холбоотой туслах хуваарь." },
+        "debt_schedule": { "type": "object", "default": {}, "properties": { "ai_instructions_schedule": { "type": "string", "default": "Одоо байгаа болон шинээр гаргах өрийн хэрэгслийн дэлгэрэнгүй мэдээллийг гаргах." }, "existing_debt_tranches": { "type": "array", "default": [], "items": { "$ref": "#/$defs/debt_tranche_detail_schema" } }, "new_debt_issuances_details": { "type": "array", "default": [], "items": { "$ref": "#/$defs/debt_tranche_detail_schema" } }, "revolving_credit_facility_rcf": { "type": "object", "default": {}, "properties": { "facility_size": { "type": ["number", "null"] }, "drawn_amount_start_of_model": { "type": ["number", "null"] }, "undrawn_availability_start_of_model": { "type": ["number", "null"] }, "interest_rate_on_drawn": { "type": ["string", "null"] }, "commitment_fee_on_undrawn": { "type": ["string", "null"] }, "calculated_periodic_movements": { "type": "array", "default": [], "items": { "$ref": "#/$defs/debt_tranche_detail_schema/properties/periodic_movements/items" } } } }, "summary_debt_rollforward": { "type": "array", "default": [], "items": [
+          { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Total Debt (Beginning of Period)"}, "name_mn": {"const": "Нийт өр (үеийн эхэнд)"}, "is_calculated": {"const": true}}},
+          { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "New Debt Issued (Tranches + RCF)"}, "name_mn": {"const": "Шинээр гаргасан өр (Транш + ЭЗС)"},"is_calculated": {"const": true}}},
+          { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Debt Repayments (Mandatory + Optional)"}, "name_mn": {"const": "Өрийн эргэн төлөлт (Заавал + Сайн дурын)"},"is_calculated": {"const": true}}},
+          { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Total Debt (End of Period)"}, "name_mn": {"const": "Нийт өр (үеийн эцэст)"},"is_calculated": {"const": true}}},
+          { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Total Interest Expense (All Debt)"}, "name_mn": {"const": "Нийт хүүгийн зардал (бүх өр)"},"is_calculated": {"const": true}}},
+          { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Weighted Average Cost of Debt (Projected)"}, "name_mn": {"const": "Өрийн жигнэсэн дундаж өртөг (төсөөлсөн)"},"is_calculated": {"const": true}, "data_type": {"const": "percentage_rate"}}}
         ] } } },
-        "ppe_schedule": { "type": "object", "default": {}, "properties": { "ai_instructions_schedule": { "type": "string" }, "line_items": { "type": "array", "default": [], "items": { "$ref": "#/$defs/financial_line_item_base_schema" } } } },
-        "working_capital_schedule": { "type": "object", "default": {}, "properties": { "ai_instructions_schedule": { "type": "string" }, "line_items": { "type": "array", "default": [], "items": { "$ref": "#/$defs/financial_line_item_base_schema" } } } }
+        "ppe_schedule": { "type": "object", "default": {}, "properties": { "ai_instructions_schedule": { "type": "string", "default": "Үндсэн хөрөнгийн хуваарийг боловсруулах." }, "line_items": { "type": "array", "default": [], "items": { "$ref": "#/$defs/financial_line_item_base_schema" } } } },
+        "working_capital_schedule": { "type": "object", "default": {}, "properties": { "ai_instructions_schedule": { "type": "string", "default": "Эргэлтийн хөрөнгийн хуваарийг боловсруулах." }, "line_items": { "type": "array", "default": [], "items": { "$ref": "#/$defs/financial_line_item_base_schema" } } } }
       }, "additionalProperties": false
     },
     "credit_analysis_metrics_and_ratios": {
       "type": "object", "default": {},
       "properties": {
-        "section_description": { "type": "string" }, "ai_instructions_section": { "type": "string" },
+        "section_description": { "type": "string", "default": "Зээлийн шинжилгээний үзүүлэлт ба харьцаа." }, 
+        "ai_instructions_section": { "type": "string", "default": "Харьцааг тооцоолно уу. Монгол тайланд харьцааны бүрэлдэхүүн хэсгүүдэд EBITDA зэрэг англи товчлол ашиглагдаж болзошгүйг анхаарна уу." },
         "leverage_ratios": { "type": "array", "default": [], "items": [
-            { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Total Debt / EBITDA"}, "unit": {"const": "x_multiple"}, "is_calculated": {"const": true} } },
-            { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Net Debt / EBITDA"}, "unit": {"const": "x_multiple"}, "is_calculated": {"const": true} } },
-            { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Total Debt / Capitalization"}, "unit": {"const": "percentage"}, "is_calculated": {"const": true} } }
+            { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Total Debt / EBITDA"}, "name_mn": {"const": "Нийт өр / EBITDA"}, "unit": {"const": "x_multiple"}, "is_calculated": {"const": true} } },
+            { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Net Debt / EBITDA"}, "name_mn": {"const": "Цэвэр өр / EBITDA"}, "unit": {"const": "x_multiple"}, "is_calculated": {"const": true} } },
+            { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Total Debt / Capitalization"}, "name_mn": {"const": "Нийт өр / Капиталжуулалт"}, "unit": {"const": "percentage"}, "is_calculated": {"const": true} } }
         ]},
         "coverage_ratios": { "type": "array", "default": [], "items": [
-            { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "EBITDA / Interest Expense"}, "unit": {"const": "x_multiple"}, "is_calculated": {"const": true} } },
-            { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "EBIT / Interest Expense"}, "unit": {"const": "x_multiple"}, "is_calculated": {"const": true} } },
-            { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "(EBITDA - Capex) / Interest Expense"}, "unit": {"const": "x_multiple"}, "is_calculated": {"const": true} } },
-            { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Cash Flow from Operations / Total Debt"}, "unit": {"const": "percentage_or_x_multiple"}, "is_calculated": {"const": true} } },
-            { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Fixed Charge Coverage Ratio (FCC_R)"}, "unit": {"const": "x_multiple"}, "is_calculated": {"const": true} } }
+            { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "EBITDA / Interest Expense"}, "name_mn": {"const": "EBITDA / Хүүгийн зардал"}, "unit": {"const": "x_multiple"}, "is_calculated": {"const": true} } },
+            { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "EBIT / Interest Expense"}, "name_mn": {"const": "EBIT / Хүүгийн зардал"}, "unit": {"const": "x_multiple"}, "is_calculated": {"const": true} } },
+            { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "(EBITDA - Capex) / Interest Expense"}, "name_mn": {"const": "(EBITDA - Капитал зардал) / Хүүгийн зардал"}, "unit": {"const": "x_multiple"}, "is_calculated": {"const": true} } },
+            { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Cash Flow from Operations / Total Debt"}, "name_mn": {"const": "Үйл ажиллагааны цэвэр мөнгөн гүйлгээ / Нийт өр"}, "unit": {"const": "percentage_or_x_multiple"}, "is_calculated": {"const": true} } },
+            { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Fixed Charge Coverage Ratio (FCC_R)"}, "name_mn": {"const": "Тогтмол төлбөрийн хамрагдалтын харьцаа (FCC_R)"}, "unit": {"const": "x_multiple"}, "is_calculated": {"const": true} } }
         ]},
         "cash_flow_metrics_for_debt_service": { "type": "array", "default": [], "items": [
-            { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Free Cash Flow (FCF) pre-Debt Service"}, "is_calculated": {"const": true} } },
-            { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Free Cash Flow (FCF) post-Mandatory Debt Service"}, "is_calculated": {"const": true} } },
-            { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Cash Interest Paid"}, "is_calculated": {"const": true} } }
+            { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Free Cash Flow (FCF) pre-Debt Service"}, "name_mn": {"const": "Чөлөөт мөнгөн гүйлгээ (FCF) өрийн үйлчилгээний өмнө"}, "is_calculated": {"const": true} } },
+            { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Free Cash Flow (FCF) post-Mandatory Debt Service"}, "name_mn": {"const": "Чөлөөт мөнгөн гүйлгээ (FCF) заавал төлөх өрийн үйлчилгээний дараа"}, "is_calculated": {"const": true} } },
+            { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Cash Interest Paid"}, "name_mn": {"const": "Төлсөн мөнгөн хүү"}, "is_calculated": {"const": true} } }
         ]},
         "liquidity_ratios": { "type": "array", "default": [], "items": [
-            { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Current Ratio"}, "unit": {"const": "x_multiple"}, "is_calculated": {"const": true} } },
-            { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Quick Ratio (Acid Test)"}, "unit": {"const": "x_multiple"}, "is_calculated": {"const": true} } }
+            { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Current Ratio"}, "name_mn": {"const": "Эргэлтийн хөрөнгийн харьцаа"}, "unit": {"const": "x_multiple"}, "is_calculated": {"const": true} } },
+            { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Quick Ratio (Acid Test)"}, "name_mn": {"const": "Түргэн хөрвөх чадварын харьцаа"}, "unit": {"const": "x_multiple"}, "is_calculated": {"const": true} } }
         ]},
         "profitability_and_efficiency_context": { "type": "array", "default": [], "items": [
-            { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "EBITDA Margin"}, "unit": {"const": "percentage"}, "is_calculated": {"const": true} } },
-            { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Net Debt / (Net Debt + Market Cap of Equity)"}, "unit": {"const": "percentage"}, "is_calculated": {"const": false} } }
+            { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "EBITDA Margin"}, "name_mn": {"const": "EBITDA Маржин"}, "unit": {"const": "percentage"}, "is_calculated": {"const": true} } },
+            { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Net Debt / (Net Debt + Market Cap of Equity)"}, "name_mn": {"const": "Цэвэр өр / (Цэвэр өр + Зах зээлийн капиталжуулалт)"}, "unit": {"const": "percentage"}, "is_calculated": {"const": false} } }
         ]}
       }, "additionalProperties": false
     },
     "valuation_context_for_debt": {
       "type": "object", "default": {},
       "properties": {
-        "section_description": { "type": "string" },
+        "section_description": { "type": "string", "default": "Өрийн үнэлгээний контекст." },
         "enterprise_value_estimation": {
           "type": "object", "default": {},
           "properties": {
             "dcf_for_ev": {
               "type": "object", "default": {},
               "properties": {
-                "ai_instructions": { "type": "string" },
+                "ai_instructions": { "type": "string", "default": "DCF ашиглан Enterprise Value тооцоолно уу." },
                 "wacc_calculation_inputs": { "type": "array", "default": [], "items": { "$ref": "#/$defs/wacc_input_item_schema" } },
                 "free_cash_flow_to_firm_fcff": { "type": "array", "default": [], "items": { "$ref": "#/$defs/financial_line_item_base_schema" } },
                 "terminal_value_fcff_gordon_growth": { "$ref": "#/$defs/simple_value_object_schema" },
@@ -374,30 +381,30 @@
           }
         },
         "asset_coverage_and_recovery_indicators": { "type": "array", "default": [], "items": [
-            { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Enterprise Value / Total Debt"}, "unit": {"const": "x_multiple"}, "is_calculated": {"const": true} } },
-            { "type": "object", "properties": {"name": {"const": "Implied Recovery Rate (Conceptual)"}, "ai_instructions": {"type": "string"}} }
+            { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Enterprise Value / Total Debt"}, "name_mn": {"const": "Аж ахуйн нэгжийн үнэ цэн / Нийт өр"}, "unit": {"const": "x_multiple"}, "is_calculated": {"const": true} } },
+            { "type": "object", "properties": {"name": {"const": "Implied Recovery Rate (Conceptual)"}, "name_mn": {"const": "Боломжит нөхөн төлбөрийн түвшин (үзэл баримтлалын)"}, "ai_instructions": {"type": "string", "default": "Энэ нь ойлголтын үзүүлэлт юм."}} }
         ]}
       }, "additionalProperties": false
     },
     "sensitivity_and_scenario_analysis_debt_focus": {
       "type": "object", "default": {},
       "properties": {
-        "section_description": { "type": "string" },
-        "key_sensitivities": { "type": "array", "default": [], "items": { "type": "object", "properties": { "variable_name": { "type": "string" }, "impact_on_metrics": { "type": "array", "items": { "type": "string" } } }, "required": ["variable_name", "impact_on_metrics"]} },
-        "sensitivity_tables_placeholder": { "type": "object", "default": {}, "properties": { "ai_instructions": { "type": "string" } } },
-        "stress_test_scenarios": { "type": "array", "default": [], "items": { "type": "object", "properties": { "scenario_name": { "type": "string" }, "description": { "type": "string" }, "assumption_overrides": { "type": "array", "default": [], "items": { "$ref": "#/$defs/assumption_override_item_schema" } }, "key_metric_results_placeholder": { "type": "object", "default": {}, "additionalProperties": true } }, "required": ["scenario_name", "description"]} },
-        "covenant_compliance_analysis_placeholder": { "type": "object", "default": {}, "properties": { "ai_instructions": { "type": "string" }, "known_covenants": { "type": "array", "default": [], "items": { "$ref": "#/$defs/known_covenant_item_schema" } } } }
+        "section_description": { "type": "string", "default": "Мэдрэмж ба хувилбарын шинжилгээ (өрийн төвлөрөл)." },
+        "key_sensitivities": { "type": "array", "default": [], "items": { "type": "object", "properties": { "variable_name": { "type": "string" }, "name_mn": { "type": ["string", "null"] }, "impact_on_metrics": { "type": "array", "items": { "type": "string" } } }, "required": ["variable_name", "impact_on_metrics"]} },
+        "sensitivity_tables_placeholder": { "type": "object", "default": {}, "properties": { "ai_instructions": { "type": "string", "default": "Мэдрэмжийн хүснэгтийг энд харуулна уу." } } },
+        "stress_test_scenarios": { "type": "array", "default": [], "items": { "type": "object", "properties": { "scenario_name": { "type": "string" }, "name_mn": { "type": ["string", "null"] }, "description": { "type": "string" }, "assumption_overrides": { "type": "array", "default": [], "items": { "$ref": "#/$defs/assumption_override_item_schema" } }, "key_metric_results_placeholder": { "type": "object", "default": {}, "additionalProperties": true } }, "required": ["scenario_name", "description"]} },
+        "covenant_compliance_analysis_placeholder": { "type": "object", "default": {}, "properties": { "ai_instructions": { "type": "string", "default": "Ковенантын нийцлийн шинжилгээг энд хийнэ үү." }, "known_covenants": { "type": "array", "default": [], "items": { "$ref": "#/$defs/known_covenant_item_schema" } } } }
       }, "additionalProperties": false
     },
     "ai_agent_summary_and_confidence_debt_focus": {
       "type": "object", "default": {},
       "properties": {
-        "overall_credit_assessment_summary_placeholder": { "type": ["string", "null"] },
-        "data_quality_and_availability_assessment": { "type": ["string", "null"] },
+        "overall_credit_assessment_summary_placeholder": { "type": ["string", "null"], "default": "Ерөнхий зээлийн үнэлгээний хураангуй (хиймэл оюун боловсруулна)." },
+        "data_quality_and_availability_assessment": { "type": ["string", "null"], "default": "Мэдээллийн чанар ба хүртээмжийн үнэлгээ (хиймэл оюун боловсруулна)." },
         "key_assumptions_and_judgment_points": { "type": "array", "default": [], "items": { "type": "string" } },
         "confidence_scores_for_key_projections": { "type": "array", "default": [], "items": { "$ref": "#/$defs/confidence_score_item_schema" } },
         "data_sources_used_primarily": { "type": "array", "default": [], "items": { "type": "string" } },
-        "limitations_of_the_model": { "type": ["string", "null"] }
+        "limitations_of_the_model": { "type": ["string", "null"], "default": "Загварын хязгаарлалтууд (хиймэл оюун боловсруулна)." }
       }, "additionalProperties": false
     }
   },

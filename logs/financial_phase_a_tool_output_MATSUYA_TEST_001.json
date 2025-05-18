@@ -1,0 +1,1684 @@
+{
+  "status": "COMPLETED_WITH_CRITICAL_QC_FAILURES",
+  "message": "Phase A processing completed, but critical quality check failures were found.",
+  "security_id": "MATSUYA_TEST_001",
+  "financial_model_phase_a": {
+    "model_metadata": {
+      "model_name": "Debt Instrument Issuer Financial Model",
+      "version": "2.3_mongolian_names",
+      "target_company_name": null,
+      "ticker_symbol": null,
+      "currency": "MNT",
+      "fiscal_year_end": "",
+      "historical_periods_count": 2,
+      "projection_periods_count": 3,
+      "analyst_name": "AI Financial Modeler Agent",
+      "date_created": "",
+      "ai_instructions_general": "This model is for debt analysis. Pay attention to Mongolian financial reporting standards if context implies.",
+      "model_focus": "Fixed Income Securities Analysis"
+    },
+    "global_assumptions": [],
+    "company_specific_assumptions_debt_focus": {
+      "section_description": "Компанийн тусгай таамаглалууд (өрийн төвлөрөл)",
+      "ai_instructions_section": "Түүхэн мэдээлэл болон баримт бичгийн агуулгад үндэслэн таамаглал боловсруулна уу.",
+      "revenue_drivers": [],
+      "cost_and_margin_drivers": [],
+      "working_capital_drivers": [],
+      "capital_expenditure_and_asset_drivers": [],
+      "financing_and_debt_assumptions": {
+        "existing_debt_refinancing_strategy": null,
+        "new_debt_issuance_plans": [],
+        "assumed_interest_rate_on_new_debt": null,
+        "dividend_policy_and_payout_ratio": [],
+        "share_repurchases_policy": [],
+        "debt_paydown_priority": null,
+        "cash_sweep_mechanism_for_excess_cash_flow": null,
+        "minimum_cash_balance_target": null
+      },
+      "tax_assumptions": {
+        "effective_tax_rate": [],
+        "cash_tax_rate_if_different": []
+      }
+    },
+    "financial_statements_core": {
+      "section_description": "Үндсэн санхүүгийн тайлангууд.",
+      "historical_period_labels": [
+        "2023",
+        "2021-2023",
+        "2020-2023",
+        "2024",
+        "2025"
+      ],
+      "projected_period_labels": [],
+      "income_statement": {
+        "ai_instructions_statement": "Орлогын тайлангийн зүйлсийг гаргаж, төсөөлөл боловсруулна уу. Монгол тайланд COGS, SG&A, EBITDA, EBIT, EBT зэрэг англи товчлол ашиглагдаж болзошгүйг анхаарна уу.",
+        "line_items": [
+          {
+            "name": "Revenue",
+            "is_calculated": false,
+            "periods": [
+              {
+                "period_label": "2023",
+                "value": 377000.0,
+                "source_reference": "Page 56, Table 14, Row 1",
+                "extraction_status": "SUCCESS"
+              },
+              {
+                "period_label": "2021-2023",
+                "value": 377000.0,
+                "source_reference": "Page 56, Table 14, Row 2, Column 3",
+                "extraction_status": "SUCCESS"
+              },
+              {
+                "period_label": "2020-2023",
+                "value": 377000.0,
+                "source_reference": "Page 56, Table 14, Row 1",
+                "extraction_status": "SUCCESS"
+              },
+              {
+                "period_label": "2024",
+                "value": null,
+                "source_reference": "CONFIRMED_NOT_FOUND",
+                "extraction_status": "NOT_FOUND_PER_LLM"
+              },
+              {
+                "period_label": "2025",
+                "value": 55033000.0,
+                "source_reference": "Page 56, Table 14, Row 4",
+                "extraction_status": "SUCCESS"
+              }
+            ],
+            "name_mn": "Орлого",
+            "data_type": "currency_value",
+            "source_guidance_historical": "Reported Net Revenue from 10-K/Q. / Тайлант цэвэр орлого."
+          },
+          {
+            "name": "Cost of Goods Sold (COGS)",
+            "is_calculated": false,
+            "periods": [
+              {
+                "period_label": "2023",
+                "value": 32.0,
+                "source_reference": "Page 56, Table 1, Row 3",
+                "extraction_status": "SUCCESS"
+              },
+              {
+                "period_label": "2021-2023",
+                "value": 32.0,
+                "source_reference": "Page 56, Table 1, Row 3",
+                "extraction_status": "SUCCESS"
+              },
+              {
+                "period_label": "2020-2023",
+                "value": 3654.0,
+                "source_reference": "Page 56, Table 1",
+                "extraction_status": "SUCCESS"
+              },
+              {
+                "period_label": "2024",
+                "value": 39860000.0,
+                "source_reference": "Page 56, Table 14, Row 'Борлуулсан бүтээгдэхүүний өртөг'",
+                "extraction_status": "SUCCESS"
+              },
+              {
+                "period_label": "2025",
+                "value": 1480629000.0,
+                "source_reference": "Page 64, Table 19, Row 2",
+                "extraction_status": "SUCCESS"
+              }
+            ],
+            "name_mn": "Борлуулсан барааны өртөг",
+            "data_type": "currency_value",
+            "source_guidance_historical": "Reported COGS. / Тайлант ББӨ."
+          },
+          {
+            "name": "Gross Profit",
+            "is_calculated": true,
+            "periods": [],
+            "name_mn": "Нийт ашиг",
+            "data_type": "currency_value",
+            "calculation_logic_description": "Revenue - COGS / Орлого - ББӨ"
+          },
+          {
+            "name": "SG&A Expenses",
+            "is_calculated": false,
+            "periods": [
+              {
+                "period_label": "2023",
+                "value": 273.0,
+                "source_reference": "Page 56, Table 1, Row Ерөнхий ба удирдлагын зардал",
+                "extraction_status": "SUCCESS"
+              },
+              {
+                "period_label": "2021-2023",
+                "value": null,
+                "source_reference": "Page 56, Table 1.  'Ерөнхий ба удирдлагын зардал' (General and Administrative Expenses) is present for 2022 and 2023, but the value for 2023 is not available.",
+                "extraction_status": "NOT_FOUND_PER_LLM"
+              },
+              {
+                "period_label": "2020-2023",
+                "value": null,
+                "source_reference": "Page 56, Table 1, Row 7 and Page 64, Table 0, Row 7.  SG&A expenses are listed as 'Борлуулалт, маркетингийн зардал' and 'Ерөнхий удирдлагын зардал' in Mongolian.  Values are available for 2022, 2023, 2024T, and 2025T.",
+                "extraction_status": "NOT_FOUND_PER_LLM"
+              },
+              {
+                "period_label": "2024",
+                "value": 448000.0,
+                "source_reference": "Page 56, Table 14, Row 'Ерөнхий ба удирдлагын зардал'",
+                "extraction_status": "SUCCESS"
+              },
+              {
+                "period_label": "2025",
+                "value": 98511000.0,
+                "source_reference": "Page 64, Table 19, Row 'Ерөнхий удирдлагын зардал'",
+                "extraction_status": "SUCCESS"
+              }
+            ],
+            "name_mn": "Худалдан борлуулалт, ерөнхий ба захиргааны зардал",
+            "data_type": "currency_value",
+            "source_guidance_historical": "Reported SG&A."
+          },
+          {
+            "name": "Other Operating Expenses/Income",
+            "is_calculated": false,
+            "periods": [
+              {
+                "period_label": "2023",
+                "value": null,
+                "source_reference": "Page 56, Table 1, Row 4. The line item 'Other Operating Expenses/Income' is not present in the table.",
+                "extraction_status": "NOT_FOUND_PER_LLM"
+              },
+              {
+                "period_label": "2021-2023",
+                "value": null,
+                "source_reference": "Data not found in the provided excerpts.",
+                "extraction_status": "NOT_FOUND_PER_LLM"
+              },
+              {
+                "period_label": "2020-2023",
+                "value": null,
+                "source_reference": "CONFIRMED_NOT_FOUND",
+                "extraction_status": "NOT_FOUND_PER_LLM"
+              },
+              {
+                "period_label": "2024",
+                "value": null,
+                "source_reference": "CONFIRMED_NOT_FOUND",
+                "extraction_status": "NOT_FOUND_PER_LLM"
+              },
+              {
+                "period_label": "2025",
+                "value": 127080000.0,
+                "source_reference": "Page 64, Table 19, Row 'Урсгал зардал'",
+                "extraction_status": "SUCCESS"
+              }
+            ],
+            "name_mn": "Бусад үйл ажиллагааны орлого, зардал",
+            "data_type": "currency_value",
+            "source_guidance_historical": "Reported. Normalize."
+          },
+          {
+            "name": "EBITDA (Earnings Before Interest, Taxes, Depreciation & Amortization)",
+            "is_calculated": true,
+            "periods": [],
+            "name_mn": "Хүү, татвар, элэгдэл, хорогдлын өмнөх ашиг",
+            "data_type": "currency_value",
+            "calculation_logic_description": "Gross Profit - SG&A - Other OpEx (excl. D&A). EBITDA abbreviation may be used."
+          },
+          {
+            "name": "Depreciation & Amortization (D&A)",
+            "is_calculated": false,
+            "periods": [
+              {
+                "period_label": "2023",
+                "value": null,
+                "source_reference": "Page 56, Table 1, Row R0-R4.  'Элэгдэл ба хорогдол' not found in this table or any other readily apparent location.",
+                "extraction_status": "NOT_FOUND_PER_LLM"
+              },
+              {
+                "period_label": "2021-2023",
+                "value": 6678000.0,
+                "source_reference": "Page 64, Table 0, Row 10",
+                "extraction_status": "SUCCESS"
+              },
+              {
+                "period_label": "2020-2023",
+                "value": 6678.0,
+                "source_reference": "Page 64, Table 0, Row R10",
+                "extraction_status": "SUCCESS"
+              },
+              {
+                "period_label": "2024",
+                "value": null,
+                "source_reference": "CONFIRMED_NOT_FOUND",
+                "extraction_status": "NOT_FOUND_PER_LLM"
+              },
+              {
+                "period_label": "2025",
+                "value": 8281000.0,
+                "source_reference": "Page 64, Table 19, Row 'Элэгдлийн зардал'",
+                "extraction_status": "SUCCESS"
+              }
+            ],
+            "name_mn": "Элэгдэл ба хорогдол",
+            "data_type": "currency_value",
+            "source_guidance_historical": "From CFS or BS roll-forward."
+          },
+          {
+            "name": "EBIT (Earnings Before Interest & Taxes)",
+            "is_calculated": true,
+            "periods": [],
+            "name_mn": "Хүү, татварын өмнөх ашиг",
+            "data_type": "currency_value",
+            "calculation_logic_description": "EBITDA - D&A. EBIT abbreviation may be used."
+          },
+          {
+            "name": "Interest Expense",
+            "is_calculated": false,
+            "periods": [
+              {
+                "period_label": "2023",
+                "value": 85.0,
+                "source_reference": "Page 56, Table 14",
+                "extraction_status": "SUCCESS"
+              },
+              {
+                "period_label": "2021-2023",
+                "value": 85.0,
+                "source_reference": "Page 56, Table 1, Row 9",
+                "extraction_status": "SUCCESS"
+              },
+              {
+                "period_label": "2020-2023",
+                "value": 85.0,
+                "source_reference": "Page 56, Table 1, Row 9",
+                "extraction_status": "SUCCESS"
+              },
+              {
+                "period_label": "2024",
+                "value": 103000.0,
+                "source_reference": "Page 56, Table 14, Row 'Санхүүгийн зардал'",
+                "extraction_status": "SUCCESS"
+              },
+              {
+                "period_label": "2025",
+                "value": null,
+                "source_reference": null,
+                "extraction_status": "FAILURE_MAX_ATTEMPTS"
+              }
+            ],
+            "name_mn": "Хүүгийн зардал",
+            "data_type": "currency_value",
+            "source_guidance_historical": "Reported Interest Expense."
+          },
+          {
+            "name": "Interest Income",
+            "is_calculated": false,
+            "periods": [
+              {
+                "period_label": "2023",
+                "value": null,
+                "source_reference": "Page 56, Table 14, Row 'Санхүүгийн зардал'.  The table presents the 'Орлогын тайлан' for 2022, 2023, 2024T, and 2025T. The line item 'Санхүүгийн зардал' is present, but 'Interest Income' or 'Хүүгийн орлого' is not.",
+                "extraction_status": "NOT_FOUND_PER_LLM"
+              },
+              {
+                "period_label": "2021-2023",
+                "value": null,
+                "source_reference": "CONFIRMED_NOT_FOUND",
+                "extraction_status": "NOT_FOUND_PER_LLM"
+              },
+              {
+                "period_label": "2020-2023",
+                "value": null,
+                "source_reference": "CONFIRMED_NOT_FOUND",
+                "extraction_status": "NOT_FOUND_PER_LLM"
+              },
+              {
+                "period_label": "2024",
+                "value": null,
+                "source_reference": "N/A",
+                "extraction_status": "NOT_FOUND_PER_LLM"
+              },
+              {
+                "period_label": "2025",
+                "value": null,
+                "source_reference": "CONFIRMED_NOT_FOUND",
+                "extraction_status": "NOT_FOUND_PER_LLM"
+              }
+            ],
+            "name_mn": "Хүүгийн орлого",
+            "data_type": "currency_value",
+            "source_guidance_historical": "Reported Interest Income."
+          },
+          {
+            "name": "EBT (Earnings Before Tax)",
+            "is_calculated": true,
+            "periods": [],
+            "name_mn": "Татварын өмнөх ашиг",
+            "data_type": "currency_value",
+            "calculation_logic_description": "EBIT - Interest Expense + Interest Income. EBT abbreviation may be used."
+          },
+          {
+            "name": "Income Tax Expense",
+            "is_calculated": false,
+            "periods": [
+              {
+                "period_label": "2023",
+                "value": null,
+                "source_reference": "Page 57, Table 14, Row 10",
+                "extraction_status": "NOT_FOUND_PER_LLM"
+              },
+              {
+                "period_label": "2021-2023",
+                "value": 88.0,
+                "source_reference": "Page 57, Table 0, Row 3",
+                "extraction_status": "SUCCESS"
+              },
+              {
+                "period_label": "2020-2023",
+                "value": 88.0,
+                "source_reference": "Page 57, Table 0, Row 3",
+                "extraction_status": "SUCCESS"
+              },
+              {
+                "period_label": "2024",
+                "value": 2624000.0,
+                "source_reference": "Page 57, Table 14, Row 'Орлогын татварын зардал'",
+                "extraction_status": "SUCCESS"
+              },
+              {
+                "period_label": "2025",
+                "value": 93945000.0,
+                "source_reference": "Page 64, Table 19, Row 'Орлогын албан татвар'",
+                "extraction_status": "SUCCESS"
+              }
+            ],
+            "name_mn": "Орлогын татварын зардал",
+            "data_type": "currency_value",
+            "source_guidance_historical": "Reported Tax Expense."
+          },
+          {
+            "name": "Net Income",
+            "is_calculated": true,
+            "periods": [],
+            "name_mn": "Цэвэр ашиг",
+            "data_type": "currency_value",
+            "calculation_logic_description": "EBT - Income Tax Expense"
+          }
+        ]
+      },
+      "balance_sheet": {
+        "ai_instructions_statement": "Хөрөнгө = Өр төлбөр + Эздийн өмч гэдгийг баталгаажуулна уу. Монгол тайланд PP&E зэрэг англи товчлол ашиглагдаж болзошгүй.",
+        "assets": {
+          "current_assets": [
+            {
+              "name": "Cash & Cash Equivalents",
+              "is_calculated": false,
+              "periods": [
+                {
+                  "period_label": "2023",
+                  "value": 387000.0,
+                  "source_reference": "Page 57, Table 15",
+                  "extraction_status": "SUCCESS"
+                },
+                {
+                  "period_label": "2021-2023",
+                  "value": 387.0,
+                  "source_reference": "Page 57, Table 1, Row 2",
+                  "extraction_status": "SUCCESS"
+                },
+                {
+                  "period_label": "2020-2023",
+                  "value": 403.0,
+                  "source_reference": "Page 57, Table 1, Row 2",
+                  "extraction_status": "SUCCESS"
+                },
+                {
+                  "period_label": "2024",
+                  "value": 3492000.0,
+                  "source_reference": "Page 57, Table 15, Row 'Мөнгө,түүнтэй адилтгах хөрөнгө'",
+                  "extraction_status": "SUCCESS"
+                },
+                {
+                  "period_label": "2025",
+                  "value": 13322000.0,
+                  "source_reference": "Page 57, Table 15, Row 'Мөнгө,түүнтэй адилтгах хөрөнгө'",
+                  "extraction_status": "SUCCESS"
+                }
+              ],
+              "name_mn": "Мөнгөн хөрөнгө ба түүнтэй адилтгах хөрөнгө",
+              "data_type": "currency_value"
+            },
+            {
+              "name": "Accounts Receivable",
+              "is_calculated": false,
+              "periods": [
+                {
+                  "period_label": "2023",
+                  "value": 30000.0,
+                  "source_reference": "Page 57, Table 15, Row 2",
+                  "extraction_status": "SUCCESS"
+                },
+                {
+                  "period_label": "2021-2023",
+                  "value": 30000000.0,
+                  "source_reference": "Page 57, Table 1, Row 3",
+                  "extraction_status": "SUCCESS"
+                },
+                {
+                  "period_label": "2020-2023",
+                  "value": 25594.0,
+                  "source_reference": "Page 65, Table 1, Row 3",
+                  "extraction_status": "SUCCESS"
+                },
+                {
+                  "period_label": "2024",
+                  "value": 5224000000.0,
+                  "source_reference": "Page 57, Table 15, Row 'Дансны авлага'",
+                  "extraction_status": "SUCCESS"
+                },
+                {
+                  "period_label": "2025",
+                  "value": 5503.0,
+                  "source_reference": "Page 57, Table 15",
+                  "extraction_status": "SUCCESS"
+                }
+              ],
+              "name_mn": "Авлагын данс",
+              "data_type": "currency_value"
+            },
+            {
+              "name": "Inventory",
+              "is_calculated": false,
+              "periods": [
+                {
+                  "period_label": "2023",
+                  "value": 38547000.0,
+                  "source_reference": "Page 57, Table 15, Row 'Бараа материал'",
+                  "extraction_status": "SUCCESS"
+                },
+                {
+                  "period_label": "2021-2023",
+                  "value": 38547.0,
+                  "source_reference": "Page 57, Table 1, Row 6",
+                  "extraction_status": "SUCCESS"
+                },
+                {
+                  "period_label": "2020-2023",
+                  "value": 38547.0,
+                  "source_reference": "Page 57, Table 1, Row 6",
+                  "extraction_status": "SUCCESS"
+                },
+                {
+                  "period_label": "2024",
+                  "value": 19930000.0,
+                  "source_reference": "Page 57, Table 15, Row 'Бараа материал'",
+                  "extraction_status": "SUCCESS"
+                },
+                {
+                  "period_label": "2025",
+                  "value": 317700000.0,
+                  "source_reference": "Page 65, Table 21, Row 'Бараа материал'",
+                  "extraction_status": "SUCCESS"
+                }
+              ],
+              "name_mn": "Бараа материал",
+              "data_type": "currency_value"
+            }
+          ],
+          "non_current_assets": [
+            {
+              "name": "Net PP&E",
+              "is_calculated": false,
+              "periods": [
+                {
+                  "period_label": "2023",
+                  "value": 220.0,
+                  "source_reference": "Page 57, Table 15",
+                  "extraction_status": "SUCCESS"
+                },
+                {
+                  "period_label": "2021-2023",
+                  "value": 220.0,
+                  "source_reference": "Page 57, Table 1: 'Үндсэн хөрөнгө' value for 2023 is 220.",
+                  "extraction_status": "SUCCESS"
+                },
+                {
+                  "period_label": "2020-2023",
+                  "value": 220.0,
+                  "source_reference": "Page 57, Table 1, Row 10",
+                  "extraction_status": "SUCCESS"
+                },
+                {
+                  "period_label": "2024",
+                  "value": 188.0,
+                  "source_reference": "Page 57, Table 15, Row 'Үндсэн хөрөнгө'",
+                  "extraction_status": "SUCCESS"
+                },
+                {
+                  "period_label": "2025",
+                  "value": 819825000.0,
+                  "source_reference": "Page 65, Table 21",
+                  "extraction_status": "SUCCESS"
+                }
+              ],
+              "name_mn": "Үндсэн хөрөнгө, цэвэр дүнгээр",
+              "data_type": "currency_value",
+              "source_guidance_historical": "Net Property, Plant & Equipment. PP&E abbreviation may be used."
+            },
+            {
+              "name": "Goodwill",
+              "is_calculated": false,
+              "periods": [
+                {
+                  "period_label": "2023",
+                  "value": null,
+                  "source_reference": null,
+                  "extraction_status": "FAILURE_MAX_ATTEMPTS"
+                },
+                {
+                  "period_label": "2021-2023",
+                  "value": null,
+                  "source_reference": null,
+                  "extraction_status": "FAILURE_MAX_ATTEMPTS"
+                },
+                {
+                  "period_label": "2020-2023",
+                  "value": null,
+                  "source_reference": null,
+                  "extraction_status": "NOT_FOUND_PER_LLM"
+                },
+                {
+                  "period_label": "2024",
+                  "value": null,
+                  "source_reference": "CONFIRMED_NOT_FOUND",
+                  "extraction_status": "NOT_FOUND_PER_LLM"
+                },
+                {
+                  "period_label": "2025",
+                  "value": null,
+                  "source_reference": "CONFIRMED_NOT_FOUND",
+                  "extraction_status": "NOT_FOUND_PER_LLM"
+                }
+              ],
+              "name_mn": "Гүүдвил",
+              "data_type": "currency_value"
+            },
+            {
+              "name": "Intangible Assets (Net)",
+              "is_calculated": false,
+              "periods": [
+                {
+                  "period_label": "2023",
+                  "value": 1.0,
+                  "source_reference": "Page 57, Table 15, Row 10",
+                  "extraction_status": "SUCCESS"
+                },
+                {
+                  "period_label": "2021-2023",
+                  "value": 4.0,
+                  "source_reference": "Page 57, Table 1, Row 11",
+                  "extraction_status": "SUCCESS"
+                },
+                {
+                  "period_label": "2020-2023",
+                  "value": 1.0,
+                  "source_reference": "Page 57, Table 1, Row R11",
+                  "extraction_status": "SUCCESS"
+                },
+                {
+                  "period_label": "2024",
+                  "value": 1000.0,
+                  "source_reference": "Page 57, Table 15, Row 'Биет бус хөрөнгө'",
+                  "extraction_status": "SUCCESS"
+                },
+                {
+                  "period_label": "2025",
+                  "value": 1.0,
+                  "source_reference": "Page 57, Table 15, Row 'Биет бус хөрөнгө'",
+                  "extraction_status": "SUCCESS"
+                }
+              ],
+              "name_mn": "Биет бус хөрөнгө, цэвэр дүнгээр",
+              "data_type": "currency_value"
+            }
+          ],
+          "total_assets": {
+            "name": "Total Assets",
+            "name_mn": "Нийт хөрөнгө",
+            "data_type": "currency_value",
+            "periods": [],
+            "is_calculated": true,
+            "calculation_logic_description": null,
+            "source_guidance_historical": null,
+            "ai_instructions": null,
+            "ai_instructions_projected": null,
+            "notes": null,
+            "unit": null
+          }
+        },
+        "liabilities_and_equity": {
+          "current_liabilities": [
+            {
+              "name": "Accounts Payable",
+              "is_calculated": false,
+              "periods": [
+                {
+                  "period_label": "2023",
+                  "value": 21979000.0,
+                  "source_reference": "Page 57, Table 15",
+                  "extraction_status": "SUCCESS"
+                },
+                {
+                  "period_label": "2021-2023",
+                  "value": null,
+                  "source_reference": "CONFIRMED_NOT_FOUND",
+                  "extraction_status": "NOT_FOUND_PER_LLM"
+                },
+                {
+                  "period_label": "2020-2023",
+                  "value": 21979000.0,
+                  "source_reference": "Page 57, Table 1, Row 15",
+                  "extraction_status": "SUCCESS"
+                },
+                {
+                  "period_label": "2024",
+                  "value": 9965000.0,
+                  "source_reference": "Page 57, Table 15, Row 'Дансны өглөг'",
+                  "extraction_status": "SUCCESS"
+                },
+                {
+                  "period_label": "2025",
+                  "value": 296126000.0,
+                  "source_reference": "Page 65, Table 21, Row 'Дансны өглөг'",
+                  "extraction_status": "SUCCESS"
+                }
+              ],
+              "name_mn": "Өглөгийн данс",
+              "data_type": "currency_value"
+            },
+            {
+              "name": "Short-Term Debt & Current Portion of LTD",
+              "is_calculated": false,
+              "periods": [
+                {
+                  "period_label": "2023",
+                  "value": 45844000.0,
+                  "source_reference": "Page 58, Table 15",
+                  "extraction_status": "SUCCESS"
+                },
+                {
+                  "period_label": "2021-2023",
+                  "value": 23677000.0,
+                  "source_reference": "Page 58, Table 0, Row R0",
+                  "extraction_status": "SUCCESS"
+                },
+                {
+                  "period_label": "2020-2023",
+                  "value": 23677000.0,
+                  "source_reference": "Page 58, Table 0, Row R0 (2022)",
+                  "extraction_status": "SUCCESS"
+                },
+                {
+                  "period_label": "2024",
+                  "value": 28464000000.0,
+                  "source_reference": "Page 58, Table 15, Row 'Богино хугацаат өр төлбөрийн дүн'",
+                  "extraction_status": "SUCCESS"
+                },
+                {
+                  "period_label": "2025",
+                  "value": null,
+                  "source_reference": "CONFIRMED_NOT_FOUND",
+                  "extraction_status": "NOT_FOUND_PER_LLM"
+                }
+              ],
+              "name_mn": "Богино хугацаат өр төлбөр ба УХӨТ-ийн эргэн төлөгдөх хэсэг",
+              "data_type": "currency_value"
+            }
+          ],
+          "non_current_liabilities": [
+            {
+              "name": "Long-Term Debt",
+              "is_calculated": false,
+              "periods": [
+                {
+                  "period_label": "2023",
+                  "value": 14038000.0,
+                  "source_reference": "Page 58, Table 15",
+                  "extraction_status": "SUCCESS"
+                },
+                {
+                  "period_label": "2021-2023",
+                  "value": null,
+                  "source_reference": "Page 58, Table 0, Row 1 and Page 58, Table 1, Row 10:  'Урт хугацаат зээл' values are provided for 2021-2023, but the values are not available in the provided document excerpts.",
+                  "extraction_status": "NOT_FOUND_PER_LLM"
+                },
+                {
+                  "period_label": "2020-2023",
+                  "value": null,
+                  "source_reference": "Page 58, Table on page 58.  'Урт хугацаат зээл' and 'Бусад урт хугацаат өр төлбөр' are listed separately.  The sum of these two is 'Урт хугацаат өр төлбөрийн дүн'.  The years 2020-2023 are represented in the table.  The value for 'Урт хугацаат өр төлбөрийн дүн' is extracted.",
+                  "extraction_status": "SUCCESS"
+                },
+                {
+                  "period_label": "2024",
+                  "value": 80000.0,
+                  "source_reference": "Page 58, Table 15, Row 'Урт хугацаат өр төлбөрийн дүн'",
+                  "extraction_status": "SUCCESS"
+                },
+                {
+                  "period_label": "2025",
+                  "value": null,
+                  "source_reference": "Page 58, Table 15:  'Урт хугацаат өр төлбөрийн дүн' is 0 for 2025.",
+                  "extraction_status": "SUCCESS"
+                }
+              ],
+              "name_mn": "Урт хугацаат өр төлбөр",
+              "data_type": "currency_value"
+            }
+          ],
+          "total_liabilities": {
+            "name": "Total Liabilities",
+            "name_mn": "Нийт өр төлбөр",
+            "data_type": "currency_value",
+            "periods": [],
+            "is_calculated": true,
+            "calculation_logic_description": null,
+            "source_guidance_historical": null,
+            "ai_instructions": null,
+            "ai_instructions_projected": null,
+            "notes": null,
+            "unit": null
+          },
+          "equity": [
+            {
+              "name": "Common Stock & APIC",
+              "is_calculated": false,
+              "periods": [
+                {
+                  "period_label": "2023",
+                  "value": null,
+                  "source_reference": "CONFIRMED_NOT_FOUND",
+                  "extraction_status": "NOT_FOUND_PER_LLM"
+                },
+                {
+                  "period_label": "2021-2023",
+                  "value": null,
+                  "source_reference": "CONFIRMED_NOT_FOUND",
+                  "extraction_status": "NOT_FOUND_PER_LLM"
+                },
+                {
+                  "period_label": "2020-2023",
+                  "value": null,
+                  "source_reference": "CONFIRMED_NOT_FOUND",
+                  "extraction_status": "NOT_FOUND_PER_LLM"
+                },
+                {
+                  "period_label": "2024",
+                  "value": null,
+                  "source_reference": "CONFIRMED_NOT_FOUND",
+                  "extraction_status": "NOT_FOUND_PER_LLM"
+                },
+                {
+                  "period_label": "2025",
+                  "value": null,
+                  "source_reference": "CONFIRMED_NOT_FOUND",
+                  "extraction_status": "NOT_FOUND_PER_LLM"
+                }
+              ],
+              "name_mn": "Энгийн хувьцаа ба Нэмж төлөгдсөн капитал",
+              "data_type": "currency_value"
+            },
+            {
+              "name": "Retained Earnings",
+              "is_calculated": false,
+              "periods": [
+                {
+                  "period_label": "2023",
+                  "value": -2702.0,
+                  "source_reference": "Page 58, Table 15, Row 'Хуримтлагдсан ашиг'",
+                  "extraction_status": "SUCCESS"
+                },
+                {
+                  "period_label": "2021-2023",
+                  "value": 6457.0,
+                  "source_reference": "Page 58, Table 0, Row R6",
+                  "extraction_status": "SUCCESS"
+                },
+                {
+                  "period_label": "2020-2023",
+                  "value": 16059.0,
+                  "source_reference": "Page 58, Table 0, Row R6, Column 2023",
+                  "extraction_status": "SUCCESS"
+                },
+                {
+                  "period_label": "2024",
+                  "value": null,
+                  "source_reference": null,
+                  "extraction_status": "FAILURE_MAX_ATTEMPTS"
+                },
+                {
+                  "period_label": "2025",
+                  "value": null,
+                  "source_reference": null,
+                  "extraction_status": "FAILURE_MAX_ATTEMPTS"
+                }
+              ],
+              "name_mn": "Хуримтлагдсан ашиг",
+              "data_type": "currency_value"
+            }
+          ],
+          "total_equity": {
+            "name": "Total Equity",
+            "name_mn": "Нийт эзэмшигчдийн өмч",
+            "data_type": "currency_value",
+            "periods": [],
+            "is_calculated": true,
+            "calculation_logic_description": null,
+            "source_guidance_historical": null,
+            "ai_instructions": null,
+            "ai_instructions_projected": null,
+            "notes": null,
+            "unit": null
+          },
+          "total_liabilities_and_equity": {
+            "name": "Total Liabilities & Equity",
+            "name_mn": "Нийт өр төлбөр ба эзэмшигчдийн өмч",
+            "data_type": "currency_value",
+            "periods": [],
+            "is_calculated": true,
+            "calculation_logic_description": null,
+            "source_guidance_historical": null,
+            "ai_instructions": null,
+            "ai_instructions_projected": null,
+            "notes": null,
+            "unit": null
+          }
+        },
+        "balance_sheet_check": {
+          "name": "Balance Sheet Check (Assets - L&E)",
+          "name_mn": "Тэнцлийн шалгалт (Хөрөнгө - ӨТ ба ЭӨ)",
+          "data_type": "currency_value",
+          "periods": [],
+          "is_calculated": true,
+          "calculation_logic_description": null,
+          "source_guidance_historical": null,
+          "ai_instructions": null,
+          "ai_instructions_projected": null,
+          "notes": null,
+          "unit": null,
+          "target_value": 0,
+          "tolerance": 1
+        }
+      },
+      "cash_flow_statement": {
+        "ai_instructions_statement": "Орлогын тайлан ба тайлан балансын өөрчлөлтөөс гаргана. Монгол тайланд Capex зэрэг англи товчлол ашиглагдаж болзошгүй.",
+        "cash_flow_from_operations_cfo": [
+          {
+            "name": "Net Income",
+            "is_calculated": false,
+            "periods": [
+              {
+                "period_label": "2023",
+                "value": -48.0,
+                "source_reference": "Page 57, Хүснэгт 14. Батлан даагчийн орлогын тайлангийн гүйцэтгэл ба төсөөлөл",
+                "extraction_status": "SUCCESS"
+              },
+              {
+                "period_label": "2021-2023",
+                "value": 9158000.0,
+                "source_reference": "Page 57, Table 0, Row R4",
+                "extraction_status": "SUCCESS"
+              },
+              {
+                "period_label": "2020-2023",
+                "value": 9603.0,
+                "source_reference": "Page 57, Table 0, Row 4",
+                "extraction_status": "SUCCESS"
+              },
+              {
+                "period_label": "2024",
+                "value": 9158000.0,
+                "source_reference": "Page 57, Table 14",
+                "extraction_status": "SUCCESS"
+              },
+              {
+                "period_label": "2025",
+                "value": 781964000.0,
+                "source_reference": "Page 64, Table 19, Row 14",
+                "extraction_status": "SUCCESS"
+              }
+            ],
+            "name_mn": "Цэвэр ашиг",
+            "data_type": "currency_value"
+          },
+          {
+            "name": "Depreciation & Amortization",
+            "is_calculated": false,
+            "periods": [
+              {
+                "period_label": "2023",
+                "value": null,
+                "source_reference": "CONFIRMED_NOT_FOUND",
+                "extraction_status": "NOT_FOUND_PER_LLM"
+              },
+              {
+                "period_label": "2021-2023",
+                "value": 6678.0,
+                "source_reference": "Page 64, Table 0, Row 10",
+                "extraction_status": "SUCCESS"
+              },
+              {
+                "period_label": "2020-2023",
+                "value": 6678.0,
+                "source_reference": "Page 64, Table 0, Row 10",
+                "extraction_status": "SUCCESS"
+              },
+              {
+                "period_label": "2024",
+                "value": null,
+                "source_reference": "CONFIRMED_NOT_FOUND",
+                "extraction_status": "NOT_FOUND_PER_LLM"
+              },
+              {
+                "period_label": "2025",
+                "value": 8281000.0,
+                "source_reference": "Page 64, Table 19, Row 'Элэгдлийн зардал'",
+                "extraction_status": "SUCCESS"
+              }
+            ],
+            "name_mn": "Элэгдэл ба хорогдол",
+            "data_type": "currency_value"
+          },
+          {
+            "name": "Changes in Accounts Receivable",
+            "is_calculated": true,
+            "periods": [],
+            "name_mn": "Авлагын өөрчлөлт",
+            "data_type": "currency_value"
+          },
+          {
+            "name": "Changes in Inventory",
+            "is_calculated": true,
+            "periods": [],
+            "name_mn": "Бараа материалын өөрчлөлт",
+            "data_type": "currency_value"
+          },
+          {
+            "name": "Changes in Accounts Payable",
+            "is_calculated": true,
+            "periods": [],
+            "name_mn": "Өглөгийн өөрчлөлт",
+            "data_type": "currency_value"
+          },
+          {
+            "name": "Net Cash Flow from Operations",
+            "is_calculated": true,
+            "periods": [],
+            "name_mn": "Үндсэн үйл ажиллагааны цэвэр мөнгөн гүйлгээ",
+            "data_type": "currency_value"
+          }
+        ],
+        "cash_flow_from_investing_cfi": [
+          {
+            "name": "Capital Expenditures (Capex)",
+            "is_calculated": false,
+            "periods": [
+              {
+                "period_label": "2023",
+                "value": null,
+                "source_reference": "CONFIRMED_NOT_FOUND",
+                "extraction_status": "NOT_FOUND_PER_LLM"
+              },
+              {
+                "period_label": "2021-2023",
+                "value": null,
+                "source_reference": "CONFIRMED_NOT_FOUND",
+                "extraction_status": "NOT_FOUND_PER_LLM"
+              },
+              {
+                "period_label": "2020-2023",
+                "value": null,
+                "source_reference": "CONFIRMED_NOT_FOUND",
+                "extraction_status": "NOT_FOUND_PER_LLM"
+              },
+              {
+                "period_label": "2024",
+                "value": null,
+                "source_reference": "CONFIRMED_NOT_FOUND",
+                "extraction_status": "NOT_FOUND_PER_LLM"
+              },
+              {
+                "period_label": "2025",
+                "value": null,
+                "source_reference": "Capital Expenditures (Capex) is not explicitly mentioned in the provided excerpts for the year 2025. However, Table 11 on page 53 provides information on construction plans for 2024 and 2025. Table 15 on page 57 provides financial statements and projections for 2025, but does not include Capex.",
+                "extraction_status": "NOT_FOUND_PER_LLM"
+              }
+            ],
+            "name_mn": "Капитал зардал (Capex)",
+            "data_type": "currency_value",
+            "calculation_logic_description": "-(Maintenance Capex + Growth Capex)"
+          },
+          {
+            "name": "Net Cash Flow from Investing",
+            "is_calculated": true,
+            "periods": [],
+            "name_mn": "Хөрөнгө оруулалтын үйл ажиллагааны цэвэр мөнгөн гүйлгээ",
+            "data_type": "currency_value"
+          }
+        ],
+        "cash_flow_from_financing_cff": [
+          {
+            "name": "Net Debt Issued/(Repaid)",
+            "is_calculated": false,
+            "periods": [
+              {
+                "period_label": "2023",
+                "value": null,
+                "source_reference": "CONFIRMED_NOT_FOUND",
+                "extraction_status": "NOT_FOUND_PER_LLM"
+              },
+              {
+                "period_label": "2021-2023",
+                "value": null,
+                "source_reference": "Data not found in the provided excerpts.",
+                "extraction_status": "NOT_FOUND_PER_LLM"
+              },
+              {
+                "period_label": "2020-2023",
+                "value": null,
+                "source_reference": "CONFIRMED_NOT_FOUND",
+                "extraction_status": "NOT_FOUND_PER_LLM"
+              },
+              {
+                "period_label": "2024",
+                "value": null,
+                "source_reference": "CONFIRMED_NOT_FOUND",
+                "extraction_status": "NOT_FOUND_PER_LLM"
+              },
+              {
+                "period_label": "2025",
+                "value": null,
+                "source_reference": "CONFIRMED_NOT_FOUND",
+                "extraction_status": "NOT_FOUND_PER_LLM"
+              }
+            ],
+            "name_mn": "Цэвэр татан төвлөрүүлсэн/(эргэн төлсөн) зээл",
+            "data_type": "currency_value"
+          },
+          {
+            "name": "Net Equity Issued/(Repurchased)",
+            "is_calculated": false,
+            "periods": [
+              {
+                "period_label": "2023",
+                "value": null,
+                "source_reference": "Page 56, Table 1, Row R1-R4. The table presents the income statement, but the line item 'Net Equity Issued/(Repurchased)' is not present.",
+                "extraction_status": "NOT_FOUND_PER_LLM"
+              },
+              {
+                "period_label": "2021-2023",
+                "value": null,
+                "source_reference": "CONFIRMED_NOT_FOUND",
+                "extraction_status": "NOT_FOUND_PER_LLM"
+              },
+              {
+                "period_label": "2020-2023",
+                "value": null,
+                "source_reference": "CONFIRMED_NOT_FOUND",
+                "extraction_status": "NOT_FOUND_PER_LLM"
+              },
+              {
+                "period_label": "2024",
+                "value": null,
+                "source_reference": "CONFIRMED_NOT_FOUND",
+                "extraction_status": "NOT_FOUND_PER_LLM"
+              },
+              {
+                "period_label": "2025",
+                "value": null,
+                "source_reference": "Data not found in the provided excerpts.",
+                "extraction_status": "NOT_FOUND_PER_LLM"
+              }
+            ],
+            "name_mn": "Цэвэр гаргасан/(эргүүлэн худалдаж авсан) хувьцаа",
+            "data_type": "currency_value"
+          },
+          {
+            "name": "Dividends Paid",
+            "is_calculated": false,
+            "periods": [
+              {
+                "period_label": "2023",
+                "value": null,
+                "source_reference": "Financial Statements section, Table 14, Page 56. No data found for 'Төлсөн ногдол ашиг' (Dividends Paid) in 2023.",
+                "extraction_status": "NOT_FOUND_PER_LLM"
+              },
+              {
+                "period_label": "2021-2023",
+                "value": null,
+                "source_reference": "Mөнгөн гүйлгээний тайлан section, Page 58, Table 1, Row 12.  The line item 'Ногдол ашиг' is present, but the value is '-'.",
+                "extraction_status": "NOT_FOUND_PER_LLM"
+              },
+              {
+                "period_label": "2020-2023",
+                "value": null,
+                "source_reference": "CONFIRMED_NOT_FOUND",
+                "extraction_status": "NOT_FOUND_PER_LLM"
+              },
+              {
+                "period_label": "2024",
+                "value": 0.0,
+                "source_reference": "Page 58, Table 16, Row 'Ногдол ашиг'",
+                "extraction_status": "SUCCESS"
+              },
+              {
+                "period_label": "2025",
+                "value": null,
+                "source_reference": "CONFIRMED_NOT_FOUND",
+                "extraction_status": "NOT_FOUND_PER_LLM"
+              }
+            ],
+            "name_mn": "Төлсөн ногдол ашиг",
+            "data_type": "currency_value"
+          },
+          {
+            "name": "Net Cash Flow from Financing",
+            "is_calculated": true,
+            "periods": [],
+            "name_mn": "Санхүүгийн үйл ажиллагааны цэвэр мөнгөн гүйлгээ",
+            "data_type": "currency_value"
+          }
+        ],
+        "net_change_in_cash": {
+          "name": "Net Change in Cash",
+          "name_mn": "Мөнгөн хөрөнгийн цэвэр өөрчлөлт",
+          "data_type": "currency_value",
+          "periods": [],
+          "is_calculated": true,
+          "calculation_logic_description": null,
+          "source_guidance_historical": null,
+          "ai_instructions": null,
+          "ai_instructions_projected": null,
+          "notes": null,
+          "unit": null
+        },
+        "cash_beginning_of_period": {
+          "name": "Cash at Beginning of Period",
+          "name_mn": "Эхний үлдэгдэл мөнгөн хөрөнгө",
+          "data_type": "currency_value",
+          "periods": [
+            {
+              "period_label": "2023",
+              "value": null,
+              "source_reference": null,
+              "extraction_status": "FAILURE_MAX_ATTEMPTS"
+            },
+            {
+              "period_label": "2021-2023",
+              "value": null,
+              "source_reference": "Data not found in the provided excerpts.",
+              "extraction_status": "NOT_FOUND_PER_LLM"
+            },
+            {
+              "period_label": "2020-2023",
+              "value": null,
+              "source_reference": "CONFIRMED_NOT_FOUND",
+              "extraction_status": "NOT_FOUND_PER_LLM"
+            },
+            {
+              "period_label": "2024",
+              "value": 3492000.0,
+              "source_reference": "Page 57, Table 15, Row 'Мөнгө,түүнтэй адилтгах хөрөнгө'",
+              "extraction_status": "SUCCESS"
+            },
+            {
+              "period_label": "2025",
+              "value": null,
+              "source_reference": "CONFIRMED_NOT_FOUND",
+              "extraction_status": "NOT_FOUND_PER_LLM"
+            }
+          ],
+          "is_calculated": false,
+          "calculation_logic_description": null,
+          "source_guidance_historical": null,
+          "ai_instructions": null,
+          "ai_instructions_projected": null,
+          "notes": null,
+          "unit": null
+        },
+        "cash_end_of_period": {
+          "name": "Cash at End of Period",
+          "name_mn": "Эцсийн үлдэгдэл мөнгөн хөрөнгө",
+          "data_type": "currency_value",
+          "periods": [],
+          "is_calculated": true,
+          "calculation_logic_description": null,
+          "source_guidance_historical": null,
+          "ai_instructions": null,
+          "ai_instructions_projected": null,
+          "notes": null,
+          "unit": null
+        }
+      }
+    },
+    "supporting_schedules_debt_focus": {
+      "section_description": "Өрийн төвлөрөлтэй холбоотой туслах хуваарь.",
+      "debt_schedule": {
+        "ai_instructions_schedule": "Одоо байгаа болон шинээр гаргах өрийн хэрэгслийн дэлгэрэнгүй мэдээллийг гаргах.",
+        "existing_debt_tranches": [],
+        "new_debt_issuances_details": [],
+        "revolving_credit_facility_rcf": {
+          "facility_size": null,
+          "drawn_amount_start_of_model": null,
+          "undrawn_availability_start_of_model": null,
+          "interest_rate_on_drawn": null,
+          "commitment_fee_on_undrawn": null,
+          "calculated_periodic_movements": []
+        },
+        "summary_debt_rollforward": [
+          {
+            "name": "Total Debt (Beginning of Period)",
+            "name_mn": "Нийт өр (үеийн эхэнд)",
+            "data_type": "currency_value",
+            "periods": [],
+            "is_calculated": true,
+            "calculation_logic_description": null,
+            "source_guidance_historical": null,
+            "ai_instructions": null,
+            "ai_instructions_projected": null,
+            "notes": null,
+            "unit": null
+          },
+          {
+            "name": "New Debt Issued (Tranches + RCF)",
+            "name_mn": "Шинээр гаргасан өр (Транш + ЭЗС)",
+            "data_type": "currency_value",
+            "periods": [],
+            "is_calculated": true,
+            "calculation_logic_description": null,
+            "source_guidance_historical": null,
+            "ai_instructions": null,
+            "ai_instructions_projected": null,
+            "notes": null,
+            "unit": null
+          },
+          {
+            "name": "Debt Repayments (Mandatory + Optional)",
+            "name_mn": "Өрийн эргэн төлөлт (Заавал + Сайн дурын)",
+            "data_type": "currency_value",
+            "periods": [],
+            "is_calculated": true,
+            "calculation_logic_description": null,
+            "source_guidance_historical": null,
+            "ai_instructions": null,
+            "ai_instructions_projected": null,
+            "notes": null,
+            "unit": null
+          },
+          {
+            "name": "Total Debt (End of Period)",
+            "name_mn": "Нийт өр (үеийн эцэст)",
+            "data_type": "currency_value",
+            "periods": [],
+            "is_calculated": true,
+            "calculation_logic_description": null,
+            "source_guidance_historical": null,
+            "ai_instructions": null,
+            "ai_instructions_projected": null,
+            "notes": null,
+            "unit": null
+          },
+          {
+            "name": "Total Interest Expense (All Debt)",
+            "name_mn": "Нийт хүүгийн зардал (бүх өр)",
+            "data_type": "currency_value",
+            "periods": [],
+            "is_calculated": true,
+            "calculation_logic_description": null,
+            "source_guidance_historical": null,
+            "ai_instructions": null,
+            "ai_instructions_projected": null,
+            "notes": null,
+            "unit": null
+          },
+          {
+            "name": "Weighted Average Cost of Debt (Projected)",
+            "name_mn": "Өрийн жигнэсэн дундаж өртөг (төсөөлсөн)",
+            "data_type": "percentage_rate",
+            "periods": [],
+            "is_calculated": true,
+            "calculation_logic_description": null,
+            "source_guidance_historical": null,
+            "ai_instructions": null,
+            "ai_instructions_projected": null,
+            "notes": null,
+            "unit": null
+          }
+        ]
+      },
+      "ppe_schedule": {
+        "ai_instructions_schedule": "Үндсэн хөрөнгийн хуваарийг боловсруулах.",
+        "line_items": []
+      },
+      "working_capital_schedule": {
+        "ai_instructions_schedule": "Эргэлтийн хөрөнгийн хуваарийг боловсруулах.",
+        "line_items": []
+      }
+    },
+    "credit_analysis_metrics_and_ratios": {
+      "section_description": "Зээлийн шинжилгээний үзүүлэлт ба харьцаа.",
+      "ai_instructions_section": "Харьцааг тооцоолно уу. Монгол тайланд харьцааны бүрэлдэхүүн хэсгүүдэд EBITDA зэрэг англи товчлол ашиглагдаж болзошгүйг анхаарна уу.",
+      "leverage_ratios": [
+        {
+          "name": "Total Debt / EBITDA",
+          "name_mn": "Нийт өр / EBITDA",
+          "data_type": "currency_value",
+          "periods": [],
+          "is_calculated": true,
+          "calculation_logic_description": null,
+          "source_guidance_historical": null,
+          "ai_instructions": null,
+          "ai_instructions_projected": null,
+          "notes": null,
+          "unit": "x_multiple"
+        },
+        {
+          "name": "Net Debt / EBITDA",
+          "name_mn": "Цэвэр өр / EBITDA",
+          "data_type": "currency_value",
+          "periods": [],
+          "is_calculated": true,
+          "calculation_logic_description": null,
+          "source_guidance_historical": null,
+          "ai_instructions": null,
+          "ai_instructions_projected": null,
+          "notes": null,
+          "unit": "x_multiple"
+        },
+        {
+          "name": "Total Debt / Capitalization",
+          "name_mn": "Нийт өр / Капиталжуулалт",
+          "data_type": "currency_value",
+          "periods": [],
+          "is_calculated": true,
+          "calculation_logic_description": null,
+          "source_guidance_historical": null,
+          "ai_instructions": null,
+          "ai_instructions_projected": null,
+          "notes": null,
+          "unit": "percentage"
+        }
+      ],
+      "coverage_ratios": [
+        {
+          "name": "EBITDA / Interest Expense",
+          "name_mn": "EBITDA / Хүүгийн зардал",
+          "data_type": "currency_value",
+          "periods": [],
+          "is_calculated": true,
+          "calculation_logic_description": null,
+          "source_guidance_historical": null,
+          "ai_instructions": null,
+          "ai_instructions_projected": null,
+          "notes": null,
+          "unit": "x_multiple"
+        },
+        {
+          "name": "EBIT / Interest Expense",
+          "name_mn": "EBIT / Хүүгийн зардал",
+          "data_type": "currency_value",
+          "periods": [],
+          "is_calculated": true,
+          "calculation_logic_description": null,
+          "source_guidance_historical": null,
+          "ai_instructions": null,
+          "ai_instructions_projected": null,
+          "notes": null,
+          "unit": "x_multiple"
+        },
+        {
+          "name": "(EBITDA - Capex) / Interest Expense",
+          "name_mn": "(EBITDA - Капитал зардал) / Хүүгийн зардал",
+          "data_type": "currency_value",
+          "periods": [],
+          "is_calculated": true,
+          "calculation_logic_description": null,
+          "source_guidance_historical": null,
+          "ai_instructions": null,
+          "ai_instructions_projected": null,
+          "notes": null,
+          "unit": "x_multiple"
+        },
+        {
+          "name": "Cash Flow from Operations / Total Debt",
+          "name_mn": "Үйл ажиллагааны цэвэр мөнгөн гүйлгээ / Нийт өр",
+          "data_type": "currency_value",
+          "periods": [],
+          "is_calculated": true,
+          "calculation_logic_description": null,
+          "source_guidance_historical": null,
+          "ai_instructions": null,
+          "ai_instructions_projected": null,
+          "notes": null,
+          "unit": "percentage_or_x_multiple"
+        },
+        {
+          "name": "Fixed Charge Coverage Ratio (FCC_R)",
+          "name_mn": "Тогтмол төлбөрийн хамрагдалтын харьцаа (FCC_R)",
+          "data_type": "currency_value",
+          "periods": [],
+          "is_calculated": true,
+          "calculation_logic_description": null,
+          "source_guidance_historical": null,
+          "ai_instructions": null,
+          "ai_instructions_projected": null,
+          "notes": null,
+          "unit": "x_multiple"
+        }
+      ],
+      "cash_flow_metrics_for_debt_service": [
+        {
+          "name": "Free Cash Flow (FCF) pre-Debt Service",
+          "name_mn": "Чөлөөт мөнгөн гүйлгээ (FCF) өрийн үйлчилгээний өмнө",
+          "data_type": "currency_value",
+          "periods": [],
+          "is_calculated": true,
+          "calculation_logic_description": null,
+          "source_guidance_historical": null,
+          "ai_instructions": null,
+          "ai_instructions_projected": null,
+          "notes": null,
+          "unit": null
+        },
+        {
+          "name": "Free Cash Flow (FCF) post-Mandatory Debt Service",
+          "name_mn": "Чөлөөт мөнгөн гүйлгээ (FCF) заавал төлөх өрийн үйлчилгээний дараа",
+          "data_type": "currency_value",
+          "periods": [],
+          "is_calculated": true,
+          "calculation_logic_description": null,
+          "source_guidance_historical": null,
+          "ai_instructions": null,
+          "ai_instructions_projected": null,
+          "notes": null,
+          "unit": null
+        },
+        {
+          "name": "Cash Interest Paid",
+          "name_mn": "Төлсөн мөнгөн хүү",
+          "data_type": "currency_value",
+          "periods": [],
+          "is_calculated": true,
+          "calculation_logic_description": null,
+          "source_guidance_historical": null,
+          "ai_instructions": null,
+          "ai_instructions_projected": null,
+          "notes": null,
+          "unit": null
+        }
+      ],
+      "liquidity_ratios": [
+        {
+          "name": "Current Ratio",
+          "name_mn": "Эргэлтийн хөрөнгийн харьцаа",
+          "data_type": "currency_value",
+          "periods": [],
+          "is_calculated": true,
+          "calculation_logic_description": null,
+          "source_guidance_historical": null,
+          "ai_instructions": null,
+          "ai_instructions_projected": null,
+          "notes": null,
+          "unit": "x_multiple"
+        },
+        {
+          "name": "Quick Ratio (Acid Test)",
+          "name_mn": "Түргэн хөрвөх чадварын харьцаа",
+          "data_type": "currency_value",
+          "periods": [],
+          "is_calculated": true,
+          "calculation_logic_description": null,
+          "source_guidance_historical": null,
+          "ai_instructions": null,
+          "ai_instructions_projected": null,
+          "notes": null,
+          "unit": "x_multiple"
+        }
+      ],
+      "profitability_and_efficiency_context": [
+        {
+          "name": "EBITDA Margin",
+          "name_mn": "EBITDA Маржин",
+          "data_type": "currency_value",
+          "periods": [],
+          "is_calculated": true,
+          "calculation_logic_description": null,
+          "source_guidance_historical": null,
+          "ai_instructions": null,
+          "ai_instructions_projected": null,
+          "notes": null,
+          "unit": "percentage"
+        },
+        {
+          "name": "Net Debt / (Net Debt + Market Cap of Equity)",
+          "name_mn": "Цэвэр өр / (Цэвэр өр + Зах зээлийн капиталжуулалт)",
+          "data_type": "currency_value",
+          "periods": [],
+          "is_calculated": false,
+          "calculation_logic_description": null,
+          "source_guidance_historical": null,
+          "ai_instructions": null,
+          "ai_instructions_projected": null,
+          "notes": null,
+          "unit": "percentage"
+        }
+      ]
+    },
+    "valuation_context_for_debt": {
+      "section_description": "Өрийн үнэлгээний контекст.",
+      "enterprise_value_estimation": {
+        "dcf_for_ev": {
+          "ai_instructions": "DCF ашиглан Enterprise Value тооцоолно уу.",
+          "wacc_calculation_inputs": [],
+          "free_cash_flow_to_firm_fcff": [],
+          "terminal_value_fcff_gordon_growth": {
+            "value": null,
+            "is_calculated": true,
+            "calculation_logic_description": null
+          },
+          "terminal_value_fcff_exit_multiple": {
+            "value": null,
+            "is_calculated": true,
+            "calculation_logic_description": null
+          },
+          "estimated_enterprise_value_dcf": {
+            "value": null,
+            "is_calculated": true,
+            "calculation_logic_description": null
+          }
+        },
+        "multiples_based_ev_estimation": {
+          "comparable_companies_data": [],
+          "selected_ev_ebitda_multiple": null,
+          "estimated_enterprise_value_multiples": {
+            "value": null,
+            "is_calculated": true,
+            "calculation_logic_description": null
+          }
+        }
+      },
+      "asset_coverage_and_recovery_indicators": [
+        {
+          "name": "Enterprise Value / Total Debt",
+          "name_mn": "Аж ахуйн нэгжийн үнэ цэн / Нийт өр",
+          "data_type": "currency_value",
+          "periods": [],
+          "is_calculated": true,
+          "calculation_logic_description": null,
+          "source_guidance_historical": null,
+          "ai_instructions": null,
+          "ai_instructions_projected": null,
+          "notes": null,
+          "unit": "x_multiple"
+        },
+        {
+          "name": "Implied Recovery Rate (Conceptual)",
+          "name_mn": "Боломжит нөхөн төлбөрийн түвшин (үзэл баримтлалын)",
+          "ai_instructions": "Энэ нь ойлголтын үзүүлэлт юм."
+        }
+      ]
+    },
+    "sensitivity_and_scenario_analysis_debt_focus": {
+      "section_description": "Мэдрэмж ба хувилбарын шинжилгээ (өрийн төвлөрөл).",
+      "key_sensitivities": [],
+      "sensitivity_tables_placeholder": {
+        "ai_instructions": "Мэдрэмжийн хүснэгтийг энд харуулна уу."
+      },
+      "stress_test_scenarios": [],
+      "covenant_compliance_analysis_placeholder": {
+        "ai_instructions": "Ковенантын нийцлийн шинжилгээг энд хийнэ үү.",
+        "known_covenants": []
+      }
+    },
+    "ai_agent_summary_and_confidence_debt_focus": {
+      "overall_credit_assessment_summary_placeholder": "Ерөнхий зээлийн үнэлгээний хураангуй (хиймэл оюун боловсруулна).",
+      "data_quality_and_availability_assessment": "Мэдээллийн чанар ба хүртээмжийн үнэлгээ (хиймэл оюун боловсруулна).",
+      "key_assumptions_and_judgment_points": [],
+      "confidence_scores_for_key_projections": [],
+      "data_sources_used_primarily": [],
+      "limitations_of_the_model": "Загварын хязгаарлалтууд (хиймэл оюун боловсруулна)."
+    }
+  },
+  "quality_report": {
+    "overall_status": "FAILED",
+    "errors": [
+      {
+        "check_type": "SchemaValidation",
+        "item_path": "model_metadata -> fiscal_year_end",
+        "message": "'' does not match '^(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$'",
+        "severity": "ERROR",
+        "details": {
+          "validator": "pattern",
+          "validator_value": "^(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$",
+          "instance_snippet": ""
+        }
+      }
+    ],
+    "warnings": [
+      {
+        "check_type": "QualityLogic",
+        "message": "Skipped financial sanity checks and completeness due to schema errors.",
+        "severity": "WARNING"
+      }
+    ]
+  },
+  "parsed_documents_summary": [
+    {
+      "file_name": "_Matsuya_Үнэт_цаасны_танилцуулга_05_07.pdf",
+      "status": "success",
+      "message": "Document parsed.",
+      "total_pages_in_doc": 72,
+      "processed_pages_in_doc": 72
+    }
+  ]
+}

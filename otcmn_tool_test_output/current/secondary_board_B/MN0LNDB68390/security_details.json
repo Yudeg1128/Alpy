@@ -1,0 +1,22 @@
+{
+  "Security Name": "Lend bond 3.2",
+  "Security Symbol": "LNDB-TBC-3.2-12",
+  "ISIN": "MN0LNDB68390",
+  "Total Quantity Issued": "10,000",
+  "Total Amount Issued": "1,000,000,000",
+  "Issue Price": "100,000",
+  "Total Quantity Announced": "10,000",
+  "Total Amount Announced": "1,000,000,000",
+  "Issuer Name": "ЛэндМН ББСБ ХК",
+  "Interest Rate": "12.00%",
+  "Flexible Interest Rate": "NO",
+  "Maturity in Months": "12",
+  "Coupon Payment Period": "Quarterly",
+  "Repayment Type": "N/A",
+  "Insurance": "Зээлжих зэрэглэл тогтоолгосон",
+  "Min Trading Quantity": "1",
+  "Other": "-",
+  "Announced Date": "2025-02-28 09:00",
+  "Closing Date": "2025-02-28 18:00",
+  "Maturity Date": "2026-03-02"
+}

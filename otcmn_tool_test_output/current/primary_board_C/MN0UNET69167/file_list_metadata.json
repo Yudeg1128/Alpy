@@ -1,0 +1,22 @@
+[
+  {
+    "file_name": "1. Маягтууд.pdf",
+    "download_href": "https://app-production-private.s3-ap-southeast-1.amazonaws.com/5fe2aff6-6f4d-4c55-99bf-74a2696b9688?response-content-disposition=inline%3B%20filename%3D%221.%2520%25D0%259C%25D0%25B0%25D1%258F%25D0%25B3%25D1%2582%25D1%2583%25D1%2583%25D0%25B4.pdf%22&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAV2HEJUYUA7ZE5TK2%2F20250515%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Date=20250515T071324Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&X-Amz-Signature=d8be27bafa820889d77fa27e75cfb32029eeb51295814ad2757b8aa3fe2586f5"
+  },
+  {
+    "file_name": "3. ҮГХА_Үнэт кредит.pdf",
+    "download_href": "https://app-production-private.s3-ap-southeast-1.amazonaws.com/4b981bb7-5365-4b3e-a567-45a333951130?response-content-disposition=inline%3B%20filename%3D%223.%2520%25D2%25AE%25D0%2593%25D0%25A5%25D0%2590_%25D2%25AE%25D0%25BD%25D1%258D%25D1%2582%2520%25D0%25BA%25D1%2580%25D0%25B5%25D0%25B4%25D0%25B8%25D1%2582.pdf%22&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAV2HEJUYUA7ZE5TK2%2F20250515%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Date=20250515T071328Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&X-Amz-Signature=76d4d6b4c51567e50e810eca24877ce0ca7a8435feaaac70f6193b7f88fb2cd6"
+  },
+  {
+    "file_name": "5. Хавсралт_Үнэт кредит ББСБ.pdf",
+    "download_href": "https://app-production-private.s3-ap-southeast-1.amazonaws.com/cda3506a-73b5-4731-910a-2b5f41ec3f5d?response-content-disposition=inline%3B%20filename%3D%225.%2520%25D0%25A5%25D0%25B0%25D0%25B2%25D1%2581%25D1%2580%25D0%25B0%25D0%25BB%25D1%2582_%25D2%25AE%25D0%25BD%25D1%258D%25D1%2582%2520%25D0%25BA%25D1%2580%25D0%25B5%25D0%25B4%25D0%25B8%25D1%2582%2520%25D0%2591%25D0%2591%25D0%25A1%25D0%2591.pdf%22&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAV2HEJUYUA7ZE5TK2%2F20250515%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Date=20250515T071334Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&X-Amz-Signature=a20548eaac1c6e8c5fb46757ddf393c181e3234fc8a74bbeb9882b2747cffbef"
+  },
+  {
+    "file_name": "4. Дүгнэлт_Үнэт кредит ББСБ.pdf",
+    "download_href": "https://app-production-private.s3-ap-southeast-1.amazonaws.com/1579f81c-e29d-41d1-b275-c0b55c2402fe?response-content-disposition=inline%3B%20filename%3D%224.%2520%25D0%2594%25D2%25AF%25D0%25B3%25D0%25BD%25D1%258D%25D0%25BB%25D1%2582_%25D2%25AE%25D0%25BD%25D1%258D%25D1%2582%2520%25D0%25BA%25D1%2580%25D0%25B5%25D0%25B4%25D0%25B8%25D1%2582%2520%25D0%2591%25D0%2591%25D0%25A1%25D0%2591.pdf%22&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAV2HEJUYUA7ZE5TK2%2F20250515%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Date=20250515T071331Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&X-Amz-Signature=ff47bb61e77d19e645d3b12c1d1f71e2f3b3be07ef639c1fac4b784cddcaaf66"
+  },
+  {
+    "file_name": "Үнэт_ҮЦТ_compressed.pdf",
+    "download_href": "https://app-production-private.s3-ap-southeast-1.amazonaws.com/840956b5-a8cb-4f2b-aef7-ba049a35e754?response-content-disposition=inline%3B%20filename%3D%22%25D2%25AE%25D0%25BD%25D1%258D%25D1%2582_%25D2%25AE%25D0%25A6%25D0%25A2_compressed.pdf%22&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAV2HEJUYUA7ZE5TK2%2F20250515%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Date=20250515T071337Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&X-Amz-Signature=2ef00521f6719b02e1cd0f0a31183b4e0015f6747eb5b84a13b4d3ed687ad640"
+  }
+]

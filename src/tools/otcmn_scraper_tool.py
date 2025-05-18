@@ -303,8 +303,6 @@ class OTCMNScraperTool(BaseTool, BaseModel): # type: ignore[misc] # For Pydantic
         # self._logger_instance.debug(f"Full summary for '{action}': {json.dumps(summary_log, indent=2, default=str)}") # For debugging, can be verbose
         return json.dumps(summary_log, default=str) # Ensure all parts are serializable
 
-# In your OTCMNScraperTool class file (e.g., otcmn_scraper_tool.py)
-
     async def _handle_scrape_boards_action(self, params: ScrapeBoardsParams, summary_log: Dict[str, Any]) -> None:
         """
         Handles the 'scrape_boards' action using the OtcmSiteInteractor.
@@ -899,69 +897,78 @@ async def main_test_otcmn_scraper_tool():
 
 
         # --- [TEST CASE 1: scrape_boards] ---
-        test_logger.info("\n--- [Test Case: scrape_boards action] ---")
-        scrape_boards_params = ScrapeBoardsParams(
-            output_directory=str(test_base_output_dir), # Pass the Path object as string
-            max_listing_pages_per_board=2 # Limit pages for quicker testing; set to None or higher for full scrape
-        )
-        scrape_boards_action_input_dict = OTCMNScraperActionInput(
-            action="scrape_boards",
-            parameters=scrape_boards_params,
-            cdp_endpoint_url=cdp_arg
-        ).model_dump(mode='json') # Use .model_dump() for Pydantic v2
+        # test_logger.info("\n--- [Test Case: scrape_boards action] ---")
+        # scrape_boards_params = ScrapeBoardsParams(
+        #     output_directory=str(test_base_output_dir), # Pass the Path object as string
+        #     max_listing_pages_per_board=2 # Limit pages for quicker testing; set to None or higher for full scrape
+        # )
+        # scrape_boards_action_input_dict = OTCMNScraperActionInput(
+        #     action="scrape_boards",
+        #     parameters=scrape_boards_params,
+        #     cdp_endpoint_url=cdp_arg
+        # ).model_dump(mode='json') # Use .model_dump() for Pydantic v2
 
-        test_logger.info(f"Tool input for 'scrape_boards': {json.dumps(scrape_boards_action_input_dict, indent=2)}")
+        # test_logger.info(f"Tool input for 'scrape_boards': {json.dumps(scrape_boards_action_input_dict, indent=2)}")
         
-        # Call arun using dictionary unpacking for the arguments
-        result_boards_str = await tool_instance.arun(tool_input=scrape_boards_action_input_dict)
+        # # Call arun using dictionary unpacking for the arguments
+        # result_boards_str = await tool_instance.arun(tool_input=scrape_boards_action_input_dict)
         
-        test_logger.info(f"'scrape_boards' action raw result string:\n{result_boards_str}")
-        try:
-            result_boards_json = json.loads(result_boards_str)
-            test_logger.info(f"'scrape_boards' action parsed JSON result:\n{json.dumps(result_boards_json, indent=2, ensure_ascii=False)}")
-            if result_boards_json.get("status") != "success" or result_boards_json.get("errors"):
-                test_logger.error(f"'scrape_boards' action reported status '{result_boards_json.get('status')}' or errors: {result_boards_json.get('errors')}")
-        except json.JSONDecodeError:
-            test_logger.error(f"Failed to parse 'scrape_boards' result as JSON: {result_boards_str}")
+        # test_logger.info(f"'scrape_boards' action raw result string:\n{result_boards_str}")
+        # try:
+        #     result_boards_json = json.loads(result_boards_str)
+        #     test_logger.info(f"'scrape_boards' action parsed JSON result:\n{json.dumps(result_boards_json, indent=2, ensure_ascii=False)}")
+        #     if result_boards_json.get("status") != "success" or result_boards_json.get("errors"):
+        #         test_logger.error(f"'scrape_boards' action reported status '{result_boards_json.get('status')}' or errors: {result_boards_json.get('errors')}")
+        # except json.JSONDecodeError:
+        #     test_logger.error(f"Failed to parse 'scrape_boards' result as JSON: {result_boards_str}")
 
 
         # --- [TEST CASE 2: filter_securities] ---
-        # This test assumes scrape_boards has run and populated some data.
-        test_logger.info("\n--- [Test Case: filter_securities action] ---")
-        filter_params = FilterSecuritiesParams(
-            output_directory=str(test_base_output_dir),
-            filter_output_filename="test_filter_mnt_bonds.json",
-            filter_currency="MNT", # Example filter: MNT currency bonds
-            # filter_interest_rate_min=15.0 # Example: interest rate >= 15%
-        )
-        filter_action_input_dict = OTCMNScraperActionInput(
-            action="filter_securities",
-            parameters=filter_params,
-            cdp_endpoint_url=None # Not used by filter_securities
-        ).model_dump(mode='json')
+        # --- [TEST CASE 2B: filter_securities with multiple criteria] ---
+        # test_logger.info("\n--- [Test Case 2B: filter_securities action - multiple criteria] ---")
+        
+        # from datetime import datetime, timedelta
+        # # Calculate maturity cutoff date: 3 months from today
+        # cutoff_date = datetime.now() + timedelta(days=6*30) # Approximate 6 months
+        # maturity_cutoff_date_str = cutoff_date.strftime("%Y-%m-%d")
+        # test_logger.info(f"Calculated maturity cutoff date for test: {maturity_cutoff_date_str}")
 
-        test_logger.info(f"Tool input for 'filter_securities': {json.dumps(filter_action_input_dict, indent=2)}")
-        result_filter_str = await tool_instance.arun(tool_input=filter_action_input_dict)
+        # multi_filter_params = FilterSecuritiesParams(
+        #     output_directory=str(test_base_output_dir),
+        #     filter_output_filename="test_filter_mnt_specific_bonds.json",
+        #     filter_currency="MNT",
+        #     filter_interest_rate_min=12.0,
+        #     filter_interest_rate_max=12.0,
+        #     filter_maturity_cutoff_date=maturity_cutoff_date_str,
+        #     filter_underwriter="Tavan Bogd Capital" # Case-insensitive substring match
+        # )
+        # multi_filter_action_input_dict = OTCMNScraperActionInput(
+        #     action="filter_securities",
+        #     parameters=multi_filter_params,
+        #     cdp_endpoint_url=None 
+        # ).model_dump(mode='json')
 
-        test_logger.info(f"'filter_securities' action raw result string:\n{result_filter_str}")
-        try:
-            result_filter_json = json.loads(result_filter_str)
-            test_logger.info(f"'filter_securities' action parsed JSON result:\n{json.dumps(result_filter_json, indent=2, ensure_ascii=False)}")
-            if result_filter_json.get("status") != "success" or result_filter_json.get("errors"):
-                 test_logger.error(f"'filter_securities' action reported status '{result_filter_json.get('status')}' or errors: {result_filter_json.get('errors')}")
-            elif result_filter_json.get("matching_securities_count", 0) == 0 and params.filter_currency == "MNT":
-                 test_logger.warning("Filter action succeeded but found 0 matching MNT securities. This might be expected if no MNT securities were scraped or matched.")
+        # test_logger.info(f"Tool input for 'filter_securities' (multi-criteria): {json.dumps(multi_filter_action_input_dict, indent=2)}")
+        # result_multi_filter_str = await tool_instance.arun(tool_input=multi_filter_action_input_dict)
 
-        except json.JSONDecodeError:
-            test_logger.error(f"Failed to parse 'filter_securities' result as JSON: {result_filter_str}")
+        # test_logger.info(f"'filter_securities' (multi-criteria) action raw result string:\n{result_multi_filter_str}")
+        # try:
+        #     result_multi_filter_json = json.loads(result_multi_filter_str)
+        #     test_logger.info(f"'filter_securities' (multi-criteria) action parsed JSON result:\n{json.dumps(result_multi_filter_json, indent=2, ensure_ascii=False)}")
+        #     if result_multi_filter_json.get("status") != "success" or result_multi_filter_json.get("errors"):
+        #          test_logger.error(f"'filter_securities' (multi-criteria) action reported status '{result_multi_filter_json.get('status')}' or errors: {result_multi_filter_json.get('errors')}")
+        #     elif result_multi_filter_json.get("matching_securities_count", 0) == 0:
+        #          test_logger.warning("Multi-criteria filter action succeeded but found 0 matching securities. This might be expected if no securities met all criteria.")
 
+        # except json.JSONDecodeError:
+        #     test_logger.error(f"Failed to parse 'filter_securities' (multi-criteria) result as JSON: {result_multi_filter_str}")
         
         # --- [TEST CASE 3: scrape_filtered_details] ---
-        # This test assumes a filter file (e.g., 'test_filter_mnt_bonds.json') exists from the previous step.
+        # # This test assumes a filter file (e.g., 'test_filter_mnt_specific_bonds.json') exists from the previous step.
         test_logger.info("\n--- [Test Case: scrape_filtered_details action] ---")
         
         # Check if the filter file from the previous step exists and has content
-        filter_file_to_use = test_base_output_dir / "filters" / "test_filter_mnt_bonds.json"
+        filter_file_to_use = test_base_output_dir / "filters" / "test_filter_mnt_specific_bonds.json"
         if not filter_file_to_use.exists():
             test_logger.warning(f"Filter file '{filter_file_to_use}' not found. Skipping 'scrape_filtered_details' test.")
         else:
@@ -974,7 +981,7 @@ async def main_test_otcmn_scraper_tool():
                     else:
                         scrape_details_params = ScrapeFilteredDetailsParams(
                             output_directory=str(test_base_output_dir),
-                            filter_input_filename="test_filter_mnt_bonds.json", # Must match filename from filter_securities
+                            filter_input_filename="test_filter_mnt_specific_bonds.json", # Must match filename from filter_securities
                             max_securities_to_process_from_filter=2 # Limit for testing; None for all
                         )
                         scrape_details_action_input_dict = OTCMNScraperActionInput(
@@ -998,7 +1005,6 @@ async def main_test_otcmn_scraper_tool():
                  test_logger.error(f"Filter file '{filter_file_to_use}' seems to be invalid JSON. Skipping 'scrape_filtered_details'.")
             except Exception as e_read_filter:
                  test_logger.error(f"Error reading filter file '{filter_file_to_use}': {e_read_filter}. Skipping 'scrape_filtered_details'.")
-
 
     except Exception as e:
         test_logger.error(f"An unexpected error occurred during the OTCMNScraperTool test run: {e}", exc_info=True)

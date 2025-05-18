@@ -17,7 +17,8 @@ from pydantic import BaseModel, Field, model_validator, PrivateAttr
 
 # Placeholder for MCPDocumentParserTool - in a real setup, this would be the actual tool
 # For this file, we'll define a mock version for standalone testing.
-# from ..tools.mcp_document_parser_tool import MCPDocumentParserTool # Example of relative import if structured
+from ..tools.mcp_document_parser_tool import MCPDocumentParserTool # Example of relative import if structured
+
 class MockMCPDocumentParserTool(BaseTool, BaseModel): # For testing this tool standalone
     name: str = "MockMCPDocumentParserTool"
     description: str = "Mock document parser"
@@ -48,28 +49,8 @@ class MockMCPDocumentParserTool(BaseTool, BaseModel): # For testing this tool st
             "tesseract_initial_check_message": "Mock Tesseract OK"
         })
 
-# Actual imports (adjust paths if your project structure is different)
-try:
-    # This assumes 'src' is in PYTHONPATH or the tool is run from a context where 'src' is accessible
-    from financial_modeling.phase_a_orchestrator import PhaseAOrchestrator, BaseLlmService, FinancialModelingUtils
-    from financial_modeling.quality_checker import QualityChecker, QualityReport
-except ImportError:
-    # Fallback for standalone execution if 'src' is not directly in PYTHONPATH
-    # This requires phase_a_orchestrator.py and quality_checker.py to be in the same directory
-    # or you adjust sys.path more robustly.
-    sys.path.append(str(Path(__file__).parent.parent / "financial_modeling"))
-    try:
-        from phase_a_orchestrator import PhaseAOrchestrator, BaseLlmService, FinancialModelingUtils
-        from quality_checker import QualityChecker, QualityReport
-    except ImportError as e:
-        print(f"CRITICAL: Could not import financial_modeling components. Ensure they are in the correct path. Error: {e}")
-        # Define minimal stubs so the rest of the file can be parsed for syntax checking
-        class BaseLlmService: pass
-        class FinancialModelingUtils: pass
-        class PhaseAOrchestrator: pass
-        class QualityChecker: pass
-        class QualityReport(BaseModel): pass
-
+from ..financial_modeling.phase_a_orchestrator import PhaseAOrchestrator, BaseLlmService, FinancialModelingUtils, GeminiLlmService
+from ..financial_modeling.quality_checker import QualityChecker, QualityReport
 
 # Module logger
 logger = logging.getLogger(__name__)
@@ -144,6 +125,22 @@ class FinancialPhaseATool(BaseTool, BaseModel):
 
         self._logger_instance.info(f"FinancialPhaseATool initialized. Schema: {self.schema_definition_path}, Prompts: {self.prompts_path}")
         return self
+
+    def _run(
+        self,
+        security_id: str, # Add all expected args from args_schema
+        documents_root_path: str,
+        primary_document_name: Optional[str] = None,
+        document_type_hint: Optional[str] = "Financial Report/Prospectus",
+        ocr_mode: Literal["auto", "force_images", "force_full_pages", "none"] = "auto",
+        ocr_lang: str = "mon",
+        max_pages_to_parse_per_doc: Optional[int] = None,
+        run_manager: Optional[Any] = None, # SyncCallbackManagerForToolRun
+        **kwargs: Any
+    ) -> str:
+        raise NotImplementedError(
+            f"{self.name} is an async-native tool. Use its `_arun` or `ainvoke` method."
+        )
 
     async def _arun(
         self,
@@ -260,7 +257,7 @@ class FinancialPhaseATool(BaseTool, BaseModel):
             )
             
             populated_model, extraction_log = await orchestrator.run_phase_a_extraction(
-                parsed_document_content=aggregated_parsed_content, # Pass the actual parsed data
+                parsed_doc_content=aggregated_parsed_content, # Pass the actual parsed data
                 document_type_hint=document_type_hint or "Financial Report"
             )
             output_payload["financial_model_phase_a"] = populated_model
@@ -309,103 +306,279 @@ class MockPhaseALLMService(BaseLlmService):
             return json.dumps({"value": 123.45, "currency": "USD", "unit": "actuals", "source_reference": "Mocked Page X", "status": "EXTRACTED_SUCCESSFULLY"})
         return json.dumps({"error": "MockPhaseALLMService - Unknown prompt type for this mock."})
 
+async def main_test_real_parser():
+    if MCPDocumentParserTool is None:
+        logger.error("MCPDocumentParserTool not imported, cannot run test.")
+        return
+
+    logger.info("Starting MCPDocumentParserTool standalone test...")
+
+    # --- IMPORTANT: CONFIGURE THIS PATH ---
+    # Replace with the actual path to your document_parser_server.py
+    # This assumes your Alpy project root is the parent of 'mcp_servers'
+    project_root = Path(__file__).resolve().parent.parent.parent
+    default_server_script = project_root / "mcp_servers" / "document_parser_server.py"
+    
+    # Path to a real PDF document you want to test with
+    # --- !!! REPLACE THIS WITH YOUR PDF PATH !!! ---
+    pdf_to_test = Path("/home/me/Documents/FundDocs/test_portfolio/_Matsuya_Үнэт_цаасны_танилцуулга_05_07.pdf")
+    # --- !!! REPLACE THIS WITH YOUR PDF PATH !!! ---
+
+    if not default_server_script.exists():
+        logger.error(f"Server script not found: {default_server_script}")
+        logger.error("Please ensure MCPDocumentParserTool's 'server_script' default points to the correct location,")
+        logger.error("or pass the correct path during instantiation if it's configurable.")
+        return
+        
+    if not pdf_to_test.exists() or not pdf_to_test.is_file():
+        logger.error(f"Test PDF not found or is not a file: {pdf_to_test}")
+        logger.error("Please provide a valid path to a PDF document for testing.")
+        return
+
+    # Instantiate the real MCPDocumentParserTool
+    # It should use its default server_executable, server_script, and server_cwd_path
+    # or you can override them here if needed.
+    try:
+        # If your MCPDocumentParserTool takes specific paths in constructor, provide them:
+        # tool_instance = MCPDocumentParserTool(
+        #     server_script=Path("/path/to/your/document_parser_server.py"),
+        #     # server_executable=Path("/path/to/your/python"), # if not default python3
+        #     # server_cwd_path=Path("/path/to/server_script_parent/"), # if needed
+        # )
+        # Otherwise, defaults from the tool's Pydantic model will be used.
+        tool_instance = MCPDocumentParserTool()
+        if hasattr(tool_instance, '_logger_instance') and tool_instance._logger_instance:
+            tool_instance._logger_instance.setLevel(logging.DEBUG) # For verbose output from the tool
+        
+    except Exception as e_init:
+        logger.error(f"Failed to instantiate MCPDocumentParserTool: {e_init}", exc_info=True)
+        return
+
+    test_input_args = {
+        "document_path": str(pdf_to_test.resolve()),
+        "ocr_mode": "auto", # Or "force_images", "force_full_pages", "none"
+        "ocr_lang": "mon", # Or your desired language e.g., "eng"
+        # "max_pages_to_process_for_testing": 5, # Optional: limit pages for faster testing
+    }
+
+    logger.info(f"Attempting to parse PDF: {pdf_to_test}")
+    logger.info(f"Using server script (default or from tool): {tool_instance.server_script if hasattr(tool_instance, 'server_script') else 'N/A'}")
+    logger.info(f"Tool input args: {test_input_args}")
+
+    result_json_str = None
+    try:
+        result_json_str = await tool_instance._arun(**test_input_args)
+        logger.info("MCPDocumentParserTool._arun call finished.")
+        
+        print("\n--- MCPDocumentParserTool Result ---")
+        try:
+            result_data = json.loads(result_json_str)
+            # print(json.dumps(result_data, indent=2, ensure_ascii=False))
+            
+            # Basic assertions on successful output structure
+            if result_data.get("status") == "success":
+                assert "pages_content" in result_data
+                assert "all_tables" in result_data
+                logger.info("Basic assertions on output structure PASSED for successful parse.")
+            else:
+                logger.warning(f"Parsing was not fully successful. Status: {result_data.get('status')}, Message: {result_data.get('message')}")
+
+        except json.JSONDecodeError:
+            logger.error("Failed to parse tool output as JSON.")
+            # print("Raw output:", result_json_str)
+        except AssertionError as e_assert:
+            logger.error(f"Assertion failed on tool output: {e_assert}")
+
+    except ToolException as e_tool: # Specific LangChain tool exception
+        logger.error(f"ToolException during MCPDocumentParserTool test run: {e_tool}", exc_info=True)
+    except Exception as e:
+        logger.error(f"Unexpected error during MCPDocumentParserTool test run: {e}", exc_info=True)
+    finally:
+        if 'tool_instance' in locals() and hasattr(tool_instance, 'close'):
+            logger.info("Closing MCPDocumentParserTool session...")
+            await tool_instance.close()
+            logger.info("MCPDocumentParserTool session closed.")
+        logger.info("MCPDocumentParserTool standalone test finished.")
+
+# This is the existing main_test_financial_phase_a_tool function from your src/tools/financial_phase_a_tool.py
+# Ensure the imports at the top of the file correctly bring in:
+# - FinancialPhaseATool, MockPhaseALLMService (or a more advanced LLM mock/service)
+# - FinancialModelingUtils
+# - ImportedRealMCPDocumentParserTool (from previous fix, to get the real parser)
+# - Path, logging, json, asyncio
+
 async def main_test_financial_phase_a_tool():
     # Setup basic logging for the test
-    logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    test_logger = logging.getLogger(__name__ + ".TestFinancialPhaseATool")
-    test_logger.info("Starting FinancialPhaseATool standalone test...")
+    logging.basicConfig(level=logging.WARNING, format='%(asctime)s - %(name)s - %(levelname)s - [%(threadName)s] - %(message)s')
+    test_logger = logging.getLogger(__name__ + ".TestFinancialPhaseATool") # Changed logger name for clarity
+    test_logger.info("Starting FinancialPhaseATool (FULL WORKFLOW) standalone test...")
 
-    # Paths (assuming Alpy project root is current dir or adjust as needed)
-    # These paths must point to your actual files.
-    project_root = Path(__file__).parent.parent.parent # Assumes this tool is in src/tools/
+    project_root = Path(__file__).resolve().parent.parent.parent
     schema_file = project_root / "fund" / "financial_model_schema.json"
     prompts_file = project_root / "prompts" / "financial_modeling_prompts.yaml"
+    
+    # Ensure logs directory exists for orchestrator and parser client logs
+    (project_root / "logs").mkdir(parents=True, exist_ok=True)
+
 
     if not schema_file.exists() or not prompts_file.exists():
         test_logger.error(f"Schema or Prompts file not found. Schema: {schema_file}, Prompts: {prompts_file}. Aborting test.")
         return
 
-    # Create a dummy PDF for the parser tool to "process"
-    dummy_doc_dir = project_root / "test_docs_phase_a"
+    dummy_doc_dir = project_root / "test_docs_phase_a_full_tool" # New dir for this test
     dummy_doc_dir.mkdir(exist_ok=True)
-    dummy_pdf_path = dummy_doc_dir / "dummy_report.pdf"
-    try:
-        from reportlab.pdfgen import canvas
-        c = canvas.Canvas(str(dummy_pdf_path))
-        c.drawString(100, 750, "Dummy PDF for FinancialPhaseATool Test. Security: TESTSEC")
-        c.showPage(); c.save()
-        test_logger.info(f"Created dummy PDF: {dummy_pdf_path}")
-    except ImportError:
-        test_logger.warning("reportlab not installed. Cannot create dummy PDF for test. Test might fail if parser needs a real file.")
-    except Exception as e_pdf:
-        test_logger.error(f"Error creating dummy PDF: {e_pdf}")
+    
+    pdf_to_test_with_full_tool_name = "_Matsuya_Үнэт_цаасны_танилцуулга_05_07.pdf" # Example name
+    # --- !!! IMPORTANT: REPLACE WITH YOUR ACTUAL PDF PATH OR COPY IT HERE !!! ---
+    # Option 1: Use a specific PDF path directly
+    # pdf_to_test_path = Path("/home/me/Documents/FundDocs/test_portfolio/_Matsuya_Үнэт_цаасны_танилцуулга_05_07.pdf")
+    # Option 2: Copy your test PDF into dummy_doc_dir for this test
+    # shutil.copy("/home/me/Documents/FundDocs/test_portfolio/_Matsuya_Үнэт_цаасны_танилцуулга_05_07.pdf", dummy_doc_dir / pdf_to_test_with_full_tool_name)
+    # pdf_to_test_path = dummy_doc_dir / pdf_to_test_with_full_tool_name
+    
+    # For this example, let's assume you will MANUALLY place your PDF in dummy_doc_dir
+    # Or provide the full path directly:
+    pdf_to_test_path = Path("/home/me/Documents/FundDocs/test_portfolio/_Matsuya_Үнэт_цаасны_танилцуулга_05_07.pdf") # REPLACE THIS
+    # --- !!! IMPORTANT: ENSURE THIS PDF EXISTS !!! ---
+
+    if not pdf_to_test_path.exists():
+        test_logger.error(f"Test PDF for full tool test not found: {pdf_to_test_path}. Please configure the path.")
+        # Attempt to create a very simple dummy if the target is not found, just to run the flow
+        pdf_to_test_path = dummy_doc_dir / "fallback_dummy_report.pdf"
+        pdf_to_test_with_full_tool_name = "fallback_dummy_report.pdf" # Update name for args
+        try:
+            from reportlab.pdfgen import canvas
+            c = canvas.Canvas(str(pdf_to_test_path))
+            c.drawString(100, 750, f"Fallback Dummy PDF for FinancialPhaseATool Test. Target: {pdf_to_test_with_full_tool_name}")
+            c.showPage(); c.save()
+            test_logger.info(f"Created fallback dummy PDF: {pdf_to_test_path}")
+        except ImportError:
+            test_logger.error("reportlab not installed and target PDF not found. Cannot proceed.")
+            return
+        except Exception as e_pdf:
+            test_logger.error(f"Error creating fallback dummy PDF: {e_pdf}")
+            return
 
 
-    # Instantiate mock/real dependencies
-    mock_parser = MockMCPDocumentParserTool() # Using the mock defined above for simplicity
-    mock_llm = MockPhaseALLMService()
-    utils = FinancialModelingUtils()
+    # --- Instantiate with REAL MCPDocumentParserTool ---
+    if MCPDocumentParserTool is None: # Check if import was successful
+        test_logger.error("Real MCPDocumentParserTool (ImportedRealMCPDocumentParserTool) not available. Aborting.")
+        return
+    
+    real_parser_tool_instance = MCPDocumentParserTool()
+    # Set log level for the parser instance if needed
+    if hasattr(real_parser_tool_instance, '_logger_instance') and real_parser_tool_instance._logger_instance:
+        real_parser_tool_instance._logger_instance.setLevel(logging.DEBUG) # More logs from parser
+
+    # Use a simple mock LLM for now for PhaseAOrchestrator.
+    # For real extraction, this needs to be a capable LLM service.
+    llm_service_instance = GeminiLlmService()
+
+    utils = FinancialModelingUtils() # This is also defined/imported in your file
 
     tool_instance = FinancialPhaseATool(
-        mcp_document_parser_tool=mock_parser,
-        llm_service=mock_llm,
+        mcp_document_parser_tool=real_parser_tool_instance, # USE THE REAL PARSER
+        llm_service=llm_service_instance,
         financial_utils=utils,
         schema_definition_path=schema_file,
         prompts_path=prompts_file
     )
-    # You can set the tool's logger level for more verbose output during test
     if hasattr(tool_instance, '_logger_instance') and tool_instance._logger_instance:
          tool_instance._logger_instance.setLevel(logging.DEBUG)
 
 
     test_input_args = {
-        "security_id": "TESTSEC001",
-        "documents_root_path": str(dummy_doc_dir.resolve()), # Use the directory with the dummy PDF
-        "primary_document_name": "dummy_report.pdf",
-        "document_type_hint": "Test Prospectus",
+        "security_id": "MATSUYA_TEST_001",
+        "documents_root_path": str(pdf_to_test_path.parent.resolve()), # Directory containing the PDF
+        "primary_document_name": pdf_to_test_path.name, # Name of the PDF file
+        "document_type_hint": "Bond Prospectus", # Or whatever is appropriate
         "ocr_mode": "auto",
-        "ocr_lang": "eng", # Use eng for simpler mock testing
-        "max_pages_to_parse_per_doc": 10
+        "ocr_lang": "mon", # Mongolian
+        "max_pages_to_parse_per_doc": None # Process all pages from the primary doc
     }
 
-    test_logger.info(f"Invoking tool with args: {test_input_args}")
+    test_logger.info(f"Invoking FinancialPhaseATool (FULL WORKFLOW) with args: {test_input_args}")
+    result_json_str = ""
     try:
         result_json_str = await tool_instance._arun(**test_input_args)
-        test_logger.info("Tool execution finished.")
+        test_logger.info("FinancialPhaseATool (FULL WORKFLOW) execution finished.")
         
-        print("\n--- FinancialPhaseATool Result ---")
+        print("\n--- FinancialPhaseATool (FULL WORKFLOW) Result ---")
         try:
             result_data = json.loads(result_json_str)
-            print(json.dumps(result_data, indent=2, ensure_ascii=False))
+            # Save the full output to a file for inspection
+            output_file_path = project_root / "logs" / f"financial_phase_a_tool_output_{test_input_args['security_id']}.json"
+            with open(output_file_path, 'w', encoding='utf-8') as f:
+                json.dump(result_data, f, indent=2, ensure_ascii=False)
+            test_logger.info(f"Full output saved to: {output_file_path}")
+
+            # Print a summary
+            print(f"Status: {result_data.get('status')}")
+            print(f"Message: {result_data.get('message')}")
+            if result_data.get("parsed_documents_summary"):
+                print(f"Parsed Docs Summary: {result_data['parsed_documents_summary']}")
+            if result_data.get("quality_report"):
+                qr = result_data['quality_report']
+                print(f"Quality Report Overall Status: {qr.get('overall_status')}")
+                print(f"  Extraction Success Rate: {qr.get('data_extraction_summary', {}).get('overall_extraction_success_rate_percent', 'N/A')}%")
+                print(f"  Schema Valid: {qr.get('schema_validation_results', {}).get('is_valid', 'N/A')}")
+                print(f"  Sanity Checks Passed: {len([s for s in qr.get('sanity_check_results', []) if s.get('status') == 'PASSED'])} / {len(qr.get('sanity_check_results', []))}")
             
-            assert result_data.get("status") in ["SUCCESS", "COMPLETED_WITH_QC_WARNINGS", "COMPLETED_WITH_CRITICAL_QC_FAILURES"]
-            assert result_data.get("financial_model_phase_a") is not None
-            assert result_data.get("quality_report") is not None
-            test_logger.info("Basic assertions on output structure passed.")
+            # Basic assertions
+            assert result_data.get("status") in ["SUCCESS", "COMPLETED_WITH_QC_WARNINGS", "COMPLETED_WITH_CRITICAL_QC_FAILURES"], f"Unexpected status: {result_data.get('status')}"
+            assert result_data.get("financial_model_phase_a") is not None, "financial_model_phase_a is missing"
+            assert result_data.get("quality_report") is not None, "quality_report is missing"
+            test_logger.info("Basic assertions on FinancialPhaseATool output structure passed.")
 
         except json.JSONDecodeError:
-            test_logger.error("Failed to parse tool output as JSON.")
-            print("Raw output:", result_json_str)
+            test_logger.error("Failed to parse FinancialPhaseATool output as JSON.")
+            # print("Raw output:", result_json_str)
         except AssertionError as e_assert:
-            test_logger.error(f"Assertion failed on tool output: {e_assert}")
+            test_logger.error(f"Assertion failed on FinancialPhaseATool output: {e_assert}")
 
+    except ToolException as e_tool:
+        test_logger.error(f"ToolException during FinancialPhaseATool (FULL WORKFLOW) test: {e_tool}", exc_info=True)
+        # if result_json_str: print("Partial/Error output:", result_json_str)
     except Exception as e:
-        test_logger.error(f"Error during FinancialPhaseATool test run: {e}", exc_info=True)
+        test_logger.error(f"Error during FinancialPhaseATool (FULL WORKFLOW) test: {e}", exc_info=True)
+        # if result_json_str: print("Partial/Error output:", result_json_str)
     finally:
-        # Clean up dummy file/dir if created by this test
-        if dummy_pdf_path.exists():
-            try: dummy_pdf_path.unlink()
-            except OSError: pass # ignore
-        if dummy_doc_dir.exists():
-            try: 
-                # Check if dir is empty before removing, or just remove if it was solely for this test
-                if not any(dummy_doc_dir.iterdir()): # Remove if empty
-                    dummy_doc_dir.rmdir()
-            except OSError: pass # ignore
-        test_logger.info("FinancialPhaseATool standalone test finished.")
+        # Close the FinancialPhaseATool itself (which should close its underlying tools if they have close methods, like the parser)
+        if hasattr(tool_instance, 'close') and callable(tool_instance.close): # Check if tool_instance itself has close, though BaseTool does not
+             pass # FinancialPhaseATool itself does not have a close method, relies on constituent tools
+        
+        # Explicitly close the real_parser_tool_instance
+        if 'real_parser_tool_instance' in locals() and hasattr(real_parser_tool_instance, 'close'):
+            test_logger.info("Closing Real MCPDocumentParserTool instance used by FinancialPhaseATool...")
+            await real_parser_tool_instance.close()
+            test_logger.info("Real MCPDocumentParserTool instance closed.")
 
-
+        if dummy_doc_dir.exists(): # Clean up the directory if it was specifically for this test
+             try:
+                 # Only remove if it was the specific one created, be careful here
+                 if "test_docs_phase_a_full_tool" in str(dummy_doc_dir) or "fallback_dummy_report.pdf" in str(pdf_to_test_path):
+                     import shutil
+                     shutil.rmtree(dummy_doc_dir)
+                     test_logger.info(f"Cleaned up test directory: {dummy_doc_dir}")
+             except OSError as e_del:
+                 test_logger.warning(f"Could not delete test directory {dummy_doc_dir}: {e_del}")
+        test_logger.info("FinancialPhaseATool (FULL WORKFLOW) standalone test finished.")
+    
 if __name__ == "__main__":
-    # Ensure logs directory exists for orchestrator logs
+    # Ensure logs directory exists if any component tries to write there by default
     Path("logs").mkdir(parents=True, exist_ok=True)
+    
+    # To run this specific test:
+    # 1. Replace the main_test_financial_phase_a_tool() call with main_test_real_parser()
+    #    at the bottom of financial_phase_a_tool.py.
+    # 2. OR, if you want to keep both, modify the if __name__ == "__main__": block
+    #    to choose which test to run, e.g., based on a command-line argument.
+    # For now, assuming you replace it:
+    
+    # Comment out or remove the FinancialPhaseATool test call:
+    # asyncio.run(main_test_financial_phase_a_tool())
+    
+    # Add the call for the real parser test:
+    # asyncio.run(main_test_real_parser())
+
     asyncio.run(main_test_financial_phase_a_tool())

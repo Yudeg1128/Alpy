@@ -88,18 +88,26 @@ In **Agent Mode**, Alpy might show its internal thought process or actions befor
 ## ⚙️ Key Components
 
 *   **`start_alpy.sh`**: Main startup script for launching `llama-server` and the Alpy application.
-*   **`src/`**: Source code for the Alpy application.
-    *   **`main.py`**: Entry point of the Alpy application, handles CLI interaction and displays.
-    *   **`agent.py`**: Core logic for the `AlpyAgent`, including mode management, LangChain integration, tool handling (including MCP tools), and LLM communication.
-    *   **`config.py`**: Application configuration settings.
-    *   **`tools/`**: Directory containing implementations for core LangChain tools like `bash_tool.py` and `python_tool.py`, and base classes/clients for MCP tools.
-*   **`prompts/prompts.yaml`**: YAML file storing system prompts for the LLM.
-*   **`requirements.txt`**: Lists Python package dependencies.
-*   **`models/`**: Directory for storing GGUF-formatted LLM models (as referenced in `start_alpy.sh`).
-*   **`mcp_servers/`**: Directory containing implementations and configurations for various external tools exposed via the Model Context Protocol. Alpy communicates with these servers to extend its capabilities.
-*   **`MCP_GUIDE.md`**: Developer guide detailing how to implement LangChain tools that interface with external MCP servers.
-*   **`managed_fs_root/`**: Directory potentially used by or for testing MCP-based filesystem tools or managing their virtual file systems.
-*   **`test_filesystem_data/`**: Directory likely containing data for testing filesystem operations or specific MCP tools.
+*   **`src/`**: Source code for Alpy.
+    *   **`main.py`**: CLI entry point.
+    *   **`agent.py`**: Core agent logic, LangChain and tool integration.
+    *   **`config.py`**: Configuration.
+    *   **`financial_modeling/`**: Financial modeling orchestrators and utilities.
+    *   **`otcmn_interaction/`**: Handlers for OTCMN (Over-the-Counter Market Network) interactions.
+    *   **`tools/`**: Built-in and MCP tool implementations (e.g., `otcmn_scraper_tool.py`, `mcp_*_tool.py`, `download_file_tool.py`).
+*   **`prompts/`**: Prompt YAMLs for LLMs (`prompts.yaml`, `financial_modeling_prompts.yaml`).
+*   **`requirements.txt`**: Python dependencies.
+*   **`models/`**: GGUF-formatted LLM models.
+*   **`mcp_servers/`**: MCP server implementations (e.g., `bash_server.py`, `brave_server.py`, `document_parser_server.py`, etc.).
+*   **`fund/`**: Financial model instructions and schemas.
+*   **`logs/`**: Log files for various components and tests.
+*   **`otcmn_tool_test_output/`**: Output from OTCMN tool tests.
+*   **`PROJECT_STRUCTURE.md`**: Additional details on project organization.
+*   **`MCP_GUIDE.md`**: Guide for MCP tool/server development.
+*   **`FINANCIAL_MODEL_GUIDE.md`**: Guide for financial modeling features.
+*   **Other files**: `.gitignore`, `.python-version`, and various documentation and log files.
+
+This structure provides a clear separation between core application logic, tool/server implementations, configuration, prompts, logs, models, and documentation.
 
 ## 🤖 Tech Stack
 

@@ -1,6 +1,18 @@
 [
   {
-    "file_name": "prospectus.pdf",
-    "download_url_segment": "/path/to/doc.pdf"
+    "file_name": "Маягт, албан бичгүүд.pdf",
+    "download_href": "https://app-production-private.s3-ap-southeast-1.amazonaws.com/4376c178-906f-48d4-9d20-5bc2877c9f63?response-content-disposition=inline%3B%20filename%3D%22%25D0%259C%25D0%25B0%25D1%258F%25D0%25B3%25D1%2582%252C%2520%25D0%25B0%25D0%25BB%25D0%25B1%25D0%25B0%25D0%25BD%2520%25D0%25B1%25D0%25B8%25D1%2587%25D0%25B3%25D2%25AF%25D2%25AF%25D0%25B4.pdf%22&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAV2HEJUYUA7ZE5TK2%2F20240925%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Date=20240925T092255Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&X-Amz-Signature=1fc55ce6586db9a9ccce922c39799e43a745d1a8a41faa9f66f40578852cf513"
+  },
+  {
+    "file_name": "ҮГХА (10).pdf",
+    "download_href": "https://app-production-private.s3-ap-southeast-1.amazonaws.com/412bc2ed-ab01-4fbb-ab21-3df578680be4?response-content-disposition=inline%3B%20filename%3D%22%25D2%25AE%25D0%2593%25D0%25A5%25D0%2590%2520%252810%2529.pdf%22&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAV2HEJUYUA7ZE5TK2%2F20240925%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Date=20240925T092255Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&X-Amz-Signature=fcf991c5ba2b04b6b5d66fc345f7e0e440f6be5d9370096d039c6606db342be4"
+  },
+  {
+    "file_name": "Тайлан, дүгнэлтүүд.pdf",
+    "download_href": "https://app-production-private.s3-ap-southeast-1.amazonaws.com/3e35f6dd-bab1-4c32-8836-1b4833d255fd?response-content-disposition=inline%3B%20filename%3D%22%25D0%25A2%25D0%25B0%25D0%25B9%25D0%25BB%25D0%25B0%25D0%25BD%252C%2520%25D0%25B4%25D2%25AF%25D0%25B3%25D0%25BD%25D1%258D%25D0%25BB%25D1%2582%25D2%25AF%25D2%25AF%25D0%25B4.pdf%22&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAV2HEJUYUA7ZE5TK2%2F20240925%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Date=20240925T092255Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&X-Amz-Signature=c3185c9f0632ba87b6819fbfe32cab75f3ddb49f14989861708f72f4a4d30a99"
+  },
+  {
+    "file_name": "KAR_Prospectus.pdf",
+    "download_href": "https://app-production-private.s3-ap-southeast-1.amazonaws.com/f0ad2dd6-a3a7-4bb0-a825-fee84d50f47c?response-content-disposition=inline%3B%20filename%3D%22KAR_Prospectus.pdf%22&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAV2HEJUYUA7ZE5TK2%2F20240925%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Date=20240925T092255Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&X-Amz-Signature=5d6e5597e13cc758bf2efc387bce83be77422586091d03522b99eb2a98129998"
   }
 ]

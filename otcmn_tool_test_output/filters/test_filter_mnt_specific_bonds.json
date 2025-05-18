@@ -1,0 +1,14 @@
+[
+  {
+    "isin": "MN0LNDB68390",
+    "detail_url_path": "/securities/detail?id=4d04bb55-ec73-4665-b577-cc0ec9ac14f6",
+    "board_category": "secondary_board_B",
+    "original_metadata_summary": {
+      "Security": "B\n\nLNDB-TBC-3.2-12\n\nLend bond 3.2",
+      "Currency": "MNT",
+      "Interest Rate": "12.00%",
+      "Maturity Date": "2026-03-02",
+      "ISIN": "MN0LNDB68390"
+    }
+  }
+]

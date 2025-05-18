@@ -210,7 +210,7 @@ class MCPDocumentParserTool(BaseTool, BaseModel):
             self._logger_instance.info(f"{self.name} MCP session is ready.")
 
     def _process_mcp_response(self, response: CallToolResult, action_name: str) -> str:
-        self._logger_instance.debug(f"Raw MCP Response for '{action_name}': isError={response.isError}, Content: {response.content}")
+        # self._logger_instance.debug(f"Raw MCP Response for '{action_name}': isError={response.isError}, Content: {response.content}")
         if response.isError or not response.content or not isinstance(response.content[0], TextContent):
             err_msg = f"Error from MCP server for '{action_name}'."
             details = "Protocol error or unexpected response format."
