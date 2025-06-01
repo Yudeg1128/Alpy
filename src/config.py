@@ -1,6 +1,10 @@
 # src/config.py
 
 import os
+from pathlib import Path
+
+# --- General Configuration ---
+LOG_DIR = os.getenv('LOG_DIR', 'logs')
 
 # --- LLM Provider Configuration ---
 # Choose 'local' for llama.cpp server or 'openrouter' for OpenRouter.ai
@@ -38,7 +42,7 @@ OPENROUTER_SITE_URL = os.getenv("OPENROUTER_SITE_URL", "https://your-site-url.co
 OPENROUTER_APP_NAME = os.getenv("OPENROUTER_APP_NAME", "Alpy") # Recommended: Your app's name
 
 # --- Google API Configuration ---
-GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY", "AIzaSyBN8f_HMB291iGskfw2oePbF9-W_5kIZfo")
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY", "AIzaSyDhpY9Egn3NxbWQfi3Ttp4h2_N1ImPv1l4")
 AVAILABLE_GOOGLE_MODELS = [
     'gemini-2.0-flash-lite', 'gemini-2.5-flash-preview-04-17', 'gemini-2.5-pro-preview-05-06', 'gemini-2.0-flash',     
     'gemini-2.0-flash-preview-image-generation', 'gemini-1.5-flash',  
@@ -46,6 +50,22 @@ AVAILABLE_GOOGLE_MODELS = [
     'veo-2.0-generate-001', 'gemini-2.0-flash-live-001'
 ]
 ACTIVE_GOOGLE_MODEL = os.getenv("ACTIVE_GOOGLE_MODEL", AVAILABLE_GOOGLE_MODELS[0])
+
+# --- Gemini API Call Control (used by _InternalGeminiLLMService in PhaseAOrchestrator) ---
+# Values based on Gemini API documentation for free tier Flash models (e.g., gemini-2.0-flash)
+# RPM: Requests Per Minute
+# TPM: Tokens Per Minute (prompt + response)
+# RPD: Requests Per Day
+# Concurrent requests are also limited by the API (e.g., ~3 for free tier).
+
+GEMINI_CONCURRENT_REQUEST_LIMIT = int(os.getenv("GEMINI_CONCURRENT_REQUEST_LIMIT", 1))  # More conservative parallel limit
+GEMINI_RPM_LIMIT = int(os.getenv("GEMINI_RPM_LIMIT", 15))  # More conservative RPM to avoid rate limits
+GEMINI_TPM_LIMIT = int(os.getenv("GEMINI_TPM_LIMIT", 1000000)) # More conservative TPM buffer
+GEMINI_RPD_LIMIT = int(os.getenv("GEMINI_RPD_LIMIT", 1500))    # More conservative RPD buffer
+
+GEMINI_INTER_REQUEST_DELAY_SECONDS = float(os.getenv("GEMINI_INTER_REQUEST_DELAY_SECONDS", 2.0)) # Increased delay between requests
+GEMINI_MAX_RETRIES = int(os.getenv("GEMINI_MAX_RETRIES", 3)) # Reduced max retries
+GEMINI_INITIAL_RETRY_DELAY_SECONDS = float(os.getenv("GEMINI_INITIAL_RETRY_DELAY_SECONDS", 10.0)) # Increased initial retry delay
 
 # --- Generation Parameters (Common for both providers) ---
 LLM_TEMPERATURE = float(os.getenv('LLM_TEMPERATURE', 0.7))
@@ -59,8 +79,25 @@ AGENT_MEMORY_WINDOW_SIZE = int(os.getenv('AGENT_MEMORY_WINDOW_SIZE', 5)) # Numbe
 AGENT_MAX_ITERATIONS = int(os.getenv('AGENT_MAX_ITERATIONS', 20))       # Max steps for ReAct agent before stopping
 # (Add any agent-specific configs here later)
 
+# --- RAG Configuration ---
+RAG_EMBEDDING_MODEL_NAME = os.getenv("RAG_EMBEDDING_MODEL_NAME", "text-embedding-004") # Or a newer Gemini embedding model
+RAG_EMBEDDING_DIM = int(os.getenv("RAG_EMBEDDING_DIM", 768)) # Dimension for text-embedding-004
+RAG_VECTOR_STORE_BASE_PATH = os.getenv("RAG_VECTOR_STORE_BASE_PATH", str(Path(__file__).resolve().parent.parent / "data" / "vector_stores")) # Points to Alpy/data/vector_stores
+RAG_CHUNK_OVERLAP_PERCENTAGE = float(os.getenv("RAG_CHUNK_OVERLAP_PERCENTAGE", 0.1)) # 10% overlap
+RAG_MIN_CHUNK_SIZE_CHARS = int(os.getenv("RAG_MIN_CHUNK_SIZE_CHARS", 100)) # Minimum characters for a chunk to be considered useful
+RAG_FAIL_IF_NO_CHUNKS = os.getenv("RAG_FAIL_IF_NO_CHUNKS", "True").lower() == "true"
+RAG_CHUNK_STRATEGY = os.getenv("RAG_CHUNK_STRATEGY", "semantic_markdown") # Options: 'simple', 'semantic_markdown'
+# RAG_CHUNK_OVERLAP (character based) is now calculated dynamically in PhaseAOrchestrator using RAG_CHUNK_SIZE and RAG_CHUNK_OVERLAP_PERCENTAGE
+RAG_NUM_RETRIEVED_CHUNKS = int(os.getenv("RAG_NUM_RETRIEVED_CHUNKS", 5))
+RAG_CHUNK_SIZE = int(os.getenv("RAG_CHUNK_SIZE", 1000)) # Chars for text chunker
+OCR_ENABLED = os.getenv("OCR_ENABLED", "True").lower() == "true" # Whether to use OCR for PDFs
+RAG_MAX_CONTEXT_LENGTH = int(os.getenv("RAG_MAX_CONTEXT_LENGTH", 4000)) # Max characters for combined RAG context
+
+# Ensure the RAG_VECTOR_STORE_BASE_PATH directory exists
+Path(RAG_VECTOR_STORE_BASE_PATH).mkdir(parents=True, exist_ok=True)
+
 # --- Logging ---
-LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
+LOG_LEVEL = os.getenv("LOG_LEVEL", "DEBUG")
 LOG_FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 
 # --- Prompt Templates (Load from file) ---
@@ -98,4 +135,3 @@ elif LLM_PROVIDER == 'google':
 
 # dy@emipmongolia.com
 # MidasHYB#1
-

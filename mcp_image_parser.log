@@ -1,0 +1,11 @@
+[2025-06-01 23:43:42,014][INFO][MCPImageParser] Starting MCP Image Parser server
+[2025-06-01 23:43:42,029][DEBUG][MCPImageParser] Initializing server 'MCPImageParserServer'
+[2025-06-01 23:43:42,029][DEBUG][MCPImageParser] Registering handler for ListToolsRequest
+[2025-06-01 23:43:42,029][DEBUG][MCPImageParser] Registering handler for CallToolRequest
+[2025-06-01 23:43:42,029][DEBUG][MCPImageParser] Registering handler for ListResourcesRequest
+[2025-06-01 23:43:42,029][DEBUG][MCPImageParser] Registering handler for ReadResourceRequest
+[2025-06-01 23:43:42,029][DEBUG][MCPImageParser] Registering handler for PromptListRequest
+[2025-06-01 23:43:42,029][DEBUG][MCPImageParser] Registering handler for GetPromptRequest
+[2025-06-01 23:43:42,029][DEBUG][MCPImageParser] Registering handler for ListResourceTemplatesRequest
+[2025-06-01 23:43:42,037][INFO][MCPImageParser] [BOOT] MCP server main starting; stdio encoding set to utf-8
+[2025-06-01 23:43:42,037][DEBUG][MCPImageParser] Using selector: EpollSelector

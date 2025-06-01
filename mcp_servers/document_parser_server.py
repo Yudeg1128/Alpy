@@ -16,7 +16,7 @@ from pydantic import BaseModel, Field
 from mcp.server.fastmcp import FastMCP
 
 # --- Configuration ---
-logging.basicConfig(level=logging.INFO, format='[%(asctime)s][%(levelname)s][MCPDocumentParserServer] %(message)s')
+logging.basicConfig(level=logging.DEBUG, format='[%(asctime)s][%(levelname)s][MCPDocumentParserServer] %(message)s')
 logger = logging.getLogger(__name__)
 
 mcp_app = FastMCP(
@@ -91,155 +91,146 @@ class DocumentParseOutput(BaseModel):
 # --- MCP Tool Implementation ---
 @mcp_app.tool(name="parse_document")
 async def parse_document_tool(input_data: DocumentParseInput) -> DocumentParseOutput:
-    doc_path = Path(input_data.document_path)
-    if not doc_path.exists() or not doc_path.is_file():
-        return DocumentParseOutput(
-            status="error",
-            message=f"Document not found or is not a file: {doc_path}",
-            tesseract_available=TESSERACT_INITIALLY_OK,
-            tesseract_initial_check_message=TESSERACT_INIT_MSG,
-            processed_pages_count=0
-        )
+    logger.debug(f"Received parse_document request for {input_data.document_path}")
+    file_path = Path(input_data.document_path)
+    if not file_path.is_file():
+        logger.error(f"Document not found: {input_data.document_path}")
+        return DocumentParseOutput(status="error", message=f"Document not found: {input_data.document_path}")
 
-    output_pages_content: List[PageContent] = []
-    output_tables: List[TableData] = []
-    output_images_ocr: List[ImageData] = []
-    
-    current_run_tesseract_ok = TESSERACT_INITIALLY_OK
-
-    fitz_doc = None
-    pdfplumber_doc = None
-    actual_total_pages = 0
+    status = "error"
+    message = "Unknown error during parsing."
+    total_pages = 0
     processed_pages_count = 0
+    pages_content: List[PageContent] = []
+    all_tables: List[TableData] = []
+    all_images_ocr_results: List[ImageData] = []
+
+    tesseract_available_this_run = TESSERACT_INITIALLY_OK
+    tesseract_initial_check_message_this_run = TESSERACT_INIT_MSG
+
+    fitz_doc: Optional[fitz.Document] = None # Define fitz_doc here for broader scope
 
     try:
-        fitz_doc = fitz.open(doc_path)
-        actual_total_pages = len(fitz_doc)
-        try:
-            pdfplumber_doc = pdfplumber.open(doc_path)
-        except Exception as e_plumber_open:
-            logger.warning(f"Could not open document with pdfplumber: {e_plumber_open}. Table extraction will be skipped.")
+        logger.debug(f"Attempting to open PDF with pdfplumber and fitz: {file_path}")
+        fitz_doc = fitz.open(file_path) # Open with fitz once
+        
+        with pdfplumber.open(file_path) as pdf_plumber_doc:
+            total_pages = len(pdf_plumber_doc.pages)
+            logger.debug(f"Total pages in document: {total_pages}")
+
+            pages_to_process_plumber = pdf_plumber_doc.pages
+            if input_data.max_pages_to_process_for_testing is not None:
+                pages_to_process_plumber = pdf_plumber_doc.pages[:input_data.max_pages_to_process_for_testing]
+                logger.debug(f"Processing limited to {len(pages_to_process_plumber)} pages for testing.")
+
+            for page_index, plumber_page in enumerate(pages_to_process_plumber):
+                processed_pages_count += 1
+                logger.debug(f"Processing page {plumber_page.page_number}")
+                page_content = PageContent(page_number=plumber_page.page_number)
+                
+                fitz_page = fitz_doc.load_page(plumber_page.page_number - 1) # fitz is 0-indexed
+
+                # PyMuPDF text extraction
+                try:
+                    page_content.text_pymupdf = fitz_page.get_text()
+                    logger.debug(f"PyMuPDF text extracted for page {plumber_page.page_number}")
+                except Exception as e:
+                    logger.warning(f"PyMuPDF text extraction failed for page {plumber_page.page_number}: {e}")
+                
+                # Table extraction with pdfplumber
+                logger.debug(f"Extracting tables for page {plumber_page.page_number}")
+                page_tables = plumber_page.extract_tables()
+                for table_idx, table_data in enumerate(page_tables):
+                    all_tables.append(TableData(page_number=plumber_page.page_number, table_index_on_page=table_idx, rows=table_data))
+                logger.debug(f"Extracted {len(page_tables)} tables from page {plumber_page.page_number}")
+
+                # OCR processing
+                if input_data.ocr_mode != "none" and tesseract_available_this_run:
+                    logger.debug(f"Starting OCR for page {plumber_page.page_number} with mode: {input_data.ocr_mode}")
+                    if input_data.ocr_mode == "force_full_pages":
+                        logger.debug(f"Performing full page OCR for page {plumber_page.page_number}")
+                        try:
+                            pix = fitz_page.get_pixmap(dpi=input_data.dpi_for_full_page_ocr)
+                            img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
+                            page_content.page_full_ocr_text = pytesseract.image_to_string(img, lang=input_data.ocr_lang)
+                            logger.debug(f"Full page OCR completed for page {plumber_page.page_number}")
+                        except Exception as e:
+                            page_content.page_full_ocr_error = str(e)
+                            logger.error(f"Full page OCR failed for page {plumber_page.page_number}: {e}")
+                    elif input_data.ocr_mode == "force_images" or \
+                        (input_data.ocr_mode == "auto" and (page_content.text_pymupdf is None or len(page_content.text_pymupdf) < input_data.min_chars_for_text_page_auto_ocr)):
+                        logger.debug(f"Performing image OCR for page {plumber_page.page_number} using fitz image list")
+                        
+                        # Use fitz to get image list
+                        image_list_fitz = fitz_page.get_images(full=True)
+                        logger.debug(f"Found {len(image_list_fitz)} images on page {plumber_page.page_number} via fitz.")
+
+                        for img_idx, img_info_fitz in enumerate(image_list_fitz):
+                            img_xref = img_info_fitz[0] # xref is the first item
+                            logger.debug(f"Processing image xref {img_xref} (index {img_idx}) on page {plumber_page.page_number}")
+                            try:
+                                base_image = fitz_doc.extract_image(img_xref)
+                                img_bytes = base_image['image']
+                                img_ext = base_image['ext']
+                                img = Image.open(io.BytesIO(img_bytes))
+
+                                ocr_text = pytesseract.image_to_string(img, lang=input_data.ocr_lang)
+                                
+                                # Get image coordinates (bbox) from fitz if possible, otherwise None
+                                # Note: fitz_page.get_image_bbox(img_info_fitz) might be an option, or use rect from draw_rect for more precision if needed.
+                                # For now, we'll leave coordinates as None as direct bbox from get_images is not straightforward like pdfplumber's page.images
+                                
+                                all_images_ocr_results.append(ImageData(
+                                    page_number=plumber_page.page_number,
+                                    image_index_on_page=img_idx, # This is now fitz's image index for the page
+                                    ocr_text=ocr_text,
+                                    ocr_lang_used=input_data.ocr_lang,
+                                    image_extension=img_ext,
+                                    # image_coordinates= # TODO: Explore getting bbox from fitz image info if necessary
+                                ))
+                                logger.debug(f"Image OCR completed for image xref {img_xref} on page {plumber_page.page_number}")
+                            except Exception as e:
+                                all_images_ocr_results.append(ImageData(page_number=plumber_page.page_number, image_index_on_page=img_idx, ocr_error=str(e)))
+                                logger.warning(f"Image OCR failed for image xref {img_xref} on page {plumber_page.page_number}: {e}")
+                
+                pages_content.append(page_content)
+
+        status = "success"
+        message = "Document parsed successfully."
+        logger.info(f"Document parsing completed successfully for {file_path}.")
+
+    except fitz.fitz.FitzError as fe:
+        status = "error"
+        message = f"Fitz (PyMuPDF) error: {fe}"
+        logger.error(f"Fitz (PyMuPDF) error processing {file_path}: {fe}", exc_info=True)
+    except pdfplumber.exceptions.PDFSyntaxError as pe:
+        status = "error"
+        message = f"PDFPlumber syntax error: {pe}"
+        logger.error(f"PDFPlumber syntax error processing {file_path}: {pe}", exc_info=True)
     except Exception as e:
-        logger.error(f"Error opening document {doc_path}: {e}", exc_info=True)
-        if fitz_doc: fitz_doc.close()
-        if pdfplumber_doc: pdfplumber_doc.close()
-        return DocumentParseOutput(
-            status="error",
-            message=f"Failed to open document: {str(e)}",
-            tesseract_available=current_run_tesseract_ok,
-            tesseract_initial_check_message=TESSERACT_INIT_MSG,
-            total_pages=actual_total_pages,
-            processed_pages_count=processed_pages_count
-        )
-
-    pages_to_iterate = actual_total_pages
-    if input_data.max_pages_to_process_for_testing is not None and input_data.max_pages_to_process_for_testing > 0:
-        pages_to_iterate = min(actual_total_pages, input_data.max_pages_to_process_for_testing)
-        logger.info(f"Limiting processing to first {pages_to_iterate} pages of {actual_total_pages} total (due to max_pages_to_process_for_testing).")
-
-
-    for i in range(pages_to_iterate):
-        page_num = i + 1
-        processed_pages_count += 1
-        fitz_page = fitz_doc.load_page(i)
-        
-        page_text_pymupdf = fitz_page.get_text("text")
-        current_page_obj = PageContent(page_number=page_num, text_pymupdf=page_text_pymupdf)
-
-        # Table Extraction
-        if pdfplumber_doc and i < len(pdfplumber_doc.pages):
-            try:
-                plumber_page = pdfplumber_doc.pages[i]
-                extracted_tables_on_page = plumber_page.extract_tables()
-                if extracted_tables_on_page:
-                    for table_idx, table_data_rows in enumerate(extracted_tables_on_page):
-                        cleaned_rows = []
-                        if table_data_rows:
-                            for row in table_data_rows:
-                                if row: 
-                                    cleaned_row = [str(cell) if cell is not None else None for cell in row]
-                                    cleaned_rows.append(cleaned_row)
-                                else: 
-                                    cleaned_rows.append([]) 
-                        output_tables.append(TableData(
-                            page_number=page_num, table_index_on_page=table_idx,
-                            rows=cleaned_rows, extraction_method="pdfplumber"
-                        ))
-            except Exception as e_table:
-                logger.warning(f"Error extracting tables from page {page_num} with pdfplumber: {e_table}")
-                output_tables.append(TableData(
-                    page_number=page_num, table_index_on_page=-1, rows=[],
-                    extraction_method="pdfplumber", notes=f"Extraction failed: {str(e_table)}"
-                ))
-        
-        # OCR Logic
-        if not current_run_tesseract_ok:
-            pass 
-        elif input_data.ocr_mode == "force_full_pages":
-            try:
-                pix = fitz_page.get_pixmap(dpi=input_data.dpi_for_full_page_ocr)
-                img_bytes = pix.tobytes("png")
-                pil_image = Image.open(io.BytesIO(img_bytes))
-                current_page_obj.page_full_ocr_text = pytesseract.image_to_string(pil_image, lang=input_data.ocr_lang).strip()
-            except pytesseract.TesseractNotFoundError:
-                current_run_tesseract_ok = False; current_page_obj.page_full_ocr_error = TESSERACT_INIT_MSG
-            except Exception as e_ocr_full:
-                current_page_obj.page_full_ocr_error = f"Full page OCR error: {str(e_ocr_full)}"
-                logger.warning(f"Error OCR'ing full page {page_num}: {e_ocr_full}")
-        
-        elif input_data.ocr_mode in ["auto", "force_images"]:
-            perform_ocr_on_images = False
-            if input_data.ocr_mode == "force_images":
-                perform_ocr_on_images = True
-            elif input_data.ocr_mode == "auto":
-                if len(page_text_pymupdf or "") < input_data.min_chars_for_text_page_auto_ocr and fitz_page.get_images(full=True):
-                    perform_ocr_on_images = True
-            
-            if perform_ocr_on_images:
-                page_images_info = fitz_page.get_images(full=True)
-                for img_idx, img_info in enumerate(page_images_info):
-                    if not current_run_tesseract_ok: break
-                    xref = img_info[0]
-                    try:
-                        base_image = fitz_doc.extract_image(xref)
-                        image_bytes = base_image["image"]
-                        pil_image = Image.open(io.BytesIO(image_bytes))
-                        ocr_text_result = pytesseract.image_to_string(pil_image, lang=input_data.ocr_lang).strip()
-                        output_images_ocr.append(ImageData(
-                            page_number=page_num, image_index_on_page=img_idx,
-                            ocr_text=ocr_text_result, ocr_lang_used=input_data.ocr_lang
-                        ))
-                    except pytesseract.TesseractNotFoundError:
-                        current_run_tesseract_ok = False
-                        output_images_ocr.append(ImageData(
-                            page_number=page_num, image_index_on_page=img_idx,
-                            ocr_error=TESSERACT_INIT_MSG, ocr_lang_used=input_data.ocr_lang
-                        ))
-                    except Exception as e_ocr_img:
-                        ocr_error_msg = f"Image OCR error: {str(e_ocr_img)}"
-                        logger.warning(f"Error OCR'ing image {img_idx} on page {page_num}: {e_ocr_img}")
-                        output_images_ocr.append(ImageData(
-                            page_number=page_num, image_index_on_page=img_idx,
-                            ocr_error=ocr_error_msg, ocr_lang_used=input_data.ocr_lang
-                        ))
-        output_pages_content.append(current_page_obj)
-
-    if fitz_doc: fitz_doc.close()
-    if pdfplumber_doc: pdfplumber_doc.close()
-
+        status = "error"
+        message = f"An unexpected error occurred: {e}"
+        logger.error(f"Unexpected error processing {file_path}: {e}", exc_info=True)
+    finally:
+        if fitz_doc:
+            fitz_doc.close()
+            logger.debug(f"Closed fitz document for {file_path}")
+    
     return DocumentParseOutput(
-        status="success",
-        message="Document parsed.",
-        file_name=doc_path.name,
-        total_pages=actual_total_pages,
+        status=status,
+        message=message,
+        file_name=file_path.name,
+        total_pages=total_pages,
         processed_pages_count=processed_pages_count,
-        pages_content=output_pages_content,
-        all_tables=output_tables,
-        all_images_ocr_results=output_images_ocr,
-        tesseract_available=current_run_tesseract_ok,
-        tesseract_initial_check_message=TESSERACT_INIT_MSG
+        pages_content=pages_content,
+        all_tables=all_tables,
+        all_images_ocr_results=all_images_ocr_results,
+        tesseract_available=tesseract_available_this_run,
+        tesseract_initial_check_message=tesseract_initial_check_message_this_run
     )
 
+
+@mcp_app.tool("main_test_interactive")
 async def main_test_interactive():
     print("--- Document Parser Server Standalone Interactive Test ---")
     print(f"Initial Tesseract Check: {TESSERACT_INIT_MSG} (Status: {'OK' if TESSERACT_INITIALLY_OK else 'Problem'})")
@@ -315,4 +306,5 @@ if __name__ == "__main__":
         asyncio.run(main_test_interactive())
     else:
         logger.info(f"Starting MCPDocumentParserServer. Initial Tesseract Check: {TESSERACT_INIT_MSG} (Status: {'OK' if TESSERACT_INITIALLY_OK else 'Problem'})")
-        mcp_app.run()
+        logger.info("MCPDocumentParserServer script is starting up and configuring FastMCP app.")
+mcp_app.run()

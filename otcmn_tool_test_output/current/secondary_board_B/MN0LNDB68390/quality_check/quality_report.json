@@ -1,0 +1,29 @@
+{
+    "overall_status": "FAILED",
+    "phase_a_data_completeness_score": null,
+    "errors": [
+        {
+            "check_type": "SchemaValidation",
+            "item_path": "",
+            "message": "'model_metadata' is a required property",
+            "severity": "ERROR",
+            "details": {
+                "validator": "required",
+                "validator_value": [
+                    "model_metadata",
+                    "financial_statements_core"
+                ],
+                "instance_snippet": "{'line_items': []}"
+            }
+        }
+    ],
+    "warnings": [
+        {
+            "check_type": "FinancialSanityCheck",
+            "item_path": null,
+            "message": "No historical periods in model, skipping period-based sanity checks.",
+            "severity": "WARNING",
+            "details": null
+        }
+    ]
+}

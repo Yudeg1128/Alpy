@@ -2,583 +2,896 @@ import asyncio
 import json
 import logging
 import os
-import shutil # For shutil.which for server paths if needed, not directly used by tool logic here
-import sys
+import shutil
 from pathlib import Path
-from typing import Any, Dict, List, Literal, Optional, Type
+from typing import Any, Dict, List, Optional, Type, Union, Literal # Union, Literal added for new models
+from uuid import uuid4 # Added for new models
 
+import google.generativeai as genai
 from langchain_core.tools import BaseTool, ToolException
-from langchain_core.callbacks.manager import AsyncCallbackManagerForToolRun # Optional for LangChain integration
-from pydantic import BaseModel, Field, model_validator, PrivateAttr
+from langchain_core.callbacks.manager import AsyncCallbackManagerForToolRun
+from pydantic import BaseModel, Field, model_validator, PrivateAttr, RootModel, ValidationError # RootModel added for new models, ValidationError for _arun
 
-# --- Local Module Imports ---
-# Assuming these are in src/financial_modeling/ and src/tools/ relative to Alpy root
-# and Alpy's src directory is in PYTHONPATH
+# Original relative imports
+from ..tools.mcp_document_parser_tool import MCPDocumentParserTool, MCPDocumentParserToolInput
+from ..financial_modeling.phase_a_orchestrator import PhaseAOrchestrator
+from ..financial_modeling.utils import FinancialModelingUtils
+from ..financial_modeling.mock_quality_checker import QualityChecker, QualityReport
+# The following two were in original but orchestrator handles them, so not strictly needed by refactored tool actions:
+# from ..rag.embedding_service import GeminiEmbeddingService
+# from ..rag.vector_store_manager import FaissVectorStoreManager
 
-# Placeholder for MCPDocumentParserTool - in a real setup, this would be the actual tool
-# For this file, we'll define a mock version for standalone testing.
-from ..tools.mcp_document_parser_tool import MCPDocumentParserTool # Example of relative import if structured
+from .. import config as AlpyConfig # For proper relative import when run with -m
+import inspect
 
-class MockMCPDocumentParserTool(BaseTool, BaseModel): # For testing this tool standalone
-    name: str = "MockMCPDocumentParserTool"
-    description: str = "Mock document parser"
-    args_schema: Type[BaseModel] = None # type: ignore
-
-    async def _arun(self, document_path: str, **kwargs: Any) -> str:
-        logger.info(f"[MockMCPDocumentParserTool] Parsing: {document_path}")
-        # Simulate finding some text and a table
-        return json.dumps({
-            "status": "success",
-            "file_name": Path(document_path).name,
-            "total_pages": 5,
-            "processed_pages_count": 5,
-            "pages_content": [
-                {"page_number": 1, "text_pymupdf": f"Cover page for {Path(document_path).name}. Company: TestCo {kwargs.get('security_id', '')}", "page_full_ocr_text": None},
-                {"page_number": 2, "text_pymupdf": "Financial Statements Section. Revenue FY2023: 1000 MNT. COGS FY2023: 600 MNT."},
-                {"page_number": 3, "text_pymupdf": "Balance Sheet data... Cash: 50, AR: 150"},
-                {"page_number": 4, "text_pymupdf": "More data... FY2022 Revenue: 800 MNT"},
-                {"page_number": 5, "text_pymupdf": "Notes section."}
-            ],
-            "all_tables": [{
-                "page_number": 2, "table_index_on_page": 0, 
-                "rows": [["Header1", "Header2"], ["Data1A", "Data1B"], ["Data2A", "Data2B"]],
-                "extraction_method": "mock_pdfplumber"
-            }],
-            "all_images_ocr_results": [],
-            "tesseract_available": True,
-            "tesseract_initial_check_message": "Mock Tesseract OK"
-        })
-
-from ..financial_modeling.phase_a_orchestrator import PhaseAOrchestrator, BaseLlmService, FinancialModelingUtils, GeminiLlmService
-from ..financial_modeling.quality_checker import QualityChecker, QualityReport
-
-# Module logger
 logger = logging.getLogger(__name__)
-# BasicConfig if no handlers on root logger (typical for library code)
-if not logging.getLogger().hasHandlers():
-    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - [%(threadName)s] - %(message)s')
+if not logger.hasHandlers():
+    logging.basicConfig(level=AlpyConfig.LOG_LEVEL, format=AlpyConfig.LOG_FORMAT)
+    logger.setLevel(AlpyConfig.LOG_LEVEL)
 
+# --- Path Configuration (Derived Internally) --- #
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 
-# --- Pydantic Schema for LangChain Tool Input ---
-class FinancialPhaseAToolInput(BaseModel):
-    security_id: str = Field(description="A unique identifier for the target company/security (e.g., ticker, CUSIP, internal ID). Used for context and output naming.")
-    documents_root_path: str = Field(description="Absolute path to the directory containing financial documents specifically for the given security_id.")
-    primary_document_name: Optional[str] = Field(default=None, description="Optional: Name of the primary document (e.g., 'prospectus.pdf', 'latest_10K.pdf') within documents_root_path to prioritize or focus on.")
-    document_type_hint: Optional[str] = Field(default="Financial Report/Prospectus", description="A hint about the type of documents being processed (e.g., '10-K', 'Bond Prospectus').")
+FINANCIAL_MODEL_SCHEMA_PATH = PROJECT_ROOT / "src" / "financial_modeling" / "mock_financial_schema.json"
+FINANCIAL_MODEL_PROMPTS_PATH = PROJECT_ROOT / "prompts" / "financial_modeling_prompts.yaml"
+DEFAULT_SECURITIES_DOCS_BASE_PATH = PROJECT_ROOT / "otcmn_tool_test_output" / "current"
+
+from enum import Enum
+
+class FinancialPhaseAActionType(str, Enum):
+    PARSE_DOCUMENTS = "parse_documents"
+    EXTRACT_DATA = "extract_data"
+    RUN_QUALITY_CHECK = "run_quality_check"
+
+# --- Action-Specific Input Schemas --- #
+
+class InnerFinancialParseDocsAction(BaseModel):
+    """Input schema for the parse_documents action.
     
-    # Parameters for MCPDocumentParserTool
-    ocr_mode: Literal["auto", "force_images", "force_full_pages", "none"] = Field(default="auto", description="OCR mode for document parsing.")
-    ocr_lang: str = Field(default="mon", description="Language for OCR (e.g., 'mon', 'eng').")
-    max_pages_to_parse_per_doc: Optional[int] = Field(default=None, description="Optional: Limit the number of pages parsed per document (for testing/efficiency).")
-
-# --- Main Tool Class ---
-class FinancialPhaseATool(BaseTool, BaseModel):
-    name: str = "GenerateFinancialModelPhaseA"
-    description: str = (
-        "Initiates Phase A (Historical Data Extraction) for financial model generation. "
-        "It parses specified documents for a given security, uses an LLM to extract historical financial data "
-        "based on a predefined schema, and performs quality checks on the extracted data. "
-        "The tool requires a 'security_id' and a 'documents_root_path' containing relevant financial PDFs for that security. "
-        "Returns a JSON string containing the populated Phase A model data and a quality report."
+    This action converts PDF/image financial documents into structured text using OCR when needed.
+    Documents should be in the security's documents folder: <securities_docs_base_path>/<security_id>/documents/
+    """
+    action: Literal["parse_documents"] = Field(
+        default="parse_documents",
+        description="Must be 'parse_documents' to parse financial documents for a security."
     )
-    args_schema: Type[BaseModel] = FinancialPhaseAToolInput
-    return_direct: bool = False # Output goes back to the LLM/agent for further processing
+    security_id: str = Field(
+        description="Unique identifier for the target company/security. Used to locate documents in <base_path>/<security_id>/documents/"
+    )
+    primary_document_name: Optional[str] = Field(
+        default=None,
+        description="Optional: Name of the primary financial document (e.g., 'annual_report.pdf') within the security's document folder."
+    )
+    ocr_mode: str = Field(
+        default="auto",
+        description="OCR mode: 'auto' (detect if needed), 'force' (always use OCR), or 'off' (never use OCR)."
+    )
+    ocr_lang: str = Field(
+        default="eng",
+        description="OCR language(s). Use 'eng' for English, 'mon' for Mongolian, or 'eng+mon' for both."
+    )
+    max_pages_to_parse_per_doc: Optional[int] = Field(
+        default=None,
+        description="Optional: Maximum number of pages to parse per document. None means parse all pages."
+    )
+    securities_docs_base_path_override: Optional[str] = Field(
+        default=None,
+        description="Optional: Override the default base path (<project_root>/otcmn_tool_test_output/current/secondary_board_B) for locating security documents."
+    )
 
-    # Dependencies to be injected or configured
-    # For real use, these would be actual tool/service instances
-    mcp_document_parser_tool: Any # Should be an instance of MCPDocumentParserTool
-    llm_service: BaseLlmService
-    financial_utils: FinancialModelingUtils
-
-    # Configuration paths
-    schema_definition_path: Path
-    prompts_path: Path
+class InnerFinancialExtractDataAction(BaseModel):
+    """Input schema for the extract_data action.
     
-    # Internal logger
-    _logger_instance: logging.Logger = PrivateAttr(default=None)
+    This action extracts financial data (line items, values, periods) from previously parsed documents.
+    Requires output from the parse_documents action as input.
+    """
+    action: Literal["extract_data"] = Field(
+        default="extract_data",
+        description="Must be 'extract_data' to extract financial data from parsed documents."
+    )
+    security_id: str = Field(
+        description="Unique identifier for the target company/security. Used to store results in <base_path>/<security_id>/extracted/"
+    )
+    parsed_documents_json: str = Field(
+        description="JSON string containing the parsed document contents from 'parse_documents'. Must include text content and page metadata."
+    )
+    vector_store_root_path_override: Optional[str] = Field(
+        default=None,
+        description="Optional: Override the default root path for vector stores used in semantic search during extraction."
+    )
+
+class InnerFinancialQualityCheckAction(BaseModel):
+    """Input schema for the run_quality_check action.
+    
+    This action validates extracted financial data against the schema and calculates completeness scores.
+    Requires output from the extract_data action as input.
+    """
+    action: Literal["run_quality_check"] = Field(
+        default="run_quality_check",
+        description="Must be 'run_quality_check' to validate extracted data and generate quality report."
+    )
+    security_id: str = Field(
+        description="Unique identifier for the target company/security. Used to store report in <base_path>/<security_id>/quality_check/"
+    )
+    extraction_result_json: str = Field(
+        description="JSON string containing the extracted financial data from 'extract_data'. Must include line items with values and periods."
+    )
+
+class FinancialPhaseAActionInput(RootModel):
+    root: Union[InnerFinancialParseDocsAction, InnerFinancialExtractDataAction, InnerFinancialQualityCheckAction] = Field(..., discriminator='action')
+
+# --- Main Tool Definition --- #
+
+class FinancialPhaseAToolError(ToolException):
+    """Custom exception for the FinancialPhaseATool."""
+    pass
+
+class FinancialPhaseATool(BaseTool, BaseModel):
+    # Custom input parsing to handle RootModel with discriminated union
+    def _parse_input(
+        self,
+        tool_input: Union[str, Dict],
+        tool_call_id: Optional[str] = None, # Langchain 0.1.x signature
+    ) -> Dict: # Returns a dictionary representation of the validated RootModel
+        if not isinstance(tool_input, dict):
+            raise ToolException(
+                f"Invalid input type {type(tool_input)}. Expected a dictionary for FinancialPhaseATool."
+            )
+        try:
+            # Validate the input using the tool's args_schema (FinancialPhaseAActionInput).
+            validated_model = self.args_schema.model_validate(tool_input)
+            # Return the dictionary representation of the inner model from the RootModel.
+            # This ensures _arun receives {'action': '...', 'security_id': '...'} as kwargs.
+            if hasattr(validated_model, 'root') and isinstance(validated_model.root, BaseModel):
+                return validated_model.root.model_dump()
+            else:
+                # This should not happen if FinancialPhaseAActionInput is correctly defined as a RootModel
+                # containing one of the Inner...Action models in its 'root'.
+                raise ToolException(
+                    f"Validated model of type {type(validated_model)} does not have a 'root' attribute "
+                    f"that is a Pydantic BaseModel, or the RootModel structure is unexpected."
+                )
+        except Exception as e: # Catches Pydantic ValidationError and other errors
+            raise ToolException(f"Tool input validation error: {e}. Input was: {tool_input}")
+
+    name: str = Field(
+        default="financial_phase_a",
+        description="Tool for financial document parsing, data extraction, and quality checking"
+    )
+    
+    description: str = Field(
+        default=(
+            "Tool for processing financial documents through three sequential phases. Each action must be called with a root object containing an 'action' field that determines the action type and its specific input schema.\n\n"
+            "Directory Structure:\n"
+            "<base_path>/                # /otcmn_tool_test_output/current\n"
+            "    <board_folder>/         # primary_board_[A,B,C] or secondary_board_[A,B,C]\n"
+            "        <security_id>/      # e.g. MN0LNDB68390\n"
+            "            documents/      # Input PDFs\n"
+            "            parsed_data/    # Phase 1 output\n"
+            "            extracted_data/ # Phase 2 output\n"
+            "            quality_check/  # Phase 3 output\n\n"
+            "Actions and Examples:\n\n"
+            "1. parse_documents - Convert PDFs to structured text:\n"
+            "   Input Example:\n"
+            "   {\n"
+            "     \"action\": \"parse_documents\",\n"
+            "     \"security_id\": \"MN0LNDB68390\",\n"
+            "     \"primary_document_name\": \"annual_report_2023.pdf\" // optional\n"
+            "   }\n"
+            "   Output: Saves parsed_financial_documents.json to <board>/<security_id>/parsed_data/\n\n"
+            "2. extract_data - Extract financial line items:\n"
+            "   Input Example:\n"
+            "   {\n"
+            "     \"action\": \"extract_data\",\n"
+            "     \"security_id\": \"MN0LNDB68390\",\n"
+            "     \"parsed_documents_json\": \"[{\\\"text\\\": \\\"...\\\"}]\"\n"
+            "   }\n"
+            "   Output: Saves extraction_result.json to <board>/<security_id>/extracted_data/\n\n"
+            "3. run_quality_check - Validate extracted data:\n"
+            "   Input Example:\n"
+            "   {\n"
+            "     \"action\": \"run_quality_check\",\n"
+            "     \"security_id\": \"MN0LNDB68390\",\n"
+            "     \"extraction_result_json\": \"{\\\"line_items\\\": [...]}\"\n"
+            "   }\n"
+            "   Output: Saves quality_report.json to <board>/<security_id>/quality_check/\n"
+            "   - Report includes completeness score and validation errors\n\n"
+            "Each action requires a security_id to locate its input/output files. "
+            "Tool will search all board folders under <base_path> for the security_id."
+        )
+    )
+    args_schema: Type[BaseModel] = FinancialPhaseAActionInput
+    return_direct: bool = False
+
+    # Core utilities and tools, with default factories or values
+    financial_utils: FinancialModelingUtils = Field(default_factory=FinancialModelingUtils)
+    mcp_document_parser_tool: MCPDocumentParserTool = Field(default_factory=MCPDocumentParserTool)
+
+    # Configuration paths, with default values from global constants
+    schema_definition_path: Path = Field(default=FINANCIAL_MODEL_SCHEMA_PATH)
+    prompts_path: Path = Field(default=FINANCIAL_MODEL_PROMPTS_PATH)
+    securities_data_base_path: Path = Field(default=DEFAULT_SECURITIES_DOCS_BASE_PATH)
 
     class Config:
-        arbitrary_types_allowed = True # For Path and tool instances
+        arbitrary_types_allowed = True
 
-    @model_validator(mode='after')
-    def _tool_post_init_validator(self) -> 'FinancialPhaseATool':
-        if self._logger_instance is None:
-            self._logger_instance = logger.getChild(f"{self.name}.{id(self)}")
-            # Avoid adding handlers if root logger already has them or if this logger already does
-            if not self._logger_instance.handlers and not logging.getLogger().hasHandlers() and not logger.handlers:
-                _handler = logging.StreamHandler(sys.stdout)
-                _formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - [%(threadName)s] - %(message)s')
-                _handler.setFormatter(_formatter)
-                self._logger_instance.addHandler(_handler)
-                self._logger_instance.propagate = False # Don't propagate to root if we add our own handler
-                self._logger_instance.setLevel(logging.INFO) # Default for this tool's logger
+    def __init__(self, **data: Any):
+        super().__init__(**data)
 
-        # Resolve paths
-        self.schema_definition_path = self.schema_definition_path.resolve()
-        self.prompts_path = self.prompts_path.resolve()
+    async def close(self):
+        """Closes any resources held by the tool, like the MCPDocumentParserTool."""
+        logger.info("Closing FinancialPhaseATool and its resources...")
+        if hasattr(self, 'mcp_document_parser_tool') and self.mcp_document_parser_tool:
+            if hasattr(self.mcp_document_parser_tool, 'close') and callable(self.mcp_document_parser_tool.close):
+                try:
+                    if inspect.iscoroutinefunction(self.mcp_document_parser_tool.close):
+                        logger.debug("Awaiting mcp_document_parser_tool.close()...")
+                        await self.mcp_document_parser_tool.close()
+                    else:
+                        logger.debug("Calling mcp_document_parser_tool.close()...")
+                        self.mcp_document_parser_tool.close() # type: ignore
+                    logger.info("MCPDocumentParserTool closed successfully.")
+                except Exception as e:
+                    logger.error(f"Error closing MCPDocumentParserTool: {e}", exc_info=True)
+            else:
+                logger.debug("mcp_document_parser_tool does not have a callable 'close' method.")
+        else:
+            logger.debug("mcp_document_parser_tool not found or not initialized.")
 
-        if not self.schema_definition_path.exists():
-            self._logger_instance.error(f"CRITICAL: Schema definition file not found at {self.schema_definition_path}")
-            # Consider raising an error here or handling it in _arun
-        if not self.prompts_path.exists():
-            self._logger_instance.error(f"CRITICAL: Prompts file not found at {self.prompts_path}")
+    async def _handle_parse_documents(self, action_input: InnerFinancialParseDocsAction) -> str:
+        logger.info(f"Starting document parsing for security: {action_input.security_id}")
+        current_docs_base_str = action_input.securities_docs_base_path_override if action_input.securities_docs_base_path_override else str(getattr(AlpyConfig, "DEFAULT_SECURITIES_DOCS_BASE_PATH", DEFAULT_SECURITIES_DOCS_BASE_PATH))
+        current_docs_base = Path(current_docs_base_str)
 
-        self._logger_instance.info(f"FinancialPhaseATool initialized. Schema: {self.schema_definition_path}, Prompts: {self.prompts_path}")
-        return self
+        # Search all board folders for the security_id
+        board_folders = [f for f in current_docs_base.iterdir() if f.is_dir() and (f.name.startswith("primary_board_") or f.name.startswith("secondary_board_"))]
+        
+        docs_root_path = None
+        for board in board_folders:
+            potential_path = board / action_input.security_id / "documents"
+            if potential_path.exists() and potential_path.is_dir():
+                docs_root_path = potential_path
+                logger.info(f"Found security {action_input.security_id} in board folder {board.name}")
+                break
 
-    def _run(
-        self,
-        security_id: str, # Add all expected args from args_schema
-        documents_root_path: str,
-        primary_document_name: Optional[str] = None,
-        document_type_hint: Optional[str] = "Financial Report/Prospectus",
-        ocr_mode: Literal["auto", "force_images", "force_full_pages", "none"] = "auto",
-        ocr_lang: str = "mon",
-        max_pages_to_parse_per_doc: Optional[int] = None,
-        run_manager: Optional[Any] = None, # SyncCallbackManagerForToolRun
-        **kwargs: Any
-    ) -> str:
-        raise NotImplementedError(
-            f"{self.name} is an async-native tool. Use its `_arun` or `ainvoke` method."
+        if not docs_root_path:
+            msg = f"Documents directory not found for security {action_input.security_id} in any board folder under {current_docs_base}"
+            logger.error(msg)
+            return json.dumps({"error": msg, "parsed_documents": []})
+
+        parsed_document_objects: List[Dict] = []
+        doc_files = [f for f in docs_root_path.iterdir() if f.is_file() and f.suffix.lower() == '.pdf']
+
+        if not doc_files:
+            msg = f"No PDF documents found in {docs_root_path}"
+            logger.warning(msg)
+            return json.dumps({"status": "warning", "message": msg, "parsed_documents": []})
+
+        for doc_path in doc_files:
+            if action_input.primary_document_name and doc_path.name != action_input.primary_document_name:
+                logger.debug(f"Skipping non-primary document: {doc_path.name}")
+                continue
+            
+            logger.info(f"Parsing document: {doc_path}")
+            parser_input_data = MCPDocumentParserToolInput(
+                document_path=str(doc_path),
+                ocr_mode=action_input.ocr_mode,
+                ocr_lang=action_input.ocr_lang,
+                max_pages_to_parse=action_input.max_pages_to_parse_per_doc,
+            )
+            try:
+                parser_result_json = await self.mcp_document_parser_tool._arun(**parser_input_data.model_dump())
+                parser_result = json.loads(parser_result_json)
+
+                if parser_result.get("error"):
+                    logger.error(f"Error parsing {doc_path.name}: {parser_result['error']}")
+                    continue
+                
+                full_text_content_parts = []
+                page_contents_for_output = [] # Store structured page content if needed later
+
+                for i, page_data in enumerate(parser_result.get("pages_content", [])):
+                    current_page_number = page_data.get("page_number")
+                    page_text = page_data.get("page_full_ocr_text") or page_data.get("text_pymupdf", "")
+                    
+                    # Ensure page_text is a string, even if it's None initially from .get()
+                    page_text = page_text if page_text is not None else ""
+
+                    if not page_text.strip(): # If primary methods yield no text
+                        logger.debug(f"Page {current_page_number}: Primary text extraction (full OCR/PyMuPDF) empty. Checking image OCR results.")
+                        image_texts_for_page = []
+                        for img_ocr_res in parser_result.get("all_images_ocr_results", []):
+                            if img_ocr_res.get("page_number") == current_page_number and img_ocr_res.get("ocr_text"):
+                                image_texts_for_page.append(img_ocr_res.get("ocr_text"))
+                        if image_texts_for_page:
+                            page_text = "\n".join(image_texts_for_page)
+                            logger.info(f"Page {current_page_number}: Used concatenated text from {len(image_texts_for_page)} images.")
+                        else:
+                            logger.warning(f"Page {current_page_number}: No text from primary extraction or image OCR.")
+
+                    full_text_content_parts.append(page_text)
+                    
+                    # Store individual page content for potential future use or detailed output
+                    page_contents_for_output.append({
+                        "page_number": page_data.get("page_number"),
+                        "text": page_text, # Text used for aggregation
+                        "text_pymupdf": page_data.get("text_pymupdf"),
+                        "page_full_ocr_text": page_data.get("page_full_ocr_text"),
+                        "page_full_ocr_error": page_data.get("page_full_ocr_error")
+                    })
+
+                full_text_content = "\n\n".join(filter(None, full_text_content_parts)) # Join pages with double newline
+
+                parsed_doc = {
+                    "document_name": doc_path.name,
+                    "full_text_content": full_text_content,
+                    "page_contents": page_contents_for_output, # Now contains more structured page data
+                    "metadata": {
+                        "total_pages": parser_result.get("total_pages", 0),
+                        "processed_pages_count": parser_result.get("processed_pages_count", 0),
+                        "file_name_from_parser": parser_result.get("file_name"), # Original filename from parser
+                        "parser_status": parser_result.get("status"),
+                        "parser_message": parser_result.get("message"),
+                        "tesseract_available": parser_result.get("tesseract_available"),
+                        "tesseract_initial_check_message": parser_result.get("tesseract_initial_check_message")
+                    }
+                }
+                parsed_document_objects.append(parsed_doc)
+                logger.info(f"Successfully parsed: {doc_path.name}")
+            except Exception as e:
+                logger.error(f"Failed to parse document {doc_path.name}: {e}", exc_info=True)
+        
+        output_list = [doc for doc in parsed_document_objects]
+
+        # Use the same board folder we found earlier
+        board_root = docs_root_path.parent.parent  # Go up from /documents to get board folder
+        output_data_dir = board_root / action_input.security_id / "parsed_data"
+        try:
+            output_data_dir.mkdir(parents=True, exist_ok=True)
+            output_file_path = output_data_dir / "parsed_financial_documents.json"
+
+            with open(output_file_path, 'w', encoding='utf-8') as f:
+                json.dump(output_list, f, ensure_ascii=False, indent=4)
+            logger.info(f"Successfully saved parsed documents to: {output_file_path}")
+            
+            return json.dumps({
+                "status": "success",
+                "message": f"Documents parsed and results saved to {output_file_path}",
+                "output_file_path": str(output_file_path),
+                "num_documents_parsed": len(output_list),
+                "parsed_documents_summary": [
+                    {
+                        "document_name": doc.get("document_name"), 
+                        "pages_processed": doc.get("metadata", {}).get("processed_pages_count", 0)
+                    }
+                    for doc in output_list
+                ]
+            })
+        except Exception as e:
+            logger.error(f"Failed to save parsed documents for security {action_input.security_id}: {e}", exc_info=True)
+            # Still return the parsed data in memory if saving failed, along with an error status
+            return json.dumps({
+                "status": "error",
+                "message": f"Documents parsed but failed to save to file: {e}",
+                "parsed_data_in_memory": output_list # Allow caller to potentially use in-memory data
+            })
+
+    async def _handle_extract_data(self, action_input: InnerFinancialExtractDataAction) -> str:
+        logger.info(f"Starting financial data extraction for security: {action_input.security_id}")
+        try:
+            list_of_parsed_document_dicts = json.loads(action_input.parsed_documents_json)
+        except json.JSONDecodeError as e:
+            logger.error(f"Invalid JSON in parsed_documents_json: {e}")
+            return json.dumps({"error": "Invalid JSON format for parsed documents."})
+        except Exception as e:
+            logger.error(f"Error converting parsed document JSON to objects: {e}", exc_info=True)
+            return json.dumps({"error": f"Error processing parsed_documents_json: {e}"})
+
+        if not list_of_parsed_document_dicts:
+            logger.warning(f"No parsed documents for extraction: {action_input.security_id}")
+            return json.dumps({"error": "No parsed documents provided.", "extracted_data": None, "quality_report": None})
+
+        orchestrator = PhaseAOrchestrator(
+            security_id=action_input.security_id,
+            prompts_yaml_path=self.prompts_path, 
+            financial_schema_path=self.schema_definition_path 
         )
+
+        try:
+            # The orchestrator's run_phase_a_extraction method will internally handle
+            # adding documents to its RAG manager using the provided parsed_documents.
+            extraction_result = await orchestrator.run_phase_a_extraction(
+                parsed_documents=list_of_parsed_document_dicts, # Pass the direct output from MCPDocumentParserTool
+                document_names=[doc_content.get('metadata', {}).get('document_name', f'doc_{i}') for i, doc_content in enumerate(list_of_parsed_document_dicts)],
+                primary_document_name=None # Ensure this is correctly passed if available
+            )
+            
+            # Find the correct board folder for this security
+            current_docs_base = Path(str(getattr(AlpyConfig, "DEFAULT_SECURITIES_DOCS_BASE_PATH", DEFAULT_SECURITIES_DOCS_BASE_PATH)))
+            board_folders = [f for f in current_docs_base.iterdir() if f.is_dir() and (f.name.startswith("primary_board_") or f.name.startswith("secondary_board_"))]
+            
+            board_root = None
+            for board in board_folders:
+                if (board / action_input.security_id).exists():
+                    board_root = board
+                    logger.info(f"Found security {action_input.security_id} in board folder {board.name}")
+                    break
+
+            if not board_root:
+                msg = f"Security folder not found for {action_input.security_id} in any board folder under {current_docs_base}"
+                logger.error(msg)
+                return json.dumps({"error": msg})
+
+            # Save extraction result to security folder
+            output_data_dir = board_root / action_input.security_id / "extracted_data"
+            try:
+                output_data_dir.mkdir(parents=True, exist_ok=True)
+                output_file_path = output_data_dir / "extraction_result.json"
+                
+                with open(output_file_path, 'w', encoding='utf-8') as f:
+                    json.dump(extraction_result, f, ensure_ascii=False, indent=4)
+                logger.info(f"Successfully saved extraction result to: {output_file_path}")
+                
+                return json.dumps({
+                    "status": "success",
+                    "message": f"Data extracted and results saved to {output_file_path}",
+                    "output_file_path": str(output_file_path),
+                    "extraction_result": extraction_result
+                })
+            except Exception as save_error:
+                logger.error(f"Failed to save extraction result for security {action_input.security_id}: {save_error}", exc_info=True)
+                return json.dumps({
+                    "status": "error",
+                    "message": f"Data extracted but failed to save to file: {save_error}",
+                    "extraction_result": extraction_result  # Return the data even if save failed
+                })
+        except Exception as e:
+            logger.error(f"Error during Phase A extraction for {action_input.security_id}: {e}", exc_info=True)
+            return json.dumps({"error": f"Extraction process failed: {e}"})
+
+
+
+    # --- Placeholder methods to satisfy BaseTool requirements ---
+    
+    def _run(self, *args: Any, **kwargs: Any) -> str:
+        # This tool is designed to be used via its specific actions (parse_documents, extract_data, run_quality_check).
+        # Direct _run is not the primary interface for this multi-action tool.
+        # Consider calling a default action or raising NotImplementedError if direct _run is not supported.
+        # For now, returning a message indicating how to use it.
+        logger.warning(
+        "FinancialPhaseATool._run() called directly. This tool is intended to be used via specific actions. "
+        "See call_action() or the individual _handle_... methods."
+        )
+        # You could choose to raise NotImplementedError or provide a default behavior.
+        # Example: return self.call_action_sync("parse_documents", {"security_id": "DEFAULT_ID_IF_NEEDED"})
+        raise NotImplementedError(
+        "FinancialPhaseATool is a multi-action tool. Use call_action() or its specific async handlers."
+        )
+
+    async def _handle_run_quality_check(self, action_input: InnerFinancialQualityCheckAction) -> str:
+        logger.info(f"Running quality check for security: {action_input.security_id}")
+        try:
+            extraction_result_dict = json.loads(action_input.extraction_result_json)
+            
+            # Create quality checker and generate report
+            quality_checker = QualityChecker(schema_definition_path=self.schema_definition_path)
+            quality_report = quality_checker.run_all_checks(extraction_result_dict)
+            
+            # Find the correct board folder for this security
+            current_docs_base = Path(str(getattr(AlpyConfig, "DEFAULT_SECURITIES_DOCS_BASE_PATH", DEFAULT_SECURITIES_DOCS_BASE_PATH)))
+            board_folders = [f for f in current_docs_base.iterdir() if f.is_dir() and (f.name.startswith("primary_board_") or f.name.startswith("secondary_board_"))]
+            
+            board_root = None
+            for board in board_folders:
+                if (board / action_input.security_id).exists():
+                    board_root = board
+                    logger.info(f"Found security {action_input.security_id} in board folder {board.name}")
+                    break
+
+            if not board_root:
+                msg = f"Security folder not found for {action_input.security_id} in any board folder under {current_docs_base}"
+                logger.error(msg)
+                return json.dumps({"error": msg})
+
+            # Save quality report to security folder
+            output_data_dir = board_root / action_input.security_id / "quality_check"
+            logger.info(f"Determined output data directory for quality check: {output_data_dir}")
+            try:
+                output_data_dir.mkdir(parents=True, exist_ok=True)
+                output_file_path = output_data_dir / "quality_report.json"
+                logger.info(f"Attempting to save quality report to: {output_file_path}")
+                
+                quality_report_dict = quality_report.model_dump()
+                with open(output_file_path, 'w', encoding='utf-8') as f:
+                    json.dump(quality_report_dict, f, ensure_ascii=False, indent=4)
+                logger.info(f"Successfully saved quality report to: {output_file_path}")
+                
+                return json.dumps({
+                    "status": "success",
+                    "message": f"Quality report generated and saved to {output_file_path}",
+                    "output_file_path": str(output_file_path),
+                    "quality_report": quality_report.model_dump()
+                })
+            except Exception as save_error:
+                logger.error(f"Failed to save quality report for security {action_input.security_id}: {save_error}", exc_info=True)
+                return json.dumps({
+                    "status": "error",
+                    "message": f"Quality report generated but failed to save to file: {save_error}",
+                    "quality_report": quality_report.model_dump()  # Return the report even if save failed
+                })
+        except json.JSONDecodeError as e:
+            logger.error(f"Invalid JSON in extraction_result_json: {e}")
+            return json.dumps({"error": "Invalid JSON format for extraction result."})
+        except Exception as e:
+            logger.error(f"Error during quality check: {e}", exc_info=True)
+            return json.dumps({"error": f"Failed to run quality check: {e}"})
 
     async def _arun(
         self,
-        security_id: str,
-        documents_root_path: str,
-        primary_document_name: Optional[str] = None,
-        document_type_hint: Optional[str] = "Financial Report/Prospectus",
-        ocr_mode: Literal["auto", "force_images", "force_full_pages", "none"] = "auto",
-        ocr_lang: str = "mon",
-        max_pages_to_parse_per_doc: Optional[int] = None,
-        run_manager: Optional[AsyncCallbackManagerForToolRun] = None, # For LangChain integration
-        **kwargs: Any # Catches any other args passed by LangChain
+        run_manager: Optional[AsyncCallbackManagerForToolRun] = None,
+        **kwargs: Any # These kwargs are the fields of one of the Inner...Action models
     ) -> str:
-        self._logger_instance.info(f"Starting Phase A for security_id='{security_id}', docs_path='{documents_root_path}'")
-
-        output_payload = {
-            "status": "PENDING",
-            "message": "Processing started.",
-            "security_id": security_id,
-            "financial_model_phase_a": None,
-            "quality_report": None,
-            "parsed_documents_summary": []
-        }
+        action_type_str = kwargs.get("action")
+        logger.debug(f"FinancialPhaseATool._arun called with action_type '{action_type_str}' and kwargs: {kwargs}")
 
         try:
-            # --- Step 1: Document Discovery and Parsing ---
-            docs_path = Path(documents_root_path)
-            if not docs_path.is_dir():
-                msg = f"Documents root path is not a valid directory: {docs_path}"
-                self._logger_instance.error(msg)
-                output_payload["status"] = "ERROR"; output_payload["message"] = msg
-                return json.dumps(output_payload, ensure_ascii=False, indent=2)
-
-            pdf_files_to_process: List[Path] = []
-            if primary_document_name:
-                primary_doc_path = docs_path / primary_document_name
-                if primary_doc_path.exists() and primary_doc_path.is_file() and primary_doc_path.suffix.lower() == ".pdf":
-                    pdf_files_to_process.append(primary_doc_path)
-                else:
-                    self._logger_instance.warning(f"Specified primary_document_name '{primary_document_name}' not found or not a PDF. Scanning directory.")
-            
-            if not pdf_files_to_process: # If no primary or primary not found, scan
-                pdf_files_to_process = sorted(list(docs_path.glob("*.pdf"))) # Simple glob, non-recursive
-
-            if not pdf_files_to_process:
-                msg = f"No PDF documents found in directory: {docs_path}"
-                self._logger_instance.error(msg)
-                output_payload["status"] = "ERROR"; output_payload["message"] = msg
-                return json.dumps(output_payload, ensure_ascii=False, indent=2)
-
-            self._logger_instance.info(f"Found {len(pdf_files_to_process)} PDF(s) to process: {[p.name for p in pdf_files_to_process]}")
-
-            aggregated_parsed_content: Dict[str, Any] = { # Aggregate content from all docs
-                "pages_content": [], "all_tables": [], "all_images_ocr_results": [],
-                "processed_files_count": 0, "total_pages_processed_across_files": 0
-            }
-            
-            # For simplicity, this version focuses on parsing one document (the first one found or the primary)
-            # A multi-document strategy would require more complex aggregation and context management.
-            # Let's process the first document in the list.
-            
-            doc_to_parse = pdf_files_to_process[0] # Or loop if handling multiple docs' content for one model
-            self._logger_instance.info(f"Processing document: {doc_to_parse.name}")
-
-            # Invoke MCPDocumentParserTool
-            # Ensure the tool instance is correctly passed or accessed
-            if not hasattr(self.mcp_document_parser_tool, "_arun"): # Basic check
-                 msg = "MCPDocumentParserTool is not correctly configured or provided."
-                 self._logger_instance.error(msg); output_payload["status"] = "ERROR"; output_payload["message"] = msg
-                 return json.dumps(output_payload, ensure_ascii=False, indent=2)
-
-            parser_input_args = {
-                "document_path": str(doc_to_parse.resolve()),
-                "ocr_mode": ocr_mode,
-                "ocr_lang": ocr_lang,
-                "max_pages_to_process_for_testing": max_pages_to_parse_per_doc, # Server tool uses this name
-                "security_id": security_id # Pass for context if parser tool uses it
-            }
-            parsed_doc_json_str = await self.mcp_document_parser_tool._arun(**parser_input_args)
-            parsed_doc_result = json.loads(parsed_doc_json_str)
-
-            output_payload["parsed_documents_summary"].append({
-                "file_name": doc_to_parse.name,
-                "status": parsed_doc_result.get("status"),
-                "message": parsed_doc_result.get("message"),
-                "total_pages_in_doc": parsed_doc_result.get("total_pages", 0),
-                "processed_pages_in_doc": parsed_doc_result.get("processed_pages_count", 0)
-            })
-
-            if parsed_doc_result.get("status") != "success":
-                msg = f"Failed to parse document '{doc_to_parse.name}': {parsed_doc_result.get('message')}"
-                self._logger_instance.error(msg)
-                # Continue if other docs, but for single doc focus, this is an error for Phase A
-                output_payload["status"] = "ERROR"; output_payload["message"] = msg
-                return json.dumps(output_payload, ensure_ascii=False, indent=2)
-
-            # Use content from this one parsed document
-            # In a multi-doc strategy, you'd merge these lists carefully
-            aggregated_parsed_content["pages_content"].extend(parsed_doc_result.get("pages_content", []))
-            aggregated_parsed_content["all_tables"].extend(parsed_doc_result.get("all_tables", []))
-            aggregated_parsed_content["all_images_ocr_results"].extend(parsed_doc_result.get("all_images_ocr_results", []))
-            aggregated_parsed_content["processed_files_count"] = 1
-            aggregated_parsed_content["total_pages_processed_across_files"] = parsed_doc_result.get("processed_pages_count",0)
-
-
-            # --- Step 2: Orchestrate Phase A Extraction ---
-            self._logger_instance.info("Instantiating PhaseAOrchestrator...")
-            orchestrator = PhaseAOrchestrator(
-                schema_definition_path=self.schema_definition_path,
-                prompts_path=self.prompts_path,
-                llm_service=self.llm_service,
-                financial_utils=self.financial_utils,
-                output_log_path=Path("logs") / f"orchestrator_{security_id}.log" # Security specific log
-            )
-            
-            populated_model, extraction_log = await orchestrator.run_phase_a_extraction(
-                parsed_doc_content=aggregated_parsed_content, # Pass the actual parsed data
-                document_type_hint=document_type_hint or "Financial Report"
-            )
-            output_payload["financial_model_phase_a"] = populated_model
-            # extraction_log could be part of quality_report details if needed
-
-            # --- Step 3: Quality Check ---
-            self._logger_instance.info("Instantiating QualityChecker...")
-            quality_checker = QualityChecker(schema_definition_path=self.schema_definition_path)
-            
-            qc_report_obj: QualityReport = quality_checker.run_all_checks(populated_model)
-            output_payload["quality_report"] = qc_report_obj.model_dump(exclude_none=True)
-
-            # --- Step 4: Finalize ---
-            if qc_report_obj.overall_status == "FAILED":
-                output_payload["status"] = "COMPLETED_WITH_CRITICAL_QC_FAILURES"
-                output_payload["message"] = "Phase A processing completed, but critical quality check failures were found."
-            elif qc_report_obj.overall_status == "PASSED_WITH_WARNINGS":
-                output_payload["status"] = "COMPLETED_WITH_QC_WARNINGS"
-                output_payload["message"] = "Phase A processing completed with quality check warnings."
-            else: # PASSED
-                output_payload["status"] = "SUCCESS"
-                output_payload["message"] = "Phase A processing completed successfully."
-            
-            self._logger_instance.info(f"Phase A completed for '{security_id}'. Final status: {output_payload['status']}")
-
-        except Exception as e:
-            self._logger_instance.error(f"Critical error in FinancialPhaseATool for '{security_id}': {e}", exc_info=True)
-            output_payload["status"] = "ERROR"
-            output_payload["message"] = f"An unexpected error occurred: {str(e)}"
-        
-        return json.dumps(output_payload, ensure_ascii=False, indent=2)
-
-
-# --- Example Standalone Test for FinancialPhaseATool ---
-# Mock LLM Service for testing
-class MockPhaseALLMService(BaseLlmService):
-    async def invoke(self, prompt: str, **kwargs) -> str:
-        # This mock needs to be more sophisticated to handle orchestrator's specific prompts
-        logger.info(f"[MockPhaseALLMService] Received prompt starting with: {prompt[:150]}...")
-        if "extract the following metadata" in prompt.lower():
-            return json.dumps({"target_company_name": "Mock Security Inc.", "ticker_symbol": "MSI", "currency": "USD", "fiscal_year_end": "12-31"})
-        elif "identify the distinct historical financial periods" in prompt.lower():
-            return json.dumps({"historical_period_labels": ["FY2023", "FY2022"]})
-        elif "extract a specific financial data point" in prompt.lower():
-            # Simplified: return a generic success for any line item
-            return json.dumps({"value": 123.45, "currency": "USD", "unit": "actuals", "source_reference": "Mocked Page X", "status": "EXTRACTED_SUCCESSFULLY"})
-        return json.dumps({"error": "MockPhaseALLMService - Unknown prompt type for this mock."})
-
-async def main_test_real_parser():
-    if MCPDocumentParserTool is None:
-        logger.error("MCPDocumentParserTool not imported, cannot run test.")
-        return
-
-    logger.info("Starting MCPDocumentParserTool standalone test...")
-
-    # --- IMPORTANT: CONFIGURE THIS PATH ---
-    # Replace with the actual path to your document_parser_server.py
-    # This assumes your Alpy project root is the parent of 'mcp_servers'
-    project_root = Path(__file__).resolve().parent.parent.parent
-    default_server_script = project_root / "mcp_servers" / "document_parser_server.py"
-    
-    # Path to a real PDF document you want to test with
-    # --- !!! REPLACE THIS WITH YOUR PDF PATH !!! ---
-    pdf_to_test = Path("/home/me/Documents/FundDocs/test_portfolio/_Matsuya_Үнэт_цаасны_танилцуулга_05_07.pdf")
-    # --- !!! REPLACE THIS WITH YOUR PDF PATH !!! ---
-
-    if not default_server_script.exists():
-        logger.error(f"Server script not found: {default_server_script}")
-        logger.error("Please ensure MCPDocumentParserTool's 'server_script' default points to the correct location,")
-        logger.error("or pass the correct path during instantiation if it's configurable.")
-        return
-        
-    if not pdf_to_test.exists() or not pdf_to_test.is_file():
-        logger.error(f"Test PDF not found or is not a file: {pdf_to_test}")
-        logger.error("Please provide a valid path to a PDF document for testing.")
-        return
-
-    # Instantiate the real MCPDocumentParserTool
-    # It should use its default server_executable, server_script, and server_cwd_path
-    # or you can override them here if needed.
-    try:
-        # If your MCPDocumentParserTool takes specific paths in constructor, provide them:
-        # tool_instance = MCPDocumentParserTool(
-        #     server_script=Path("/path/to/your/document_parser_server.py"),
-        #     # server_executable=Path("/path/to/your/python"), # if not default python3
-        #     # server_cwd_path=Path("/path/to/server_script_parent/"), # if needed
-        # )
-        # Otherwise, defaults from the tool's Pydantic model will be used.
-        tool_instance = MCPDocumentParserTool()
-        if hasattr(tool_instance, '_logger_instance') and tool_instance._logger_instance:
-            tool_instance._logger_instance.setLevel(logging.DEBUG) # For verbose output from the tool
-        
-    except Exception as e_init:
-        logger.error(f"Failed to instantiate MCPDocumentParserTool: {e_init}", exc_info=True)
-        return
-
-    test_input_args = {
-        "document_path": str(pdf_to_test.resolve()),
-        "ocr_mode": "auto", # Or "force_images", "force_full_pages", "none"
-        "ocr_lang": "mon", # Or your desired language e.g., "eng"
-        # "max_pages_to_process_for_testing": 5, # Optional: limit pages for faster testing
-    }
-
-    logger.info(f"Attempting to parse PDF: {pdf_to_test}")
-    logger.info(f"Using server script (default or from tool): {tool_instance.server_script if hasattr(tool_instance, 'server_script') else 'N/A'}")
-    logger.info(f"Tool input args: {test_input_args}")
-
-    result_json_str = None
-    try:
-        result_json_str = await tool_instance._arun(**test_input_args)
-        logger.info("MCPDocumentParserTool._arun call finished.")
-        
-        print("\n--- MCPDocumentParserTool Result ---")
-        try:
-            result_data = json.loads(result_json_str)
-            # print(json.dumps(result_data, indent=2, ensure_ascii=False))
-            
-            # Basic assertions on successful output structure
-            if result_data.get("status") == "success":
-                assert "pages_content" in result_data
-                assert "all_tables" in result_data
-                logger.info("Basic assertions on output structure PASSED for successful parse.")
+            if action_type_str == FinancialPhaseAActionType.PARSE_DOCUMENTS.value:
+                specific_action_input = InnerFinancialParseDocsAction.model_validate(kwargs)
+                return await self._handle_parse_documents(specific_action_input)
+            elif action_type_str == FinancialPhaseAActionType.EXTRACT_DATA.value:
+                specific_action_input = InnerFinancialExtractDataAction.model_validate(kwargs)
+                return await self._handle_extract_data(specific_action_input)
+            elif action_type_str == FinancialPhaseAActionType.RUN_QUALITY_CHECK.value:
+                specific_action_input = InnerFinancialQualityCheckAction.model_validate(kwargs)
+                return await self._handle_run_quality_check(specific_action_input)
             else:
-                logger.warning(f"Parsing was not fully successful. Status: {result_data.get('status')}, Message: {result_data.get('message')}")
+                valid_actions = [e.value for e in FinancialPhaseAActionType]
+                error_msg = f"Invalid or missing 'action' field in input. Must be one of {valid_actions}. Received: '{action_type_str}'"
+                logger.error(error_msg + f" with kwargs: {kwargs}")
+                return json.dumps({
+                    "error": error_msg,
+                    "details": f"The 'action' parameter must be one of {valid_actions}."
+                })
+        except ValidationError as ve:
+            error_msg = f"Input validation error for action '{action_type_str}': {ve}"
+            logger.error(error_msg + f" for kwargs: {kwargs}", exc_info=True)
+            return json.dumps({
+                "error": "Input validation error",
+                "action_type": action_type_str,
+                "details": str(ve)
+            })
+        except Exception as e:
+            error_msg = f"Unexpected error during execution of action '{action_type_str}': {e}"
+            logger.error(error_msg + f" for kwargs: {kwargs}", exc_info=True)
+            return json.dumps({
+                "error": "Unexpected tool error",
+                "action_type": action_type_str,
+                "details": str(e)
+            })
+# --- Standalone Test Functions --- #
 
-        except json.JSONDecodeError:
-            logger.error("Failed to parse tool output as JSON.")
-            # print("Raw output:", result_json_str)
-        except AssertionError as e_assert:
-            logger.error(f"Assertion failed on tool output: {e_assert}")
-
-    except ToolException as e_tool: # Specific LangChain tool exception
-        logger.error(f"ToolException during MCPDocumentParserTool test run: {e_tool}", exc_info=True)
-    except Exception as e:
-        logger.error(f"Unexpected error during MCPDocumentParserTool test run: {e}", exc_info=True)
-    finally:
-        if 'tool_instance' in locals() and hasattr(tool_instance, 'close'):
-            logger.info("Closing MCPDocumentParserTool session...")
-            await tool_instance.close()
-            logger.info("MCPDocumentParserTool session closed.")
-        logger.info("MCPDocumentParserTool standalone test finished.")
-
-# This is the existing main_test_financial_phase_a_tool function from your src/tools/financial_phase_a_tool.py
-# Ensure the imports at the top of the file correctly bring in:
-# - FinancialPhaseATool, MockPhaseALLMService (or a more advanced LLM mock/service)
-# - FinancialModelingUtils
-# - ImportedRealMCPDocumentParserTool (from previous fix, to get the real parser)
-# - Path, logging, json, asyncio
-
-async def main_test_financial_phase_a_tool():
-    # Setup basic logging for the test
-    logging.basicConfig(level=logging.WARNING, format='%(asctime)s - %(name)s - %(levelname)s - [%(threadName)s] - %(message)s')
-    test_logger = logging.getLogger(__name__ + ".TestFinancialPhaseATool") # Changed logger name for clarity
-    test_logger.info("Starting FinancialPhaseATool (FULL WORKFLOW) standalone test...")
-
-    project_root = Path(__file__).resolve().parent.parent.parent
-    schema_file = project_root / "fund" / "financial_model_schema.json"
-    prompts_file = project_root / "prompts" / "financial_modeling_prompts.yaml"
-    
-    # Ensure logs directory exists for orchestrator and parser client logs
-    (project_root / "logs").mkdir(parents=True, exist_ok=True)
-
-
-    if not schema_file.exists() or not prompts_file.exists():
-        test_logger.error(f"Schema or Prompts file not found. Schema: {schema_file}, Prompts: {prompts_file}. Aborting test.")
-        return
-
-    dummy_doc_dir = project_root / "test_docs_phase_a_full_tool" # New dir for this test
-    dummy_doc_dir.mkdir(exist_ok=True)
-    
-    pdf_to_test_with_full_tool_name = "_Matsuya_Үнэт_цаасны_танилцуулга_05_07.pdf" # Example name
-    # --- !!! IMPORTANT: REPLACE WITH YOUR ACTUAL PDF PATH OR COPY IT HERE !!! ---
-    # Option 1: Use a specific PDF path directly
-    # pdf_to_test_path = Path("/home/me/Documents/FundDocs/test_portfolio/_Matsuya_Үнэт_цаасны_танилцуулга_05_07.pdf")
-    # Option 2: Copy your test PDF into dummy_doc_dir for this test
-    # shutil.copy("/home/me/Documents/FundDocs/test_portfolio/_Matsuya_Үнэт_цаасны_танилцуулга_05_07.pdf", dummy_doc_dir / pdf_to_test_with_full_tool_name)
-    # pdf_to_test_path = dummy_doc_dir / pdf_to_test_with_full_tool_name
-    
-    # For this example, let's assume you will MANUALLY place your PDF in dummy_doc_dir
-    # Or provide the full path directly:
-    pdf_to_test_path = Path("/home/me/Documents/FundDocs/test_portfolio/_Matsuya_Үнэт_цаасны_танилцуулга_05_07.pdf") # REPLACE THIS
-    # --- !!! IMPORTANT: ENSURE THIS PDF EXISTS !!! ---
-
-    if not pdf_to_test_path.exists():
-        test_logger.error(f"Test PDF for full tool test not found: {pdf_to_test_path}. Please configure the path.")
-        # Attempt to create a very simple dummy if the target is not found, just to run the flow
-        pdf_to_test_path = dummy_doc_dir / "fallback_dummy_report.pdf"
-        pdf_to_test_with_full_tool_name = "fallback_dummy_report.pdf" # Update name for args
-        try:
-            from reportlab.pdfgen import canvas
-            c = canvas.Canvas(str(pdf_to_test_path))
-            c.drawString(100, 750, f"Fallback Dummy PDF for FinancialPhaseATool Test. Target: {pdf_to_test_with_full_tool_name}")
-            c.showPage(); c.save()
-            test_logger.info(f"Created fallback dummy PDF: {pdf_to_test_path}")
-        except ImportError:
-            test_logger.error("reportlab not installed and target PDF not found. Cannot proceed.")
-            return
-        except Exception as e_pdf:
-            test_logger.error(f"Error creating fallback dummy PDF: {e_pdf}")
-            return
-
-
-    # --- Instantiate with REAL MCPDocumentParserTool ---
-    if MCPDocumentParserTool is None: # Check if import was successful
-        test_logger.error("Real MCPDocumentParserTool (ImportedRealMCPDocumentParserTool) not available. Aborting.")
-        return
-    
-    real_parser_tool_instance = MCPDocumentParserTool()
-    # Set log level for the parser instance if needed
-    if hasattr(real_parser_tool_instance, '_logger_instance') and real_parser_tool_instance._logger_instance:
-        real_parser_tool_instance._logger_instance.setLevel(logging.DEBUG) # More logs from parser
-
-    # Use a simple mock LLM for now for PhaseAOrchestrator.
-    # For real extraction, this needs to be a capable LLM service.
-    llm_service_instance = GeminiLlmService()
-
-    utils = FinancialModelingUtils() # This is also defined/imported in your file
-
-    tool_instance = FinancialPhaseATool(
-        mcp_document_parser_tool=real_parser_tool_instance, # USE THE REAL PARSER
-        llm_service=llm_service_instance,
-        financial_utils=utils,
-        schema_definition_path=schema_file,
-        prompts_path=prompts_file
-    )
-    if hasattr(tool_instance, '_logger_instance') and tool_instance._logger_instance:
-         tool_instance._logger_instance.setLevel(logging.DEBUG)
-
-
-    test_input_args = {
-        "security_id": "MATSUYA_TEST_001",
-        "documents_root_path": str(pdf_to_test_path.parent.resolve()), # Directory containing the PDF
-        "primary_document_name": pdf_to_test_path.name, # Name of the PDF file
-        "document_type_hint": "Bond Prospectus", # Or whatever is appropriate
-        "ocr_mode": "auto",
-        "ocr_lang": "mon", # Mongolian
-        "max_pages_to_parse_per_doc": None # Process all pages from the primary doc
-    }
-
-    test_logger.info(f"Invoking FinancialPhaseATool (FULL WORKFLOW) with args: {test_input_args}")
-    result_json_str = ""
+async def test_parse_documents_action(tool: FinancialPhaseATool):
+    print("--- Testing: Parse Documents Action ---", flush=True)
     try:
-        result_json_str = await tool_instance._arun(**test_input_args)
-        test_logger.info("FinancialPhaseATool (FULL WORKFLOW) execution finished.")
+        # tool instance is now passed as an argument
+        test_security_id = "MN0LNDB68390" 
+        parse_action_input = {
+            "action": "parse_documents",
+            "security_id": test_security_id,
+            "primary_document_name": None, 
+            "ocr_mode": "auto",
+            "ocr_lang": "mon",
+            "max_pages_to_parse_per_doc": None
+        }
+        print(f"Invoking tool._arun with input: {json.dumps(parse_action_input, indent=2)}", flush=True)
+        # Call _arun by unpacking the action input dictionary as keyword arguments
+        parsed_docs_json_str = await tool._arun(**parse_action_input)
+        print("tool._arun call completed.", flush=True)
         
-        print("\n--- FinancialPhaseATool (FULL WORKFLOW) Result ---")
         try:
-            result_data = json.loads(result_json_str)
-            # Save the full output to a file for inspection
-            output_file_path = project_root / "logs" / f"financial_phase_a_tool_output_{test_input_args['security_id']}.json"
-            with open(output_file_path, 'w', encoding='utf-8') as f:
-                json.dump(result_data, f, indent=2, ensure_ascii=False)
-            test_logger.info(f"Full output saved to: {output_file_path}")
-
-            # Print a summary
-            print(f"Status: {result_data.get('status')}")
-            print(f"Message: {result_data.get('message')}")
-            if result_data.get("parsed_documents_summary"):
-                print(f"Parsed Docs Summary: {result_data['parsed_documents_summary']}")
-            if result_data.get("quality_report"):
-                qr = result_data['quality_report']
-                print(f"Quality Report Overall Status: {qr.get('overall_status')}")
-                print(f"  Extraction Success Rate: {qr.get('data_extraction_summary', {}).get('overall_extraction_success_rate_percent', 'N/A')}%")
-                print(f"  Schema Valid: {qr.get('schema_validation_results', {}).get('is_valid', 'N/A')}")
-                print(f"  Sanity Checks Passed: {len([s for s in qr.get('sanity_check_results', []) if s.get('status') == 'PASSED'])} / {len(qr.get('sanity_check_results', []))}")
+            parsed_data_result = json.loads(parsed_docs_json_str)
+            print(f"Parse Documents Output (Full JSON if possible, or sample):\n{json.dumps(parsed_data_result, indent=2)}", flush=True)
             
-            # Basic assertions
-            assert result_data.get("status") in ["SUCCESS", "COMPLETED_WITH_QC_WARNINGS", "COMPLETED_WITH_CRITICAL_QC_FAILURES"], f"Unexpected status: {result_data.get('status')}"
-            assert result_data.get("financial_model_phase_a") is not None, "financial_model_phase_a is missing"
-            assert result_data.get("quality_report") is not None, "quality_report is missing"
-            test_logger.info("Basic assertions on FinancialPhaseATool output structure passed.")
+            if isinstance(parsed_data_result, dict) and parsed_data_result.get("error"):
+                print(f"Parse action failed with error in result: {parsed_data_result['error']}", flush=True)
+            elif isinstance(parsed_data_result, dict) and parsed_data_result.get("parsed_documents_summary"):
+                summary = parsed_data_result.get("parsed_documents_summary", [])
+                if not summary and parsed_data_result.get("num_documents_parsed", 0) == 0 :
+                     print("Parse action returned no documents or an empty result based on summary.", flush=True)
+                else:
+                    print(f"Parsed {len(summary)} documents successfully according to summary.", flush=True)
 
-        except json.JSONDecodeError:
-            test_logger.error("Failed to parse FinancialPhaseATool output as JSON.")
-            # print("Raw output:", result_json_str)
-        except AssertionError as e_assert:
-            test_logger.error(f"Assertion failed on FinancialPhaseATool output: {e_assert}")
+            print("Test 'parse_documents' completed its main logic.", flush=True)
 
-    except ToolException as e_tool:
-        test_logger.error(f"ToolException during FinancialPhaseATool (FULL WORKFLOW) test: {e_tool}", exc_info=True)
-        # if result_json_str: print("Partial/Error output:", result_json_str)
+        except json.JSONDecodeError as je:
+            print(f"Error decoding JSON from parse_documents: {je}", flush=True)
+            print(f"Raw output was: {parsed_docs_json_str}", flush=True)
+            logger.error("Test 'parse_documents' failed due to JSON decode error", exc_info=True)
+
     except Exception as e:
-        test_logger.error(f"Error during FinancialPhaseATool (FULL WORKFLOW) test: {e}", exc_info=True)
-        # if result_json_str: print("Partial/Error output:", result_json_str)
-    finally:
-        # Close the FinancialPhaseATool itself (which should close its underlying tools if they have close methods, like the parser)
-        if hasattr(tool_instance, 'close') and callable(tool_instance.close): # Check if tool_instance itself has close, though BaseTool does not
-             pass # FinancialPhaseATool itself does not have a close method, relies on constituent tools
-        
-        # Explicitly close the real_parser_tool_instance
-        if 'real_parser_tool_instance' in locals() and hasattr(real_parser_tool_instance, 'close'):
-            test_logger.info("Closing Real MCPDocumentParserTool instance used by FinancialPhaseATool...")
-            await real_parser_tool_instance.close()
-            test_logger.info("Real MCPDocumentParserTool instance closed.")
+        print(f"Error during 'parse_documents' action test: {e}", flush=True)
+        logger.error("Test 'parse_documents' failed with an exception", exc_info=True)
+    # Note: Closing the tool, especially mcp_document_parser_tool, should be handled by the main test runner
+    # to avoid closing it prematurely if other tests need it.
 
-        if dummy_doc_dir.exists(): # Clean up the directory if it was specifically for this test
-             try:
-                 # Only remove if it was the specific one created, be careful here
-                 if "test_docs_phase_a_full_tool" in str(dummy_doc_dir) or "fallback_dummy_report.pdf" in str(pdf_to_test_path):
-                     import shutil
-                     shutil.rmtree(dummy_doc_dir)
-                     test_logger.info(f"Cleaned up test directory: {dummy_doc_dir}")
-             except OSError as e_del:
-                 test_logger.warning(f"Could not delete test directory {dummy_doc_dir}: {e_del}")
-        test_logger.info("FinancialPhaseATool (FULL WORKFLOW) standalone test finished.")
+async def test_extract_data_action(tool: FinancialPhaseATool):
+    print("\n--- Testing: Extract Data Action ---")
+    test_security_id = "MN0LNDB68390"
+
+    # Path to the expected output from the parse_documents action
+    # This assumes parse_documents was run and successfully created this file in one of the board folders.
+    # We need to find which board folder it used.
+    current_docs_base_dir = tool.securities_data_base_path # Use tool's configured path
     
+    parsed_documents_path = None
+    possible_board_folders = [d for d in current_docs_base_dir.iterdir() if d.is_dir() and (d.name.startswith("primary_board_") or d.name.startswith("secondary_board_"))]
+    
+    for board_folder in possible_board_folders:
+        potential_path = board_folder / test_security_id / "parsed_data" / "parsed_financial_documents.json"
+        if potential_path.exists():
+            parsed_documents_path = potential_path
+            logger.info(f"Found parsed documents for extraction at: {parsed_documents_path}")
+            break
+            
+    if not parsed_documents_path:
+        error_message = f"Required parsed documents file not found for test_extract_data_action in any board folder for {test_security_id} under {current_docs_base_dir}. Run 'test_parse_documents_action' first or ensure the file exists."
+        logger.error(error_message)
+        print(f"Error: {error_message}")
+        return
+
+    parsed_documents_json_str = ""
+    try:
+        with open(parsed_documents_path, 'r', encoding='utf-8') as f:
+            parsed_documents_json_str = f.read()
+        # Validate JSON structure after reading
+        parsed_docs_content_for_extraction = json.loads(parsed_documents_json_str)
+        # The actual content for "parsed_documents_json" in the action input should be a JSON string
+        # representing the list of parsed document objects.
+        # So, we re-dump the loaded list back into a string.
+        parsed_documents_input_str = json.dumps(parsed_docs_content_for_extraction)
+
+    except json.JSONDecodeError as e:
+        logger.error(f"Invalid JSON in {parsed_documents_path}: {e}")
+        print(f"Error: Invalid JSON in {parsed_documents_path}: {e}")
+        return
+    except Exception as e:
+        logger.error(f"Error reading or parsing {parsed_documents_path}: {e}", exc_info=True)
+        print(f"Error reading or parsing {parsed_documents_path}: {e}")
+        return
+
+    extract_action_input = {
+        "action": "extract_data",
+        "security_id": test_security_id, 
+        "parsed_documents_json": parsed_documents_input_str # This must be a string
+    }
+    try:
+        extraction_result_json_str = await tool._arun(**extract_action_input)
+        extraction_result = json.loads(extraction_result_json_str)
+        print(f"Extract Data Output (JSON sample):\n{json.dumps(extraction_result, indent=2)[:500]}...")
+        if isinstance(extraction_result, dict) and extraction_result.get("error"):
+            print(f"Extract action failed: {extraction_result['error']}")
+    except Exception as e:
+        print(f"Error during 'extract_data' action test: {e}")
+        logger.error("Test 'extract_data' failed", exc_info=True)
+
+async def test_run_quality_check_action(tool: FinancialPhaseATool):
+    print("\n--- Testing: Run Quality Check Action ---")
+    test_security_id = "MN0LNDB68390"
+
+    # Path to the expected output from the extract_data action
+    current_docs_base_dir = tool.securities_data_base_path
+
+    extraction_result_path = None
+    possible_board_folders = [d for d in current_docs_base_dir.iterdir() if d.is_dir() and (d.name.startswith("primary_board_") or d.name.startswith("secondary_board_"))]
+
+    for board_folder in possible_board_folders:
+        potential_path = board_folder / test_security_id / "extracted_data" / "extraction_result.json"
+        if potential_path.exists():
+            extraction_result_path = potential_path
+            logger.info(f"Found extraction results for QC at: {extraction_result_path}")
+            break
+    
+    if not extraction_result_path:
+        error_message = f"Required extraction result file not found for test_run_quality_check_action in any board folder for {test_security_id} under {current_docs_base_dir}. Run 'test_extract_data_action' first or ensure the file exists."
+        logger.error(error_message)
+        print(f"Error: {error_message}")
+        return
+
+    extraction_result_json_str_for_qc = ""
+    try:
+        with open(extraction_result_path, 'r', encoding='utf-8') as f:
+            extraction_result_json_str_for_qc = f.read()
+        # Validate JSON
+        json.loads(extraction_result_json_str_for_qc) # Ensures it's valid JSON string
+        logger.info(f"Successfully loaded extraction result from {extraction_result_path}")
+    except Exception as e:
+        logger.error(f"Error reading extraction result file {extraction_result_path}: {e}")
+        print(f"Error reading extraction result file {extraction_result_path}: {e}")
+        return
+
+    quality_check_action_input = {
+        "action": "run_quality_check",
+        "security_id": test_security_id,
+        "extraction_result_json": extraction_result_json_str_for_qc # This must be a string
+    }
+    try:
+        quality_report_json_str = await tool._arun(**quality_check_action_input)
+        quality_report = json.loads(quality_report_json_str)
+        print(f"Quality Check Output (JSON sample):\n{json.dumps(quality_report, indent=2)[:500]}...")
+        if isinstance(quality_report, dict) and quality_report.get("error"):
+            print(f"QC action failed: {quality_report['error']}")
+    except Exception as e:
+        print(f"Error during 'run_quality_check' action test: {e}")
+        logger.error("Test 'run_quality_check' failed", exc_info=True)
+
 if __name__ == "__main__":
-    # Ensure logs directory exists if any component tries to write there by default
-    Path("logs").mkdir(parents=True, exist_ok=True)
-    
-    # To run this specific test:
-    # 1. Replace the main_test_financial_phase_a_tool() call with main_test_real_parser()
-    #    at the bottom of financial_phase_a_tool.py.
-    # 2. OR, if you want to keep both, modify the if __name__ == "__main__": block
-    #    to choose which test to run, e.g., based on a command-line argument.
-    # For now, assuming you replace it:
-    
-    # Comment out or remove the FinancialPhaseATool test call:
-    # asyncio.run(main_test_financial_phase_a_tool())
-    
-    # Add the call for the real parser test:
-    # asyncio.run(main_test_real_parser())
+    import argparse
+    import asyncio
 
-    asyncio.run(main_test_financial_phase_a_tool())
+    parser = argparse.ArgumentParser(description="Run specific tests for FinancialPhaseATool actions.")
+    parser.add_argument("--test-parse", action="store_true", help="Run the 'parse_documents' action test.")
+    parser.add_argument("--test-extract", action="store_true", help="Run the 'extract_data' action test.")
+    parser.add_argument("--test-qc", action="store_true", help="Run the 'run_quality_check' action test.")
+    parser.add_argument("--test-all", action="store_true", help="Run all action tests sequentially.")
+
+    args = parser.parse_args()
+
+    # Configure logging for test runs
+    logging.basicConfig(level=AlpyConfig.LOG_LEVEL, format=AlpyConfig.LOG_FORMAT) # Use main app config for direct runs
+    logger.setLevel(logging.INFO) 
+    logging.getLogger("mcp.client.session").setLevel(logging.WARNING) 
+    logging.getLogger("httpx").setLevel(logging.WARNING)
+    logging.getLogger("httpcore").setLevel(logging.WARNING)
+
+
+    async def main_test_runner():
+        run_any_test = False
+        # Create a single tool instance to be used by all tests
+        # This allows resources like MCPDocumentParserTool to be initialized once.
+        tool_instance = FinancialPhaseATool()
+        try:
+            if args.test_all or args.test_parse:
+                await test_parse_documents_action(tool_instance)
+                run_any_test = True
+            if args.test_all or args.test_extract:
+                await test_extract_data_action(tool_instance)
+                run_any_test = True
+            if args.test_all or args.test_qc:
+                await test_run_quality_check_action(tool_instance)
+                run_any_test = True
+            
+            if not run_any_test:
+                print("No test specified. Use --test-parse, --test-extract, --test-qc, or --test-all.")
+        finally:
+            # Ensure the tool (and its sub-tools like MCPDocumentParserTool) are closed after all tests
+            if hasattr(tool_instance, 'close') and callable(tool_instance.close):
+                print("Closing FinancialPhaseATool instance...")
+                await tool_instance.close()
+                print("FinancialPhaseATool instance closed.")
+
+    asyncio.run(main_test_runner())
+
+async def test_extract_data_action(tool: FinancialPhaseATool):
+    print("\n--- Testing: Extract Data Action ---")
+    # tool = FinancialPhaseATool() # Tool instance is now passed as an argument
+    # Use the same security_id as test_parse_documents_action to load its output
+    test_security_id = "MN0LNDB68390"
+
+    # Construct the path to the parsed_financial_documents.json file
+    # Use the same base path as the parse_documents action uses for its output.
+    # DEFAULT_SECURITIES_DOCS_BASE_PATH is a global Path object defined in this file.
+    current_docs_base_dir = DEFAULT_SECURITIES_DOCS_BASE_PATH
+    parsed_documents_path = DEFAULT_SECURITIES_DOCS_BASE_PATH / "secondary_board_B" / test_security_id / "parsed_data" / "parsed_financial_documents.json"
+
+    parsed_documents_json_str = ""
+    if not parsed_documents_path.exists():
+        error_message = f"Required parsed documents file not found for test_extract_data_action: {parsed_documents_path}. Run 'test_parse_documents_action' first or ensure the file exists."
+        logger.error(error_message)
+        raise FileNotFoundError(error_message)
+    else:
+        logger.info(f"Loading parsed documents from: {parsed_documents_path}")
+        try:
+            with open(parsed_documents_path, 'r', encoding='utf-8') as f:
+                parsed_documents_json_str = f.read()
+            # Validate JSON structure after reading, before using it in extract_action_input
+            json.loads(parsed_documents_json_str) 
+        except json.JSONDecodeError as e:
+            logger.error(f"Invalid JSON in {parsed_documents_path}: {e}")
+            print(f"Error: Invalid JSON in {parsed_documents_path}: {e}")
+            return # Or raise, to make the test fail explicitly
+        except Exception as e: # Catch other potential file reading errors
+            logger.error(f"Error reading or parsing {parsed_documents_path}: {e}", exc_info=True)
+            print(f"Error reading or parsing {parsed_documents_path}: {e}")
+            return # Or raise
+
+    extract_action_input = {
+        "action": "extract_data",
+        "security_id": test_security_id, 
+        "parsed_documents_json": parsed_documents_json_str
+    }
+    try:
+        extraction_result_json = await tool._arun(**extract_action_input)
+        print(f"Extract Data Output (JSON sample):\n{json.dumps(json.loads(extraction_result_json), indent=2)[:500]}...")
+        extracted_data = json.loads(extraction_result_json)
+        if isinstance(extracted_data, dict) and extracted_data.get("error"):
+            print(f"Extract action failed: {extracted_data['error']}")
+    except Exception as e:
+        print(f"Error during 'extract_data' action test: {e}")
+        logger.error("Test 'extract_data' failed", exc_info=True)
+
+async def test_run_quality_check_action(tool: FinancialPhaseATool):
+    print("\n--- Testing: Run Quality Check Action ---")
+    # tool = FinancialPhaseATool() # Tool instance is now passed as an argument
+    test_security_id = "MN0LNDB68390"
+
+    # Read the actual extraction result file
+    extraction_result_path = DEFAULT_SECURITIES_DOCS_BASE_PATH / "secondary_board_B" / test_security_id / "extracted_data" / "extraction_result.json"
+    
+    try:
+        with open(extraction_result_path, 'r', encoding='utf-8') as f:
+            extraction_result_json = f.read()
+        # Validate JSON
+        json.loads(extraction_result_json)
+        logger.info(f"Successfully loaded extraction result from {extraction_result_path}")
+    except Exception as e:
+        logger.error(f"Error reading extraction result file: {e}")
+        raise
+
+    quality_check_action_input = {
+        "action": "run_quality_check",
+        "security_id": test_security_id,
+        "extraction_result_json": extraction_result_json
+    }
+    try:
+        quality_report_json = await tool._arun(**quality_check_action_input)
+        print(f"Quality Check Output (JSON sample):\n{json.dumps(json.loads(quality_report_json), indent=2)[:500]}...")
+        qc_data = json.loads(quality_report_json)
+        if isinstance(qc_data, dict) and qc_data.get("error"):
+            print(f"QC action failed: {qc_data['error']}")
+    except Exception as e:
+        print(f"Error during 'run_quality_check' action test: {e}")
+        logger.error("Test 'run_quality_check' failed", exc_info=True)
+
+if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Run specific tests for FinancialPhaseATool actions.")
+    parser.add_argument("--test-parse", action="store_true", help="Run the 'parse_documents' action test.")
+    parser.add_argument("--test-extract", action="store_true", help="Run the 'extract_data' action test.")
+    parser.add_argument("--test-qc", action="store_true", help="Run the 'run_quality_check' action test.")
+    parser.add_argument("--test-all", action="store_true", help="Run all action tests sequentially.")
+
+    args = parser.parse_args()
+
+    # Configure logging for test runs
+    logging.basicConfig(level=AlpyConfig.LOG_LEVEL, format=AlpyConfig.LOG_FORMAT)
+    logger.setLevel(logging.INFO) 
+    logging.getLogger("mcp.client.session").setLevel(logging.WARNING) 
+
+    async def main():
+        run_any_test = False
+        tool = FinancialPhaseATool()
+        try:
+            if args.test_parse:
+                await test_parse_documents_action(tool)
+                run_any_test = True
+            if args.test_extract:
+                await test_extract_data_action(tool)
+                run_any_test = True
+            if args.test_qc:
+                await test_run_quality_check_action(tool)
+                run_any_test = True
+            if args.test_all:
+                await test_parse_documents_action(tool)
+                await test_extract_data_action(tool)
+                await test_run_quality_check_action(tool)
+                run_any_test = True
+            
+            if not run_any_test:
+                print("No test specified. Use --test-parse, --test-extract, --test-qc, or --test-all.")
+        finally:
+            logger.info("Closing FinancialPhaseATool after tests.")
+            await tool.close()
+            parser.print_help()
+
+    asyncio.run(main())

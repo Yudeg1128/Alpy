@@ -1,0 +1,12 @@
+[2025-06-01 21:10:20,830][INFO][MCPImageParser] Starting MCP Image Parser server
+[2025-06-01 21:10:20,845][DEBUG][MCPImageParser] Initializing server 'MCPImageParserServer'
+[2025-06-01 21:10:20,846][DEBUG][MCPImageParser] Registering handler for ListToolsRequest
+[2025-06-01 21:10:20,846][DEBUG][MCPImageParser] Registering handler for CallToolRequest
+[2025-06-01 21:10:20,846][DEBUG][MCPImageParser] Registering handler for ListResourcesRequest
+[2025-06-01 21:10:20,846][DEBUG][MCPImageParser] Registering handler for ReadResourceRequest
+[2025-06-01 21:10:20,846][DEBUG][MCPImageParser] Registering handler for PromptListRequest
+[2025-06-01 21:10:20,846][DEBUG][MCPImageParser] Registering handler for GetPromptRequest
+[2025-06-01 21:10:20,846][DEBUG][MCPImageParser] Registering handler for ListResourceTemplatesRequest
+[2025-06-01 21:10:20,851][DEBUG][MCPImageParser] Using selector: EpollSelector
+[2025-06-01 21:10:20,851][DEBUG][MCPImageParser] Received parse_image request for: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390/images/Албан бичиг ба 2001-2003 маягт_1_page_11.png
+[2025-06-01 21:10:20,855][DEBUG][MCPImageParser] Using AsyncIOEngine.POLLER as I/O engine

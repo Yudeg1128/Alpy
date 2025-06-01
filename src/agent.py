@@ -32,6 +32,7 @@ from .tools.mcp_puppeteer_tool import MCPPuppeteerTool
 from .tools.download_file_tool import DownloadFileTool
 from .tools.otcmn_scraper_tool import OTCMNScraperTool
 from .tools.mcp_playwright_tool import MCPPlaywrightTool
+from .tools.financial_phase_a_tool import FinancialPhaseATool
 from rich.console import Console as RichConsole
 from rich.panel import Panel as RichPanel
 from rich.markdown import Markdown as RichMarkdown
@@ -320,6 +321,7 @@ class AlpyAgent:
         self.download_file_tool = DownloadFileTool(instance_name="AlpyDownloadFileTool")
         self.otcmn_scraper_tool = OTCMNScraperTool(instance_name="AlpyOTCMNScraperTool")
         self.mcp_playwright_tool = MCPPlaywrightTool(instance_name="AlpyPlaywrightTool")
+        self.financial_phase_a_tool = FinancialPhaseATool(instance_name="AlpyFinancialPhaseATool")
         self.tools: List[BaseTool] = [
             self.mcp_bash_tool,
             self.mcp_python_tool,
@@ -330,7 +332,8 @@ class AlpyAgent:
             self.mcp_puppeteer_tool,
             self.download_file_tool,
             self.otcmn_scraper_tool,
-            self.mcp_playwright_tool
+            self.mcp_playwright_tool,
+            self.financial_phase_a_tool
         ]
         self.tools_by_name = {tool.name: tool for tool in self.tools}
         logger.info(f"Tools initialized: {[tool.name for tool in self.tools]}")
@@ -811,6 +814,7 @@ class AlpyAgent:
             "Download File Tool": self.download_file_tool,
             "OTCMN Scraper Tool": self.otcmn_scraper_tool,
             "Playwright Tool": self.mcp_playwright_tool,
+            "Financial Phase A Tool": self.financial_phase_a_tool,
         }
 
         for tool_name, tool_instance in tools_to_close.items():

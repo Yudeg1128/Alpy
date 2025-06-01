@@ -55,17 +55,59 @@ single_line_item_extraction:
     - Definition/Guidance: '{line_item_definition}'
 
     Instructions:
-    1.  Carefully review the provided Mongolian financial document excerpts (text and table data) for the reporting period '{period_label}'.
-    2.  Identify the precise numerical value for the line item.
-    3.  Determine the reported currency (e.g., 'MNT', 'USD', 'EUR'). If not directly with the number, infer from page/table context.
-    4.  Determine the unit of the value (e.g., 'actuals', 'thousands', 'millions', 'мян.₮', 'сая.₮'). If numbers are in thousands/millions, state this. Use 'actuals' if no scaling is apparent.
-    5.  Provide a brief source reference (e.g., "Page X, Table Y, Row Z", "Page A, paragraph B", "Financial Statements section, Item Q").
-    6.  If the data point is explicitly zero, use 0 for 'value'.
-    7.  If the data is not found, not applicable (N/A), or cannot be reliably determined:
-        - Set 'value', 'currency', and 'unit' to null.
-        - Set 'status' to "CONFIRMED_NOT_FOUND".
-    8.  If the data is successfully extracted:
-        - Set 'status' to "EXTRACTED_SUCCESSFULLY".
+    1.  You are an expert financial data extractor. Your task is to find '{line_item_english_name}' (Mongolian: '{line_item_mongolian_name}') for period '{period_label}' in the OCR text.
+    
+    2.  IMPORTANT: The OCR text contains financial tables that look like this:
+        ```
+        Тайлан тэнцлийн үзүүлэлтүүд 2022 2023 2024
+        ХӨРӨНГӨ
+        Мөнгө ба түүнтэй адилтгах хөрөнгө 5,217,581 4,639,318 7,885,968
+        ```
+        
+    3.  Often the OCR is imperfect with spaces and alignment issues. Match line items by:  
+        - Looking for partial name matches (even with typos/OCR errors)
+        - Examining numbers that follow financial terms
+        - Identifying columns by year numbers (2022, 2023, etc.)
+    
+    4.  Period conversion guide (match '{period_label}' to the right column):
+        - FY2020 = 2020 column
+        - FY2021 = 2021 column
+        - FY2022 = 2022 column
+        - FY2023 = 2023 column
+        - FY2024 = 2024 column or most recent column if 2024 not available
+    
+    5.  Common financial terms and CRITICAL DISTINCTIONS:
+        - Assets (Нийт Хөрөнгө, Актив): Represents what the company owns.
+        - Liabilities (Нийт Өр Төлбөр): Represents what the company owes.
+        - Equity (Эздийн өмч, Өөрийн хөрөнгө, Нийт Эзэмшигчийн Өмч): Represents the owners' stake.
+          CRITICALLY IMPORTANT: 'Total Equity' (Эздийн өмч, Өөрийн хөрөнгө, Нийт Эзэмшигчийн Өмч) is NOT the same as 'Total Assets' (Нийт Хөрөнгө, Актив).
+          'Total Assets' is usually the largest figure on the asset side of a balance sheet. 'Total Equity' is found below liabilities.
+          Do NOT use 'Нийт Хөрөнгө' when looking for 'Total Equity'.
+        - Cash: Мөнгө
+        - Revenue: Орлого, Борлуулалт
+        - Profit: Ашиг
+        - Gross profit: Нийт ашиг
+    
+    6.  Currency and units - look for:
+        - мянган төг = thousands of MNT
+        - тэрбум төг = billions of MNT
+        - сая төг = millions of MNT
+    
+    7.  EXTRACTION STRATEGY:
+        a. First, try to find rows in tables with terms similar to '{line_item_english_name}' or '{line_item_mongolian_name}'.
+        b. Look for numeric values in these rows.
+        c. Determine which column matches '{period_label}' (e.g., a column header like '2023' for 'FY2023').
+        d. Extract the value from the correct row and column.
+        e. IF THE TABLE SEARCH IS UNSUCCESSFUL OR THE DATA IS NOT IN A CLEAR TABLE: Also look for direct key-value patterns, such as '{line_item_mongolian_name}: [VALUE]' or '{line_item_english_name}: [VALUE]' anywhere in the text for the period '{period_label}'. The value might follow the colon directly.
+
+    8.  If you find the data (either from a table or a key-value pair):
+        - Return the exact numeric value
+        - Include currency and unit information
+        - Set status to "EXTRACTED_SUCCESSFULLY"
+    
+    9.  If after thorough search you cannot find the data:
+        - Set value, currency, and unit to null
+        - Set status to "CONFIRMED_NOT_FOUND"
 
     Output Format: Respond STRICTLY with a single JSON object. No conversational text outside this JSON.
     ```json

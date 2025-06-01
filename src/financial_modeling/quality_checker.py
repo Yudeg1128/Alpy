@@ -207,7 +207,7 @@ class QualityChecker:
                                                     if p_data.get("extraction_status") == "SUCCESS" and p_data.get("value") is not None:
                                                         successfully_extracted_data_points +=1
         if total_historical_data_points > 0:
-            completeness = (successfully_extracted_data_points / total_historical_data_points) * 100
+            completeness = (float(successfully_extracted_data_points) / total_historical_data_points) * 100
             self.report.phase_a_data_completeness_score = round(completeness, 2)
             logger.info(f"Phase A Completeness: {self.report.phase_a_data_completeness_score}% ({successfully_extracted_data_points}/{total_historical_data_points} data points).")
         else:

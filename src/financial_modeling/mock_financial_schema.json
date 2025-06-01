@@ -1,0 +1,173 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Mock Financial Model Schema (Income Statement & Basic Balance Sheet)",
+  "description": "Schema with core income statement items and a basic balance sheet, inspired by a more comprehensive model.",
+  "type": "object",
+  "$defs": {
+    "period_object_value_only": {
+      "type": "object",
+      "properties": {
+        "period_label": {
+          "type": "string",
+          "description": "Label for the period, e.g., FY2023, FY_Proj_1."
+        },
+        "value": {
+          "type": ["number", "string", "null"],
+          "description": "Value for the item in this period."
+        },
+        "source_reference": {
+          "type": ["string", "null"],
+          "description": "Reference to where the data was found."
+        },
+        "extraction_status": {
+          "type": ["string", "null"],
+          "description": "Status of data extraction for this period (e.g., SUCCESS, NOT_FOUND_PER_LLM, FAILURE_...)"
+        }
+      },
+      "required": ["period_label"],
+      "additionalProperties": true
+    },
+
+    "financial_line_item_base_schema": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Name of the financial line item (English)." },
+        "name_mn": { "type": ["string", "null"], "description": "Name of the financial line item (Mongolian)." },
+        "data_type": { "type": "string", "default": "currency_value", "description": "Semantic data type." },
+        "periods": {
+          "type": "array", "default": [],
+          "items": { "$ref": "#/$defs/period_object_value_only" },
+          "description": "Array of values for historical and projected periods."
+        },
+        "is_calculated": { "type": "boolean", "description": "True if calculated." },
+        "calculation_logic_description": { "type": ["string", "null"] },
+        "source_guidance_historical": { "type": ["string", "null"] },
+        "ai_instructions": { "type": ["string", "null"] },
+        "ai_instructions_projected": { "type": ["string", "null"] },
+        "notes": { "type": ["string", "null"] },
+        "unit": { "type": ["string", "null"] }
+      },
+      "required": ["name", "data_type", "periods", "is_calculated"],
+      "additionalProperties": true
+    }
+  },
+  "properties": {
+    "model_metadata": {
+      "type": "object",
+      "properties": {
+        "model_name": { "type": "string", "default": "Mock Financial Model" },
+        "version": { "type": "string", "default": "1.0_mock" },
+        "currency": { "type": "string", "default": "MNT" },
+        "fiscal_year_end": { "type": "string", "pattern": "^(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])", "default": "12-31" },
+        "historical_periods_count": { "type": "integer", "minimum": 0, "default": 5 },
+        "projection_periods_count": { "type": "integer", "minimum": 0, "default": 0 }
+      },
+      "required": ["model_name", "version", "currency", "fiscal_year_end", "historical_periods_count", "projection_periods_count"],
+      "additionalProperties": true
+    },
+    "financial_statements_core": {
+      "type": "object",
+      "default": {},
+      "properties": {
+        "section_description": { "type": "string", "default": "Үндсэн санхүүгийн тайлангууд (Хялбаршуулсан)." },
+        "historical_period_labels": { "type": "array", "items": { "type": "string" }, "default": ["FY2020", "FY2021", "FY2022", "FY2023", "FY2024"] },
+        "projected_period_labels": { "type": "array", "items": { "type": "string" }, "default": [] },
+        "income_statement": {
+          "type": "object",
+          "default": {},
+          "properties": {
+            "ai_instructions_statement": { "type": "string", "default": "Орлогын тайлангийн зүйлсийг гаргана уу (хялбаршуулсан)." },
+            "line_items": {
+              "type": "array",
+              "description": "Core income statement line items for mock data.",
+              "items": [
+                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Revenue"}, "name_mn": {"const": "Орлого"}, "is_calculated": {"const": false}} },
+                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Cost of Goods Sold"}, "name_mn": {"const": "ББӨ"}, "is_calculated": {"const": false}} },
+                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Gross Profit"}, "name_mn": {"const": "Нийт ашиг"}, "is_calculated": {"const": true}} },
+                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Operating Expenses"}, "name_mn": {"const": "Үйл ажиллагааны зардал"}, "is_calculated": {"const": false}} },
+                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "EBITDA"}, "name_mn": {"const": "Хүү, татвар, элэгдэл, хорогдлын өмнөх ашиг"}, "is_calculated": {"const": true}, "calculation_logic_description": {"default": "Gross Profit - Operating Expenses"}} },
+                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Depreciation & Amortization"}, "name_mn": {"const": "Элэгдэл ба хорогдол"}, "is_calculated": {"const": false}} },
+                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "EBIT"}, "name_mn": {"const": "Хүү, татварын өмнөх ашиг"}, "is_calculated": {"const": true}, "calculation_logic_description": {"default": "EBITDA - Depreciation & Amortization"}} },
+                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Interest Expense"}, "name_mn": {"const": "Хүүгийн зардал"}, "is_calculated": {"const": false}} },
+                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Income Before Tax"}, "name_mn": {"const": "Татварын өмнөх ашиг"}, "is_calculated": {"const": true}, "calculation_logic_description": {"default": "EBIT - Interest Expense"}} },
+                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Tax"}, "name_mn": {"const": "Татвар"}, "is_calculated": {"const": false}} },
+                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Net Income"}, "name_mn": {"const": "Цэвэр ашиг"}, "is_calculated": {"const": true}, "calculation_logic_description": {"default": "Income Before Tax - Tax"}} }
+              ],
+              "default": []
+            }
+          },
+          "required": ["line_items"],
+          "additionalProperties": false
+        },
+        "balance_sheet": {
+          "type": "object",
+          "default": {},
+          "properties": {
+            "ai_instructions_statement": { "type": "string", "default": "Балансын тайлангийн зүйлсийг гаргана уу (хялбаршуулсан)." },
+            "line_items": {
+              "type": "array",
+              "description": "Core balance sheet line items.",
+              "items": [
+                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Cash and Cash Equivalents"}, "name_mn": {"const": "Мөнгө ба түүнтэй адилтгах хөрөнгө"}, "is_calculated": {"const": false}} },
+                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Accounts Receivable"}, "name_mn": {"const": "Авлага"}, "is_calculated": {"const": false}} },
+                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Inventory"}, "name_mn": {"const": "Бараа материал"}, "is_calculated": {"const": false}} },
+                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Total Current Assets"}, "name_mn": {"const": "Нийт Эргэлтийн Хөрөнгө"}, "is_calculated": {"const": true}, "calculation_logic_description": {"default": "Cash and Cash Equivalents + Accounts Receivable + Inventory"}} },
+                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Property, Plant & Equipment (Net)"}, "name_mn": {"const": "Үндсэн хөрөнгө (цэвэр)"}, "is_calculated": {"const": false}} },
+                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Intangible Assets"}, "name_mn": {"const": "Биет бус хөрөнгө"}, "is_calculated": {"const": false}} },
+                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Total Non-Current Assets"}, "name_mn": {"const": "Нийт Эргэлтийн Бус Хөрөнгө"}, "is_calculated": {"const": true}, "calculation_logic_description": {"default": "Property, Plant & Equipment (Net) + Intangible Assets"}} },
+                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Total Assets"}, "name_mn": {"const": "Нийт Хөрөнгө"}, "is_calculated": {"const": true}, "calculation_logic_description": {"default": "Total Current Assets + Total Non-Current Assets"}} },
+                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Accounts Payable"}, "name_mn": {"const": "Өглөг"}, "is_calculated": {"const": false}} },
+                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Short-Term Debt"}, "name_mn": {"const": "Богино хугацаат өр төлбөр"}, "is_calculated": {"const": false}} },
+                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Total Current Liabilities"}, "name_mn": {"const": "Нийт Богино Хугацаат Өр Төлбөр"}, "is_calculated": {"const": true}, "calculation_logic_description": {"default": "Accounts Payable + Short-Term Debt"}} },
+                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Long-Term Debt"}, "name_mn": {"const": "Урт хугацаат өр төлбөр"}, "is_calculated": {"const": false}} },
+                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Total Non-Current Liabilities"}, "name_mn": {"const": "Нийт Урт Хугацаат Өр Төлбөр"}, "is_calculated": {"const": true}, "calculation_logic_description": {"default": "Long-Term Debt"}} },
+                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Total Liabilities"}, "name_mn": {"const": "Нийт Өр Төлбөр"}, "is_calculated": {"const": true}, "calculation_logic_description": {"default": "Total Current Liabilities + Total Non-Current Liabilities"}} },
+                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Common Stock"}, "name_mn": {"const": "Энгийн хувьцаа"}, "is_calculated": {"const": false}} },
+                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Retained Earnings"}, "name_mn": {"const": "Хуримтлагдсан ашиг"}, "is_calculated": {"const": false}} },
+                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Total Equity"}, "name_mn": {"const": "Нийт Эзэмшигчийн Өмч"}, "is_calculated": {"const": true}, "calculation_logic_description": {"default": "Common Stock + Retained Earnings"}, "ai_instructions": {"default": "Extract 'Total Equity' (Нийт Эзэмшигчийн Өмч or Эздийн өмч or Өөрийн хөрөнгө). This is the owners' stake, found below Total Liabilities. CRITICALLY IMPORTANT: This is NOT 'Total Assets' (Нийт Хөрөнгө or Актив). Do NOT use the value for 'Нийт Хөрөнгө'. Verify against Assets = Liabilities + Equity if possible, but prioritize direct extraction of the 'Total Equity' line item itself."}} },
+                { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Total Liabilities & Equity"}, "name_mn": {"const": "Нийт Өр Төлбөр ба Эзэмшигчийн Өмч"}, "is_calculated": {"const": true}, "calculation_logic_description": {"default": "Total Liabilities + Total Equity"}} }
+              ],
+              "default": []
+            }
+          },
+          "required": ["line_items"],
+          "additionalProperties": false
+        },
+        "cash_flow_statement": {
+          "type": "object",
+          "default": {},
+          "properties": {
+            "ai_instructions_statement": { "type": "string", "default": "Мөнгөн гүйлгээний тайлангийн зүйлсийг гаргана уу (хялбаршуулсан)." },
+            "line_items": {
+              "type": "array",
+              "items": [
+                  { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Net Income (CF)"}, "name_mn": {"const": "Цэвэр ашиг (Мөнгөн гүйлгээ)"}, "is_calculated": {"const": false}, "ai_instructions": {"default": "Often the starting point for CFO. Can be linked from Income Statement."}} },
+                  { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Depreciation & Amortization (CF)"}, "name_mn": {"const": "Элэгдэл хорогдол (Мөнгөн гүйлгээ)"}, "is_calculated": {"const": false}, "ai_instructions": {"default": "Non-cash expense added back to Net Income."}} },
+                  { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Changes in Accounts Receivable"}, "name_mn": {"const": "Авлага дансны өөрчлөлт"}, "is_calculated": {"const": false}, "ai_instructions": {"default": "Increase in AR is a use of cash (subtract), decrease is a source of cash (add)."}} },
+                  { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Changes in Inventory"}, "name_mn": {"const": "Бараа материалын өөрчлөлт"}, "is_calculated": {"const": false}, "ai_instructions": {"default": "Increase in Inventory is a use of cash (subtract), decrease is a source of cash (add)."}} },
+                  { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Changes in Accounts Payable"}, "name_mn": {"const": "Өглөг дансны өөрчлөлт"}, "is_calculated": {"const": false}, "ai_instructions": {"default": "Increase in AP is a source of cash (add), decrease is a use of cash (subtract)."}} },
+                  { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Net Cash from Operating Activities"}, "name_mn": {"const": "Үндсэн үйл ажиллагааны цэвэр мөнгөн гүйлгээ"}, "is_calculated": {"const": true}, "calculation_logic_description": {"default": "Sum of Net Income, D&A, and changes in working capital components."}} },
+                  { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Capital Expenditures"}, "name_mn": {"const": "Капитал зарцуулалт"}, "is_calculated": {"const": false}, "ai_instructions": {"default": "Purchase of Property, Plant & Equipment. Typically a negative cash flow."}} },
+                  { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Proceeds from Sale of Assets"}, "name_mn": {"const": "Хөрөнгө борлуулсны орлого"}, "is_calculated": {"const": false}, "ai_instructions": {"default": "Cash received from selling long-term assets. Typically a positive cash flow."}} },
+                  { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Net Cash from Investing Activities"}, "name_mn": {"const": "Хөрөнгө оруулалтын үйл ажиллагааны цэвэр мөнгөн гүйлгээ"}, "is_calculated": {"const": true}, "calculation_logic_description": {"default": "Sum of cash flows from investing activities (e.g., Capex, Sale of Assets)."}} },
+                  { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Issuance of Debt"}, "name_mn": {"const": "Өр төлбөр гаргасан"}, "is_calculated": {"const": false}, "ai_instructions": {"default": "Cash received from new borrowings."}} },
+                  { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Repayment of Debt"}, "name_mn": {"const": "Өр төлбөр барагдуулсан"}, "is_calculated": {"const": false}, "ai_instructions": {"default": "Cash paid to reduce debt."}} },
+                  { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Issuance of Equity"}, "name_mn": {"const": "Хувьцаа гаргасан"}, "is_calculated": {"const": false}, "ai_instructions": {"default": "Cash received from selling new stock."}} },
+                  { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Dividends Paid"}, "name_mn": {"const": "Ногдол ашиг төлсөн"}, "is_calculated": {"const": false}, "ai_instructions": {"default": "Cash paid out to shareholders."}} },
+                  { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Net Cash from Financing Activities"}, "name_mn": {"const": "Санхүүжилтийн үйл ажиллагааны цэвэр мөнгөн гүйлгээ"}, "is_calculated": {"const": true}, "calculation_logic_description": {"default": "Sum of cash flows from financing activities (e.g., Debt/Equity issuance/repayment, Dividends)."}} },
+                  { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Net Change in Cash"}, "name_mn": {"const": "Мөнгөн хөрөнгийн цэвэр өөрчлөлт"}, "is_calculated": {"const": true}, "calculation_logic_description": {"default": "Net Cash from Operating Activities + Net Cash from Investing Activities + Net Cash from Financing Activities."}} },
+                  { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Cash at Beginning of Period"}, "name_mn": {"const": "Тайлант үеийн эхний мөнгөн хөрөнгө"}, "is_calculated": {"const": false}} },
+                  { "allOf": [{"$ref": "#/$defs/financial_line_item_base_schema"}], "properties": {"name": {"const": "Cash at End of Period"}, "name_mn": {"const": "Тайлант үеийн эцсийн мөнгөн хөрөнгө"}, "is_calculated": {"const": true}, "calculation_logic_description": {"default": "Cash at Beginning of Period + Net Change in Cash. Should reconcile with Balance Sheet cash."}} }
+              ],
+              "default": []
+            }
+          },
+          "required": ["line_items"]
+        }
+      },
+      "required": ["historical_period_labels", "income_statement", "balance_sheet", "cash_flow_statement"],
+      "additionalProperties": false
+    }
+  },
+  "required": ["model_metadata", "financial_statements_core"]
+}

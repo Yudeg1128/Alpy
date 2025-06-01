@@ -151,7 +151,22 @@ class MCPDocumentParserTool(BaseTool, BaseModel):
         if not self.server_executable.exists(): raise MCPDocumentParserToolError(f"Server exec not found: {self.server_executable}")
         if not self.server_script.exists(): raise MCPDocumentParserToolError(f"Server script not found: {self.server_script}")
         if not self.server_cwd_path or not self.server_cwd_path.is_dir(): raise MCPDocumentParserToolError(f"Server CWD invalid: {self.server_cwd_path}")
-        return StdioServerParameters(command=str(self.server_executable), args=[str(self.server_script)], cwd=str(self.server_cwd_path), env=os.environ.copy())
+        server_log_file = self.server_cwd_path.parent / "logs" / "mcp_document_parser_server.log"
+        server_log_file.parent.mkdir(parents=True, exist_ok=True) # Ensure logs directory exists
+
+        # Ensure executable and script paths are strings and properly quoted if they contain spaces (though unlikely for these paths)
+        # Using absolute paths for executable and script is generally safer.
+        # The paths self.server_executable and self.server_script are already absolute.
+        command_str = f"{str(self.server_executable)} {str(self.server_script)}"
+        
+        self._logger_instance.info(f"MCPDocumentParserServer log will be at: {server_log_file}")
+
+        return StdioServerParameters(
+            command="/bin/bash", # Using /bin/bash for explicit path
+            args=["-c", command_str],
+            cwd=str(self.server_cwd_path),
+            env=os.environ.copy()
+        )
 
     async def _mcp_server_log_callback(self, params: LoggingMessageNotificationParams) -> None:
         level = getattr(logging, params.level.upper(), logging.INFO)
@@ -161,32 +176,51 @@ class MCPDocumentParserTool(BaseTool, BaseModel):
         self._logger_instance.info(f"Starting {self.name} (server: {self.server_script.name}) MCP session lifecycle...")
         try:
             server_params = self._get_server_params()
-            # Log file for this specific client's view of server's stderr
-            log_file_path = Path(os.getcwd()) / f"logs/docparser_mcp_client_sees_{self.server_script.name}.log"
-            log_file_path.parent.mkdir(parents=True, exist_ok=True) # Ensure logs directory exists
-            self._logger_instance.info(f"MCP Server ({self.server_script.name}) stderr will be logged to: {log_file_path}")
             
+            log_file_path = Path("logs") / "mcp_document_parser_server.log"
+            log_file_path.parent.mkdir(parents=True, exist_ok=True)
             with open(log_file_path, 'a', encoding='utf-8') as ferr:
                 async with stdio_client(server_params, errlog=ferr) as (rs, ws):
                     self._logger_instance.info(f"Stdio streams obtained for {self.server_script.name}.")
-                    async with ClientSession(rs, ws, client_info=self._client_info, logging_callback=self._mcp_server_log_callback) as session:
+                    async with ClientSession(
+                        rs, 
+                        ws, 
+                        client_info=self._client_info,
+                        logging_callback=self._mcp_server_log_callback
+                    ) as session:
                         self._logger_instance.info(f"ClientSession created. Initializing {self.name} session...")
-                        init_result: InitializeResult = await asyncio.wait_for(session.initialize(), timeout=self.session_init_timeout)
+                        init_result: InitializeResult = await asyncio.wait_for(
+                            session.initialize(), 
+                            timeout=self.session_init_timeout
+                        )
                         self._logger_instance.info(f"{self.name} MCP session initialized. Server caps: {init_result.capabilities}")
+                        
                         self._session_async = session
                         self._session_ready_event_async.set()
+                        
                         self._logger_instance.info(f"{self.name} session ready. Waiting for shutdown signal...")
                         await self._shutdown_event_async.wait()
                         self._logger_instance.info(f"{self.name} shutdown signal received.")
-        except asyncio.TimeoutError: self._logger_instance.error(f"Timeout ({self.session_init_timeout}s) during {self.name} session init.")
-        except asyncio.CancelledError: self._logger_instance.info(f"{self.name} session lifecycle task cancelled.")
-        except MCPDocumentParserToolError as e: self._logger_instance.error(f"Lifecycle error (setup): {e}")
-        except Exception as e: self._logger_instance.error(f"Error in {self.name} session lifecycle: {e}", exc_info=True)
+
+        except asyncio.TimeoutError:
+            self._logger_instance.error(f"Timeout ({self.session_init_timeout}s) during {self.name} session init.")
+        except asyncio.CancelledError:
+            self._logger_instance.info(f"{self.name} session lifecycle task cancelled.")
+        except MCPDocumentParserToolError as e:
+            self._logger_instance.error(f"Lifecycle error (setup or general): {e}", exc_info=True) # Added exc_info for more detail
+        except Exception as e:
+            self._logger_instance.error(f"Error in {self.name} session lifecycle: {e}", exc_info=True)
         finally:
             self._logger_instance.info(f"{self.name} session lifecycle task finished.")
-            self._session_async = None
+            self._session_async = None # Ensure session is cleared
+            # If the lifecycle task ends (normally or due to error before ready_event was set),
+            # and ready_event wasn't set, set it now to prevent indefinite blocking in _ensure_session_ready.
+            # Callers of _ensure_session_ready must check if self._session_async is None.
             if self._session_ready_event_async and not self._session_ready_event_async.is_set():
-                self._session_ready_event_async.set() 
+                self._session_ready_event_async.set()
+            # Clear the shutdown event in case it was set and we are exiting due to an error
+            if self._shutdown_event_async and self._shutdown_event_async.is_set():
+                self._shutdown_event_async.clear()
 
     async def _ensure_session_ready(self):
         if self._is_closed_async: raise MCPDocumentParserToolError(f"{self.name} is closed.")
@@ -200,13 +234,21 @@ class MCPDocumentParserTool(BaseTool, BaseModel):
                 self._session_ready_event_async.clear(); self._shutdown_event_async.clear()
                 self._lifecycle_task_async = asyncio.create_task(self._manage_session_lifecycle())
             else: self._logger_instance.info(f"Waiting for existing {self.name} session setup.") # Should not happen if logic is correct
-            try: await asyncio.wait_for(self._session_ready_event_async.wait(), timeout=self.session_init_timeout + 5.0) # Shorter subsequent wait
+            
+            self._logger_instance.debug(f"About to wait for _session_ready_event_async for {self.name} (timeout: {self.session_init_timeout + 5.0}s). Event state: {self._session_ready_event_async.is_set()}")
+            try: 
+                await asyncio.wait_for(self._session_ready_event_async.wait(), timeout=self.session_init_timeout + 5.0) # Shorter subsequent wait
+                self._logger_instance.debug(f"_session_ready_event_async for {self.name} was set or already set.")
             except asyncio.TimeoutError:
-                self._logger_instance.error(f"Timeout waiting for {self.name} session ready.")
-                if self._lifecycle_task_async and not self._lifecycle_task_async.done(): self._lifecycle_task_async.cancel()
+                self._logger_instance.error(f"Timeout waiting for {self.name} _session_ready_event_async after {self.session_init_timeout + 5.0}s.")
+                if self._lifecycle_task_async and not self._lifecycle_task_async.done():
+                    self._logger_instance.warning(f"Attempting to cancel the lifecycle task for {self.name} due to session ready timeout.")
+                    self._lifecycle_task_async.cancel()
                 raise MCPDocumentParserToolError(f"Timeout establishing {self.name} MCP session.")
+            
             if not self._session_async or not self._session_ready_event_async.is_set():
-                raise MCPDocumentParserToolError(f"Failed to establish valid {self.name} MCP session.")
+                self._logger_instance.error(f"Session for {self.name} is not valid after wait. Session obj: {'present' if self._session_async else 'None'}. Event set: {self._session_ready_event_async.is_set()}.")
+                raise MCPDocumentParserToolError(f"Failed to establish valid {self.name} MCP session even after event was supposedly set or wait completed.")
             self._logger_instance.info(f"{self.name} MCP session is ready.")
 
     def _process_mcp_response(self, response: CallToolResult, action_name: str) -> str:
@@ -246,6 +288,11 @@ class MCPDocumentParserTool(BaseTool, BaseModel):
         try:
             await self._ensure_session_ready()
             if not self._session_async: return json.dumps({"status": "error", "error": f"{self.name} session not available."})
+
+            # --- DIAGNOSTIC DELAY --- 
+            self._logger_instance.debug("MCP session ready. Adding 1s delay before first tool call to server as a diagnostic step.")
+            await asyncio.sleep(1) # Potential race condition mitigation/diagnosis
+            # --- END DIAGNOSTIC DELAY ---
 
             self._logger_instance.debug(f"Calling MCP server tool '{server_tool_name}' with arguments: {mcp_arguments_for_server}")
 
@@ -296,88 +343,120 @@ class MCPDocumentParserTool(BaseTool, BaseModel):
 async def main_test_mcp_document_parser_tool():
     log_level_str = os.getenv("LOG_LEVEL_TOOL_TEST", "INFO").upper()
     log_level = getattr(logging, log_level_str, logging.INFO)
-    # Ensure logs directory exists for client-side server logs
     Path("logs").mkdir(parents=True, exist_ok=True)
     if not logging.getLogger().hasHandlers(): logging.basicConfig(level=log_level, format='%(asctime)s - %(name)s - %(levelname)s [%(threadName)s] - %(message)s', stream=sys.stdout)
-    if log_level > logging.DEBUG: logging.getLogger("asyncio").setLevel(logging.WARNING) # Quieten asyncio debug logs unless tool log level is DEBUG
+    if log_level > logging.DEBUG: logging.getLogger("asyncio").setLevel(logging.WARNING)
 
     test_logger = logging.getLogger(__name__ + ".MCPDocumentParserTool_Test")
     test_logger.setLevel(log_level)
     
-    test_logger.info("Starting MCPDocumentParserTool standalone test...")
-    test_logger.warning("Ensure 'document_parser_server.py' is in mcp_servers/ and its env has dependencies (PyMuPDF, pdfplumber, pytesseract + lang packs).")
+    test_logger.info("Starting MCPDocumentParserTool standalone test with multiple PDFs...")
+    test_logger.warning("Ensure 'document_parser_server.py' is running in mcp_servers/ and its env has dependencies (PyMuPDF, pdfplumber, pytesseract + lang packs).")
 
     tool: Optional[MCPDocumentParserTool] = None
     
-    # Create a dummy PDF for testing if one doesn't exist
-    dummy_pdf_path = Path("test_dummy.pdf")
-    if not dummy_pdf_path.exists():
-        try:
-            from reportlab.pdfgen import canvas
-            c = canvas.Canvas(str(dummy_pdf_path))
-            c.drawString(100, 750, "Test Page 1: Hello World!")
-            c.showPage()
-            c.drawString(100, 750, "Test Page 2: Mongolian: Сайн уу")
-            # Add a simple table-like structure
-            c.drawString(100, 700, "Header1 | Header2")
-            c.drawString(100, 680, "Data1   | Data2")
-            c.save()
-            test_logger.info(f"Created dummy PDF: {dummy_pdf_path.resolve()}")
-        except ImportError:
-            test_logger.warning("reportlab not installed, cannot create dummy PDF. Please provide a PDF path for testing.")
-            return
-        except Exception as e:
-            test_logger.error(f"Failed to create dummy PDF: {e}")
-            return
-            
-    pdf_to_test = ""
-    try:
-        user_pdf_path = input(f"Enter path to a PDF to test (or press Enter to use dummy '{dummy_pdf_path.resolve()}'): ").strip()
-        if user_pdf_path:
-            pdf_to_test = Path(user_pdf_path).resolve()
-            if not pdf_to_test.exists():
-                test_logger.error(f"Provided PDF path does not exist: {pdf_to_test}")
-                return
-        else:
-            pdf_to_test = dummy_pdf_path.resolve()
-        
-        test_logger.info(f"Using PDF: {pdf_to_test}")
+    pdf_base_dir = Path("/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390/documents").resolve()
+    pdf_filenames = [
+        "Албан бичиг ба 2001-2003 маягт_1.pdf",
+        "Зээлжих зэрэглэлийн үнэлгээний тайлан (1).pdf",
+        "Мэргэжлийн байгууллагын дүгнэлтүүд (3).pdf",
+        "хавсралт (1).pdf"
+    ]
 
-    except Exception as e:
-        test_logger.error(f"Error getting PDF path: {e}")
-        return
+    # Enhanced print_summary with more specific error handling
+    def print_summary(json_string: str, test_case_name: str, pdf_file_name: str):
+        print(f"\nAttempting to print summary for {test_case_name} (PDF: {pdf_file_name}):")
+        try:
+            parsed_output = json.loads(json_string)
+            print(f"  Successfully parsed JSON for {test_case_name} (PDF: {pdf_file_name}).")
+
+            print(f"  Status: {parsed_output.get('status')}, Message: {parsed_output.get('message')}")
+            print(f"  File: {parsed_output.get('file_name')}, Total Pages: {parsed_output.get('total_pages')}, Processed: {parsed_output.get('processed_pages_count')}")
+            print(f"  Tesseract Available: {parsed_output.get('tesseract_available')}, Initial Check: {parsed_output.get('tesseract_initial_check_message')}")
+
+            pages_content = parsed_output.get('pages_content', [])
+            print(f"  Pages Content Extracted: {len(pages_content)}")
+            for i, page in enumerate(pages_content[:3]): # Show first 3 pages summary
+                text_pymupdf_summary = (page.get('text_pymupdf') or '')[:50] + ('...' if len(page.get('text_pymupdf') or '') > 50 else '')
+                page_ocr_summary = (page.get('page_full_ocr_text') or '')[:50] + ('...' if len(page.get('page_full_ocr_text') or '') > 50 else '')
+                ocr_error_summary = page.get('page_full_ocr_error')
+                print(f"    Page {page.get('page_number')}: PyMuPDF Text: '{text_pymupdf_summary}', Full Page OCR: '{page_ocr_summary}'" + (f", OCR Error: {ocr_error_summary}" if ocr_error_summary else ""))
+            if len(pages_content) > 3:
+                print(f"    ... and {len(pages_content) - 3} more pages content.")
+
+            all_tables = parsed_output.get('all_tables', [])
+            print(f"  Tables Extracted: {len(all_tables)}")
+            for i, table in enumerate(all_tables[:2]): # Show first 2 tables summary
+                print(f"    Table on Page {table.get('page_number')} (Idx {table.get('table_index_on_page')}): {len(table.get('rows', []))} rows. Method: {table.get('extraction_method')}. Notes: {table.get('notes')}")
+            if len(all_tables) > 2:
+                print(f"    ... and {len(all_tables) - 2} more tables.")
+
+            all_images_ocr = parsed_output.get('all_images_ocr_results', [])
+            print(f"  Images OCR Results: {len(all_images_ocr)}")
+            for i, img_ocr in enumerate(all_images_ocr[:3]): # Show first 3 image OCR summaries
+                ocr_text_summary = (img_ocr.get('ocr_text') or '')[:50] + ('...' if len(img_ocr.get('ocr_text') or '') > 50 else '')
+                print(f"    Image on Page {img_ocr.get('page_number')} (Idx {img_ocr.get('image_index_on_page')}): OCR Text: '{ocr_text_summary}', Lang: {img_ocr.get('ocr_lang_used')}, Error: {img_ocr.get('ocr_error')}")
+            if len(all_images_ocr) > 3:
+                print(f"    ... and {len(all_images_ocr) - 3} more image OCR results.")
+            print(f"  Successfully completed print_summary for {test_case_name} (PDF: {pdf_file_name}).")
+            return parsed_output
+        except json.JSONDecodeError as e_json:
+            print(f"  Error: Could not parse JSON response for {test_case_name} (PDF: {pdf_file_name}): {e_json}")
+            print(f"  Problematic JSON string (first 1000 chars): {json_string[:1000]}...")
+            return None
+        except Exception as e_summary:
+            print(f"  Error: Unexpected error during print_summary for {test_case_name} (PDF: {pdf_file_name}): {e_summary}", exc_info=True)
+            return None
 
     try:
         tool = MCPDocumentParserTool()
         if tool._logger_instance and log_level <= logging.DEBUG: tool._logger_instance.setLevel(logging.DEBUG)
 
-        print("\n--- [Test Case 1: Parse PDF with 'auto' OCR mode, 'mon' language] ---")
-        result_json = await tool._arun(
-            document_path=str(pdf_to_test),
-            ocr_mode="auto",
-            ocr_lang="mon" 
-        )
-        print(f"Result (auto/mon):\n{json.dumps(json.loads(result_json), indent=2, ensure_ascii=False)}")
-        result = json.loads(result_json)
-        assert result.get("status") == "success", f"Parsing failed: {result.get('message')}"
+        for pdf_file_name in pdf_filenames:
+            pdf_to_test = pdf_base_dir / pdf_file_name
+            if not pdf_to_test.exists():
+                test_logger.error(f"PDF path does not exist: {pdf_to_test}. Skipping...")
+                continue
+            
+            test_logger.info(f"\n{'='*20} PROCESSING PDF: {pdf_file_name} {'='*20}")
 
-        if pdf_to_test.name != "test_dummy.pdf": # test_dummy only has 2 pages
-            print("\n--- [Test Case 2: Parse same PDF, 'force_full_pages' OCR, 'eng' language, limit server pages (internal server test)] ---")
-            # To test server's internal page limit, we'd need a way to pass it, or rely on server default if any.
-            # This client tool itself does not pass max_pages_to_process_for_testing.
-            # The server has this field, so we're testing if the server uses it if it were set by another means
-            # (e.g. if the server was started with a default for that field in its DocumentParseInput for testing).
-            # Here, we just call with different OCR settings.
-            result_json_force = await tool._arun(
-                document_path=str(pdf_to_test),
-                ocr_mode="force_full_pages",
-                ocr_lang="eng",
-                dpi_for_full_page_ocr=150 # Lower DPI for faster test
-            )
-            print(f"Result (force_full_pages/eng/150dpi):\n{json.dumps(json.loads(result_json_force), indent=2, ensure_ascii=False)}")
-            result_force = json.loads(result_json_force)
-            assert result_force.get("status") == "success", f"Force OCR parsing failed: {result_force.get('message')}"
-            # Could add more assertions, e.g. check if result_force['processed_pages_count'] reflects a limit if server was configured for it.
+            tc1_name = f"Test Case 1 (auto/mon) for {pdf_file_name}"
+            print(f"\n--- [{tc1_name}] ---")
+            try:
+                result_json_tc1 = await tool._arun(
+                    document_path=str(pdf_to_test),
+                    ocr_mode="auto",
+                    ocr_lang="mon" 
+                )
+                parsed_result_tc1 = print_summary(result_json_tc1, tc1_name, pdf_file_name)
+                if parsed_result_tc1:
+                    assert parsed_result_tc1.get("status") == "success", f"{tc1_name} Parsing failed: {parsed_result_tc1.get('message')}"
+            except Exception as e_tc1:
+                 test_logger.error(f"Error during {tc1_name}: {e_tc1}", exc_info=True)
+
+            tc2_name = f"Test Case 2 (force_full_pages/eng/150dpi) for {pdf_file_name}"
+            print(f"\n--- [{tc2_name}] ---")
+            result_json_tc2 = ""
+            try:
+                result_json_tc2 = await tool._arun(
+                    document_path=str(pdf_to_test),
+                    ocr_mode="force_full_pages",
+                    ocr_lang="eng", 
+                    dpi_for_full_page_ocr=150 
+                )
+                test_logger.info(f"{tc2_name}: Received JSON string of length {len(result_json_tc2)}.")
+                test_logger.info(f"{tc2_name}: JSON snippet (first 500 chars): {result_json_tc2[:500]}...")
+                
+                parsed_result_tc2 = print_summary(result_json_tc2, tc2_name, pdf_file_name)
+                
+                if parsed_result_tc2:
+                    assert parsed_result_tc2.get("status") == "success", f"{tc2_name} Force OCR parsing failed: {parsed_result_tc2.get('message')}"
+                else:
+                    test_logger.error(f"{tc2_name}: print_summary returned None, indicating an issue.")
+
+            except Exception as e_tc2_arun:
+                test_logger.error(f"{tc2_name}: Error during _arun or initial processing: {e_tc2_arun}", exc_info=True)
+                test_logger.error(f"{tc2_name}: Potentially problematic JSON (if received before error): {result_json_tc2[:500]}...")
 
     except Exception as e:
         test_logger.error(f"Error during MCPDocumentParserTool test: {e}", exc_info=True)
@@ -386,10 +465,7 @@ async def main_test_mcp_document_parser_tool():
             test_logger.info("Closing MCPDocumentParserTool...")
             await tool.close()
             test_logger.info("MCPDocumentParserTool closed.")
-        if dummy_pdf_path.exists() and "test_dummy.pdf" in str(dummy_pdf_path): # Clean up dummy PDF
-            try: dummy_pdf_path.unlink(); test_logger.info(f"Cleaned up dummy PDF: {dummy_pdf_path}")
-            except OSError as e_del: test_logger.warning(f"Could not delete dummy PDF {dummy_pdf_path}: {e_del}")
-        test_logger.info("MCPDocumentParserTool standalone test finished.")
+        test_logger.info("MCPDocumentParserTool standalone test finished for all PDFs.")
 
 if __name__ == "__main__":
     # Ensure logs directory exists for client-side view of server logs

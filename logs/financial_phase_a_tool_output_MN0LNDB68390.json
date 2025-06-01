@@ -1,0 +1,945 @@
+{
+  "status": "FAILED_QUALITY_CHECK",
+  "message": "Phase A extraction completed, but quality checks failed.",
+  "security_id": "MN0LNDB68390",
+  "financial_model_phase_a": {
+    "security_id": "MN0LNDB68390",
+    "primary_document_name": "Мэргэжлийн байгууллагын дүгнэлтүүд (3).pdf",
+    "status": "COMPLETED_INTERMEDIATE_EXTRACTION",
+    "message": "RAG processing completed. Line item extraction completed.",
+    "metadata": {
+      "company_name": "ЛэндМН ББСБ ХК",
+      "reporting_currency": "MNT",
+      "document_type": "financial report",
+      "document_source_name": "Мэргэжлийн байгууллагын дүгнэлтүүд (3).pdf"
+    },
+    "historical_periods": [
+      {
+        "period_id": "FY2020",
+        "period_label": "FY2020",
+        "start_date": "2020-01-01",
+        "end_date": "2020-12-31",
+        "period_type": "custom"
+      },
+      {
+        "period_id": "FY2021",
+        "period_label": "FY2021",
+        "start_date": "2021-01-01",
+        "end_date": "2021-12-31",
+        "period_type": "custom"
+      },
+      {
+        "period_id": "FY2022",
+        "period_label": "FY2022",
+        "start_date": "2022-01-01",
+        "end_date": "2022-12-31",
+        "period_type": "custom"
+      },
+      {
+        "period_id": "FY2023",
+        "period_label": "FY2023",
+        "start_date": "2023-01-01",
+        "end_date": "2023-12-31",
+        "period_type": "custom"
+      },
+      {
+        "period_id": "FY2024",
+        "period_label": "FY2024",
+        "start_date": "2024-01-01",
+        "end_date": "2024-12-31",
+        "period_type": "custom"
+      }
+    ],
+    "line_items_data": [
+      {
+        "item_name_english": "Depreciation & Amortization",
+        "item_name_mongolian": "Элэгдэл ба хорогдол",
+        "period_id": "FY2022",
+        "value": 259961,
+        "unit": "мян.төг",
+        "notes": "The document contains a table with the heading '2022'.  The row 'Элэгдлийн зардал' (Depreciation Expense) has the value 259961 in the 2022 column.",
+        "extraction_status": "EXTRACTED_SUCCESSFULLY"
+      },
+      {
+        "item_name_english": "Cash and Cash Equivalents",
+        "item_name_mongolian": "Мөнгө ба түүнтэй адилтгах хөрөнгө",
+        "period_id": "FY2022",
+        "value": 5217581,
+        "unit": "мянган төг",
+        "notes": "Table showing 'Мөнгө ба түүнтэй адилтгах хөрөнгө' with values for 2022.",
+        "extraction_status": "EXTRACTED_SUCCESSFULLY"
+      },
+      {
+        "item_name_english": "Cash and Cash Equivalents",
+        "item_name_mongolian": "Мөнгө ба түүнтэй адилтгах хөрөнгө",
+        "period_id": "FY2023",
+        "value": 4639318,
+        "unit": "мянган",
+        "notes": "Found 'Мөнгө ба түүнтэй адилтгах хөрөнгө' in the table under the 2023 column, with a value of 4,639,318.",
+        "extraction_status": "EXTRACTED_SUCCESSFULLY"
+      },
+      {
+        "item_name_english": "Cash and Cash Equivalents",
+        "item_name_mongolian": "Мөнгө ба түүнтэй адилтгах хөрөнгө",
+        "period_id": "FY2024",
+        "value": 16.2,
+        "unit": "төгрөг",
+        "notes": "“ЛэндМН ББСБ” ХК-ийн мөнгө ба түүнтэй адилтгах хөрөнгийн дүн 2024 оны 3 дугаар улирлын байдлаар 16.2 тэрбум төгрөг",
+        "extraction_status": "EXTRACTED_SUCCESSFULLY"
+      },
+      {
+        "item_name_english": "Property, Plant & Equipment (Net)",
+        "item_name_mongolian": "Үндсэн хөрөнгө (цэвэр)",
+        "period_id": "FY2022",
+        "value": 373470,
+        "unit": "мянган төг",
+        "notes": "Found 'Үндсэн ба биет бус хөрөнгө' in a table, with 373,470 in the 2022 column. Currency is 'мянган төг'.",
+        "extraction_status": "EXTRACTED_SUCCESSFULLY"
+      },
+      {
+        "item_name_english": "Property, Plant & Equipment (Net)",
+        "item_name_mongolian": "Үндсэн хөрөнгө (цэвэр)",
+        "period_id": "FY2024",
+        "value": 2648977,
+        "unit": "мянган төг",
+        "notes": "Found 'Үндсэн ба биет бус хөрөнгө' (similar to 'Property, Plant & Equipment (Net)') in the financial table, with the value 2,648,977 in the 2023 УЦУЙН column which likely corresponds to FY2024.",
+        "extraction_status": "EXTRACTED_SUCCESSFULLY"
+      },
+      {
+        "item_name_english": "Total Non-Current Assets",
+        "item_name_mongolian": "Нийт Эргэлтийн Бус Хөрөнгө",
+        "period_id": "FY2022",
+        "value": 373470,
+        "unit": "мянган төг",
+        "notes": "The table under 'Тайлан тэнцлийн үзүүлэлтүүд' contains 'Үндсэн ба биет бус хөрөнгө' which corresponds to 'Total Non-Current Assets'. The value extracted is from the 2022 column.",
+        "extraction_status": "EXTRACTED_SUCCESSFULLY"
+      },
+      {
+        "item_name_english": "Total Assets",
+        "item_name_mongolian": "Нийт Хөрөнгө",
+        "period_id": "FY2022",
+        "value": 76858757,
+        "unit": "мянган төг",
+        "notes": "Found 'Нийт хөрөнгийн дүн' (Total Assets) in a table, with a value of 76,858,757 in the 2022 column.",
+        "extraction_status": "EXTRACTED_SUCCESSFULLY"
+      },
+      {
+        "item_name_english": "Total Assets",
+        "item_name_mongolian": "Нийт Хөрөнгө",
+        "period_id": "FY2023",
+        "value": 103819081,
+        "unit": "мянган төг",
+        "notes": "Table: Тайлан тэнцлийн үзүүлэлтүүд, Нийт хөрөнгийн дүн",
+        "extraction_status": "EXTRACTED_SUCCESSFULLY"
+      },
+      {
+        "item_name_english": "Total Assets",
+        "item_name_mongolian": "Нийт Хөрөнгө",
+        "period_id": "FY2024",
+        "value": 228114286,
+        "unit": "мянган төг",
+        "notes": "Found 'Нийт хөрөнгийн дүн' (Total Assets) in the financial table, with the value from the 2023 УЦУЙН column (FY2024 equivalent).",
+        "extraction_status": "EXTRACTED_SUCCESSFULLY"
+      },
+      {
+        "item_name_english": "Total Liabilities",
+        "item_name_mongolian": "Нийт Өр Төлбөр",
+        "period_id": "FY2022",
+        "value": 64870653,
+        "unit": "төг",
+        "notes": "Found 'Нийг өр төлбөрийн дүн' (Total Liabilities) in the financial table for FY2022.",
+        "extraction_status": "EXTRACTED_SUCCESSFULLY"
+      },
+      {
+        "item_name_english": "Total Liabilities",
+        "item_name_mongolian": "Нийт Өр Төлбөр",
+        "period_id": "FY2024",
+        "value": 161150417,
+        "unit": "мянган төг",
+        "notes": "Table with financial data. 'Нийг өр төлбөрийн дүн' is found in the 'ӨР ТӨЛБӨР' section. The value '161,150,417' corresponds to the '2023' column, and represents the total liabilities for the year 2024",
+        "extraction_status": "EXTRACTED_SUCCESSFULLY"
+      },
+      {
+        "item_name_english": "Depreciation & Amortization (CF)",
+        "item_name_mongolian": "Элэгдэл хорогдол (Мөнгөн гүйлгээ)",
+        "period_id": "FY2023",
+        "value": 259961,
+        "unit": "мян.төг",
+        "notes": "Found 'Элэгдлийн зардал' in the 2022 column and a similar term ('Элэгдлийн зардал') in 2023, within a table related to rentals.",
+        "extraction_status": "EXTRACTED_SUCCESSFULLY"
+      },
+      {
+        "item_name_english": "Issuance of Equity",
+        "item_name_mongolian": "Хувьцаа гаргасан",
+        "period_id": "FY2024",
+        "value": 6000.0,
+        "unit": "төг",
+        "notes": "Table showing Bond issuance in 2024",
+        "extraction_status": "EXTRACTED_SUCCESSFULLY"
+      },
+      {
+        "item_name_english": "Cash at Beginning of Period",
+        "item_name_mongolian": "Тайлант үеийн эхний мөнгөн хөрөнгө",
+        "period_id": "FY2023",
+        "value": 476651,
+        "unit": "мян.төг",
+        "notes": "Found a row with '1 дүгээр сарын 1-ний байдлаар' in the document. The corresponding value for 2023 is 476,651. '1 дүгээр сарын 1-ний байдлаар' translates to 'As of January 1st' and is equivalent to 'Cash at Beginning of Period'. The unit found is мян.төг.",
+        "extraction_status": "EXTRACTED_SUCCESSFULLY"
+      }
+    ],
+    "raw_llm_responses": {
+      "metadata_extraction": {
+        "response": "```json\n{\n  \"target_company_name\": \"ЛэндМН ББСБ ХК\",\n  \"ticker_symbol\": null,\n  \"currency\": \"MNT\",\n  \"fiscal_year_end\": null\n}\n```"
+      },
+      "line_item_extraction_Revenue_FY2020": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"No revenue information found in the provided document excerpts.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Revenue_FY2021": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Revenue' (Орлого) for FY2021 in the provided excerpts. The documents predominantly contain information about tax payments and lease-related expenses, and lack the required financial data.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Revenue_FY2022": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Revenue' or 'Орлого' in the provided excerpts for FY2022. Only found cost related information and table with year 2022 and 2023 but no revenue information in tables or key-value pairs.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Revenue_FY2023": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find Revenue or Орлого in the provided excerpts.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Revenue_FY2024": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to locate 'Revenue' or 'Орлого' for FY2024 in the provided text excerpts.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Cost of Goods Sold_FY2020": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Cost of Goods Sold' or 'ББӨ' in the provided document excerpts for FY2020.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Cost of Goods Sold_FY2021": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to locate 'Cost of Goods Sold' or 'ББӨ' for FY2021 in any tables or key-value pairs within the provided text excerpts.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Cost of Goods Sold_FY2022": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"No Cost of Goods Sold (ББӨ) data found in the provided excerpts.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Cost of Goods Sold_FY2023": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Cost of Goods Sold' or 'ББӨ' or any similar terms in the provided documents.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Cost of Goods Sold_FY2024": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"The provided text excerpts do not contain the requested information, 'Cost of Goods Sold' or 'ББӨ' for the period 'FY2024'. The excerpts include financial statements for 2023, but no data for 2024. No key-value pairs are present.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Gross Profit_FY2020": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Gross Profit' or 'Нийт ашиг' in the provided text excerpts.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Gross Profit_FY2021": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Gross Profit' or 'Нийт ашиг' in any form, with any associated value, in any of the provided documents for FY2021.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Gross Profit_FY2022": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"No direct mention of 'Gross Profit' or 'Нийт ашиг' for FY2022 in the provided excerpts. The available tables and text snippets do not contain this information.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Gross Profit_FY2023": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Gross Profit' (Нийт ашиг) for FY2023 in any table or key-value pair in the provided excerpts. The text focuses on other financial aspects like leasing, operational expenses, and related data, but the target data point is not present.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Gross Profit_FY2024": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"No 'Gross Profit' or 'Нийт ашиг' found in the provided excerpts, and the period 'FY2024' is not available.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Operating Expenses_FY2020": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Operating Expenses' or 'Үйл ажиллагааны зардал' in the provided documents.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Operating Expenses_FY2021": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Operating Expenses' or 'Үйл ажиллагааны зардал' in the provided document excerpts. The excerpts primarily show tax-related data.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Operating Expenses_FY2022": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"The provided text excerpts do not contain information about 'Operating Expenses' or 'Үйл ажиллагааны зардал'. The table contains only the balance sheet information.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Operating Expenses_FY2023": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Operating Expenses' or 'Үйл ажиллагааны зардал' in the provided text excerpts. The excerpts mainly contain balance sheet items, and there are no direct references to operating expenses.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Operating Expenses_FY2024": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Operating Expenses' or 'Үйл ажиллагааны зардал' in any clear table or direct key-value pair for FY2024.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_EBITDA_FY2020": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"No financial data found in the provided excerpts. The excerpts primarily concern tax-related information and do not contain financial statements or key-value pairs related to EBITDA for FY2020.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_EBITDA_FY2021": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Хүү, татвар, элэгдэл, хорогдлын өмнөх ашиг' or 'EBITDA' for FY2021 in the provided text excerpts.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_EBITDA_FY2022": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"The provided document excerpts do not contain the requested EBITDA data in either a table format or key-value pair for FY2022.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_EBITDA_FY2023": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"EBITDA data not found in the provided excerpts. The excerpts primarily contain information related to lease obligations and administrative expenses, but do not include a relevant table or a direct mention of EBITDA for FY2023.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_EBITDA_FY2024": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"No EBITDA data found in the provided excerpts for FY2024. Only balance sheet information and descriptions of liabilities were provided.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Depreciation & Amortization_FY2020": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Depreciation & Amortization' ('Элэгдэл ба хорогдол') for FY2020 in any table or key-value pair within the provided excerpts.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Depreciation & Amortization_FY2021": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to locate 'Depreciation & Amortization' (or 'Элэгдэл ба хорогдол') for FY2021 in any of the provided documents.  The documents are primarily tax-related and do not contain the relevant financial statements.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Depreciation & Amortization_FY2022": {
+        "response": "```json\n{\n  \"value\": 259961,\n  \"currency\": \"мян.төг\",\n  \"unit\": null,\n  \"source_reference\": \"The document contains a table with the heading '2022'.  The row 'Элэгдлийн зардал' (Depreciation Expense) has the value 259961 in the 2022 column.\",\n  \"status\": \"EXTRACTED_SUCCESSFULLY\"\n}\n```"
+      },
+      "line_item_extraction_Depreciation & Amortization_FY2023": {
+        "response": "```json\n{\n  \"value\": 0,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"The document excerpts contain financial data, however, there are no instances of 'Depreciation & Amortization' or 'Элэгдэл ба хорогдол' for FY2023. The closest match is 'Элэгдлийн зардал' but it is not clear what the value is.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Depreciation & Amortization_FY2024": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Depreciation & Amortization' or 'Элэгдэл ба хорогдол' for FY2024 in the provided document excerpts, based on table scans and key-value searches.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_EBIT_FY2020": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'EBIT' or 'Хүү, татварын өмнөх ашиг' in the provided text extracts for FY2020.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_EBIT_FY2021": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find the requested financial data point within the provided documents.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_EBIT_FY2022": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"The provided documents do not contain the requested financial data (EBIT) for FY2022.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_EBIT_FY2023": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find EBIT or related terms in the provided excerpts.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_EBIT_FY2024": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find EBIT data or related terms in any of the provided text excerpts for FY2024.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Interest Expense_FY2020": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Interest Expense' or 'Хүүгийн зардал' for FY2020 in any tables or key-value patterns within the provided text.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Interest Expense_FY2021": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Interest Expense' or 'Хүүгийн зардал' or related terms in the provided text excerpts. The documents primarily concern tax information.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Interest Expense_FY2022": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"The provided text excerpts do not contain the line item 'Interest Expense' (Хүүгийн зардал) for FY2022.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Interest Expense_FY2023": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Interest Expense' or 'Хүүгийн зардал' in any tables or key-value pairs within the provided text excerpts.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Interest Expense_FY2024": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": null,\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Income Before Tax_FY2020": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Income Before Tax' or 'Татварын өмнөх ашиг' in the provided documents for FY2020.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Income Before Tax_FY2021": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Income Before Tax' or 'Татварын өмнөх ашиг' in the provided documents. The documents appear to contain tax-related information, but not financial statements with the desired data point.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Income Before Tax_FY2022": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Income Before Tax' or 'Татварын өмнөх ашиг' in the provided text excerpts for FY2022. The excerpts primarily focus on balance sheet items and some details on lease obligations.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Income Before Tax_FY2023": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Income Before Tax' or 'Татварын өмнөх ашиг' in any form in the provided excerpts. The documents primarily discuss lease obligations, and management/operational expenses.  No financial statements with the target line item are present.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Income Before Tax_FY2024": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Income Before Tax' or 'Татварын өмнөх ашиг' in the provided excerpts for the period FY2024.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Tax_FY2020": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Tax' or 'Татвар' with FY2020 data in the provided documents. Several tables are present, but they lack the relevant period.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Tax_FY2021": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Tax' or 'Татвар' for FY2021 in the provided excerpts.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Tax_FY2022": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Tax' or 'Татвар' with a corresponding value for FY2022 in the provided excerpts. The excerpts contain financial statements related to lease obligations and tax-related documents from the Mongolian Tax Authority, but no direct financial data for 'Tax' in the requested period could be extracted.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Tax_FY2023": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Tax' or 'Татвар' for FY2023 in any key-value pair or table in the provided text.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Tax_FY2024": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Tax' or 'Татвар' data for 'FY2024' in any of the provided documents. There are tables, but the relevant data is absent. There is a mention of 'Татварын' but it does not contain numeric values for FY2024.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Net Income_FY2020": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find any mention of 'Net Income' or 'Цэвэр ашиг' or a financial table with year 2020 in the provided excerpts. The documents mostly contain tax-related information.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Net Income_FY2021": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Net Income' or 'Цэвэр ашиг' for FY2021 in the provided excerpts. No financial tables with relevant data were identified.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Net Income_FY2022": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Net Income' (Цэвэр ашиг) or a close equivalent in the document excerpts for FY2022. Only tables of expenses and other financial details were found, but none with the target information.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Net Income_FY2023": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Net Income' or 'Цэвэр ашиг' in the provided text excerpts for FY2023. The excerpts primarily focus on lease liabilities and operating expenses.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Net Income_FY2024": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Net Income' or 'Цэвэр ашиг' for FY2024 in the provided excerpts. The excerpts primarily focus on rental obligations and management expenses for 2022 and 2023. There is no income statement data or balance sheet present.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Cash and Cash Equivalents_FY2020": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Cash and Cash Equivalents' for FY2020 in the provided document excerpts. The excerpts appear to be related to tax information and do not contain the required financial data.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Cash and Cash Equivalents_FY2021": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find the data in the provided document excerpts.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Cash and Cash Equivalents_FY2022": {
+        "response": "```json\n{\n  \"value\": 5217581,\n  \"currency\": \"мянган төг\",\n  \"unit\": null,\n  \"source_reference\": \"Table showing 'Мөнгө ба түүнтэй адилтгах хөрөнгө' with values for 2022.\",\n  \"status\": \"EXTRACTED_SUCCESSFULLY\"\n}\n```"
+      },
+      "line_item_extraction_Cash and Cash Equivalents_FY2023": {
+        "response": "```json\n{\n  \"value\": 4639318,\n  \"currency\": \"мянган\",\n  \"unit\": \"төг\",\n  \"source_reference\": \"Found 'Мөнгө ба түүнтэй адилтгах хөрөнгө' in the table under the 2023 column, with a value of 4,639,318.\",\n  \"status\": \"EXTRACTED_SUCCESSFULLY\"\n}\n```"
+      },
+      "line_item_extraction_Cash and Cash Equivalents_FY2024": {
+        "response": "```json\n{\n  \"value\": 16.2,\n  \"currency\": \"төгрөг\",\n  \"unit\": \"тэрбум\",\n  \"source_reference\": \"“ЛэндМН ББСБ” ХК-ийн мөнгө ба түүнтэй адилтгах хөрөнгийн дүн 2024 оны 3 дугаар улирлын байдлаар 16.2 тэрбум төгрөг\",\n  \"status\": \"EXTRACTED_SUCCESSFULLY\"\n}\n```"
+      },
+      "line_item_extraction_Accounts Receivable_FY2020": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to locate 'Accounts Receivable' or 'Авлага' for FY2020 in the provided documents. The documents primarily discuss tax-related information.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Accounts Receivable_FY2021": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"The provided documents do not contain any financial statements with Accounts Receivable data for FY2021.  The documents focus on lease obligations and tax information.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Accounts Receivable_FY2022": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Accounts Receivable' or 'Авлага' in the provided excerpts for the period FY2022.  The excerpts provided focus on lease obligations and other operational expenses, not balance sheet items like accounts receivable. The text does include tables for 2022 and 2023 data, but not relevant financial terms.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Accounts Receivable_FY2023": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find Accounts Receivable or Авлага in the provided document excerpts for FY2023. Only operational expenses and rental-related information are present.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Accounts Receivable_FY2024": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find Accounts Receivable (Авлага) in the provided text excerpts for FY2024. The provided financial data primarily focuses on cash and related assets, but does not include accounts receivable. No clear table or key-value pair with the requested data was found.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Inventory_FY2020": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Бараа материал' or 'Inventory' in the provided documents for FY2020.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Inventory_FY2021": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Бараа материал' or 'Inventory' for the FY2021 period in the provided documents.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Inventory_FY2022": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Бараа материал' or 'Inventory' for FY2022 in the provided excerpts.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Inventory_FY2023": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Inventory' or 'Бараа материал' in any of the provided documents for FY2023, either in table format or key-value pair format.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Inventory_FY2024": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Бараа материал' or 'Inventory' in the provided document excerpts for FY2024.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Total Current Assets_FY2020": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Total Current Assets' or 'Нийт Эргэлтийн Хөрөнгө' in any format within the provided documents for FY2020.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Total Current Assets_FY2021": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to locate 'Total Current Assets' or 'Нийт Эргэлтийн Хөрөнгө' for FY2021 in the provided text excerpts.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Total Current Assets_FY2022": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"The provided documents contain financial tables. The target data point 'Total Current Assets' (Нийт Эргэлтийн Хөрөнгө) is not explicitly present in the text. The documents list 'Мөнгө ба түүнтэй адилтгах хөрөнгө' (Cash and cash equivalents), but not 'Total Current Assets'.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Total Current Assets_FY2023": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to locate 'Total Current Assets' or 'Нийт Эргэлтийн Хөрөнгө' in any of the provided document excerpts for the period FY2023.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Total Current Assets_FY2024": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Total Current Assets' or 'Нийт Эргэлтийн Хөрөнгө' in the provided documents.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Property, Plant & Equipment (Net)_FY2020": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Property, Plant & Equipment (Net)' or 'Үндсэн хөрөнгө (цэвэр)' or relevant table with period 2020 in the provided text excerpts.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Property, Plant & Equipment (Net)_FY2021": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"No financial data related to 'Property, Plant & Equipment (Net)' or 'Үндсэн хөрөнгө (цэвэр)' found in the provided text excerpts. The text primarily focuses on tax-related information.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Property, Plant & Equipment (Net)_FY2022": {
+        "response": "```json\n{\n  \"value\": 373470,\n  \"currency\": \"мянган төг\",\n  \"unit\": null,\n  \"source_reference\": \"Found 'Үндсэн ба биет бус хөрөнгө' in a table, with 373,470 in the 2022 column. Currency is 'мянган төг'.\",\n  \"status\": \"EXTRACTED_SUCCESSFULLY\"\n}\n```"
+      },
+      "line_item_extraction_Property, Plant & Equipment (Net)_FY2023": {
+        "response": "```json\n{\n  \"value\": \"1,052,705\",\n  \"currency\": \"мян.төг\",\n  \"unit\": \"мянган төг\",\n  \"source_reference\": \"Financial table in document.\",\n  \"status\": \"EXTRACTED_SUCCESSFULLY\"\n}\n```"
+      },
+      "line_item_extraction_Property, Plant & Equipment (Net)_FY2024": {
+        "response": "```json\n{\n  \"value\": 2648977,\n  \"currency\": \"мянган төг\",\n  \"unit\": null,\n  \"source_reference\": \"Found 'Үндсэн ба биет бус хөрөнгө' (similar to 'Property, Plant & Equipment (Net)') in the financial table, with the value 2,648,977 in the 2023 УЦУЙН column which likely corresponds to FY2024.\",\n  \"status\": \"EXTRACTED_SUCCESSFULLY\"\n}\n```"
+      },
+      "line_item_extraction_Intangible Assets_FY2020": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": null,\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Intangible Assets_FY2021": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find Intangible Assets for FY2021 in the provided excerpts. The table provided relates to 2022 and 2023, but no values for 2021 are provided. There are no key-value pairs present.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Intangible Assets_FY2022": {
+        "response": "```json\n{\n  \"value\": \"401,095\",\n  \"currency\": \"мян.төг\",\n  \"unit\": null,\n  \"source_reference\": \"Found in a table under '7. БИЕТ БУС ХӨРӨНГӨ' with a '2022' column.\",\n  \"status\": \"EXTRACTED_SUCCESSFULLY\"\n}\n```"
+      },
+      "line_item_extraction_Intangible Assets_FY2023": {
+        "response": "```json\n{\n  \"value\": \"355,542\",\n  \"currency\": \"мян.төг\",\n  \"unit\": null,\n  \"source_reference\": \"Found a table with 'Биет бус хөрөнгө' and a value in the 2023 column.\",\n  \"status\": \"EXTRACTED_SUCCESSFULLY\"\n}\n```"
+      },
+      "line_item_extraction_Intangible Assets_FY2024": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Intangible Assets' or 'Биет бус хөрөнгө' for FY2024 in any format. The documents provided only contain data for 2022 and 2023.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Total Non-Current Assets_FY2020": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Total Non-Current Assets' or 'Нийт Эргэлтийн Бус Хөрөнгө' for 'FY2020' in the provided documents. The documents contain tax-related information but lack financial statements with balance sheet data.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Total Non-Current Assets_FY2021": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Total Non-Current Assets' or its Mongolian equivalent in the provided text excerpts for FY2021. The documents appear to be related to tax information and do not contain the required financial data.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Total Non-Current Assets_FY2022": {
+        "response": "```json\n{\n  \"value\": 373470,\n  \"currency\": \"мянган төг\",\n  \"unit\": null,\n  \"source_reference\": \"The table under 'Тайлан тэнцлийн үзүүлэлтүүд' contains 'Үндсэн ба биет бус хөрөнгө' which corresponds to 'Total Non-Current Assets'. The value extracted is from the 2022 column.\",\n  \"status\": \"EXTRACTED_SUCCESSFULLY\"\n}\n```"
+      },
+      "line_item_extraction_Total Non-Current Assets_FY2023": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"The provided OCR text does not contain the requested data point 'Total Non-Current Assets' or 'Нийт Эргэлтийн Бус Хөрөнгө' for FY2023. While a balance sheet table exists, it only includes 'Үндсэн ба биет бус хөрөнгө'.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Total Non-Current Assets_FY2024": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Total Non-Current Assets' (Нийт Эргэлтийн Бус Хөрөнгө) in the provided document excerpts for FY2024. The text contains financial tables but does not have an entry that is definitively identified as 'Total Non-Current Assets'. The available data mainly provides information regarding нийт хөрөнгө (Total Assets).\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Total Assets_FY2020": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to locate 'Total Assets' (Нийт Хөрөнгө) for FY2020 within the provided documents. The documents primarily focus on tax-related information, and financial tables that might contain balance sheet data are not present in the OCR text.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Total Assets_FY2021": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Total Assets' or 'Нийт Хөрөнгө' for FY2021 in any format (table or key-value pair) in the provided excerpts. The excerpts primarily contain tax-related information and lack the necessary financial statements.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Total Assets_FY2022": {
+        "response": "```json\n{\n  \"value\": 76858757,\n  \"currency\": \"мянган төг\",\n  \"unit\": null,\n  \"source_reference\": \"Found 'Нийт хөрөнгийн дүн' (Total Assets) in a table, with a value of 76,858,757 in the 2022 column.\",\n  \"status\": \"EXTRACTED_SUCCESSFULLY\"\n}\n```"
+      },
+      "line_item_extraction_Total Assets_FY2023": {
+        "response": "```json\n{\n  \"value\": 103819081,\n  \"currency\": \"мянган төг\",\n  \"unit\": null,\n  \"source_reference\": \"Table: Тайлан тэнцлийн үзүүлэлтүүд, Нийт хөрөнгийн дүн\",\n  \"status\": \"EXTRACTED_SUCCESSFULLY\"\n}\n```"
+      },
+      "line_item_extraction_Total Assets_FY2024": {
+        "response": "```json\n{\n  \"value\": 228114286,\n  \"currency\": \"мянган төг\",\n  \"unit\": null,\n  \"source_reference\": \"Found 'Нийт хөрөнгийн дүн' (Total Assets) in the financial table, with the value from the 2023 УЦУЙН column (FY2024 equivalent).\",\n  \"status\": \"EXTRACTED_SUCCESSFULLY\"\n}\n```"
+      },
+      "line_item_extraction_Accounts Payable_FY2020": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Accounts Payable' (Mongolian: 'Өглөг') or similar terms for 'FY2020' in any clear table or key-value pair in the provided documents.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Accounts Payable_FY2021": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"No 'Accounts Payable' or 'Өглөг' found in the provided text excerpts.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Accounts Payable_FY2022": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find direct mention of 'Accounts Payable' or 'Өглөг' in FY2022. The document has tables, but 'Accounts Payable' or similar terms are not present. The table shows 'Түрээсийн өр төлбөр' (Lease Payable) but not for the specific line item sought.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Accounts Payable_FY2023": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find Accounts Payable (Өглөг) in the provided excerpts. There are tables, but no matching terms and no direct key-value pairs.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Accounts Payable_FY2024": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find Accounts Payable (Өглөг) for FY2024. The provided text excerpts do not contain this information. The texts focuses on other financial items, like the assessment of cash and liquidity of \\\"LendMN\\\".\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Short-Term Debt_FY2020": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to locate 'Short-Term Debt' or 'Богино хугацаат өр төлбөр' for FY2020 in the provided text excerpts. The text is heavily focused on tax information, and does not include balance sheets.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Short-Term Debt_FY2021": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Short-Term Debt' or 'Богино хугацаат өр төлбөр' for FY2021 in the provided text. The documents predominantly discuss general information and loan products, but they lack financial statements or tables with balance sheet items like short-term debt.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Short-Term Debt_FY2022": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"No financial data for 'Short-Term Debt' or 'Богино хугацаат өр төлбөр' found in the provided excerpts for FY2022.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Short-Term Debt_FY2023": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"No financial data found directly related to 'Short-Term Debt' or 'Богино хугацаат өр төлбөр' in the provided text. The excerpts primarily discuss other topics like auditing and loan products.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Short-Term Debt_FY2024": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"No table or key-value pair found matching 'Short-Term Debt' or 'Богино хугацаат өр төлбөр' for FY2024.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Total Current Liabilities_FY2020": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Total Current Liabilities' or 'Нийт Богино Хугацаат Өр Төлбөр' for FY2020 in the provided excerpts. The excerpts primarily contain tax-related information and do not present balance sheet data with the required line item.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Total Current Liabilities_FY2021": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Total Current Liabilities' or 'Нийт Богино Хугацаат Өр Төлбөр' for FY2021 in the provided document excerpts. The excerpts mostly contain descriptions of services and loan products, and mention of 2023 financial statements, but do not include any financial tables or key-value pairs containing the target financial data point.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Total Current Liabilities_FY2022": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to locate 'Total Current Liabilities' or 'Нийт Богино Хугацаат Өр Төлбөр' for FY2022 in any of the provided text snippets. The provided text focuses on other financial information, like loan products and audit details for 2023.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Total Current Liabilities_FY2023": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Total Current Liabilities' or 'Нийт Богино Хугацаат Өр Төлбөр' in the provided text excerpts for FY2023. The excerpts primarily discuss other topics.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Total Current Liabilities_FY2024": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Total Current Liabilities' (Mongolian: 'Нийт Богино Хугацаат Өр Төлбөр') for period 'FY2024' in the provided excerpts.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Long-Term Debt_FY2020": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Long-Term Debt' or 'Урт хугацаат өр төлбөр' for FY2020 in the provided excerpts. The excerpts appear to be related to tax information and do not contain the requested financial data.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Long-Term Debt_FY2021": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to locate 'Урт хугацаат өр төлбөр' or 'Long-Term Debt' in any form within the document excerpts.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Long-Term Debt_FY2022": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Long-Term Debt' or 'Урт хугацаат өр төлбөр' in the document excerpts.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Long-Term Debt_FY2023": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Урт хугацаат өр төлбөр' or 'Long-Term Debt' in any table or key-value pair format in the provided text.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Long-Term Debt_FY2024": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Long-Term Debt' or 'Урт хугацаат өр төлбөр' in the document excerpts. The provided excerpts focus on lease liabilities and bond information. No financial tables were found that include the requested line item. Also, key-value pairs of the item were not presented.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Total Non-Current Liabilities_FY2020": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Total Non-Current Liabilities' or 'Нийт Урт Хугацаат Өр Төлбөр' in the provided text excerpts. These excerpts mainly focus on tax calculations and do not contain balance sheet information.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Total Non-Current Liabilities_FY2021": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to locate 'Total Non-Current Liabilities' or 'Нийт Урт Хугацаат Өр Төлбөр' for FY2021 in provided documents.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Total Non-Current Liabilities_FY2022": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Total Non-Current Liabilities' or 'Нийт Урт Хугацаат Өр Төлбөр' for FY2022 in the provided document excerpts. The excerpts contain tables, but none clearly display the target line item. The tables primarily focus on 'Түрээсийн өр төлбөр' and asset information. No key-value pairs were found.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Total Non-Current Liabilities_FY2023": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Total Non-Current Liabilities' or similar terms in the provided excerpts for FY2023.  The provided text focuses on lease obligations, and other tax and financial information but does not contain balance sheet items needed for extraction.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Total Non-Current Liabilities_FY2024": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Total Non-Current Liabilities' or 'Нийт Урт Хугацаат Өр Төлбөр' for FY2024 in the provided excerpts. The text mentions 'өр төлбөр' but doesn't provide the specific value for the requested line item. No clear tables or key-value pairs were present.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Total Liabilities_FY2020": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Total Liabilities' or 'Нийт Өр Төлбөр' or related terms for FY2020 in the provided excerpts. These excerpts appear to focus on tax information and do not contain standard financial statements. \",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Total Liabilities_FY2021": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Total Liabilities' (Нийт Өр Төлбөр) or similar terms within the provided excerpts.  The text focuses on tax calculations and doesn't include the balance sheet information I need to extract 'Total Liabilities'.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Total Liabilities_FY2022": {
+        "response": "```json\n{\n  \"value\": 64870653,\n  \"currency\": \"төг\",\n  \"unit\": \"мянган\",\n  \"source_reference\": \"Found 'Нийг өр төлбөрийн дүн' (Total Liabilities) in the financial table for FY2022.\",\n  \"status\": \"EXTRACTED_SUCCESSFULLY\"\n}\n```"
+      },
+      "line_item_extraction_Total Liabilities_FY2023": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Total Liabilities' or 'Нийт Өр Төлбөр' in the provided excerpts, but I found 'Түрээсийн өр төлбөр' with a value of 981,642 in 2023, but this is not 'Total Liabilities'.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Total Liabilities_FY2024": {
+        "response": "```json\n{\n  \"value\": 161150417,\n  \"currency\": \"мянган төг\",\n  \"unit\": null,\n  \"source_reference\": \"Table with financial data. 'Нийг өр төлбөрийн дүн' is found in the 'ӨР ТӨЛБӨР' section. The value '161,150,417' corresponds to the '2023' column, and represents the total liabilities for the year 2024\",\n  \"status\": \"EXTRACTED_SUCCESSFULLY\"\n}\n```"
+      },
+      "line_item_extraction_Common Stock_FY2020": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Common Stock' or 'Энгийн хувьцаа' in the provided excerpts.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Common Stock_FY2021": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Common Stock' or 'Энгийн хувьцаа' in the provided documents.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Common Stock_FY2022": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find the line item 'Common Stock' or 'Энгийн хувьцаа' in the provided text excerpts for FY2022. The text includes financial statements, but none contain this specific data point. Focused search on balance sheet items, the term did not appear.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Common Stock_FY2023": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Common Stock' or 'Энгийн хувьцаа' in the provided excerpts.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Common Stock_FY2024": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Common Stock' or 'Энгийн хувьцаа' for FY2024 in any table or key-value pair in the provided text.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Retained Earnings_FY2020": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Хуримтлагдсан ашиг' or 'Retained Earnings' in the provided documents. These documents appear to be tax-related and do not contain the financial data needed.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Retained Earnings_FY2021": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Retained Earnings' or 'Хуримтлагдсан ашиг' in the provided documents.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Retained Earnings_FY2022": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find the data in the provided excerpts. Although some tables are available, they don't show 'Retained Earnings' or 'Хуримтлагдсан ашиг' and it's values.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Retained Earnings_FY2023": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Retained Earnings' or its Mongolian equivalent in the provided excerpts.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Retained Earnings_FY2024": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": null,\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Total Equity_FY2020": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find the specified data point in the provided document excerpts.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Total Equity_FY2021": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Total Equity' (or Mongolian equivalent) or related data in the provided excerpts. The documents primarily focus on tax-related information and lack balance sheets or income statements that would contain the target data point.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Total Equity_FY2022": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to locate 'Total Equity' (Нийт Эзэмшигчийн Өмч) or similar terms in the provided excerpts.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Total Equity_FY2023": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to extract Total Equity for FY2023 from the provided text. The text mentions 'ӨӨРИЙН ХӨРӨНГӨ', including 'Хувьцаат капитал' and 'Нэмж төлөгдсөн капитал' but does not provide a 'Total Equity' figure, nor does it have 'Нийт Эзэмшигчийн Өмч' or anything similar.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Total Equity_FY2024": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"The document discusses the company's total assets and the percentages attributed to owner's equity and liabilities, but no specific numeric values for 'Total Equity' are found, and there are no tables with a column for 2024 containing 'Total Equity'.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Total Liabilities & Equity_FY2020": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find the requested financial data ('Total Liabilities & Equity' or 'Нийт Өр Төлбөр ба Эзэмшигчийн Өмч') for FY2020 in the provided document excerpts.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Total Liabilities & Equity_FY2021": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Total Liabilities & Equity' (or similar) or key-value pairs with the target period in the provided text.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Total Liabilities & Equity_FY2022": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find the exact value for 'Total Liabilities & Equity' or related terms in any key-value pair or table in the provided excerpts. The closest match is 'Нийт өр төлбөрийн дүн' (Total Liabilities), but there is no sum provided for the liabilities and equity, so the extraction failed.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Total Liabilities & Equity_FY2023": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Total Liabilities & Equity' or similar in any table or key-value pairs in the provided text.  'Нийт Өр Төлбөрийн дүн' is found for 2023 but it is not 'Total Liabilities & Equity'.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Total Liabilities & Equity_FY2024": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Total Liabilities & Equity' or the Mongolian equivalent in a table or a key-value pair. The text mentions components like 'өр төлбөр' and 'өөрийн хөрөнгө', but not a combined total for FY2024.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Net Income (CF)_FY2020": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Net Income (CF)' or 'Цэвэр ашиг (Мөнгөн гүйлгээ)' for FY2020 in the provided text excerpts.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Net Income (CF)_FY2021": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"The provided documents do not contain financial statements with the requested data. The texts contain information about tax reports but not the targeted financial data (Net Income (CF)).\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Net Income (CF)_FY2022": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Net Income (CF)' or 'Цэвэр ашиг (Мөнгөн гүйлгээ)' in the provided text excerpts for the specified period. \",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Net Income (CF)_FY2023": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"The provided document excerpts do not contain 'Net Income (CF)' (Цэвэр ашиг (Мөнгөн гүйлгээ)) or any directly related terms.  No values matching the criteria were found.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Net Income (CF)_FY2024": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"The provided documents do not contain the required information in a table or a key-value pair. The documents contain financial information for the years 2022 and 2023, but not for 2024. No match was found for Net Income (CF).\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Depreciation & Amortization (CF)_FY2020": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find the requested financial data point 'Depreciation & Amortization (CF)' or 'Элэгдэл хорогдол (Мөнгөн гүйлгээ)' for period FY2020 in the provided documents. The documents primarily consist of tax-related information, and no financial statements or relevant tables were identified.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Depreciation & Amortization (CF)_FY2021": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Depreciation & Amortization (CF)' or 'Элэгдэл хорогдол (Мөнгөн гүйлгээ)' for FY2021 in the provided excerpts. The documents primarily concern tax information, not financial statements with the target line item.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Depreciation & Amortization (CF)_FY2022": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find the requested financial data point in the provided text excerpts.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Depreciation & Amortization (CF)_FY2023": {
+        "response": "```json\n{\n  \"value\": 259961,\n  \"currency\": \"мян.төг\",\n  \"unit\": null,\n  \"source_reference\": \"Found 'Элэгдлийн зардал' in the 2022 column and a similar term ('Элэгдлийн зардал') in 2023, within a table related to rentals.\",\n  \"status\": \"EXTRACTED_SUCCESSFULLY\"\n}\n```"
+      },
+      "line_item_extraction_Depreciation & Amortization (CF)_FY2024": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Depreciation & Amortization (CF)' or 'Элэгдэл хорогдол (Мөнгөн гүйлгээ)' in the provided excerpts.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Changes in Accounts Receivable_FY2020": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"The provided documents do not contain information about 'Changes in Accounts Receivable' or 'Авлага дансны өөрчлөлт'.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Changes in Accounts Receivable_FY2021": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Changes in Accounts Receivable' or 'Авлага дансны өөрчлөлт' in the provided text excerpts.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Changes in Accounts Receivable_FY2022": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Changes in Accounts Receivable' or 'Авлага дансны өөрчлөлт' in any of the documents provided.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Changes in Accounts Receivable_FY2023": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"The provided text excerpts do not contain the requested data ('Changes in Accounts Receivable' or 'Авлага дансны өөрчлөлт') for FY2023.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Changes in Accounts Receivable_FY2024": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"The provided excerpts do not contain the financial data point 'Changes in Accounts Receivable' (Авлага дансны өөрчлөлт) for FY2024.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Changes in Inventory_FY2020": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"The provided text excerpts do not contain any financial statements or data tables, and therefore no values for 'Changes in Inventory' or 'Бараа материалын өөрчлөлт' for FY2020 could be found.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Changes in Inventory_FY2021": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Changes in Inventory' or 'Бараа материалын өөрчлөлт' for FY2021 in the provided text excerpts.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Changes in Inventory_FY2022": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Changes in Inventory' (Бараа материалын өөрчлөлт) for FY2022 in the provided OCR text.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Changes in Inventory_FY2023": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Changes in Inventory' or 'Бараа материалын өөрчлөлт' in the provided text excerpts for FY2023. The excerpts focus on loan and other financial data, but do not include the target line item.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Changes in Inventory_FY2024": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Changes in Inventory' or 'Бараа материалын өөрчлөлт' in the provided text excerpts for FY2024.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Changes in Accounts Payable_FY2020": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Changes in Accounts Payable' or 'Өглөг дансны өөрчлөлт' in the provided text excerpts.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Changes in Accounts Payable_FY2021": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"No relevant financial data or tables found in the provided text excerpts. The excerpts contain tax-related information but do not mention 'Changes in Accounts Payable' or 'Өглөг дансны өөрчлөлт'.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Changes in Accounts Payable_FY2022": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"The provided text excerpts do not contain information about 'Changes in Accounts Payable' or 'Өглөг дансны өөрчлөлт'. The excerpts primarily show financial data from balance sheet tables for years 2022 and 2023, but the target line item is not present.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Changes in Accounts Payable_FY2023": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"The provided documents do not contain the line item 'Changes in Accounts Payable' or 'Өглөг дансны өөрчлөлт'.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Changes in Accounts Payable_FY2024": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"No 'Changes in Accounts Payable' or similar term found for FY2024 (or 2024) in the provided excerpts. The provided text predominantly focuses on topics such as lease liabilities, but does not contain information that can satisfy the given objective.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Net Cash from Operating Activities_FY2020": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to locate 'Net Cash from Operating Activities' or its Mongolian equivalent ('Үндсэн үйл ажиллагааны цэвэр мөнгөн гүйлгээ') in the provided text excerpts for the FY2020 period. The excerpts mainly focus on tax-related information and lack the required financial statements.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Net Cash from Operating Activities_FY2021": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Net Cash from Operating Activities' or related terms in provided excerpts.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Net Cash from Operating Activities_FY2022": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to locate the specified financial data point in the provided document excerpts. The excerpts contain financial statements but do not include the requested item. The table structures do not list the required line item or any variations of it.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Net Cash from Operating Activities_FY2023": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Net Cash from Operating Activities' or related terms in the provided document excerpts for FY2023.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Net Cash from Operating Activities_FY2024": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find the requested data in the provided text excerpts.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Capital Expenditures_FY2020": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Capital Expenditures' or 'Капитал зарцуулалт' in any form, nor any financial tables, within the provided excerpts.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Capital Expenditures_FY2021": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"No relevant financial data found related to Capital Expenditures for FY2021 in the provided excerpts.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Capital Expenditures_FY2022": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Capital Expenditures' or 'Капитал зарцуулалт' in any form within the provided documents.  The documents contain financial statements, but the specific line item is not present.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Capital Expenditures_FY2023": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Capital Expenditures' or 'Капитал зарцуулалт' in the provided text excerpts for FY2023.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Capital Expenditures_FY2024": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Capital Expenditures' or 'Капитал зарцуулалт' or similar terms in the provided excerpts for FY2024, either in a table or as a key-value pair.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Proceeds from Sale of Assets_FY2020": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Proceeds from Sale of Assets' (Mongolian: 'Хөрөнгө борлуулсны орлого') or a similar term within the provided text excerpts for FY2020.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Proceeds from Sale of Assets_FY2021": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Proceeds from Sale of Assets' or 'Хөрөнгө борлуулсны орлого' in the provided text excerpts for FY2021. The documents seem related to tax information.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Proceeds from Sale of Assets_FY2022": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to locate 'Proceeds from Sale of Assets' (Mongolian: 'Хөрөнгө борлуулсны орлого') for FY2022 within the provided text excerpts. The excerpts primarily focus on lease obligations, and administrative expenses.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Proceeds from Sale of Assets_FY2023": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Proceeds from Sale of Assets' or 'Хөрөнгө борлуулсны орлого' in the provided text excerpts for FY2023.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Proceeds from Sale of Assets_FY2024": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Proceeds from Sale of Assets' or 'Хөрөнгө борлуулсны орлого' in the provided text for FY2024. The provided text focuses on rental obligations, and operating expenses for 2022 and 2023.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Net Cash from Investing Activities_FY2020": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Net Cash from Investing Activities' or 'Хөрөнгө оруулалтын үйл ажиллагааны цэвэр мөнгөн гүйлгээ' or any close variations in the provided documents.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Net Cash from Investing Activities_FY2021": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to locate 'Net Cash from Investing Activities' or 'Хөрөнгө оруулалтын үйл ажиллагааны цэвэр мөнгөн гүйлгээ' in the provided excerpts. The documents primarily focus on tax-related information, and no financial statements or relevant tables were found.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Net Cash from Investing Activities_FY2022": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Net Cash from Investing Activities' or 'Хөрөнгө оруулалтын үйл ажиллагааны цэвэр мөнгөн гүйлгээ' in the provided excerpts for FY2022. The excerpts contain financial tables but do not include the target line item.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Net Cash from Investing Activities_FY2023": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": null,\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Net Cash from Investing Activities_FY2024": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Net Cash from Investing Activities' or 'Хөрөнгө оруулалтын үйл ажиллагааны цэвэр мөнгөн гүйлгээ' within the provided text excerpts.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Issuance of Debt_FY2020": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Issuance of Debt' or 'Өр төлбөр гаргасан' data for FY2020 in the provided documents.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Issuance of Debt_FY2021": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Issuance of Debt' or 'Өр төлбөр гаргасан' for FY2021 in the provided documents.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Issuance of Debt_FY2022": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Issuance of Debt' or 'Өр төлбөр гаргасан' for the period 'FY2022' in the provided documents. The documents primarily focus on 'Түрээсийн өр төлбөр' and other expense items.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Issuance of Debt_FY2023": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Issuance of Debt' (Mongolian: 'Өр төлбөр гаргасан') for period 'FY2023' in the document excerpts.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Issuance of Debt_FY2024": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"No direct information on 'Issuance of Debt' or 'Өр төлбөр гаргасан' for FY2024 could be found in the provided excerpts. The text discusses topics like lease liabilities and tax-related information but does not contain the requested data point.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Repayment of Debt_FY2020": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Repayment of Debt' (Mongolian: 'Өр төлбөр барагдуулсан') or similar in the provided document excerpts. The excerpts contain tax-related information but do not include the requested financial data point.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Repayment of Debt_FY2021": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"No table or key-value pairs containing the requested data were found in the provided excerpts.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Repayment of Debt_FY2022": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Repayment of Debt' or 'Өр төлбөр барагдуулсан' in the provided text excerpts for FY2022.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Repayment of Debt_FY2023": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Repayment of Debt' or 'Өр төлбөр барагдуулсан' in the provided text excerpts for FY2023. The excerpts primarily focus on lease obligations and tax-related information.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Repayment of Debt_FY2024": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Repayment of Debt' or 'Өр төлбөр барагдуулсан' in the provided excerpts. The excerpts mainly deal with rental and tax information.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Issuance of Equity_FY2020": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find the specified data in the provided documents.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Issuance of Equity_FY2021": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Issuance of Equity' or 'Хувьцаа гаргасан' in the provided document excerpts. These excerpts focus on tax information and lack relevant financial statements.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Issuance of Equity_FY2022": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"No clear mention of 'Issuance of Equity' or 'Хувьцаа гаргасан' found within tables or as a key-value pair in the document excerpts for FY2022.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Issuance of Equity_FY2023": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Issuance of Equity' or 'Хувьцаа гаргасан' in the provided text excerpts for FY2023. The excerpts primarily focus on lease obligations and operational expenses.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Issuance of Equity_FY2024": {
+        "response": "```json\n{\n  \"value\": 6000.00,\n  \"currency\": \"төг\",\n  \"unit\": \"сая\",\n  \"source_reference\": \"Table showing Bond issuance in 2024\",\n  \"status\": \"EXTRACTED_SUCCESSFULLY\"\n}\n```"
+      },
+      "line_item_extraction_Dividends Paid_FY2020": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Dividends Paid' or 'Ногдол ашиг төлсөн' data in any of the provided text excerpts. The documents primarily discuss tax-related information and do not contain relevant financial statements.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Dividends Paid_FY2021": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"The provided excerpts do not contain the requested financial data point ('Dividends Paid' or 'Ногдол ашиг төлсөн') for the FY2021 period.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Dividends Paid_FY2022": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"The provided excerpts do not contain the line item 'Dividends Paid' or 'Ногдол ашиг төлсөн'.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Dividends Paid_FY2023": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Dividends Paid' or 'Ногдол ашиг төлсөн' in any format in the provided excerpts for FY2023.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Dividends Paid_FY2024": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"No 'Dividends Paid' or 'Ногдол ашиг төлсөн' data found in the provided excerpts for FY2024.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Net Cash from Financing Activities_FY2020": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"No financial data or tables were found in the provided excerpts related to 'Net Cash from Financing Activities' for FY2020.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Net Cash from Financing Activities_FY2021": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find the data in the provided documents. The documents appear to be related to tax calculations and do not contain the target financial information.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Net Cash from Financing Activities_FY2022": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"The provided text excerpts do not contain the requested financial data point 'Net Cash from Financing Activities' (or the Mongolian equivalent) for the period FY2022. No tables or key-value pairs with this information were found.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Net Cash from Financing Activities_FY2023": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Net Cash from Financing Activities' or the Mongolian equivalent within the provided excerpts.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Net Cash from Financing Activities_FY2024": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"The provided excerpts do not contain the target financial data point ('Net Cash from Financing Activities' or 'Санхүүжилтийн үйл ажиллагааны цэвэр мөнгөн гүйлгээ') for the period FY2024.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Net Change in Cash_FY2020": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Net Change in Cash' or 'Мөнгөн хөрөнгийн цэвэр өөрчлөлт' in the provided excerpts.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Net Change in Cash_FY2021": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find the requested financial data in the provided text excerpts.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Net Change in Cash_FY2022": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Net Change in Cash' or 'Мөнгөн хөрөнгийн цэвэр өөрчлөлт' in the provided excerpts.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Net Change in Cash_FY2023": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Net Change in Cash' (Мөнгөн хөрөнгийн цэвэр өөрчлөлт) in the provided excerpts. The excerpts contain tables of expenses and income, but do not provide balance sheets, cash flow statements, or other financial statements required to find this information.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Net Change in Cash_FY2024": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Мөнгөн хөрөнгийн цэвэр өөрчлөлт' or 'Net Change in Cash' in the provided document excerpts. The excerpts contain financial data but do not include the target line item. The text mentions 'мөнгө ба түүнтэй адилтгах хөрөнгийн дүн' (Cash and cash equivalents), but not the net change.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Cash at Beginning of Period_FY2020": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Cash at Beginning of Period' ('Тайлант үеийн эхний мөнгөн хөрөнгө') in the provided documents.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Cash at Beginning of Period_FY2021": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Cash at Beginning of Period' or related terms in the provided text excerpts for FY2021. The excerpts appear to be tax-related and do not contain typical financial statements.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Cash at Beginning of Period_FY2022": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Cash at Beginning of Period' in the provided text. There is a table with financial data, but the specific line item is not present. Additionally, no key-value pairs match the target information.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Cash at Beginning of Period_FY2023": {
+        "response": "```json\n{\n  \"value\": 476651,\n  \"currency\": \"мян.төг\",\n  \"unit\": null,\n  \"source_reference\": \"Found a row with '1 дүгээр сарын 1-ний байдлаар' in the document. The corresponding value for 2023 is 476,651. '1 дүгээр сарын 1-ний байдлаар' translates to 'As of January 1st' and is equivalent to 'Cash at Beginning of Period'. The unit found is мян.төг.\",\n  \"status\": \"EXTRACTED_SUCCESSFULLY\"\n}\n```"
+      },
+      "line_item_extraction_Cash at Beginning of Period_FY2024": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find the requested data point ('Cash at Beginning of Period' or similar) in the provided document excerpts, which primarily focus on loan data and balance sheet details with data from 2022, 2023, and some from 2024. No relevant key-value pairs or table rows were present.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Cash at End of Period_FY2020": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to locate 'Cash at End of Period' or 'Тайлант үеийн эцсийн мөнгөн хөрөнгө' within the provided text excerpts for FY2020. The documents appear to be related to tax calculations and do not contain the financial data requested.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Cash at End of Period_FY2021": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Cash at End of Period' or 'Тайлант үеийн эцсийн мөнгөн хөрөнгө' or related terms in any table or key-value pair format for FY2021 in the provided document excerpts.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Cash at End of Period_FY2022": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Cash at End of Period' or its Mongolian equivalent in the provided excerpts for FY2022. The excerpts primarily focus on lease obligations and operational expenses, lacking the required financial statement data.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Cash at End of Period_FY2023": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find 'Cash at End of Period' or a similar term in the provided excerpts. The excerpts focus on topics like lease obligations, depreciation, and management expenses. No balance sheet data is present.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      },
+      "line_item_extraction_Cash at End of Period_FY2024": {
+        "response": "```json\n{\n  \"value\": null,\n  \"currency\": null,\n  \"unit\": null,\n  \"source_reference\": \"Unable to find the 'Cash at End of Period' or any equivalent term in a table or key-value pair format.\",\n  \"status\": \"CONFIRMED_NOT_FOUND\"\n}\n```"
+      }
+    }
+  },
+  "quality_report": {
+    "overall_status": "FAILED",
+    "phase_a_data_completeness_score": null,
+    "errors": [
+      {
+        "check_type": "SchemaValidation",
+        "item_path": "Root",
+        "message": "'model_metadata' is a required property",
+        "severity": "ERROR",
+        "details": {
+          "validator": "required",
+          "validator_value": [
+            "model_metadata",
+            "financial_statements_core"
+          ],
+          "instance_snippet": "{'security_id': 'MN0LNDB68390', 'primary_document_name': 'Мэргэжлийн байгууллагын дүгнэлтүүд (3).pdf', 'status': 'COMPLETED_INTERMEDIATE_EXTRACTION', 'message': 'RAG processing completed. Line item ex"
+        }
+      }
+    ],
+    "warnings": [
+      {
+        "check_type": "FinancialSanityCheck",
+        "item_path": null,
+        "message": "No historical periods in model, skipping period-based sanity checks.",
+        "severity": "WARNING",
+        "details": null
+      }
+    ]
+  },
+  "parsed_documents_summary": [
+    {
+      "file_name": "Мэргэжлийн байгууллагын дүгнэлтүүд (3).pdf",
+      "status": "success",
+      "message": "Document parsed successfully.",
+      "total_pages_in_doc": 72,
+      "processed_pages_in_doc": 72
+    },
+    {
+      "file_name": "Зээлжих зэрэглэлийн үнэлгээний тайлан (1).pdf",
+      "status": "success",
+      "message": "Document parsed successfully.",
+      "total_pages_in_doc": 11,
+      "processed_pages_in_doc": 11
+    },
+    {
+      "file_name": "хавсралт (1).pdf",
+      "status": "success",
+      "message": "Document parsed successfully.",
+      "total_pages_in_doc": 60,
+      "processed_pages_in_doc": 60
+    },
+    {
+      "file_name": "Албан бичиг ба 2001-2003 маягт_1.pdf",
+      "status": "success",
+      "message": "Document parsed successfully.",
+      "total_pages_in_doc": 15,
+      "processed_pages_in_doc": 15
+    }
+  ]
+}
