@@ -1,0 +1,20 @@
+{
+  "status": "success",
+  "message": "Found 5 similar items for query 'Full historical financial statements and, most importantly, comprehensive Markdown tables containing official annual and quarterly reports, balance sheets (ХОРОНГО), income statements (Орлогын үзүүлэлтүүд), cash flow statements, statements of changes in equity, and key performance indicators (KPIs). Prioritize extracting data from Markdown tables that clearly present multi-year financial data with column and row headers and numerical values, focusing on the most recent and complete tables. Look for section headings like 'Тайлан тэнцлийн үзүүлэлтүүд' (Balance Sheet Indicators) and table headers such as 'ХОРОНГО' (Assets), 'ӨР ТӨЛБӨР' (Liabilities), 'ӨӨРИЙН ХӨРӨНГО' (Equity), 'Орлогын үзүүлэлтүүд' (Income/Revenue Indicators). Prefer tables over narrative or unstructured text whenever possible.' in security MN0LNDB68390",
+  "result": {
+    "distances": [
+      0.6255940198898315,
+      0.6289541125297546,
+      0.6419528722763062,
+      0.6479705572128296,
+      0.6493792533874512
+    ],
+    "indices": [
+      140,
+      122,
+      5,
+      61,
+      73
+    ]
+  }
+}

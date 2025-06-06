@@ -1,0 +1,73 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "QualityControlAgentInstruction",
+    "description": "Schema for the Quality Control LLM's precise instructions to the agent for data repair.",
+    "type": "object",
+    "properties": {
+      "qc_status": {
+        "type": "string",
+        "description": "Overall status of the quality control check.",
+        "enum": ["Pass", "Fail"]
+      },
+      "deterministic_qc_issues": {
+        "type": "array",
+        "description": "A list of structured error details identified by the programmatic (deterministic) QC checks. This provides the factual basis for any 'Fail' status.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "section": {
+              "type": "string",
+              "description": "The top-level schema section where the problem occurred (e.g., 'bond_financials_historical')."
+            },
+            "field": {
+              "type": ["string", "null"],
+              "description": "Specific field affected, if applicable."
+            },
+            "period": {
+              "type": ["string", "null"],
+              "description": "Reporting period affected (YYYY-MM-DD), if applicable."
+            },
+            "problem_type": {
+              "type": "string",
+              "description": "Categorization of the problem (e.g., 'BalanceSheetEquationMismatch', 'UnitInconsistency', 'NegativeValueAnomaly')."
+            },
+            "description": {
+              "type": "string",
+              "description": "Human-readable description of the specific issue identified by the deterministic check."
+            },
+            "value_found": {
+              "type": ["string", "number", "boolean", "array", "object", "null"],
+              "description": "The problematic value found in the extracted data."
+            },
+            "expected_value": {
+              "type": ["string", "number", "boolean", "array", "object", "null"],
+              "description": "The value expected if deterministically calculable, or null."
+            }
+          },
+          "required": ["section", "problem_type", "description", "value_found"],
+          "additionalProperties": false
+        }
+      },
+      "repair_instructions": {
+        "type": "array",
+        "description": "A list of targeted instructions for the agent to use to re-extract/repair data. Only present if qc_status is 'Fail'. Empty if 'Pass'.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "section_to_re_extract": {
+              "type": "string",
+              "description": "The specific top-level schema section (e.g., 'bond_financials_historical') that needs re-extraction/repair."
+            },
+            "llm_repair_prompt_directive": {
+              "type": "string",
+              "description": "A precise, concise, and targeted instruction for the data extractor LLM. This directive should guide the LLM on how to specifically correct the identified problem(s) for the given section. Example: 'Focus on ensuring Assets = Liabilities + Equity for 2023-12-31 Balance Sheet data. Re-verify conversion of units for all financial figures for this period to base MNT. Ensure all numerical fields are pure numbers.' or 'Carefully re-extract 'governing_law' and 'trustee_agent'; ensure explicit presence in source docs and if not found, explicitly use null. Avoid inferring values unless explicitly instructed by schema.'."
+            }
+          },
+          "required": ["section_to_re_extract", "llm_repair_prompt_directive"],
+          "additionalProperties": false
+        }
+      }
+    },
+    "required": ["qc_status"],
+    "additionalProperties": false
+  }

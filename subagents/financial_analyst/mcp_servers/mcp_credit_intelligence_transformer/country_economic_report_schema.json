@@ -1,0 +1,46 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CountryEconomicReport",
+  "type": "object",
+  "properties": {
+    "country": { "type": "string" },
+    "report_date": { "type": "string", "format": "date" },
+    "inflation": {
+      "type": "object",
+      "properties": {
+        "recent_annual_inflation_pct": { "type": "number" },
+        "historical_inflation_pct": {
+          "type": "array",
+          "items": { "type": "number" },
+          "description": "Annual inflation rates for recent years, percent"
+        },
+        "commentary": { "type": "string" }
+      },
+      "required": ["recent_annual_inflation_pct", "historical_inflation_pct"]
+    },
+    "fx": {
+      "type": "object",
+      "properties": {
+        "recent_usd_mnt_rate": { "type": "number" },
+        "historical_usd_mnt_rates": {
+          "type": "array",
+          "items": { "type": "number" },
+          "description": "Annual average USD/MNT rates for recent years"
+        },
+        "volatility_commentary": { "type": "string" }
+      },
+      "required": ["recent_usd_mnt_rate", "historical_usd_mnt_rates"]
+    },
+    "macro_risks": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Key macroeconomic risks (e.g., commodity, policy, external shocks)"
+    },
+    "sources": {
+      "type": "array",
+      "items": { "type": "string", "format": "uri" },
+      "minItems": 1
+    }
+  },
+  "required": ["country", "report_date", "inflation", "fx", "macro_risks", "sources"]
+}

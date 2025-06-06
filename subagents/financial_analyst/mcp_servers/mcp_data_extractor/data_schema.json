@@ -1,0 +1,486 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "HighYieldBondExtractionSchema_Mongolian",
+  "description": "Comprehensive schema for extracting structured data from Mongolian high-yield bond documents for a single security. Designed for multilingual LLM extraction from mixed Mongolian and English source text, with all extracted values to be output in English where applicable.",
+  "type": "object",
+  "properties": {
+    "bond_metadata": {
+      "type": "object",
+      "description": "Fundamental identifying information for the bond.",
+      "faiss_query_optimal": "security_id, ISIN, currency, principal_amount_issued, coupon_rate_type, coupon_rate, coupon_frequency, issue_date, maturity_date, trustee_agent, call_provisions, put_provisions, governing_law, default_interest_rate, denomination, listing_venue", 
+      "properties": {
+        "security_id": {
+          "type": "string",
+          "description": "Unique internal identifier for the bond, often alphanumeric. This is an internal system identifier, not necessarily an ISIN.",
+          "pattern": "^[A-Z0-9_-]{3,}$"
+        },
+        "isin": {
+          "type": "string",
+          "description": "International Securities Identification Number (12 characters), if available. Null if not explicitly stated.",
+          "pattern": "^[A-Z]{2}[A-Z0-9]{9}[0-9]$",
+          "nullable": true
+        },
+        "currency": {
+          "type": "string",
+          "description": "Denomination currency of the bond (ISO 4217 code, e.g., 'MNT' for Mongolian Tugrik, 'USD' for US Dollar).",
+          "enum": ["MNT", "USD", "EUR", "JPY", "CNY", "KRW", "GBP", "SGD", "AUD", "CAD", "CHF", "HKD", "RUB", "BRL", "INR", "ZAR"]
+        },
+        "principal_amount_issued": {
+          "type": "number",
+          "description": "Total face value (nominal amount) of the bond issued, in the bond's denomination currency.",
+          "minimum": 0
+        },
+        "coupon_rate_type": {
+          "type": "string",
+          "description": "Type of coupon payment structure.",
+          "enum": ["Fixed", "Floating", "Zero Coupon", "Variable"]
+        },
+        "coupon_rate": {
+          "type": "number",
+          "description": "Annual coupon rate as a decimal (e.g., 0.12 for 12%, 0.055 for 5.5%). For Zero Coupon bonds, this value is 0.0. The value should be between 0.0 and 1.0 (0% to 100%).",
+          "minimum": 0,
+          "maximum": 1.0,
+          "nullable": true
+        },
+        "coupon_frequency": {
+          "type": "string",
+          "description": "How often coupon is paid annually. Use 'N/A' for Zero Coupon bonds.",
+          "enum": ["Annual", "Semi-Annual", "Quarterly", "Monthly", "At Maturity", "N/A"]
+        },
+        "issue_date": {
+          "type": "string",
+          "description": "The official date or datetime the bond was issued. Accepts 'YYYY-MM-DD' or 'YYYY-MM-DD HH:MM' (ISO 8601 date or datetime). Time is optional.",
+          "anyOf": [
+            {"format": "date"},
+            {"format": "date-time"}
+          ]
+        },
+        "maturity_date": {
+          "type": "string",
+          "description": "The date or datetime the bond matures and principal is repaid. Accepts 'YYYY-MM-DD' or 'YYYY-MM-DD HH:MM' (ISO 8601 date or datetime). Time is optional.",
+          "anyOf": [
+            {"format": "date"},
+            {"format": "date-time"}
+          ]
+        },
+        "trustee_agent": {
+          "type": "string",
+          "description": "Name of the bond trustee or paying agent. Null if not specified.",
+          "nullable": true
+        },
+        "call_provisions": {
+          "type": ["string", "null"],
+          "description": "Summary of any issuer call options, including dates, prices, and conditions (e.g., 'Callable at 105 in 2026, then declining'). Use 'Absent' if no call provisions are present.",
+          "enum": ["Absent", "Details Provided"]
+        },
+        "put_provisions": {
+          "type": ["string", "null"],
+          "description": "Summary of any bondholder put options, including dates, prices, and conditions. Use 'Absent' if no put provisions are present.",
+          "enum": ["Absent", "Details Provided"]
+        },
+        "governing_law": {
+          "type": ["string", "null"],
+          "description": "The legal jurisdiction (e.g., 'Mongolian Law', 'New York Law') under which the bond agreement is governed. Null if not specified.",
+          "nullable": true
+        },
+        "default_interest_rate": {
+          "type": ["number", "null"],
+          "description": "The increased annual interest rate (as a decimal) that applies to overdue principal or interest payments upon an event of default. Null if not specified.",
+          "minimum": 0,
+          "nullable": true
+        },
+        "denomination": {
+          "type": ["number", "null"],
+          "description": "The minimum face value (par amount) in which the bond can be traded or purchased, in the bond's denomination currency. Null if not specified.",
+          "minimum": 0,
+          "nullable": true
+        },
+        "listing_venue": {
+          "type": ["string", "null"],
+          "description": "The exchange or market where the bond is listed or traded (e.g., 'Mongolian Stock Exchange', 'OTC'). Null if not specified.",
+          "nullable": true
+        }
+      },
+      "comments": {
+        "type": ["string", "null"],
+        "description": "LLM-generated notes on extraction quality, missing data, or encountered problems."
+      },
+      "required": [
+        "security_id",
+        "currency",
+        "principal_amount_issued",
+        "coupon_rate_type",
+        "coupon_frequency",
+        "issue_date",
+        "maturity_date",
+        "call_provisions",
+        "put_provisions"
+      ],
+      "additionalProperties": false
+    },
+    "bond_financials_historical": {
+      "type": "object",
+      "description": "Historical financial performance of the issuer.",
+      "faiss_query_optimal": "Retrieve only JSON files containing content_blocks of type 'table', or blocks with clear multi-year, multi-column, numeric financial statement structure (balance sheets, income statements, cash flow, equity, KPIs). Exclude narrative, contract, metadata, and text-only files. Look for table headers or section titles such as 'Тайлан тэнцлийн үзүүлэлтүүд', 'ХОРОНГО', 'ӨР ТӨЛБӨР', 'ӨӨРИЙН ХӨРӨНГО', 'Орлогын үзүүлэлтүүд', and English equivalents. Prefer tables with explicit period and metric labels.",
+      "faiss_top_k": 5,
+      "properties": {
+        "base_unit_of_measure": {
+          "type": "string",
+          "description": "The currency and scale to which all financials are normalized (e.g., 'MNT', 'USD'). All values in 'financials' dicts must be in this unit."
+        },
+        "unit_conversion_notes": {
+          "type": "string",
+          "description": "Explanation of how units were determined and converted, including any ambiguities or assumptions."
+        },
+        "historical_financial_statements": {
+          "type": "array",
+          "description": "List of historical financial statements for different reporting periods.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "reporting_period_end_date": {
+                "type": "string",
+                "description": "End date or datetime of the financial reporting period. Accepts 'YYYY-MM-DD' or 'YYYY-MM-DD HH:MM' (ISO 8601). Time is optional.",
+                "anyOf": [
+                  {"format": "date"},
+                  {"format": "date-time"}
+                ]
+              },
+              "reporting_period_type": {
+                "type": "string",
+                "description": "Type of financial report (e.g., Annual, Quarterly, Semi-Annual)."
+              },
+              "financials": {
+                "type": "object",
+                "description": "Dictionary of all available numerical financial data points for the period. Keys should be snake_case (e.g., 'total_revenue', 'net_income'). Values are numbers. Use 'null' if a specific data point is mentioned but its value is not found.",
+                "patternProperties": {
+                  "^[a-zA-Z_]+$": {
+                    "type": ["number", "null"]
+                  }
+                },
+                "minProperties": 1,
+                "example": {
+                  "total_revenue": 50000000000.00,
+                  "ebitda": 15000000000.00,
+                  "net_income": 8000000000.00,
+                  "total_debt": 30000000000.00,
+                  "cash_and_equivalents": 5000000000.00,
+                  "total_assets": 70000000000.00,
+                  "total_equity": 40000000000.00,
+                  "interest_expense": 1500000000.00,
+                  "cash_from_operations": 12000000000.00,
+                  "capital_expenditures": 3000000000.00,
+                  "retained_earnings": 1000000000.00,
+                  "cogs": 20000000000.00,
+                  "gross_profit": 30000000000.00,
+                  "sga_expenses": 5000000000.00,
+                  "income_tax_expense": 2000000000.00,
+                  "long_term_debt": 25000000000.00,
+                  "current_assets": 10000000000.00,
+                  "current_liabilities": 8000000000.00,
+                  "working_capital": 2000000000.00
+                }
+              }
+            },
+            "required": ["reporting_period_end_date", "reporting_period_type", "financials"],
+            "additionalProperties": false
+          },
+          "minItems": 1
+        }
+      },
+      "required": ["base_unit_of_measure", "unit_conversion_notes", "historical_financial_statements"],
+      "additionalProperties": false
+    },
+    "bond_financials_projections": {
+      "type": "object",
+      "description": "Explicit issuer-provided financial projections.",
+      "faiss_query_optimal": "Issuer-provided financial projections, forecast tables, future financial outlook, projected income statements, projected balance sheets, and forward-looking metrics such as projected revenue, projected EBITDA, or future capital expenditures for all projection periods. Look for phrases like 'ирээдүйн таамаглал' (future forecast) or 'төлөвлөгөөт үзүүлэлтүүд' (planned indicators).",
+      "properties": {
+        "base_unit_of_measure": {
+          "type": "string",
+          "description": "The currency and scale to which all projections are normalized (e.g., 'MNT', 'USD'). All values in 'financials' dicts must be in this unit."
+        },
+        "unit_conversion_notes": {
+          "type": "string",
+          "description": "Explanation of how units were determined and converted, including any ambiguities or assumptions."
+        },
+        "issuer_projections": {
+          "type": ["object", "null"],
+          "description": "Explicit issuer-provided financial projections, if available. Null if no projections are found.",
+          "properties": {
+            "projection_period_start_date": {
+              "type": "string",
+              "description": "Start date or datetime of the projection period. Accepts 'YYYY-MM-DD' or 'YYYY-MM-DD HH:MM' (ISO 8601). Time is optional.",
+              "anyOf": [
+                {"format": "date"},
+                {"format": "date-time"}
+              ]
+            },
+            "projection_period_end_date": {
+              "type": "string",
+              "description": "End date or datetime of the projection period. Accepts 'YYYY-MM-DD' or 'YYYY-MM-DD HH:MM' (ISO 8601). Time is optional.",
+              "anyOf": [
+                {"format": "date"},
+                {"format": "date-time"}
+              ]
+            },
+            "projected_metrics": {
+              "type": "object",
+              "description": "Dictionary of projected numerical line items (e.g., 'projected_revenue', 'projected_ebitda', 'projected_capex' for future periods). Keys should be snake_case. Use 'null' if a specific data point is mentioned but its value is not found.",
+              "patternProperties": {
+                "^[a-zA-Z_]+$": {
+                  "type": ["number", "null"]
+                }
+              },
+              "minProperties": 1,
+              "example": {
+                "projected_total_revenue_next_year": 60000000000.00,
+                "projected_ebitda_next_year": 18000000000.00,
+                "projected_capital_expenditures_next_year": 4000000000.00
+              }
+            }
+          },
+          "required": ["projection_period_start_date", "projection_period_end_date", "projected_metrics"],
+          "additionalProperties": false
+        }
+      },
+      "comments": {
+        "type": ["string", "null"],
+        "description": "LLM-generated notes on extraction quality, missing data, or encountered problems."
+      },
+      "required": ["issuer_projections"],
+      "additionalProperties": false
+    },
+    "collateral_and_protective_clauses": {
+      "type": "object",
+      "description": "Details of collateral backing the bond and associated protective clauses, covenants, and events of default.",
+      "faiss_query_optimal": "All information related to collateral, security, asset backing, covenants, protective clauses, events of default, negative pledge, asset sale restrictions, financial covenants, or reporting requirements for this bond.",
+      "properties": {
+        "seniority": {
+          "type": "string",
+          "description": "Position in capital structure relative to other debt. 'Secured' indicates collateral is pledged; 'Unsecured' indicates no collateral. Use 'N/A' if information is absent.",
+          "enum": ["Secured", "Unsecured", "Pari Passu Secured", "Subordinated Secured", "Subordinated Unsecured", "N/A"]
+        },
+        "collateral_assets": {
+          "type": "array",
+          "description": "List of specific assets pledged as collateral for the bond.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "asset_id": {
+                "type": ["string", "null"],
+                "description": "A unique identifier or key name for the pledged asset, if provided. Null if not identifiable.",
+                "nullable": true
+              },
+              "asset_type": {
+                "type": "string",
+                "description": "General category of the pledged asset.",
+                "enum": ["Real Estate", "Machinery & Equipment", "Accounts Receivable", "Inventory", "Cash Flows", "Shares", "Intellectual Property", "Other", "N/A"]
+              },
+              "asset_description": {
+                "type": "string",
+                "description": "Detailed description of the asset pledged (e.g., 'All mining equipment located at X site', 'Receivables from Government contracts'). Use 'N/A' if no further description is available."
+              },
+              "valuation_method": {
+                "type": "string",
+                "description": "Method used to value the asset for collateral purposes.",
+                "enum": ["Appraisal", "Book Value", "Market Value", "Discounted Cash Flow", "Historical Cost", "Other", "N/A"]
+              },
+              "valuation_amount": {
+                "type": ["number", "null"],
+                "description": "The monetary value of the asset as per valuation. Null if no valuation amount is provided.",
+                "nullable": true
+              },
+              "valuation_currency": {
+                "type": ["string", "null"],
+                "description": "Currency of the valuation amount (ISO 4217 code). Null if no valuation amount is provided.",
+                "nullable": true
+              },
+              "valuation_date": {
+                "type": ["string", "null"],
+                "description": "Date or datetime of the asset valuation. Accepts 'YYYY-MM-DD' or 'YYYY-MM-DD HH:MM' (ISO 8601). Null if not provided. Time is optional.",
+                "anyOf": [
+                  {"format": "date"},
+                  {"format": "date-time"}
+                ],
+                "nullable": true
+              },
+              "lien_priority": {
+                "type": "string",
+                "description": "Priority of the lien on this asset relative to other creditors.",
+                "enum": ["First Lien", "Second Lien", "Pari Passu", "Subordinate Lien", "N/A"]
+              },
+              "additional_details": {
+                "type": ["string", "null"],
+                "description": "Any other relevant specific details about the asset or its encumbrance. Use 'N/A' if none.",
+                "nullable": true
+              }
+            },
+            "required": ["asset_type", "asset_description", "valuation_method", "lien_priority"],
+            "additionalProperties": false
+          },
+          "minItems": 0
+        },
+        "collateral_maintenance_requirements": {
+          "type": "string",
+          "description": "Specific requirements to maintain the value or coverage of collateral (e.g., 'Maintain collateral value at 120% of outstanding principal', 'Regular appraisals required'). Use 'Absent' if no such clause is found.",
+          "enum": ["Absent", "Details Provided"]
+        },
+        "negative_pledge_clause": {
+          "type": "string",
+          "description": "Details of restrictions on the issuer creating new liens or encumbrances on its assets, particularly unencumbered ones. Use 'Absent' if no such clause is found.",
+          "enum": ["Absent", "Details Provided"]
+        },
+        "asset_sale_restrictions": {
+          "type": "string",
+          "description": "Details of limitations on the issuer's ability to sell or dispose of pledged assets. Use 'Absent' if no such clause is found.",
+          "enum": ["Absent", "Details Provided"]
+        },
+        "financial_covenants": {
+          "type": "array",
+          "description": "List of specific financial ratios or metrics the issuer is required to maintain (e.g., 'Debt-to-EBITDA not to exceed 3.0x', 'Minimum Debt Service Coverage Ratio of 1.2x'). Each item is a string describing the covenant.",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 0
+        },
+        "events_of_default": {
+          "type": "array",
+          "description": "List of non-payment events (e.g., bankruptcy, cross-default to other debt, breach of covenants, change of control) that would constitute an Event of Default under the bond indenture, allowing bondholders to accelerate repayment. Each item is a string describing an event.",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 0
+        },
+        "information_reporting_requirements": {
+          "type": "string",
+          "description": "Specific requirements for the issuer to provide ongoing financial statements, collateral reports, or other periodic information to bondholders or the trustee. Use 'Absent' if no such clause is found.",
+          "enum": ["Absent", "Details Provided"]
+        }
+      },
+      "comments": {
+        "type": ["string", "null"],
+        "description": "LLM-generated notes on extraction quality, missing data, or encountered problems."
+      },
+      "required": [
+        "seniority",
+        "collateral_assets",
+        "collateral_maintenance_requirements",
+        "negative_pledge_clause",
+        "asset_sale_restrictions",
+        "financial_covenants",
+        "events_of_default",
+        "information_reporting_requirements"
+      ],
+      "additionalProperties": false
+    },
+    "issuer_business_profile": {
+      "type": "object",
+      "description": "Qualitative and structural information about the bond issuer's business.",
+      "faiss_query_optimal": "Provide details on the bond issuer's name, primary industry, business model summary, key products and services, competitive advantages, management team overview, ownership structure, and any significant governance notes.",
+      "properties": {
+        "issuer_name": {
+          "type": "string",
+          "description": "Legal name of the bond issuer."
+        },
+        "issuer_industry": {
+          "type": "string",
+          "description": "Primary industry sector of the issuer (e.g., 'Mining', 'Financial Services', 'Real Estate', 'Manufacturing')."
+        },
+        "business_model_summary": {
+          "type": "string",
+          "description": "Concise description of the issuer's core operations, how it generates revenue, and its value proposition. Use 'N/A' if not available."
+        },
+        "key_products_services": {
+          "type": "array",
+          "description": "List of main products or services offered by the issuer.",
+          "items": { "type": "string" },
+          "minItems": 0
+        },
+        "competitive_advantages": {
+          "type": "string",
+          "description": "Summary of the issuer's key competitive strengths (e.g., 'Market leader', 'Proprietary technology', 'Cost efficiency'). Use 'N/A' if not available."
+        },
+        "management_team_summary": {
+          "type": "string",
+          "description": "Brief overview of key management individuals (e.g., CEO, CFO) and their relevant experience, or a general statement about the management team's qualifications. Use 'N/A' if not available."
+        },
+        "ownership_structure": {
+          "type": "string",
+          "description": "Summary of key shareholders or the overall ownership structure (e.g., 'Family-owned', 'State-owned enterprise', 'Publicly listed company with diversified shareholders'). Use 'N/A' if not available."
+        },
+        "governance_notes": {
+          "type": "string",
+          "description": "Any specific corporate governance structures, policies, related-party transactions, or notable governance risks. Use 'N/A' if not available."
+        }
+      },
+      "comments": {
+        "type": ["string", "null"],
+        "description": "LLM-generated notes on extraction quality, missing data, or encountered problems."
+      },
+      "required": [
+        "issuer_name",
+        "issuer_industry",
+        "business_model_summary",
+        "key_products_services",
+        "competitive_advantages",
+        "management_team_summary",
+        "ownership_structure",
+        "governance_notes"
+      ],
+      "additionalProperties": false
+    },
+    "industry_profile": {
+      "type": "object",
+      "description": "General information and analysis of the industry in which the issuer operates.",
+      "faiss_query_optimal": "Retrieve any content blocks (narrative, descriptive, analytical, or tabular) that mention or discuss the issuer's industry, sector, business area, market, regulatory context, or economic environment. Include sections or paragraphs that provide even partial information about the issuer's sector, market, business activities, regulatory environment, competitive context, or industry risks. Prioritize but do not require blocks titled or mentioning 'Industry Overview', 'Market Analysis', 'Sector Trends', 'Competitive Landscape', 'Industry Risks', 'Regulatory Environment', 'Opportunities and Threats', or similar. If no dedicated industry section is present, include any content that describes what the issuer does, its business model, or its place in the market or economy.",
+      "properties": {
+        "industry_overview": {
+          "type": "string",
+          "description": "General description and context of the industry, including its size, growth prospects, and key characteristics. Use 'N/A' if not available."
+        },
+        "key_industry_trends": {
+          "type": "array",
+          "description": "List of major trends impacting the industry (e.g., 'Digitalization', 'Commodity Price Volatility', 'Regulatory changes', 'Technological disruption').",
+          "items": { "type": "string" },
+          "minItems": 0
+        },
+        "competitive_landscape_notes": {
+          "type": "string",
+          "description": "Notes on the competitive environment within the industry (e.g., 'Fragmented market with many small players', 'Few dominant players with high barriers to entry', 'Intense price competition'). Use 'N/A' if not available."
+        },
+        "regulatory_environment_notes": {
+          "type": "string",
+          "description": "Key regulations, regulatory bodies, or licensing requirements significantly impacting the industry and the issuer's operations. Use 'N/A' if not available."
+        },
+        "industry_risk_factors": {
+          "type": "array",
+          "description": "List of specific risks inherent to the industry that could impact the issuer's performance (e.g., 'Supply chain disruptions', 'Geopolitical risks', 'Environmental regulations').",
+          "items": { "type": "string" },
+          "minItems": 0
+        }
+      },
+      "comments": {
+        "type": ["string", "null"],
+        "description": "LLM-generated notes on extraction quality, missing data, or encountered problems."
+      },
+      "required": [
+        "industry_overview",
+        "key_industry_trends",
+        "competitive_landscape_notes",
+        "regulatory_environment_notes",
+        "industry_risk_factors"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "bond_metadata",
+    "bond_financials_historical",
+    "bond_financials_projections",
+    "collateral_and_protective_clauses",
+    "issuer_business_profile",
+    "industry_profile"
+  ],
+  "additionalProperties": false
+}

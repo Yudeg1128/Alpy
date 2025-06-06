@@ -10,6 +10,7 @@ import logging
 import os
 import asyncio
 from pathlib import Path
+from financial_analyst.security_folder_utils import require_security_folder, get_subfolder, get_security_file
 from typing import List, Dict, Any, Optional, Tuple, Set
 
 import faiss
@@ -49,7 +50,7 @@ logger.info("Starting MCP Image Embedder server")
 # Constants
 OUTPUT_BASE_DIR = Path('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current')
 VECTOR_DIMENSION = 1408
-VECTOR_STORE_NAME = "vector_store"
+VECTOR_STORE_NAME = "vector_store_image"
 
 # Rate limiting constants
 REQUESTS_PER_MINUTE = 10  # API rate limit
@@ -75,17 +76,9 @@ mcp_app = FastMCP(
     description="MCP server for creating FAISS vector stores from images using Vertex AI's multimodal embedding model"
 )
 
-def get_board_path(security_id: str) -> Path:
-    for board_path in OUTPUT_BASE_DIR.iterdir():
-        if not board_path.is_dir():
-            continue
-        if (board_path / security_id).exists():
-            return board_path
-    raise ValueError(f"Security ID {security_id} not found in any board directory")
-
 def load_image_as_blob(image_path: str) -> bytes:
     """Load an image from path and return it as bytes."""
-    with Image.open(image_path) as img:
+    with PILImage.open(image_path) as img:
         # Convert to RGB if needed
         if img.mode != 'RGB':
             img = img.convert('RGB')
@@ -96,7 +89,7 @@ def load_image_as_blob(image_path: str) -> bytes:
         while True:
             # Save to bytes
             img_bytes = BytesIO()
-            resized = img.resize((int(img.width/ratio), int(img.height/ratio)), Image.Resampling.LANCZOS)
+            resized = img.resize((int(img.width/ratio), int(img.height/ratio)), PILImage.Resampling.LANCZOS)
             resized.save(img_bytes, format='JPEG', quality=85)
             if len(img_bytes.getvalue()) <= target_size or ratio > 8:
                 break
@@ -117,12 +110,9 @@ def create_faiss_index(embeddings: List[List[float]]) -> Any:
     index.add(embeddings_array)
     return index
 
-def load_vector_store(base_path: Path) -> Tuple[Optional[Any], Optional[Dict], Set[str]]:
+def load_vector_store(security_id: str) -> Tuple[Optional[Any], Optional[Dict], Set[str]]:
     """Load existing vector store and return index, metadata, and processed image paths."""
-    if not isinstance(base_path, Path):
-        base_path = Path(base_path)
-    
-    store_dir = base_path / VECTOR_STORE_NAME
+    store_dir = get_subfolder(security_id, VECTOR_STORE_NAME)
     if not store_dir.exists():
         return None, None, set()
         
@@ -145,12 +135,9 @@ def load_vector_store(base_path: Path) -> Tuple[Optional[Any], Optional[Dict], S
         logger.error(f"Failed to load vector store: {e}")
         return None, None, set()
 
-def save_vector_store(index: Any, metadata: Dict, base_path: Path) -> str:
+def save_vector_store(index: Any, metadata: Dict, security_id: str) -> str:
     """Save FAISS index and metadata to disk."""
-    if not isinstance(base_path, Path):
-        base_path = Path(base_path)
-    
-    store_dir = base_path / VECTOR_STORE_NAME
+    store_dir = get_subfolder(security_id, VECTOR_STORE_NAME)
     store_dir.mkdir(parents=True, exist_ok=True)
     
     # Save index
@@ -179,9 +166,7 @@ async def embed_images(security_id: str, image_paths: List[str], metadata: Optio
     logger.debug(f"Image paths: {image_paths}")
 
     # Create vector store directory if it doesn't exist
-    board_path = get_board_path(security_id)
-    logger.debug(f"Board path: {board_path}")
-    security_path = board_path / security_id
+    security_path = require_security_folder(security_id)
     logger.debug(f"Security path: {security_path}")
 
     # Get multimodal model
@@ -230,7 +215,7 @@ async def embed_images(security_id: str, image_paths: List[str], metadata: Optio
         )
 
     index = create_faiss_index(embeddings)
-    store_path = save_vector_store(index, image_metadata, security_path)
+    store_path = save_vector_store(index, image_metadata, security_id)
 
     return ImageEmbedderOutput(
         status="success",
@@ -245,8 +230,7 @@ async def run_stdio_server():
     @mcp_app.tool(name="embed_images")
     async def embed_images(security_id: str, image_paths: List[str], metadata: Optional[Dict] = None) -> ImageEmbedderOutput:
         try:
-            board_path = get_board_path(security_id)
-            security_path = board_path / security_id
+            security_path = require_security_folder(security_id)
             
             logger.debug(f"Processing images for security {security_id}")
             logger.debug(f"Image paths: {image_paths}")
@@ -257,7 +241,7 @@ async def run_stdio_server():
             logger.debug("Model initialized successfully")
             
             # Load existing progress
-            existing_index, existing_metadata, processed_paths = load_vector_store(security_path)
+            existing_index, existing_metadata, processed_paths = load_vector_store(security_id)
             
             # Check for store corruption
             if len(processed_paths) > len(image_paths):
@@ -291,7 +275,7 @@ async def run_stdio_server():
                     return ImageEmbedderOutput(
                     status="success",
                     message=f"All {len(processed_paths)} images already embedded",
-                    vector_store_path=str(security_path / VECTOR_STORE_NAME)
+                    vector_store_path=str(get_subfolder(security_id, VECTOR_STORE_NAME))
                 )
                 
             logger.info(f"Processing {len(pending_images)} new images")
@@ -387,7 +371,7 @@ async def run_stdio_server():
                     if all_embeddings:  # Only create index if we have valid embeddings
                         try:
                             index = create_faiss_index(all_embeddings)
-                            store_path = save_vector_store(index, all_metadata, security_path)
+                            store_path = save_vector_store(index, all_metadata, security_id)
                             logger.info(f"Saved {len(all_embeddings)} embeddings to vector store")
                         except Exception as e:
                             logger.error(f"Failed to save vector store: {e}")

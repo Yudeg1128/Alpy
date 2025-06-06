@@ -1,0 +1,20 @@
+{
+  "status": "success",
+  "message": "Found 5 similar items for query 'Provide details on the bond issuer's name, primary industry, business model summary, key products and services, competitive advantages, management team overview, ownership structure, and any significant governance notes.' in security MN0LNDB68390",
+  "result": {
+    "distances": [
+      0.7553365230560303,
+      0.7869241237640381,
+      0.7919638752937317,
+      0.7930876016616821,
+      0.7959296703338623
+    ],
+    "indices": [
+      70,
+      61,
+      91,
+      133,
+      42
+    ]
+  }
+}

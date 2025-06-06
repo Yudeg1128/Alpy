@@ -1,0 +1,22 @@
+{
+  "bond_metadata": {
+    "security_id": "LNDB-TBC-3.2-12",
+    "isin": "MN0LNDB68390",
+    "currency": "MNT",
+    "principal_amount_issued": 1000000000,
+    "coupon_rate_type": "Fixed",
+    "coupon_rate": 0.12,
+    "coupon_frequency": "Quarterly",
+    "issue_date": "2025-02-28 18:00",
+    "maturity_date": "2026-03-02",
+    "trustee_agent": null,
+    "call_provisions": "Absent",
+    "put_provisions": "Absent",
+    "governing_law": "Mongolian Law",
+    "default_interest_rate": null,
+    "denomination": 100000,
+    "listing_venue": null
+  },
+  "comments": "Extracted core bond metadata. Trustee/Paying Agent, Default Interest Rate, Call/Put provisions, and Listing Venue were not explicitly stated in the provided documents. Listing venue is inferred as not publicly listed based on the description 'хаалттай хүрээнд' (closed circle/private placement). Issue date is taken from the 'Announced Date' as the closest available date related to the bond offering start.",
+  "input_quality": "Extraction relied primarily on documents 1, 2, and 5, which contained the most direct information about the specific bond (ISIN MN0LNDB68390). Document 3 and 6 provided supporting evidence for the typical denomination used by the issuer. Document 4 was irrelevant. The principal amount was confirmed across multiple sources and matched the authoritative source value."
+}

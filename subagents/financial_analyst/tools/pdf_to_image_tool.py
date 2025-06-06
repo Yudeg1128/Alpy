@@ -57,8 +57,8 @@ class PDFToImageTool(BaseTool, BaseModel):
         # Start the MCP server process
         params = StdioServerParameters(
             command="python3",
-            args=[str(Path(__file__).parent.parent / "mcp_pdf_to_image" / "server.py")],
-            cwd=str(Path(__file__).parent.parent / "mcp_pdf_to_image")
+            args=[str(Path(__file__).parent.parent / "mcp_servers" / "mcp_pdf_to_image" / "server.py")],
+            cwd=str(Path(__file__).parent.parent / "mcp_servers" / "mcp_pdf_to_image")
         )
         
         client_info = MCPImplementation(name="PDFToImageToolClient", version="0.1.0")

@@ -1,0 +1,384 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "SecurityCreditIntelligenceReport",
+    "description": "Comprehensive credit intelligence report for a single high-yield bond security, integrating all extracted data, generated assumptions, financial model output, qualitative research, and quality control assessment.",
+    "type": "object",
+    "properties": {
+      "security_id": {
+        "type": "string",
+        "description": "Unique internal identifier for the bond, sourced from bond_metadata."
+      },
+      "extraction_phase_data": {
+        "type": "object",
+        "description": "Raw data extracted from primary bond documentation (Phase 1 output, including initial qualitative profiles).",
+        "properties": {
+          "bond_metadata": {
+            "type": "object",
+            "description": "Fundamental identifying information for the bond.",
+            "properties": {
+              "security_id": { "type": "string" },
+              "isin": { "type": ["string", "null"] },
+              "currency": { "type": "string", "enum": ["MNT", "USD", "EUR", "JPY", "CNY", "KRW", "GBP", "SGD", "AUD", "CAD", "CHF", "HKD", "RUB", "BRL", "INR", "ZAR"] },
+              "principal_amount_issued": { "type": "number" },
+              "coupon_rate_type": { "type": "string", "enum": ["Fixed", "Floating", "Zero Coupon", "Variable"] },
+              "coupon_rate": { "type": ["number", "null"] },
+              "coupon_frequency": { "type": "string", "enum": ["Annual", "Semi-Annual", "Quarterly", "Monthly", "At Maturity", "N/A"] },
+              "issue_date": { "type": ["string", "null"], "format": "date" },
+              "maturity_date": { "type": "string", "format": "date" },
+              "trustee_agent": { "type": ["string", "null"] },
+              "call_provisions": { "type": "string", "enum": ["Absent", "Details Provided"] },
+              "put_provisions": { "type": "string", "enum": ["Absent", "Details Provided"] },
+              "governing_law": { "type": ["string", "null"] },
+              "default_interest_rate": { "type": ["number", "null"] },
+              "denomination": { "type": ["number", "null"] },
+              "listing_venue": { "type": ["string", "null"] },
+              "comments": { "type": "string" },
+              "input_quality": { "type": "string" }
+            },
+            "required": ["security_id", "currency", "principal_amount_issued", "coupon_rate_type", "coupon_frequency", "maturity_date", "call_provisions", "put_provisions", "comments", "input_quality"],
+            "additionalProperties": false
+          },
+          "bond_financials_historical": {
+            "type": "object",
+            "properties": {
+              "historical_financial_statements": {
+                "type": "array",
+                "items": { "$ref": "#/definitions/HistoricalFinancialStatement" }
+              },
+              "comments": { "type": "string" },
+              "input_quality": { "type": "string" }
+            },
+            "required": ["historical_financial_statements", "comments", "input_quality"],
+            "additionalProperties": false
+          },
+          "bond_financials_projections": {
+            "type": "object",
+            "properties": {
+              "issuer_projections": {
+                "type": ["object", "null"],
+                "properties": {
+                  "projection_period_start_date": { "type": "string", "format": "date" },
+                  "projection_period_end_date": { "type": "string", "format": "date" },
+                  "projected_metrics": {
+                    "type": "object",
+                    "patternProperties": { "^[a-zA-Z_]+$": { "type": ["number", "null"] } },
+                    "minProperties": 1
+                  }
+                },
+                "required": ["projection_period_start_date", "projection_period_end_date", "projected_metrics"],
+                "additionalProperties": false
+              },
+              "comments": { "type": "string" },
+              "input_quality": { "type": "string" }
+            },
+            "required": ["issuer_projections", "comments", "input_quality"],
+            "additionalProperties": false
+          },
+          "collateral_and_protective_clauses": {
+            "type": "object",
+            "properties": {
+              "seniority": { "type": "string", "enum": ["Secured", "Unsecured", "Pari Passu Secured", "Subordinated Secured", "Subordinated Unsecured", "N/A"] },
+              "collateral_assets": {
+                "type": "array",
+                "items": { "$ref": "#/definitions/CollateralAsset" }
+              },
+              "collateral_maintenance_requirements": { "type": "string", "enum": ["Absent", "Details Provided"] },
+              "negative_pledge_clause": { "type": "string", "enum": ["Absent", "Details Provided"] },
+              "asset_sale_restrictions": { "type": "string", "enum": ["Absent", "Details Provided"] },
+              "financial_covenants": { "type": "array", "items": { "type": "string" } },
+              "events_of_default": { "type": "array", "items": { "type": "string" } },
+              "information_reporting_requirements": { "type": "string", "enum": ["Absent", "Details Provided"] },
+              "comments": { "type": "string" },
+              "input_quality": { "type": "string" }
+            },
+            "required": ["seniority", "collateral_assets", "collateral_maintenance_requirements", "negative_pledge_clause", "asset_sale_restrictions", "financial_covenants", "events_of_default", "information_reporting_requirements", "comments", "input_quality"],
+            "additionalProperties": false
+          },
+          "issuer_business_profile": {
+            "type": "object",
+            "properties": {
+              "issuer_name": { "type": "string" },
+              "issuer_industry": { "type": "string" },
+              "business_model_summary": { "type": "string" },
+              "key_products_services": { "type": "array", "items": { "type": "string" } },
+              "competitive_advantages": { "type": "string" },
+              "management_team_summary": { "type": "string" },
+              "ownership_structure": { "type": "string" },
+              "governance_notes": { "type": "string" },
+              "comments": { "type": "string" },
+              "input_quality": { "type": "string" }
+            },
+            "required": ["issuer_name", "issuer_industry", "business_model_summary", "key_products_services", "competitive_advantages", "management_team_summary", "ownership_structure", "governance_notes", "comments", "input_quality"],
+            "additionalProperties": false
+          },
+          "industry_profile": {
+            "type": "object",
+            "properties": {
+              "industry_overview": { "type": "string" },
+              "key_industry_trends": { "type": "array", "items": { "type": "string" } },
+              "competitive_landscape_notes": { "type": "string" },
+              "regulatory_environment_notes": { "type": "string" },
+              "industry_risk_factors": { "type": "array", "items": { "type": "string" } },
+              "comments": { "type": "string" },
+              "input_quality": { "type": "string" }
+            },
+            "required": ["industry_overview", "key_industry_trends", "competitive_landscape_notes", "regulatory_environment_notes", "industry_risk_factors", "comments", "input_quality"],
+            "additionalProperties": false
+          }
+        },
+        "required": ["bond_metadata", "bond_financials_historical", "bond_financials_projections", "collateral_and_protective_clauses", "issuer_business_profile", "industry_profile"],
+        "additionalProperties": false
+      },
+      "assumptions_generation_data": {
+        "type": "object",
+        "description": "Detailed financial projection assumptions generated by the hybrid LLM/deterministic process (Phase 2, first step output).",
+        "properties": {
+          "projection_horizon_years": { "type": "integer", "minimum": 1 },
+          "base_currency": { "type": "string", "enum": ["MNT", "USD", "EUR", "JPY", "CNY", "KRW", "GBP", "SGD", "AUD", "CAD", "CHF", "HKD", "RUB", "BRL", "INR", "ZAR"] },
+          "assumptions_by_category": {
+            "type": "object",
+            "properties": {
+              "revenue_assumptions": { "type": "array", "items": { "$ref": "#/definitions/AssumptionDetail" } },
+              "expense_assumptions": { "type": "array", "items": { "$ref": "#/definitions/AssumptionDetail" } },
+              "loan_portfolio_assumptions": { "type": "array", "items": { "$ref": "#/definitions/AssumptionDetail" } },
+              "capital_expenditure_assumptions": { "type": "array", "items": { "$ref": "#/definitions/AssumptionDetail" } },
+              "working_capital_assumptions": { "type": "array", "items": { "$ref": "#/definitions/AssumptionDetail" } },
+              "debt_assumptions": { "type": "array", "items": { "$ref": "#/definitions/AssumptionDetail" } },
+              "tax_assumptions": { "type": "array", "items": { "$ref": "#/definitions/AssumptionDetail" } },
+              "other_operating_assumptions": { "type": "array", "items": { "$ref": "#/definitions/AssumptionDetail" } }
+            },
+            "additionalProperties": false
+          },
+          "llm_comments": { "type": "string" },
+          "input_quality_notes": { "type": "string" }
+        },
+        "required": ["projection_horizon_years", "base_currency", "assumptions_by_category", "llm_comments", "input_quality_notes"],
+        "additionalProperties": false
+      },
+      "financial_model_data": {
+        "type": "object",
+        "description": "Unified historical and projected financial statements, debt schedule, and credit ratios from the deterministic financial model (Phase 2, second step output).",
+        "properties": {
+          "unified_financial_statements": {
+            "type": "array",
+            "items": { "$ref": "#/definitions/UnifiedFinancialStatement" }
+          },
+          "debt_schedule": {
+            "type": "array",
+            "items": { "$ref": "#/definitions/DebtScheduleEntry" }
+          },
+          "credit_ratios": {
+            "type": "array",
+            "items": { "$ref": "#/definitions/CreditRatio" }
+          },
+          "model_execution_notes": { "type": "string" },
+          "summary_key_metrics": {
+            "type": "object",
+            "properties": {
+              "projected_dscr_avg": { "type": ["number", "null"] },
+              "projected_dscr_min": { "type": ["number", "null"] },
+              "projected_ebitda_cagr": { "type": ["number", "null"] },
+              "peak_debt_level": { "type": ["number", "null"] },
+              "cash_at_maturity": { "type": ["number", "null"] }
+            },
+            "additionalProperties": false
+          }
+        },
+        "required": ["unified_financial_statements", "debt_schedule", "credit_ratios", "model_execution_notes"],
+        "additionalProperties": false
+      },
+      "deep_industry_research_data": {
+        "type": "object",
+        "description": "In-depth, structured research on the issuer's industry, gathered from online sources (Phase 2, parallel enrichment).",
+        "properties": {
+          "industry_name_researched": { "type": "string" },
+          "research_findings": {
+            "type": "object",
+            "properties": {
+              "overview": { "type": "object", "properties": { "summary": { "type": "string" }, "growth_stage": { "type": "string", "enum": ["Emerging", "Growth", "Mature", "Declining", "N/A"] }, "typical_market_size_usd_bn": { "type": ["number", "null"] }, "key_drivers": { "type": "array", "items": { "type": "string" } } }, "required": ["summary", "growth_stage", "key_drivers"] },
+              "key_trends": { "type": "array", "items": { "$ref": "#/definitions/IndustryDetailItem" } },
+              "competitive_landscape": { "type": "object", "properties": { "structure_notes": { "type": "string" }, "barriers_to_entry": { "type": "array", "items": { "type": "string" } }, "key_success_factors": { "type": "array", "items": { "type": "string" } } }, "required": ["structure_notes", "barriers_to_entry", "key_success_factors"] },
+              "regulatory_environment": { "type": "object", "properties": { "summary": { "type": "string" }, "major_regulations": { "type": "array", "items": { "type": "string" } }, "regulatory_bodies": { "type": "array", "items": { "type": "string" } } }, "required": ["summary", "major_regulations", "regulatory_bodies"] },
+              "major_risk_factors": { "type": "array", "items": { "$ref": "#/definitions/IndustryDetailItem" } },
+              "future_outlook": { "type": "string" }
+            },
+            "required": ["overview", "key_trends", "competitive_landscape", "regulatory_environment", "major_risk_factors", "future_outlook"],
+            "additionalProperties": false
+          },
+          "research_process_notes": { "type": "string" },
+          "sources_cited": { "type": "array", "items": { "type": "string", "format": "uri" }, "minItems": 1 },
+          "confidence_score": { "type": "number", "minimum": 0.0, "maximum": 1.0 }
+        },
+        "required": ["industry_name_researched", "research_findings", "research_process_notes", "sources_cited", "confidence_score"],
+        "additionalProperties": false
+      }
+
+
+    },
+    "macroeconomic_adjustments": {
+      "type": "object",
+      "description": "Explicit documentation of how inflation and FX risk were handled in the deterministic financial model, with Mongolia-specific context.",
+      "properties": {
+        "inflation_adjustment_method": {
+          "type": "string",
+          "description": "Method used to account for inflation in projections (e.g., conservative average, latest trend, scenario analysis)."
+        },
+        "fx_adjustment_method": {
+          "type": "string",
+          "description": "Method used to account for FX risk in projections."
+        },
+        "quantitative_impact": {
+          "type": "object",
+          "description": "Quantitative impact of inflation and FX adjustments on key projections (e.g., revenue, expenses, cash flows).",
+          "properties": {
+            "revenue_impact": {"type": ["number", "null"], "description": "Impact on projected revenue (absolute or %)."},
+            "expense_impact": {"type": ["number", "null"], "description": "Impact on projected expenses (absolute or %)."},
+            "cash_flow_impact": {"type": ["number", "null"], "description": "Impact on projected cash flows (absolute or %)."}
+          },
+          "additionalProperties": false
+        },
+        "mongolia_specific_risks": {
+          "type": "string",
+          "description": "Commentary on Mongolia-specific macroeconomic/material risks considered."
+        },
+        "commentary": {
+          "type": "string",
+          "description": "Additional notes on the rationale for adjustments."
+        }
+      },
+      "required": ["inflation_adjustment_method", "fx_adjustment_method", "quantitative_impact", "mongolia_specific_risks", "commentary"],
+      "additionalProperties": false
+    },
+    "required": [
+      "security_id",
+      "extraction_phase_data",
+      "assumptions_generation_data",
+      "financial_model_data",
+      "macroeconomic_adjustments"
+    ],
+    "additionalProperties": false,
+    "definitions": {
+      "HistoricalFinancialStatement": {
+        "type": "object",
+        "properties": {
+          "reporting_period_end_date": { "type": "string", "format": "date" },
+          "reporting_period_type": { "type": "string", "enum": ["Annual", "Quarterly", "Semi-Annual"] },
+          "financials": {
+            "type": "object",
+            "patternProperties": { "^[a-zA-Z_]+$": { "type": ["number", "null"] } },
+            "minProperties": 1
+          }
+        },
+        "required": ["reporting_period_end_date", "reporting_period_type", "financials"],
+        "additionalProperties": false
+      },
+      "CollateralAsset": {
+        "type": "object",
+        "properties": {
+          "asset_id": { "type": ["string", "null"] },
+          "asset_type": { "type": "string", "enum": ["Real Estate", "Machinery & Equipment", "Accounts Receivable", "Inventory", "Cash Flows", "Shares", "Intellectual Property", "Other", "N/A"] },
+          "asset_description": { "type": "string" },
+          "valuation_method": { "type": "string", "enum": ["Appraisal", "Book Value", "Market Value", "Discounted Cash Flow", "Historical Cost", "Other", "N/A"] },
+          "valuation_amount": { "type": ["number", "null"] },
+          "valuation_currency": { "type": ["string", "null"] },
+          "valuation_date": { "type": ["string", "null"], "format": "date" },
+          "lien_priority": { "type": "string", "enum": ["First Lien", "Second Lien", "Pari Passu", "Subordinate Lien", "N/A"] },
+          "additional_details": { "type": ["string", "null"] }
+        },
+        "required": ["asset_type", "asset_description", "valuation_method", "lien_priority"],
+        "additionalProperties": false
+      },
+      "AssumptionDetail": {
+        "type": "object",
+        "properties": {
+          "metric_name": { "type": "string" },
+          "assumption_type": { "type": "string", "enum": ["growth_rate", "percentage_of_revenue", "percentage_of_assets", "percentage_of_loans", "absolute_value", "percentage_of_debt", "other_ratio"] },
+          "values": { "type": "array", "items": { "type": "number" }, "minItems": 1 },
+          "projection_periods": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+          "basis_of_assumption": { "type": "string" },
+          "unit_notes": { "type": "string" }
+        },
+        "required": ["metric_name", "assumption_type", "values", "projection_periods", "basis_of_assumption"],
+        "additionalProperties": false
+      },
+      "UnifiedFinancialStatement": {
+        "type": "object",
+        "properties": {
+          "reporting_period_end_date": { "type": "string", "format": "date" },
+          "reporting_period_type": { "type": "string", "enum": ["Annual", "Quarterly", "Semi-Annual", "Projected_Annual", "Projected_Quarterly", "Projected_Semi-Annual"] },
+          "income_statement": { "type": "object", "patternProperties": { "^[a-zA-Z_]+$": { "type": ["number", "null"] } } },
+          "balance_sheet": { "type": "object", "patternProperties": { "^[a-zA-Z_]+$": { "type": ["number", "null"] } } },
+          "cash_flow_statement": { "type": "object", "patternProperties": { "^[a-zA-Z_]+$": { "type": ["number", "null"] } } }
+        },
+        "required": ["reporting_period_end_date", "reporting_period_type", "income_statement", "balance_sheet", "cash_flow_statement"],
+        "additionalProperties": false
+      },
+      "DebtScheduleEntry": {
+        "type": "object",
+        "properties": {
+          "period_end_date": { "type": "string", "format": "date" },
+          "beginning_principal": { "type": "number" },
+          "interest_expense": { "type": "number" },
+          "principal_repayment": { "type": "number" },
+          "ending_principal": { "type": "number" },
+          "new_borrowings": { "type": "number", "default": 0 }
+        },
+        "required": ["period_end_date", "beginning_principal", "interest_expense", "principal_repayment", "ending_principal"],
+        "additionalProperties": false
+      },
+      "CreditRatio": {
+        "type": "object",
+        "properties": {
+          "period_end_date": { "type": "string", "format": "date" },
+          "period_type": { "type": "string", "enum": ["Annual", "Quarterly", "Semi-Annual", "Projected_Annual", "Projected_Quarterly", "Projected_Semi-Annual"] },
+          "dscr": { "type": ["number", "null"] },
+          "debt_to_ebitda": { "type": ["number", "null"] },
+          "net_debt_to_ebitda": { "type": ["number", "null"] },
+          "interest_coverage_ratio": { "type": ["number", "null"] },
+          "current_ratio": { "type": ["number", "null"] },
+          "total_debt_to_equity": { "type": ["number", "null"] },
+          "cash_conversion_cycle_days": { "type": ["number", "null"] },
+          "ebitda_margin": { "type": ["number", "null"] }
+        },
+        "required": ["period_end_date", "period_type"],
+        "additionalProperties": false
+      },
+      "IndustryDetailItem": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "relevance_to_financials_or_nb": { "type": "string" },
+          "sources": { "type": "array", "items": { "type": "string", "format": "uri" }, "minItems": 1 }
+        },
+        "required": ["name", "description", "sources"],
+        "additionalProperties": false
+      },
+      "ValidationErrorDetail": {
+        "type": "object",
+        "properties": {
+          "section": { "type": "string" },
+          "field": { "type": ["string", "null"] },
+          "period": { "type": ["string", "null"] },
+          "problem_type": { "type": "string" },
+          "description": { "type": "string" },
+          "value_found": { "type": ["string", "number", "boolean", "array", "object", "null"] },
+          "expected_value": { "type": ["string", "number", "boolean", "array", "object", "null"] }
+        },
+        "required": ["section", "problem_type", "description", "value_found"],
+        "additionalProperties": false
+      },
+      "RemediationAction": {
+        "type": "object",
+        "properties": {
+          "section_to_re_extract": { "type": "string" },
+          "repair_prompt_instruction": { "type": "string" },
+          "related_qc_issue_indices": { "type": "array", "items": { "type": "integer" } },
+          "max_retries": { "type": "integer", "minimum": 1 },
+          "requires_human_review": { "type": "boolean" }
+        },
+        "required": ["section_to_re_extract", "repair_prompt_instruction", "related_qc_issue_indices"],
+        "additionalProperties": false
+      }
+    }
+  }

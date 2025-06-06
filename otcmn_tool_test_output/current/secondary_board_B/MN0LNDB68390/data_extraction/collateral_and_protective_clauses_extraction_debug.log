@@ -1,0 +1,37 @@
+
+=== Section: collateral_and_protective_clauses ===
+docs_json_count: 11
+files_sent (10):
+  [1] /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390/parsed_images/Мэргэжлийн байгууллагын дүгнэлтүүд (3)_page_8.json
+    length: 3073 chars
+    snippet: {"content_blocks": [{"type": "heading", "content": "АНДЕРРАЙТЕРИЙН ДҮГНЭЛТ"}, {"type": "paragraph", "content": "IV. Татан төвлөрүүлэх хөрөнгийн зарцуулалт"}, {"type": "paragraph", "content": "Үнэт цаа...
+  [2] /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390/parsed_images/хавсралт (1)_page_12.json
+    length: 3981 chars
+    snippet: {"content_blocks": [{"type": "heading", "content": "14.7. Цалин, урамшууллын хороо нь дараах чиглэлээр дүгнэлт гаргаж, ТУЗ-д танилцуулна:"}, {"type": "paragraph", "content": "14.7.1. компанийн ТУЗ-ийн...
+  [3] /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390/parsed_images/хавсралт (1)_page_10.json
+    length: 4833 chars
+    snippet: {"content_blocks": [{"type": "heading", "content": "11. Таловлии Удирдах Зөвлөлийн гишүүнийг нор домгүүлэн сонгох", "source_page": null}, {"type": "paragraph", "content": "11.1. ТУЗ на кор донишуулах ...
+  [4] /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390/parsed_images/хавсралт (1)_page_56.json
+    length: 4192 chars
+    snippet: {"content_blocks": [{"type": "text", "content": "хугацаа хоцрох зэрэг Андеррайтерийн үйлчилгээнээс хамаарахгүй хүчин зүйлийн\nшалтгаанаар хойшилсон тохиолдолд энэхүү зүйлд заасан хугацаа хамаарахгүй."...
+  [5] /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390/parsed_images/хавсралт (1)_page_5.json
+    length: 3918 chars
+    snippet: {"content_blocks": [{"type": "paragraph", "content": "4.4. Компани нь өөрийн зорилго болон эрхлэх үйл ажиллагаагаа хэрэгжүүлэх үйл ажиллагаатай шууд буюу шууд бус холбоотой, хууль тогтоомжоор хориглоо...
+  [6] /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390/parsed_images/хавсралт (1)_page_53.json
+    length: 4096 chars
+    snippet: {"content_blocks": [{"type": "heading", "content": "АНДЕРРАЙТЕРИЙН ҮЙЛЧИЛГЭЭНИЙ ГЭРЭЭ", "source_page": null}, {"type": "paragraph", "content": "2024 оны 12 сарын дууны өдөр Улаанбаатар хот", "source_p...
+  [7] /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390/parsed_images/хавсралт (1)_page_6.json
+    length: 5016 chars
+    snippet: {"content_blocks": [{"type": "paragraph", "content": "8.4.1. компанийн дүрэмд нэмэлт, өөрчлөлт оруулах буюу түүний шинчилсэн найруулгыг батлах;", "source_page": null}, {"type": "paragraph", "content":...
+  [8] /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390/parsed_images/Мэргэжлийн байгууллагын дүгнэлтүүд (3)_page_21.json
+    length: 4460 chars
+    snippet: {"content_blocks": [{"type": "text", "content": "хугацаа хоцрох зорог Андеррайтерийн үйлчилгзовох хамаарахгүй хүчин зүйлийн\nшалтгаанаар хойшилсон тохиолдолд махүү зүйлд заасан хугацаа хамаарахгүй.", ...
+  [9] /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390/parsed_images/Мэргэжлийн байгууллагын дүгнэлтүүд (3)_page_22.json
+    length: 4310 chars
+    snippet: {"content_blocks": [{"type": "heading", "content": "6.2.2. Андеррайтерийн зүгээс боломжит хөрөнгө оруулагчдад танилцуулах Үнэт цаас гаргагч талын үйл ажиллагааны талаарх мэдээллүүдийг үнэн зөв, бодито...
+  [10] /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390/parsed_images/хавсралт (1)_page_57.json
+    length: 4727 chars
+    snippet: {"content_blocks": [{"type": "heading", "content": "6.2.2. Андеррайтерийн зүгээх боломжит хөрөнгө оруулагчдад твиняцуулах Үнэт цаас гаргагч талын үйл ажиллагааны талаарх мэдээллүүдийг уном зов, бодито...
+total_docs_char_size: 43267
+prompt_total_chars: 53032
+prompt_token_estimate: 28469

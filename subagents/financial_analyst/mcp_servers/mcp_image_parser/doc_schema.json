@@ -1,0 +1,55 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "OptimizedDocumentContentExtraction",
+    "description": "Optimized schema for extracting content blocks directly from a document image, where tables are structured as a list of dictionaries.",
+    "type": "object",
+    "properties": {
+      "content_blocks": {
+        "type": "array",
+        "description": "A sequential list of identified content blocks from the document, preserving their original order.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "description": "The type of content block identified.",
+              "enum": ["heading", "paragraph", "table"]
+            },
+            "content": {
+              "type": ["string", "array"],
+              "description": "The extracted content.",
+              "oneOf": [
+                {
+                  "description": "For 'heading' and 'paragraph' types, this is the raw text content.",
+                  "type": "string"
+                },
+                {
+                  "description": "For 'table' type, this is an array of objects, where each object represents a row. Keys are the column headers (extracted as seen in the table, preserving original text/language), and values are the corresponding cell contents. Parenthesized numbers should be converted to negative numbers (e.g., '(5.14)' -> -5.14).",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "patternProperties": {
+                      "^[a-zA-Z0-9_ -]+$": {
+                        "type": ["string", "number", "boolean", "null"],
+                        "description": "Table cell value, converted to number if possible, or string. Empty cells can be null or empty string."
+                      }
+                    },
+                    "minProperties": 1
+                  }
+                }
+              ]
+            },
+            "source_page": {
+              "type": ["integer", "null"],
+              "description": "The page number from which this content block was extracted. Null if page number cannot be reliably determined.",
+              "minimum": 1
+            }
+          },
+          "required": ["type", "content"],
+          "additionalProperties": false
+        }
+      }
+    },
+    "required": ["content_blocks"],
+    "additionalProperties": false
+  }

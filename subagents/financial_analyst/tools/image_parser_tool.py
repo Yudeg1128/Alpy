@@ -290,11 +290,10 @@ class ImageParserTool(BaseTool, BaseModel):
             self._logger_instance.error(f"Image parsing failed on server: {error_msg}")
             raise RuntimeError(f"Image parsing failed: {error_msg}")
             
-        content = response.get("markdown_content")
-        if content is None: # Check for None explicitly, as empty string could be valid (though unlikely for markdown)
-            self._logger_instance.error("No markdown content in successful server response")
-            raise RuntimeError("No markdown content in server response")
-            
+        content = response.get("structured_content")
+        if content is None:
+            self._logger_instance.error("No structured_content in successful server response")
+            raise RuntimeError("No structured_content in server response")
         return content
 
     async def close(self):
@@ -350,20 +349,24 @@ async def test_mongolian_doc(image_path=None):
     tool = ImageParserTool()
     try:
         test_logger.info(f"Testing with image: {image_path}")
-        
         result = await tool._arun(image_path=image_path)
-        print("\n=== Parsing Result ===")
-        print(result)
-        
+        print("\n=== Parsing Result (Structured JSON) ===")
+        print(json.dumps(result, ensure_ascii=False, indent=2))
         # Check output file
         image_path_obj = Path(image_path)
-        expected_output = image_path_obj.with_suffix(".txt") # Updated to .txt and same directory
-        
+        expected_output = image_path_obj.with_suffix(".json")
         if expected_output.exists():
             test_logger.info(f"Successfully saved result to: {expected_output}")
+            print("\n=== Output JSON Content ===")
+            with open(expected_output, "r", encoding="utf-8") as f:
+                print(f.read())
+            # Optionally, validate structure
+            if not (isinstance(result, dict) and "content_blocks" in result):
+                test_logger.error("Output JSON missing required 'content_blocks' key!")
+            else:
+                test_logger.info("Output JSON structure looks correct.")
         else:
             test_logger.error(f"Failed to find output file at: {expected_output}")
-            
     finally:
         await tool.close()
         test_logger.info("Test finished.")

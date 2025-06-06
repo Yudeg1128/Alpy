@@ -6,7 +6,7 @@ GOOGLE_MODEL = "gemini-2.0-flash-lite"
 
 # --- LLM Parameters ---
 LLM_TEMPERATURE = 0.7
-LLM_MAX_TOKENS = 2000
+LLM_MAX_TOKENS = 8000
 LLM_TOP_P = 0.8
 
 # --- Agent Parameters ---

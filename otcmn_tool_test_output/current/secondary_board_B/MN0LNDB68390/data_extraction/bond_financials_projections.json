@@ -1,0 +1,22 @@
+{
+  "bond_financials_projections": {
+    "base_unit_of_measure": "MNT",
+    "unit_conversion_notes": "Financial projections were provided in billions MNT. Values have been converted to the base unit MNT by multiplying by 1,000,000,000, using the bond principal amount (1 billion MNT) as the reference for unit consistency.",
+    "issuer_projections": {
+      "projection_period_start_date": "2024-12-01",
+      "projection_period_end_date": "2027-12-31",
+      "projected_metrics": {
+        "projected_ending_cash_balance_2025_12_31": 24300000000.0,
+        "projected_average_monthly_cash_balance_2024_12_to_2025_12": 20600000000.0,
+        "projected_total_net_cash_flow_2024_12_to_2025_10": 26480000000.0,
+        "projected_total_operating_cash_flow_2024_12_to_2025_10": 48470000000.0,
+        "projected_loan_portfolio_end_of_2024": 220900000000.0,
+        "projected_loan_portfolio_end_of_2025": 262100000000.0,
+        "projected_loan_portfolio_end_of_2026": 302200000000.0,
+        "projected_loan_portfolio_end_of_2027": 336200000000.0
+      }
+    },
+    "comments": "Extracted projected cash flow metrics for the period ending December 2025 and projected loan portfolio size through 2027 from the base case scenario. Monthly cash flow details were available but not extracted as individual line items per month; instead, summary metrics (total/average over period, ending balance) were extracted. Loan portfolio projections were extracted for year-ends.",
+    "input_quality": "Document 1 provided detailed monthly cash flow projections (base case) and summary figures for the period ending December 2025, which were essential for cash flow projections. Document 2 provided pessimistic cash flow projections but was not used for the base case extraction. Document 7 provided annual loan portfolio projections through 2027, which extended the projection horizon and added a key asset projection. Documents 3, 4, 5, and 6 contained historical data, risk metrics, and business descriptions but no explicit financial projections relevant to this section."
+  }
+}

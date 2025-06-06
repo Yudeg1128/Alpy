@@ -1,0 +1,27 @@
+{
+  "status": "success",
+  "message": "Found 5 similar items for 1 queries in security MN0LNDB68390",
+  "result": {
+    "distances": [
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "indices": [
+      [
+        1,
+        2,
+        3,
+        4,
+        37
+      ]
+    ]
+  },
+  "queries": [
+    ""
+  ]
+}

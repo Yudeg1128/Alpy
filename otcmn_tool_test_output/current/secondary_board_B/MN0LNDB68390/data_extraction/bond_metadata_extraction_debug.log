@@ -1,0 +1,22 @@
+
+=== Section: bond_metadata ===
+docs_json_count: 7
+files_sent (5):
+  [1] /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390/parsed_images/Албан бичиг ба 2001-2003 маягт_1_page_9.json
+    length: 661 chars
+    snippet: {"Security Name": "Lend bond 3.2", "Security Symbol": "LNDB-TBC-3.2-12", "ISIN": "MN0LNDB68390", "Total Quantity Issued": "10,000", "Total Amount Issued": "₮ 1,000,000,000", "Issue Price": "₮ 100,000"...
+  [2] /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390/parsed_images/хавсралт (1)_page_35.json
+    length: 379 chars
+    snippet: {"Security": "B\n\nLNDB-TBC-3.2-12\n\nLend bond 3.2", "ISIN": "MN0LNDB68390", "Currency": "MNT", "Interest Rate": "12.00%", "Maturity Date": "2026-03-02", "Price": "₮ 100,000", "Total Amount": "₮ 1,00...
+  [3] /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390/parsed_images/Мэргэжлийн байгууллагын дүгнэлтүүд (3)_page_8.json
+    length: 3519 chars
+    snippet: {"content_blocks": [{"type": "heading", "content": "7. Лид бонд 2 хаалттай өрийн хэрэгсэл траич 2/", "source_page": null}, {"type": "paragraph", "content": "Норасои уню: 100,000 төгрег", "source_page"...
+  [4] /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390/parsed_images/Албан бичиг ба 2001-2003 маягт_1_page_8.json
+    length: 2581 chars
+    snippet: {"content_blocks": [{"type": "heading", "content": "Certificate of Registration", "source_page": null}, {"type": "paragraph", "content": "(Information Security Management System)", "source_page": null...
+  [5] /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390/parsed_images/хавсралт (1)_page_53.json
+    length: 3073 chars
+    snippet: {"content_blocks": [{"type": "heading", "content": "АНДЕРРАЙТЕРИЙН ДҮГНЭЛТ"}, {"type": "paragraph", "content": "IV. Татан төвлөрүүлэх хөрөнгийн зарцуулалт"}, {"type": "paragraph", "content": "Үнэт цаа...
+total_docs_char_size: 16675
+prompt_total_chars: 24999
+prompt_token_estimate: 10113

@@ -9,6 +9,7 @@ import asyncio
 import logging
 import os
 from pathlib import Path
+from financial_analyst.security_folder_utils import require_security_folder, get_subfolder, get_security_file
 from typing import List, Dict, Any, Optional
 from pdf2image import convert_from_path
 from PIL import Image
@@ -42,15 +43,6 @@ mcp_app = FastMCP(
     description="MCP server for converting PDFs to Gemini-optimized images"
 )
 
-def get_board_path(security_id: str) -> Path:
-    """Find the board directory containing the security ID."""
-    for board in os.listdir(OUTPUT_BASE_DIR):
-        board_path = OUTPUT_BASE_DIR / board
-        if not board_path.is_dir():
-            continue
-        if (board_path / security_id).exists():
-            return board_path
-    raise ValueError(f"Security ID {security_id} not found in any board directory")
 
 def optimize_image(image: Image.Image) -> Image.Image:
     """Optimize image for Gemini model input."""
@@ -75,11 +67,10 @@ def optimize_image(image: Image.Image) -> Image.Image:
 async def pdf_to_image(security_id: str, pdf_paths: List[str]) -> PDFToImageOutput:
     try:
         # Find correct board path
-        board_path = get_board_path(security_id)
-        security_path = board_path / security_id
-        
+        security_path = require_security_folder(security_id)
+
         # Create images directory if it doesn't exist
-        images_dir = security_path / "images"
+        images_dir = get_subfolder(security_id, "images")
         images_dir.mkdir(exist_ok=True)
         
         all_image_paths = []

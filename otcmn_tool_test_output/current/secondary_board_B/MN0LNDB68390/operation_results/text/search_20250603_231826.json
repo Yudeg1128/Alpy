@@ -1,0 +1,20 @@
+{
+  "status": "success",
+  "message": "Found 5 similar items for query 'security_id, ISIN, currency, principal_amount_issued, coupon_rate_type, coupon_rate, coupon_frequency, issue_date, maturity_date, trustee_agent, call_provisions, put_provisions, governing_law, default_interest_rate, denomination, listing_venue' in security MN0LNDB68390",
+  "result": {
+    "distances": [
+      0.738969624042511,
+      0.7655150294303894,
+      0.7755593657493591,
+      0.7782397866249084,
+      0.781862735748291
+    ],
+    "indices": [
+      123,
+      133,
+      70,
+      130,
+      80
+    ]
+  }
+}

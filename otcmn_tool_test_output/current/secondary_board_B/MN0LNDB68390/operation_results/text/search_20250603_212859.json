@@ -1,0 +1,20 @@
+{
+  "status": "success",
+  "message": "Found 5 similar items for query 'trustee agent' in security MN0LNDB68390",
+  "result": {
+    "distances": [
+      0.8748204112052917,
+      0.8767014741897583,
+      0.8767014741897583,
+      0.8767014741897583,
+      0.8767014741897583
+    ],
+    "indices": [
+      112,
+      1,
+      2,
+      3,
+      4
+    ]
+  }
+}

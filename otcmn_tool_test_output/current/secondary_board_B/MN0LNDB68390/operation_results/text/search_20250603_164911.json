@@ -1,0 +1,20 @@
+{
+  "status": "success",
+  "message": "Found 5 similar items for query 'What are the bond's security identifiers, currency, total issued principal, coupon rate type, exact annual coupon rate, coupon payment frequency, issue date, maturity date, trustee agent, any call or put provisions, governing law, default interest rate, minimum denomination, and listing venue?' in security MN0LNDB68390",
+  "result": {
+    "distances": [
+      0.6852945685386658,
+      0.6958785057067871,
+      0.7247415781021118,
+      0.727470338344574,
+      0.733642578125
+    ],
+    "indices": [
+      70,
+      130,
+      140,
+      123,
+      61
+    ]
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "status": "success",
+  "message": "Found 10 similar items for query 'Retrieve all narrative, descriptive, or analytical content blocks that discuss the issuer's industry, sector, or market. Prioritize sections covering industry size, growth prospects, key industry trends, competitive landscape (major competitors, market structure, barriers to entry), regulatory environment (laws, licensing, regulatory changes), and industry-specific risk factors or challenges. Look for sections titled or mentioning 'Industry Overview', 'Market Analysis', 'Sector Trends', 'Competitive Landscape', 'Industry Risks', 'Regulatory Environment', 'Opportunities and Threats', or similar. Prefer qualitative and contextual information over purely quantitative data.' in security MN0LNDB68390",
+  "result": {
+    "distances": [
+      0.7468039989471436,
+      0.7588365077972412,
+      0.7612529397010803,
+      0.7617818117141724,
+      0.763651967048645,
+      0.764371395111084,
+      0.7676762342453003,
+      0.7686827182769775,
+      0.7752565145492554,
+      0.7763359546661377
+    ],
+    "indices": [
+      33,
+      61,
+      101,
+      127,
+      73,
+      5,
+      50,
+      63,
+      160,
+      140
+    ]
+  }
+}

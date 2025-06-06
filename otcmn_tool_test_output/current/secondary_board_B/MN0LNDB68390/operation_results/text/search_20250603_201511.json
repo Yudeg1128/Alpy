@@ -1,0 +1,20 @@
+{
+  "status": "success",
+  "message": "Found 5 similar items for query 'Provide an overview of the industry, including key trends, competitive landscape, regulatory environment, and primary industry-specific risk factors relevant to the issuer.' in security MN0LNDB68390",
+  "result": {
+    "distances": [
+      0.8461948037147522,
+      0.8476867079734802,
+      0.8537625670433044,
+      0.8592153787612915,
+      0.8644922971725464
+    ],
+    "indices": [
+      133,
+      33,
+      61,
+      80,
+      42
+    ]
+  }
+}

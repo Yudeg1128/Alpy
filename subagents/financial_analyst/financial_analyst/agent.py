@@ -5,6 +5,9 @@ from tools.pdf_to_image_tool import PDFToImageTool
 from tools.vector_ops_tool import VectorOpsTool
 from tools.image_embedder_tool import ImageEmbedderTool
 from tools.image_parser_tool import ImageParserTool
+from tools.txt_embedder_tool import TxtEmbedderTool
+from tools.data_extractor_tool import DataExtractorTool
+from tools.quality_checker_tool import QualityCheckerTool
 import os
 import yaml
 from . import config
@@ -70,7 +73,10 @@ class FinancialAnalystAgent:
         self.vector_ops_tool = VectorOpsTool()
         self.image_embedder_tool = ImageEmbedderTool()
         self.image_parser_tool = ImageParserTool()
-        self.tools = [self.pdf_to_image_tool, self.vector_ops_tool, self.image_embedder_tool, self.image_parser_tool]
+        self.txt_embedder_tool = TxtEmbedderTool()
+        self.data_extractor_tool = DataExtractorTool()
+        self.quality_checker_tool = QualityCheckerTool()
+        self.tools = [self.pdf_to_image_tool, self.vector_ops_tool, self.image_embedder_tool, self.image_parser_tool, self.txt_embedder_tool, self.data_extractor_tool, self.quality_checker_tool]
         self.tools_by_name = {tool.name: tool for tool in self.tools}
         logger.info(f"Tools initialized: {[tool.name for tool in self.tools]}")
 

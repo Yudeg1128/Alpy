@@ -1,0 +1,20 @@
+{
+  "status": "success",
+  "message": "Found 5 similar items for query 'Describe the bond's seniority, specific collateral assets pledged (including asset type, description, valuation, and lien priority), collateral maintenance requirements, negative pledge clause, asset sale restrictions, financial covenants, information reporting requirements, and all specific events of default.' in security MN0LNDB68390",
+  "result": {
+    "distances": [
+      0.7721472978591919,
+      0.7737132906913757,
+      0.774566113948822,
+      0.7800036072731018,
+      0.7806375026702881
+    ],
+    "indices": [
+      70,
+      33,
+      61,
+      140,
+      101
+    ]
+  }
+}

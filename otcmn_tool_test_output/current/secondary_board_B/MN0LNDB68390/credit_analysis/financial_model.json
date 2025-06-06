@@ -1,0 +1,958 @@
+{
+  "security_id": "MN0LNDB68390",
+  "extraction_phase_data": {
+    "bond_metadata": {
+      "security_id": "LNDB-TBC-3.2-12",
+      "isin": "MN0LNDB68390",
+      "currency": "MNT",
+      "principal_amount_issued": 1000000000,
+      "coupon_rate_type": "Fixed",
+      "coupon_rate": 0.12,
+      "coupon_frequency": "Quarterly",
+      "issue_date": "2025-02-28 18:00",
+      "maturity_date": "2026-03-02",
+      "trustee_agent": null,
+      "call_provisions": "Absent",
+      "put_provisions": "Absent",
+      "governing_law": "Mongolian Law",
+      "default_interest_rate": null,
+      "denomination": 100000,
+      "listing_venue": null
+    },
+    "bond_financials_historical": {
+      "base_unit_of_measure": "MNT",
+      "unit_conversion_notes": "Financial values were extracted from tables and narrative text. Values reported in 'сая төгрөг' (million MNT) were multiplied by 1,000,000. Values reported in 'тэрбум төгрөг' (billion MNT) were multiplied by 1,000,000,000. Values from the detailed annual statements (Doc 12-17) and cash flow statements (Doc 8-9, 14-15) were determined to be in '000 MNT based on their magnitude relative to the bond principal and consistency with other statements reported in millions; these values were multiplied by 1,000. There were inconsistencies in reported values and calculations in some source tables (e.g., Net Interest Income in Doc 4/5 for H1 2023, Income Statement summary in Doc 6/7 Table 5 vs narrative in Doc 1/2 for Q3 periods); narrative values were prioritized for Q3 income statement items where available and calculation discrepancies in tables were noted. Specific line item labels varied across documents (e.g., different terms for operating expenses or components of equity); the most specific available label was used as the snake_case key.\nWARNING: Non-numeric value for investments: None\nWARNING: Non-numeric value for deferred_tax_liabilities: None",
+      "historical_financial_statements": [
+        {
+          "reporting_period_end_date": "2021-12-31",
+          "reporting_period_type": "Annual",
+          "financials": {
+            "cash_and_equivalents": 4900000000.0,
+            "gross_loans": 32430000000.0,
+            "loan_loss_provision": -2190000000.0,
+            "net_loans": 30240000000.0,
+            "other_current_assets": 770000000.0,
+            "total_current_assets": 38100000000.0,
+            "property_and_equipment": 760000000.0,
+            "intangible_assets": 450000000.0,
+            "total_non_current_assets": 1210000000.0,
+            "total_assets": 39310000000.0,
+            "bonds_payable": 7320000000.0,
+            "trust_liabilities": 7750000000.0,
+            "loans_payable": 2850000000.0,
+            "other_liabilities": 1580000000.0,
+            "total_liabilities": 19490000000.0,
+            "share_capital": 10760000000.0,
+            "treasury_stock": -2340000000.0,
+            "retained_earnings": 11340000000.0,
+            "other_additions_to_equity": 50000000.0,
+            "total_equity": 19810000000.0,
+            "total_liabilities_and_equity": 39310000000.0,
+            "net_cash_from_operations": -28482167000.0
+          }
+        },
+        {
+          "reporting_period_end_date": "2022-12-31",
+          "reporting_period_type": "Annual",
+          "financials": {
+            "cash_and_equivalents": 5217581000.0,
+            "gross_loans": 69586280000.0,
+            "loan_loss_provision": -3297126000.0,
+            "net_loans": 66289154000.0,
+            "other_assets": 768409000.0,
+            "investments": 172230000.0,
+            "prepayments": 45437000.0,
+            "intangible_assets": 401095000.0,
+            "property_and_equipment": 373470000.0,
+            "right_of_use_assets": 217592000.0,
+            "deferred_tax_assets": 76663000.0,
+            "total_assets": 76858757000.0,
+            "loans_payable": 44225863000.0,
+            "lease_liabilities": 285772000.0,
+            "other_liabilities": 2622414000.0,
+            "income_tax_payable": 815146000.0,
+            "asset_backed_securities": 4679661000.0,
+            "deferred_tax_liabilities": 9044000.0,
+            "total_liabilities": 52628856000.0,
+            "share_capital": 10756859000.0,
+            "treasury_stock": -2337547000.0,
+            "other_reserves": 57348000.0,
+            "retained_earnings": 15753241000.0,
+            "total_equity": 24229901000.0,
+            "total_liabilities_and_equity": 76858757000.0,
+            "interest_and_similar_income": 20214948000.0,
+            "interest_expense": -3949884000.0,
+            "net_interest_and_similar_income": 16265064000.0,
+            "loan_impairment_expense": -1438635000.0,
+            "net_interest_income_after_impairment": 14826409000.0,
+            "management_and_operating_expenses": -7636249000.0,
+            "other_income_expense_net": -637914000.0,
+            "profit_before_tax": 6532246000.0,
+            "income_tax_expense": -1007265000.0,
+            "net_profit": 5524981000.0,
+            "net_cash_from_operations": -28482167000.0,
+            "net_cash_from_investing": -284665000.0,
+            "net_cash_from_financing": 29080735000.0
+          }
+        },
+        {
+          "reporting_period_end_date": "2023-06-30",
+          "reporting_period_type": "Semi-Annual",
+          "financials": {
+            "cash_and_equivalents": 4609318000.0,
+            "net_loans": 94892079000.0,
+            "receivables": 73076000.0,
+            "property_plant_equipment_and_intangible_assets": 3161903000.0,
+            "other_assets": 1062705000.0,
+            "total_assets": 103819081000.0,
+            "loans_payable": 57338224000.0,
+            "other_liabilities": 7154637000.0,
+            "total_liabilities": 64870653000.0,
+            "share_capital": 10756859000.0,
+            "additional_paid_in_capital": -2337547000.0,
+            "retained_earnings_or_loss": 2902348000.0,
+            "other_secondary_or_owners_equity": 27626768000.0,
+            "total_equity": 38948428000.0,
+            "total_liabilities_and_equity": 103819081000.0,
+            "interest_and_similar_income": 13536264000.0,
+            "interest_expense": -7844499000.0,
+            "net_interest_and_similar_income": 25691770000.0,
+            "loan_impairment_expense": -2335036000.0,
+            "operating_income_net": 23356731000.0,
+            "management_and_consulting_expenses": -6225046000.0,
+            "other_operating_income_expense": -392383000.0,
+            "profit_before_tax": 16739301000.0,
+            "income_tax_expense": -3557939000.0,
+            "net_profit": 13181362000.0
+          }
+        },
+        {
+          "reporting_period_end_date": "2023-12-31",
+          "reporting_period_type": "Annual",
+          "financials": {
+            "cash_and_equivalents": 7885968000.0,
+            "gross_loans": 129129295000.0,
+            "loan_loss_provision": -5666922000.0,
+            "net_loans": 123462373000.0,
+            "other_assets": 415965000.0,
+            "investments": null,
+            "prepayments": 55975000.0,
+            "intangible_assets": 355542000.0,
+            "property_and_equipment": 306158000.0,
+            "right_of_use_assets": 945652000.0,
+            "deferred_tax_assets": 41318000.0,
+            "total_assets": 133468951000.0,
+            "loans_payable": 77445677000.0,
+            "lease_liabilities": 981642000.0,
+            "other_liabilities": 3863865000.0,
+            "income_tax_payable": 3638541000.0,
+            "asset_backed_securities": 4798243000.0,
+            "deferred_tax_liabilities": null,
+            "total_liabilities": 90737012000.0,
+            "share_capital": 10756859000.0,
+            "treasury_stock": -2337547000.0,
+            "other_reserves": 57348000.0,
+            "retained_earnings": 34255279000.0,
+            "total_equity": 42731939000.0,
+            "total_liabilities_and_equity": 133468951000.0,
+            "interest_and_similar_income": 47842587000.0,
+            "interest_expense": -9527344000.0,
+            "net_interest_and_similar_income": 38315243000.0,
+            "loan_impairment_expense": -2684936000.0,
+            "net_interest_income_after_impairment": 35630287000.0,
+            "management_and_operating_expenses": -10223598000.0,
+            "other_income_expense_net": -35966000.0,
+            "profit_before_tax": 25370723000.0,
+            "income_tax_expense": -5574907000.0,
+            "net_profit": 19795816000.0,
+            "net_cash_from_operations": -16988694000.0,
+            "net_cash_from_investing": -284665000.0,
+            "net_cash_from_financing": 29080735000.0
+          }
+        },
+        {
+          "reporting_period_end_date": "2024-06-30",
+          "reporting_period_type": "Semi-Annual",
+          "financials": {
+            "cash_and_equivalents": 16234244000.0,
+            "net_loans": 200834900000.0,
+            "receivables": 41318000.0,
+            "property_plant_equipment_and_intangible_assets": 8354843000.0,
+            "other_assets": 2648977000.0,
+            "total_assets": 228114286000.0,
+            "loans_payable": 140830700000.0,
+            "other_liabilities": 19287170000.0,
+            "total_liabilities": 161160417000.0,
+            "share_capital": 10756859000.0,
+            "additional_paid_in_capital": -2337547000.0,
+            "retained_earnings_or_loss": 2902348000.0,
+            "other_secondary_or_owners_equity": 55642200000.0,
+            "total_equity": 64963860000.0,
+            "total_liabilities_and_equity": 228114286000.0,
+            "interest_and_similar_income": 63913350000.0,
+            "interest_expense": -16209072000.0,
+            "net_interest_and_similar_income": 47704277000.0,
+            "loan_impairment_expense": -3464687000.0,
+            "operating_income_net": 44239590000.0,
+            "management_and_consulting_expenses": -19194466000.0,
+            "other_operating_income_expense": -297064000.0,
+            "profit_before_tax": 35748040000.0,
+            "income_tax_expense": -8465283000.0,
+            "net_profit": 27282757000.0
+          }
+        },
+        {
+          "reporting_period_end_date": "2024-09-30",
+          "reporting_period_type": "Quarterly",
+          "financials": {
+            "cash_and_equivalents": 10290000000.0,
+            "investments": 1000000000.0,
+            "gross_loans": 208590000000.0,
+            "loan_loss_provision": -9160000000.0,
+            "net_loans": 199430000000.0,
+            "other_current_assets": 4600000000.0,
+            "total_current_assets": 224480000000.0,
+            "property_and_equipment": 1640000000.0,
+            "intangible_assets": 150000000.0,
+            "total_non_current_assets": 1790000000.0,
+            "total_assets": 226270000000.0,
+            "bonds_payable": 25270000000.0,
+            "trust_liabilities": 53480000000.0,
+            "loans_payable": 18990000000.0,
+            "other_liabilities": 62180000000.0,
+            "total_liabilities": 159910000000.0,
+            "share_capital": 10800000000.0,
+            "treasury_stock": -2340000000.0,
+            "retained_earnings": 55040000000.0,
+            "other_additions_to_equity": 2500000000.0,
+            "total_equity": 66410000000.0,
+            "total_liabilities_and_equity": 226320000000.0,
+            "interest_income_ytd": 64000000000.0,
+            "interest_expense_ytd": 16300000000.0,
+            "net_profit_ytd": 27300000000.0
+          }
+        }
+      ]
+    },
+    "bond_financials_projections": {
+      "base_unit_of_measure": "MNT",
+      "unit_conversion_notes": "Financial projections were provided in billions MNT. Values have been converted to the base unit MNT by multiplying by 1,000,000,000, using the bond principal amount (1 billion MNT) as the reference for unit consistency.",
+      "issuer_projections": {
+        "projection_period_start_date": "2024-12-01",
+        "projection_period_end_date": "2027-12-31",
+        "projected_metrics": {
+          "projected_ending_cash_balance_2025_12_31": 24300000000.0,
+          "projected_average_monthly_cash_balance_2024_12_to_2025_12": 20600000000.0,
+          "projected_total_net_cash_flow_2024_12_to_2025_10": 26480000000.0,
+          "projected_total_operating_cash_flow_2024_12_to_2025_10": 48470000000.0,
+          "projected_loan_portfolio_end_of_2024": 220900000000.0,
+          "projected_loan_portfolio_end_of_2025": 262100000000.0,
+          "projected_loan_portfolio_end_of_2026": 302200000000.0,
+          "projected_loan_portfolio_end_of_2027": 336200000000.0
+        }
+      }
+    },
+    "collateral_and_protective_clauses": {
+      "seniority": "Unsecured",
+      "collateral_assets": [],
+      "collateral_maintenance_requirements": "Absent",
+      "negative_pledge_clause": "Absent",
+      "asset_sale_restrictions": "Absent",
+      "financial_covenants": [],
+      "events_of_default": [],
+      "information_reporting_requirements": "Absent"
+    },
+    "issuer_business_profile": {
+      "issuer_name": "ЛЭНДМН ББСБ\" ХК",
+      "issuer_industry": "Non-Bank Financial Institution (NBFI)",
+      "business_model_summary": "The issuer is a non-bank financial institution primarily engaged in lending activities. It operates a 100% fintech technology-based digital loan application called LendMN, which processes customer data (including social insurance income) to assess risk and determine loan amounts. The company generates revenue primarily from interest income on its loan portfolio and loan repayments. Bond proceeds are planned to be used for expanding its lending portfolio, specifically for Lend loans, Business loans, and Long-term consumer loans.",
+      "key_products_services": [
+        "Lending (Lend loans, Business loans, Long-term consumer loans)",
+        "Factoring services",
+        "Digital payment and money transfer services",
+        "Foreign exchange trading",
+        "Trust services",
+        "Investment and financial advice/information",
+        "Investing in short-term financial assets",
+        "Issuing payment instruments"
+      ],
+      "competitive_advantages": "The company utilizes a 100% fintech technology-based digital loan application (LendMN) that processes various customer data for risk assessment and loan amount calculation, aiming to minimize risk. It holds ISO/IEC 27001:2013 certification for its information security management system related to the provision of fintech-based lending services, indicating a focus on data security.",
+      "management_team_summary": "The executive management is led by a Chief Executive Officer (CEO), who is responsible for the company's day-to-day operations and reports to the Board of Directors (BoD). The CEO cannot be the Chairman of the BoD. The documents mention Цэрэндорж овогтой Ууганбаяр as the CEO representing the company in the underwriter agreement. The BoD oversees the executive management and has committees including an Audit Committee and a Salary and Bonus Committee. An Internal Audit function reports to the BoD.",
+      "ownership_structure": "The company is a Joint Stock Company (ХК) with 800,000,000 common shares, each with a nominal value of 10 MNT. Shareholders can be individuals or legal entities. Specific major shareholders or their percentages are not detailed in the provided documents.",
+      "governance_notes": "The company's governance structure includes the Shareholders' Meeting as the highest authority, the Board of Directors (BoD), and the Executive Management led by the CEO. The BoD must convene an extraordinary shareholders' meeting if the company's equity falls below its registered capital or if losses exceed 30% of total equity for a reporting period. The company has an Internal Audit function reporting to the BoD and BoD committees (Audit, Salary/Bonus). The issuer is obligated to disclose conflict of interest transactions according to company law and comply with regulations from the Financial Regulatory Commission and other relevant bodies."
+    },
+    "industry_profile": {
+      "industry_overview": "The Mongolian Non-Bank Financial Institution (NBFI) sector plays a crucial role in increasing access to financial services, particularly by providing loans to individuals underserved by banks. As of 2024, there are 573 NBFIs operating with a total of 5.4 million customers. The sector's total assets reached 7.1 trillion MNT, an increase of 2.5 trillion MNT from the previous year. Total loans amounted to 5.75 trillion MNT, with 90.5% extended to individuals. The sector is in a growth stage, driven by increasing demand for consumer loans, widespread adoption of Fintech technology, the need to expand financial access in underserved areas, and relatively softer lending criteria compared to banks.",
+      "key_industry_trends": [
+        "Fintech and app-based lending: 70% of NBFIs provide loans via mobile apps, increasing accessibility and operational efficiency.",
+        "Green finance initiatives: Mongolia encourages NBFIs to increase green lending within the framework of sustainable finance, with 3.4% of total loans being green loans as of 2024.",
+        "Rising interest rates and consumer debt burden: Average monthly loan interest rates reached 3.5% in 2024 (over 40% annually), increasing the consumer debt burden."
+      ],
+      "competitive_landscape_notes": "The sector is characterized by a large number of small players and high competition, although some larger NBFIs dominate the market. Barriers to entry include the requirement for regulatory licenses, necessary technological infrastructure, and the need to build customer trust. Key success factors include the adoption of Fintech technology, sound risk management practices, and customer-centric services.",
+      "regulatory_environment_notes": "The Financial Regulatory Commission (FRC) oversees and regulates the activities of NBFIs and is working to improve the regulatory environment. Starting in 2025, NBFIs are required to report loan information within 24 hours. Major regulations include the Law on Non-Bank Financial Activities and the Law on Credit Information. Key regulatory bodies are the Financial Regulatory Commission and the Bank of Mongolia.",
+      "industry_risk_factors": [
+        "Increasing household debt: Easy access to credit may increase household debt levels and potentially negatively impact loan quality.",
+        "Weak regulatory oversight: It is challenging to supervise the activities of many small NBFIs, leading to a weak regulatory environment."
+      ]
+    }
+  },
+  "assumptions_generation_data": {
+    "projection_horizon_years": 5,
+    "base_currency": "MNT",
+    "assumptions_by_category": {
+      "revenue_assumptions": [
+        {
+          "metric_name": "average_yield_on_loans",
+          "assumption_type": "other_ratio",
+          "values": [
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4
+          ],
+          "projection_periods": [
+            "2026",
+            "2027",
+            "2028",
+            "2029",
+            "2030"
+          ],
+          "basis_of_assumption": "Based on historical interest income relative to average gross loans. 2022: 29.0% (20.21B / 69.59B), 2023: 37.0% (47.84B / 129.13B), 2024 Q3 YTD annualized: ~40.9% (85.33B / 208.59B). Industry average monthly rate is 3.5% (42% annually). Assumed a stable 40% for projections, reflecting recent performance and industry context.",
+          "unit_notes": ""
+        }
+      ],
+      "expense_assumptions": [
+        {
+          "metric_name": "cost_of_funds_as_pct_of_average_interest_bearing_liabilities",
+          "assumption_type": "other_ratio",
+          "values": [
+            0.22,
+            0.22,
+            0.22,
+            0.22,
+            0.22
+          ],
+          "projection_periods": [
+            "2026",
+            "2027",
+            "2028",
+            "2029",
+            "2030"
+          ],
+          "basis_of_assumption": "Based on historical interest expense relative to estimated average interest-bearing liabilities. 2022: ~8.1% (3.95B / ~48.9B), 2023: ~11.6% (9.53B / ~82.3B), 2024 Q3 YTD annualized: ~22.2% (21.73B / ~97.7B). Assumed a stable 22% for projections, reflecting the recent trend and cost of funding sources like the 12% bond.",
+          "unit_notes": ""
+        },
+        {
+          "metric_name": "loan_impairment_expense_as_pct_of_average_loans",
+          "assumption_type": "percentage_of_loans",
+          "values": [
+            0.025,
+            0.025,
+            0.025,
+            0.025,
+            0.025
+          ],
+          "projection_periods": [
+            "2026",
+            "2027",
+            "2028",
+            "2029",
+            "2030"
+          ],
+          "basis_of_assumption": "Based on historical loan impairment expense relative to average gross loans. 2022: 2.1% (1.44B / ~69.6B), 2023: 2.1% (2.68B / ~129.1B), 2024 H1 annualized: ~4.2% (3.46B H1 expense annualized / ~169B avg loans). Given industry risk of rising household debt, assumed a slightly conservative 2.5% of average gross loans for projections.",
+          "unit_notes": ""
+        },
+        {
+          "metric_name": "operating_expenses_as_pct_of_revenue",
+          "assumption_type": "percentage_of_revenue",
+          "values": [
+            0.3,
+            0.3,
+            0.3,
+            0.3,
+            0.3
+          ],
+          "projection_periods": [
+            "2026",
+            "2027",
+            "2028",
+            "2029",
+            "2030"
+          ],
+          "basis_of_assumption": "Based on historical management and operating expenses relative to interest income. 2022: 37.8% (7.64B / 20.21B), 2023: 21.4% (10.22B / 47.84B), 2024 H1 annualized: 30.0% (19.19B H1 expense annualized / 63.91B H1 revenue annualized). The 2024 H1 absolute value shows a significant increase. Assumed 30% of revenue for projections, reflecting the higher recent cost base.",
+          "unit_notes": ""
+        },
+        {
+          "metric_name": "depreciation_as_pct_of_revenue",
+          "assumption_type": "percentage_of_revenue",
+          "values": [
+            0.05,
+            0.05,
+            0.05,
+            0.05,
+            0.05
+          ],
+          "projection_periods": [
+            "2026",
+            "2027",
+            "2028",
+            "2029",
+            "2030"
+          ],
+          "basis_of_assumption": "Historical depreciation is not explicitly available as a separate line item. Estimated as 5% of revenue, reflecting a reasonable level for a growing NBFI with technology assets, and linked to the Capex assumption.",
+          "unit_notes": ""
+        }
+      ],
+      "loan_portfolio_assumptions": [
+        {
+          "metric_name": "gross_loans_growth",
+          "assumption_type": "growth_rate",
+          "values": [
+            0.153,
+            0.113,
+            0.09,
+            0.07,
+            0.05
+          ],
+          "projection_periods": [
+            "2026",
+            "2027",
+            "2028",
+            "2029",
+            "2030"
+          ],
+          "basis_of_assumption": "Based on issuer's projected loan portfolio growth rates for 2026 (15.3%) and 2027 (11.3%) from Document 7. Tapered growth rate by ~2-3% annually for 2028-2030 (9%, 7%, 5%) reflecting maturing growth.",
+          "unit_notes": ""
+        },
+        {
+          "metric_name": "loan_loss_provision_as_pct_of_loans",
+          "assumption_type": "percentage_of_loans",
+          "values": [
+            0.0439,
+            0.0439,
+            0.0439,
+            0.0439,
+            0.0439
+          ],
+          "projection_periods": [
+            "2026",
+            "2027",
+            "2028",
+            "2029",
+            "2030"
+          ],
+          "basis_of_assumption": "Based on the specific instruction and calculated from 2024 Q3 data as Loan Loss Provision (9.16B MNT) / Gross Loans (208.59B MNT) = 4.39%. Assumed this ratio is maintained for the ending gross loan balance in projections.",
+          "unit_notes": ""
+        }
+      ],
+      "capital_expenditure_assumptions": [
+        {
+          "metric_name": "capex_as_pct_of_revenue",
+          "assumption_type": "percentage_of_revenue",
+          "values": [
+            0.05,
+            0.05,
+            0.05,
+            0.05,
+            0.05
+          ],
+          "projection_periods": [
+            "2026",
+            "2027",
+            "2028",
+            "2029",
+            "2030"
+          ],
+          "basis_of_assumption": "Historical Capex data (Net Cash from Investing) is inconsistent with balance sheet growth in PPE/Intangibles. Estimated as 5% of revenue, reflecting necessary investment to support growth and maintain technology infrastructure, and linked to the Depreciation assumption.",
+          "unit_notes": ""
+        }
+      ],
+      "working_capital_assumptions": [
+        {
+          "metric_name": "change_in_accounts_receivable_as_pct_of_revenue",
+          "assumption_type": "percentage_of_revenue",
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "projection_periods": [
+            "2026",
+            "2027",
+            "2028",
+            "2029",
+            "2030"
+          ],
+          "basis_of_assumption": "Limited and inconsistent historical data on receivables. Assumed negligible changes in other working capital items for projection purposes, as loans are the primary asset.",
+          "unit_notes": ""
+        },
+        {
+          "metric_name": "change_in_accounts_payable_as_pct_of_cogs",
+          "assumption_type": "percentage_of_cogs",
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "projection_periods": [
+            "2026",
+            "2027",
+            "2028",
+            "2029",
+            "2030"
+          ],
+          "basis_of_assumption": "Not applicable for an NBFI. Assumed negligible changes in other working capital items for projection purposes.",
+          "unit_notes": ""
+        },
+        {
+          "metric_name": "change_in_inventory_as_pct_of_cogs",
+          "assumption_type": "percentage_of_cogs",
+          "values": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "projection_periods": [
+            "2026",
+            "2027",
+            "2028",
+            "2029",
+            "2030"
+          ],
+          "basis_of_assumption": "Not applicable for an NBFI. Assumed negligible changes in other working capital items for projection purposes.",
+          "unit_notes": ""
+        }
+      ],
+      "debt_assumptions": [
+        {
+          "metric_name": "total_liabilities_excluding_equity_as_pct_of_total_assets",
+          "assumption_type": "percentage_of_assets",
+          "values": [
+            0.7,
+            0.7,
+            0.7,
+            0.7,
+            0.7
+          ],
+          "projection_periods": [
+            "2026",
+            "2027",
+            "2028",
+            "2029",
+            "2030"
+          ],
+          "basis_of_assumption": "Based on historical Total Liabilities / Total Assets ratio. 2022: 68.5%, 2023: 68.0%, 2024 H1: 70.6%, 2024 Q3: 70.7%. Assumed a stable 70% for projections, implying new debt is raised to maintain this leverage level as assets grow.",
+          "unit_notes": ""
+        },
+        {
+          "metric_name": "bond_repayment_LNDB-TBC-3.2-12",
+          "assumption_type": "absolute_value",
+          "values": [
+            1000000000.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "projection_periods": [
+            "2026",
+            "2027",
+            "2028",
+            "2029",
+            "2030"
+          ],
+          "basis_of_assumption": "Bond principal amount (1,000,000,000 MNT) from bond_metadata. Maturity date is March 2, 2026. Repayment occurs in the 2026 projection period.",
+          "unit_notes": ""
+        },
+        {
+          "metric_name": "bond_interest_expense_LNDB-TBC-3.2-12",
+          "assumption_type": "absolute_value",
+          "values": [
+            30000000.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "projection_periods": [
+            "2026",
+            "2027",
+            "2028",
+            "2029",
+            "2030"
+          ],
+          "basis_of_assumption": "Bond principal (1,000,000,000 MNT) and annual coupon rate (12%) from bond_metadata. Annual interest is 120,000,000 MNT, paid quarterly. Bond matures March 2, 2026. In 2026, interest is paid for approximately 3 months (Jan-Mar), calculated as 120,000,000 * (3/12) = 30,000,000 MNT. No interest expense in subsequent years.",
+          "unit_notes": ""
+        }
+      ],
+      "tax_assumptions": [
+        {
+          "metric_name": "income_tax_rate",
+          "assumption_type": "other_ratio",
+          "values": [
+            0.23,
+            0.23,
+            0.23,
+            0.23,
+            0.23
+          ],
+          "projection_periods": [
+            "2026",
+            "2027",
+            "2028",
+            "2029",
+            "2030"
+          ],
+          "basis_of_assumption": "Based on historical income tax expense relative to profit before tax. 2022: 15.5%, 2023 H1: 21.3%, 2023: 22.0%, 2024 H1: 23.7%. Assumed a stable 23% for projections, reflecting the recent trend towards a higher effective tax rate.",
+          "unit_notes": ""
+        }
+      ],
+      "other_operating_assumptions": [
+        {
+          "metric_name": "total_asset_growth",
+          "assumption_type": "growth_rate",
+          "values": [
+            0.153,
+            0.112,
+            0.09,
+            0.07,
+            0.05
+          ],
+          "projection_periods": [
+            "2026",
+            "2027",
+            "2028",
+            "2029",
+            "2030"
+          ],
+          "basis_of_assumption": "Derived from projected gross loans growth, assuming total assets maintain a stable proportion (~92% based on 2024 Q3) of gross loans. Projected gross loans growth is based on issuer projections for 2026 (15.3%) and 2027 (11.3%) from Document 7, and tapering thereafter (9%, 7%, 5%).",
+          "unit_notes": ""
+        }
+      ]
+    },
+    "llm_comments": "Assumptions were generated based on historical financial data, issuer projections, and industry context. Key judgments included prioritizing issuer loan growth projections over generic asset growth, estimating ratios (yield, cost of funds, OpEx, Capex, Depreciation, Tax) based on recent historical trends, assuming a stable liability structure relative to assets, and explicitly modeling the specific bond's interest and principal repayment. Data limitations included inconsistent historical line item labels and units requiring normalization, messy and potentially inconsistent PPE/Intangibles data, limited explicit Capex/Depreciation figures, and sparse data for other working capital items.",
+    "input_quality_notes": "The input data provided a good mix of historical financials (annual, semi-annual, quarterly), issuer projections (loan portfolio, cash flow summaries), bond metadata, and industry context. However, data quality was mixed. Historical financial statements had inconsistent line item labels and reporting units across periods, requiring careful normalization. Specific line items like depreciation and detailed Capex were not consistently available. PPE/Intangibles balances showed large, potentially inconsistent jumps. Working capital details beyond loans/cash were minimal. Issuer projections were valuable but only extended to 2027 for loans and 2025 for cash flow details. The specific instruction for loan loss provision (using the balance sheet ratio) was followed. Overall, sufficient data was available to build a reasonable set of assumptions, but required judgment calls due to inconsistencies and missing detail.",
+    "country_economic_context": {
+      "country": "Mongolia",
+      "report_date": "2025-06-05",
+      "inflation": {
+        "recent_annual_inflation_pct": 9.0,
+        "historical_inflation_pct": [
+          15.15,
+          10.35,
+          9.0
+        ],
+        "commentary": "Mongolia's inflation rate decreased from a peak of 15.15% in 2022 to 9.0% in 2024, aligning with the Bank of Mongolia's target band of 6±2%. This decline is attributed to softer import prices and a slight appreciation of the tugrik. However, core inflation remains elevated due to robust domestic demand and rapid credit growth, prompting the central bank to tighten reserve requirements and debt service-to-income limits for consumer loans."
+      },
+      "fx": {
+        "recent_usd_mnt_rate": 3392.02,
+        "historical_usd_mnt_rates": [
+          2850.0,
+          3100.0,
+          3392.02
+        ],
+        "volatility_commentary": "The Mongolian tugrik has depreciated against the US dollar over the past three years, with the average exchange rate rising from 2850.0 in 2022 to 3392.02 in 2024. This depreciation reflects Mongolia's external vulnerabilities, including a current account deficit and reliance on commodity exports. However, foreign exchange reserves have remained stable, supported by foreign direct investment and external financing."
+      },
+      "macro_risks": [
+        "Climate-related shocks, notably the severe 2023–2024 dzud causing significant livestock losses.",
+        "Political instability following the resignation of Prime Minister Oyun-Erdene amid corruption allegations.",
+        "Fiscal expansion leading to increased public debt and potential inflationary pressures.",
+        "Dependence on commodity exports, particularly to China, exposing the economy to external demand fluctuations.",
+        "Rising household debt levels due to rapid credit growth in the banking sector."
+      ],
+      "sources": [
+        "https://www.montsame.mn/en/read/361132",
+        "https://tradingeconomics.com/mongolia/inflation-cpi",
+        "https://montsame.mn/en/read/356003",
+        "https://www.worldbank.org/en/news/press-release/2024/05/10/mongolia-s-economy-recovering-risks-remain-world-bank-report",
+        "https://www.imf.org/en/News/Articles/2024/10/14/mcs-mongolia-concluding-statement-of-the-2024-imf-staff-visit",
+        "https://time.com/7290686/mongolia-prime-minister-oyun-erdene-luvsannamsrain-resigns-protests-corruption-son/",
+        "https://apnews.com/article/35f9ba81883ae38385c391a1c8305800"
+      ]
+    }
+  },
+  "financial_model_data": {
+    "unified_financial_statements": [
+      {
+        "reporting_period_end_date": "2024-12-31",
+        "reporting_period_type": "Projected_Annual",
+        "financials": {
+          "interest_income": 89743500000.0,
+          "interest_expense": 22387400000.000004,
+          "net_interest_income": 67356100000.0,
+          "management_and_operating_expenses": 22435875000.0,
+          "loan_loss_provision_expense": 8754977000.0,
+          "net_income": 27423268480.0,
+          "ebitda": 36165248000.0,
+          "depreciation": 82000000.0,
+          "amortization": 0,
+          "income_tax": 8659979520.0,
+          "revenue": 89743500000.0,
+          "total_assets": 264208950000.00003,
+          "total_debt": 151914500000.0,
+          "other_liabilities": 22325656275.000004,
+          "total_liabilities": 174240156275.0,
+          "total_equity": 89968793725.00003,
+          "cash_and_equivalents": 10290000000.0,
+          "accounts_receivable": 0,
+          "accounts_payable": 0,
+          "inventory": 0,
+          "property_plant_and_equipment": 1640000000.0,
+          "accumulated_depreciation": 0,
+          "net_ppe": 1640000000.0,
+          "net_loans": 219373000000.00003,
+          "other_assets": 32905950000.000004
+        },
+        "income_statement": {
+          "interest_income": 89743500000.0,
+          "interest_expense": 22387400000.000004,
+          "net_interest_income": 67356100000.0,
+          "management_and_operating_expenses": 22435875000.0,
+          "loan_loss_provision_expense": 8754977000.0,
+          "net_income": 27423268480.0,
+          "ebitda": 36165248000.0,
+          "depreciation": 82000000.0,
+          "amortization": 0,
+          "income_tax": 8659979520.0,
+          "revenue": 89743500000.0,
+          "total_revenue": 89743500000.0
+        },
+        "cash_flow_statement": {
+          "cash_from_operations": 36260245480.0,
+          "capital_expenditures": -1096865000.0000002,
+          "cash_from_financing": -7995500000.0,
+          "cash_from_investing": -1096865000.0000002
+        }
+      },
+      {
+        "reporting_period_end_date": "2025-12-31",
+        "reporting_period_type": "Projected_Annual",
+        "financials": {
+          "interest_income": 98717850000.00002,
+          "interest_expense": 22787175000.000004,
+          "net_interest_income": 75930675000.00002,
+          "management_and_operating_expenses": 24679462500.000004,
+          "loan_loss_provision_expense": 9784035800.000002,
+          "net_income": 31452734292.00001,
+          "ebitda": 41467176700.000015,
+          "depreciation": 82000000.0,
+          "amortization": 0,
+          "income_tax": 9932442408.000004,
+          "revenue": 98717850000.00002,
+          "total_assets": 316522725480.00006,
+          "total_debt": 174227900000.0,
+          "other_liabilities": 26746170303.060005,
+          "total_liabilities": 200974070303.06,
+          "total_equity": 115548655176.94006,
+          "cash_and_equivalents": 37457880480.0,
+          "accounts_receivable": 0,
+          "accounts_payable": 0,
+          "inventory": 0,
+          "property_plant_and_equipment": 1640000000.0,
+          "accumulated_depreciation": 82000000.0,
+          "net_ppe": 1558000000.0,
+          "net_loans": 241310300000.00006,
+          "other_assets": 36196545000.00001
+        },
+        "income_statement": {
+          "interest_income": 98717850000.00002,
+          "interest_expense": 22787175000.000004,
+          "net_interest_income": 75930675000.00002,
+          "management_and_operating_expenses": 24679462500.000004,
+          "loan_loss_provision_expense": 9784035800.000002,
+          "net_income": 31452734292.00001,
+          "ebitda": 41467176700.000015,
+          "depreciation": 82000000.0,
+          "amortization": 0,
+          "income_tax": 9932442408.000004,
+          "revenue": 98717850000.00002,
+          "total_revenue": 98717850000.00002
+        },
+        "cash_flow_statement": {
+          "cash_from_operations": 41318770092.000015,
+          "capital_expenditures": -219373000.0000003,
+          "cash_from_financing": 22313400000.0,
+          "cash_from_investing": -219373000.0000003
+        }
+      },
+      {
+        "reporting_period_end_date": "2026-12-31",
+        "reporting_period_type": "Projected_Annual",
+        "financials": {
+          "interest_income": 108589635000.00003,
+          "interest_expense": 27876464000.0,
+          "net_interest_income": 80713171000.00003,
+          "management_and_operating_expenses": 32576890500.000008,
+          "loan_loss_provision_expense": 10931356590.000002,
+          "net_income": 28584651410.700016,
+          "ebitda": 37204923910.00002,
+          "depreciation": 82000000.0,
+          "amortization": 0,
+          "income_tax": 8538272499.300006,
+          "revenue": 108589635000.00003,
+          "total_assets": 380436326592.0001,
+          "total_debt": 261341850000.0,
+          "other_liabilities": 32146869597.024014,
+          "total_liabilities": 293488719597.024,
+          "total_equity": 86947606994.97614,
+          "cash_and_equivalents": 73702797092.00002,
+          "accounts_receivable": 0,
+          "accounts_payable": 0,
+          "inventory": 0,
+          "property_plant_and_equipment": 1640000000.0,
+          "accumulated_depreciation": 164000000.0,
+          "net_ppe": 1476000000.0,
+          "net_loans": 265441330000.0001,
+          "other_assets": 39816199500.000015
+        },
+        "income_statement": {
+          "interest_income": 108589635000.00003,
+          "interest_expense": 27876464000.0,
+          "net_interest_income": 80713171000.00003,
+          "management_and_operating_expenses": 32576890500.000008,
+          "loan_loss_provision_expense": 10931356590.000002,
+          "net_income": 28584651410.700016,
+          "ebitda": 37204923910.00002,
+          "depreciation": 82000000.0,
+          "amortization": 0,
+          "income_tax": 8538272499.300006,
+          "revenue": 108589635000.00003,
+          "total_revenue": 108589635000.00003
+        },
+        "cash_flow_statement": {
+          "cash_from_operations": 39598008000.70002,
+          "capital_expenditures": -241310300.0000003,
+          "cash_from_financing": 87113950000.0,
+          "cash_from_investing": -241310300.0000003
+        }
+      },
+      {
+        "reporting_period_end_date": "2027-12-31",
+        "reporting_period_type": "Projected_Annual",
+        "financials": {
+          "interest_income": 119448598500.00005,
+          "interest_expense": 44428114500.0,
+          "net_interest_income": 75020484000.00005,
+          "management_and_operating_expenses": 35834579550.000015,
+          "loan_loss_provision_expense": 12210301180.000004,
+          "net_income": 20708074517.90002,
+          "ebitda": 26975603270.000027,
+          "depreciation": 82000000.0,
+          "amortization": 0,
+          "income_tax": 6185528752.100006,
+          "revenue": 119448598500.00005,
+          "total_assets": 501105810630.70013,
+          "total_debt": 248274757500.0,
+          "other_liabilities": 42343440998.29417,
+          "total_liabilities": 290618198498.2942,
+          "total_equity": 210487612132.40594,
+          "cash_and_equivalents": 163928528180.7,
+          "accounts_receivable": 0,
+          "accounts_payable": 0,
+          "inventory": 0,
+          "property_plant_and_equipment": 1640000000.0,
+          "accumulated_depreciation": 246000000.0,
+          "net_ppe": 1394000000.0,
+          "net_loans": 291985463000.0001,
+          "other_assets": 43797819450.000015
+        },
+        "income_statement": {
+          "interest_income": 119448598500.00005,
+          "interest_expense": 44428114500.0,
+          "net_interest_income": 75020484000.00005,
+          "management_and_operating_expenses": 35834579550.000015,
+          "loan_loss_provision_expense": 12210301180.000004,
+          "net_income": 20708074517.90002,
+          "ebitda": 26975603270.000027,
+          "depreciation": 82000000.0,
+          "amortization": 0,
+          "income_tax": 6185528752.100006,
+          "revenue": 119448598500.00005,
+          "total_revenue": 119448598500.00005
+        },
+        "cash_flow_statement": {
+          "cash_from_operations": 33000375697.900024,
+          "capital_expenditures": -265441330.0000003,
+          "cash_from_financing": -13067092500.0,
+          "cash_from_investing": -265441330.0000003
+        }
+      }
+    ],
+    "debt_schedule": [
+      {
+        "period_end_date": "2024",
+        "beginning_principal": 159910000000.0,
+        "interest_expense": 22387400000.000004,
+        "principal_repayment": 7995500000.0,
+        "ending_principal": 151914500000.0,
+        "new_borrowings": 0
+      },
+      {
+        "period_end_date": "2025",
+        "beginning_principal": 151914500000.0,
+        "interest_expense": 22787175000.000004,
+        "principal_repayment": 7595725000.0,
+        "ending_principal": 174227900000.0,
+        "new_borrowings": 29909125000.0
+      },
+      {
+        "period_end_date": "2026",
+        "beginning_principal": 174227900000.0,
+        "interest_expense": 27876464000.0,
+        "principal_repayment": 43556975000.0,
+        "ending_principal": 261341850000.0,
+        "new_borrowings": 130670925000.0
+      },
+      {
+        "period_end_date": "2027",
+        "beginning_principal": 261341850000.0,
+        "interest_expense": 44428114500.0,
+        "principal_repayment": 13067092500.0,
+        "ending_principal": 248274757500.0,
+        "new_borrowings": 0
+      }
+    ],
+    "credit_ratios": [
+      [
+        {
+          "projected_dscr_avg": 0.6765252076512196,
+          "projected_dscr_min": 0.3615966547941991,
+          "projected_ebitda_cagr": -0.09309894715374012,
+          "peak_debt_level": 261341850000.0,
+          "cash_at_maturity": 163928528180.7
+        }
+      ]
+    ],
+    "key_assumptions_summary": {
+      "loan_impairment_rates": {
+        "historical_actual": 0.0439,
+        "projection_rates": {
+          "2024": 0.0439,
+          "2025": 0.0446,
+          "2026": 0.0453,
+          "2027": 0.046
+        },
+        "methodology": "Based on 2024 Q3 historical rate of 4.39% (9.16B MNT / 208.59B MNT) with gradual increase to account for rising household debt risk. This conservative approach aligns with macroeconomic risks identified."
+      }
+    },
+    "model_execution_notes": "All projections are strictly deterministic, based on extracted data, conservative assumptions, and explicit inflation/FX adjustments. No LLM or manual intervention."
+  },
+  "macroeconomic_adjustments": {
+    "inflation_adjustment_method": "Conservative: max(recent_annual_inflation_pct, 3y avg) = 11.50% used in projections. Mongolia's inflation rate decreased from a peak of 15.15% in 2022 to 9.0% in 2024, aligning with the Bank of Mongolia's target band of 6±2%. This decline is attributed to softer import prices and a slight appreciation of the tugrik. However, core inflation remains elevated due to robust domestic demand and rapid credit growth, prompting the central bank to tighten reserve requirements and debt service-to-income limits for consumer loans.",
+    "fx_adjustment_method": "Conservative: max(recent_usd_mnt_rate, 3y avg) = 3392.02 used in projections. The Mongolian tugrik has depreciated against the US dollar over the past three years, with the average exchange rate rising from 2850.0 in 2022 to 3392.02 in 2024. This depreciation reflects Mongolia's external vulnerabilities, including a current account deficit and reliance on commodity exports. However, foreign exchange reserves have remained stable, supported by foreign direct investment and external financing.",
+    "quantitative_impact": {
+      "revenue_impact": 23948726051.250008,
+      "expense_impact": -14795210171.441706,
+      "cash_flow_impact": 9153515879.808302
+    },
+    "mongolia_specific_risks": "Climate-related shocks, notably the severe 2023–2024 dzud causing significant livestock losses.; Political instability following the resignation of Prime Minister Oyun-Erdene amid corruption allegations.; Fiscal expansion leading to increased public debt and potential inflationary pressures.; Dependence on commodity exports, particularly to China, exposing the economy to external demand fluctuations.; Rising household debt levels due to rapid credit growth in the banking sector.",
+    "commentary": "Macroeconomic adjustments are based on the most adverse recent or average values to ensure conservative projections. Sources: https://www.montsame.mn/en/read/361132, https://tradingeconomics.com/mongolia/inflation-cpi, https://montsame.mn/en/read/356003, https://www.worldbank.org/en/news/press-release/2024/05/10/mongolia-s-economy-recovering-risks-remain-world-bank-report, https://www.imf.org/en/News/Articles/2024/10/14/mcs-mongolia-concluding-statement-of-the-2024-imf-staff-visit, https://time.com/7290686/mongolia-prime-minister-oyun-erdene-luvsannamsrain-resigns-protests-corruption-son/, https://apnews.com/article/35f9ba81883ae38385c391a1c8305800"
+  }
+}

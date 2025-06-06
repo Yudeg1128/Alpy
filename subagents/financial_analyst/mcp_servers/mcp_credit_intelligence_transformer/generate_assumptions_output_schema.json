@@ -1,0 +1,148 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "FinancialProjectionAssumptionsSchema",
+    "description": "Structured assumptions for a financial projection model, derived from extracted bond and issuer data.",
+    "type": "object",
+    "properties": {
+      "projection_horizon_years": {
+        "type": "integer",
+        "description": "The total number of years (or equivalent periods) for which detailed financial projections are being made. This is derived from the maturity date of the bond and available historical data.",
+        "minimum": 1
+      },
+      "base_currency": {
+        "type": "string",
+        "description": "The base currency for all monetary assumptions (ISO 4217 code), derived from bond_metadata.",
+        "enum": ["MNT", "USD", "EUR", "JPY", "CNY", "KRW", "GBP", "SGD", "AUD", "CAD", "CHF", "HKD", "RUB", "BRL", "INR", "ZAR"]
+      },
+      "assumptions_by_category": {
+        "type": "object",
+        "description": "Categorized financial and operating assumptions for the projection period.",
+        "properties": {
+          "revenue_assumptions": {
+            "type": "array",
+            "description": "Assumptions related to top-line revenue or interest income generation.",
+            "items": { "$ref": "#/definitions/AssumptionDetail" }
+          },
+          "expense_assumptions": {
+            "type": "array",
+            "description": "Assumptions for key operating and non-operating expenses.",
+            "items": { "$ref": "#/definitions/AssumptionDetail" }
+          },
+          "loan_portfolio_assumptions": {
+            "type": "array",
+            "description": "Specific assumptions for loan portfolio growth, crucial for NBFIs.",
+            "items": { "$ref": "#/definitions/AssumptionDetail" }
+          },
+          "capital_expenditure_assumptions": {
+            "type": "array",
+            "description": "Assumptions for capital expenditures (CAPEX).",
+            "items": { "$ref": "#/definitions/AssumptionDetail" }
+          },
+          "working_capital_assumptions": {
+            "type": "array",
+            "description": "Assumptions for working capital changes (e.g., changes in receivables, payables, inventory).",
+            "items": { "$ref": "#/definitions/AssumptionDetail" }
+          },
+          "debt_assumptions": {
+            "type": "array",
+            "description": "Assumptions related to new debt, refinancing, and interest rates.",
+            "items": { "$ref": "#/definitions/AssumptionDetail" }
+          },
+          "tax_assumptions": {
+            "type": "array",
+            "description": "Assumptions for income tax rates.",
+            "items": { "$ref": "#/definitions/AssumptionDetail" }
+          },
+          "other_operating_assumptions": {
+            "type": "array",
+            "description": "Other relevant operational assumptions not covered above (e.g., customer growth, branch expansion).",
+            "items": { "$ref": "#/definitions/AssumptionDetail" }
+          }
+        },
+        "additionalProperties": false
+      },
+      "llm_comments": {
+        "type": "string",
+        "description": "LLM's internal commentary on the assumption generation process, including key judgment calls, data limitations, and any notable inferences made."
+      },
+      "input_quality_notes": {
+        "type": "string",
+        "description": "LLM's assessment of the quality and completeness of the input data used to generate these assumptions, highlighting any missing or conflicting information."
+      },
+      "country_economic_context": {
+        "type": "object",
+        "properties": {
+          "country": { "type": "string" },
+          "report_date": { "type": "string", "format": "date" },
+          "inflation": {
+            "type": "object",
+            "properties": {
+              "recent_annual_inflation_pct": { "type": "number" },
+              "historical_inflation_pct": { "type": "array", "items": { "type": "number" } },
+              "commentary": { "type": "string" }
+            },
+            "required": ["recent_annual_inflation_pct", "historical_inflation_pct"]
+          },
+          "fx": {
+            "type": "object",
+            "properties": {
+              "recent_usd_mnt_rate": { "type": "number" },
+              "historical_usd_mnt_rates": { "type": "array", "items": { "type": "number" } },
+              "volatility_commentary": { "type": "string" }
+            },
+            "required": ["recent_usd_mnt_rate", "historical_usd_mnt_rates"]
+          },
+          "macro_risks": { "type": "array", "items": { "type": "string" } },
+          "sources": { "type": "array", "items": { "type": "string", "format": "uri" }, "minItems": 1 }
+        },
+        "required": ["country", "report_date", "inflation", "fx", "macro_risks", "sources"]
+      }
+    },
+    "required": [
+      "projection_horizon_years",
+      "base_currency",
+      "assumptions_by_category",
+      "llm_comments",
+      "input_quality_notes",
+      "country_economic_context"
+    ],
+    "additionalProperties": false,
+    "definitions": {
+      "AssumptionDetail": {
+        "type": "object",
+        "properties": {
+          "metric_name": {
+            "type": "string",
+            "description": "The standardized English name of the financial metric for which the assumption is made (e.g., 'total_revenue_growth', 'interest_expense_as_percent_of_loans', 'capex_absolute_value')."
+          },
+          "assumption_type": {
+            "type": "string",
+            "description": "The type of assumption, guiding how the value is applied in the model.",
+            "enum": ["growth_rate", "percentage_of_revenue", "percentage_of_assets", "percentage_of_loans", "absolute_value", "percentage_of_debt", "other_ratio"]
+          },
+          "values": {
+            "type": "array",
+            "description": "An array of numerical values for the assumption, corresponding to the 'projection_periods'. Values should be in decimal for percentages (e.g., 0.10 for 10%), and full numbers for absolute values.",
+            "items": { "type": "number" },
+            "minItems": 1
+          },
+          "projection_periods": {
+            "type": "array",
+            "description": "An array of strings representing the periods for which the 'values' apply (e.g., ['2025', '2026', '2027'], or ['2025Q1', '2025Q2']). Must match the length of 'values'.",
+            "items": { "type": "string" },
+            "minItems": 1
+          },
+          "basis_of_assumption": {
+            "type": "string",
+            "description": "Explanation of how this assumption was derived, including source documents (e.g., 'Based on issuer projection in Doc 7', '3-year historical average from financial statements', 'Analyst judgment due to industry trends from Industry Profile section', 'Implied by 2024Q3 actuals and market outlook')."
+          },
+          "unit_notes": {
+            "type": "string",
+            "description": "Any specific unit notes for this assumption, if different from base_currency (e.g., 'number_of_customers', 'percentage_points')."
+          }
+        },
+        "required": ["metric_name", "assumption_type", "values", "projection_periods", "basis_of_assumption"],
+        "additionalProperties": false
+      }
+    }
+  }

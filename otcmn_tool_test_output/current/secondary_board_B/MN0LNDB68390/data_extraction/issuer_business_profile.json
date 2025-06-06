@@ -1,0 +1,23 @@
+{
+  "issuer_business_profile": {
+    "issuer_name": "ЛЭНДМН ББСБ\" ХК",
+    "issuer_industry": "Non-Bank Financial Institution (NBFI)",
+    "business_model_summary": "The issuer is a non-bank financial institution primarily engaged in lending activities. It operates a 100% fintech technology-based digital loan application called LendMN, which processes customer data (including social insurance income) to assess risk and determine loan amounts. The company generates revenue primarily from interest income on its loan portfolio and loan repayments. Bond proceeds are planned to be used for expanding its lending portfolio, specifically for Lend loans, Business loans, and Long-term consumer loans.",
+    "key_products_services": [
+      "Lending (Lend loans, Business loans, Long-term consumer loans)",
+      "Factoring services",
+      "Digital payment and money transfer services",
+      "Foreign exchange trading",
+      "Trust services",
+      "Investment and financial advice/information",
+      "Investing in short-term financial assets",
+      "Issuing payment instruments"
+    ],
+    "competitive_advantages": "The company utilizes a 100% fintech technology-based digital loan application (LendMN) that processes various customer data for risk assessment and loan amount calculation, aiming to minimize risk. It holds ISO/IEC 27001:2013 certification for its information security management system related to the provision of fintech-based lending services, indicating a focus on data security.",
+    "management_team_summary": "The executive management is led by a Chief Executive Officer (CEO), who is responsible for the company's day-to-day operations and reports to the Board of Directors (BoD). The CEO cannot be the Chairman of the BoD. The documents mention Цэрэндорж овогтой Ууганбаяр as the CEO representing the company in the underwriter agreement. The BoD oversees the executive management and has committees including an Audit Committee and a Salary and Bonus Committee. An Internal Audit function reports to the BoD.",
+    "ownership_structure": "The company is a Joint Stock Company (ХК) with 800,000,000 common shares, each with a nominal value of 10 MNT. Shareholders can be individuals or legal entities. Specific major shareholders or their percentages are not detailed in the provided documents.",
+    "governance_notes": "The company's governance structure includes the Shareholders' Meeting as the highest authority, the Board of Directors (BoD), and the Executive Management led by the CEO. The BoD must convene an extraordinary shareholders' meeting if the company's equity falls below its registered capital or if losses exceed 30% of total equity for a reporting period. The company has an Internal Audit function reporting to the BoD and BoD committees (Audit, Salary/Bonus). The issuer is obligated to disclose conflict of interest transactions according to company law and comply with regulations from the Financial Regulatory Commission and other relevant bodies.",
+    "comments": "Extraction quality is good. Information for all requested fields was found across the provided documents. Financial values were successfully converted to base units (MNT). The business model, key services, governance structure, and some competitive advantages (fintech, ISO certification) are well-described. Specific details on individual management team members (beyond the CEO) and major shareholders are not available in the provided text.",
+    "input_quality": "All provided documents were used for extraction. Document 1 (Underwriter Conclusion) was useful for bond usage, projected income, cash balance, and credit rating. Document 2 (Company Charter/Articles) was crucial for registered capital, ownership structure type, and detailed governance structure. Document 3 (ISO Certificate) confirmed the company name, address, and specifically the scope of fintech-based lending services and information security certification. Document 4 (MIRA Rating Report) confirmed the credit rating. Documents 5 & 6 (Underwriter Agreement) confirmed the issuer name, CEO name, bond amount, bond terms, and provided context on issuer/underwriter responsibilities, including obligations related to information accuracy, liquidity, and conflict of interest. No documents were irrelevant, although some provided redundant information (e.g., company name, address)."
+  }
+}

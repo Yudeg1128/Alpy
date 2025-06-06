@@ -1,0 +1,81 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "QualityControlAgentInstruction",
+  "description": "Schema for the Quality Control LLM's precise instructions to the agent for data repair.",
+  "type": "object",
+  "properties": {
+    "qc_status": {
+      "type": "string",
+      "description": "Overall status of the quality control check.",
+      "enum": ["Pass", "Fail"]
+    },
+    "reasoning": {
+      "type": "string",
+      "description": "Explanation of the analysis and why specific corrections were chosen."
+    },
+    "deterministic_qc_issues": {
+      "type": "array",
+      "description": "A list of structured error details identified by the programmatic (deterministic) QC checks. This provides the factual basis for any 'Fail' status.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "section": {
+            "type": "string",
+            "description": "The top-level schema section where the problem occurred (e.g., 'bond_financials_historical')."
+          },
+          "field": {
+            "type": ["string", "null"],
+            "description": "Specific field affected, if applicable."
+          },
+          "period": {
+            "type": ["string", "null"],
+            "description": "Reporting period affected (YYYY-MM-DD), if applicable."
+          },
+          "problem_type": {
+            "type": "string",
+            "description": "Categorization of the problem (e.g., 'BalanceSheetEquationMismatch', 'UnitInconsistency', 'NegativeValueAnomaly')."
+          },
+          "description": {
+            "type": "string",
+            "description": "Human-readable description of the specific issue identified by the deterministic check."
+          },
+          "value_found": {
+            "type": ["string", "number", "boolean", "array", "object", "null"],
+            "description": "The problematic value found in the extracted data."
+          },
+          "expected_value": {
+            "type": ["string", "number", "boolean", "array", "object", "null"],
+            "description": "The value expected if deterministically calculable, or null."
+          }
+        },
+        "required": ["section", "problem_type", "description", "value_found"],
+        "additionalProperties": false
+      }
+    },
+    "value_corrections": {
+      "type": "object",
+      "description": "A dictionary mapping JSON paths to corrected values. Each key is a dot-notation path to a value in the data that needs correction, and each value is the corrected value.",
+      "additionalProperties": true
+    },
+    "repair_instructions": {
+      "type": "array",
+      "description": "List of repair instructions for complex issues that cannot be fixed with direct value corrections",
+      "items": {
+        "type": "object",
+        "required": ["section_to_re_extract", "llm_repair_prompt_directive"],
+        "properties": {
+          "section_to_re_extract": {
+            "type": "string",
+            "description": "Section of data that needs to be re-extracted"
+          },
+          "llm_repair_prompt_directive": {
+            "type": "string",
+            "description": "Directive to include in the LLM prompt to guide repair extraction"
+          }
+        }
+      }
+    }
+  },
+  "required": ["qc_status"],
+  "additionalProperties": false
+}

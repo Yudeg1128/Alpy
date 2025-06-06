@@ -1,0 +1,306 @@
+{
+  "content_blocks": [
+    {
+      "type": "table",
+      "content": [
+        {
+          "Unnamed: 0": "1.  Доходи",
+          "Unnamed: 1": null,
+          "Unnamed: 2": null,
+          "Unnamed: 3": null,
+          "Unnamed: 4": null,
+          "Unnamed: 5": null
+        },
+        {
+          "Unnamed: 0": "1.1.  Чистий дохід від реалізації товарів, робіт, послуг",
+          "Unnamed: 1": null,
+          "Unnamed: 2": null,
+          "Unnamed: 3": null,
+          "Unnamed: 4": "4.207.257,17",
+          "Unnamed: 5": null
+        },
+        {
+          "Unnamed: 0": "1.2.  Інші операційні доходи",
+          "Unnamed: 1": null,
+          "Unnamed: 2": null,
+          "Unnamed: 3": null,
+          "Unnamed: 4": "124.445,00",
+          "Unnamed: 5": null
+        },
+        {
+          "Unnamed: 0": "1.3.  Дохід від участі в капіталі",
+          "Unnamed: 1": null,
+          "Unnamed: 2": null,
+          "Unnamed: 3": null,
+          "Unnamed: 4": null,
+          "Unnamed: 5": null
+        },
+        {
+          "Unnamed: 0": "1.4.  Інші фінансові доходи",
+          "Unnamed: 1": null,
+          "Unnamed: 2": null,
+          "Unnamed: 3": null,
+          "Unnamed: 4": "2.000,00",
+          "Unnamed: 5": null
+        },
+        {
+          "Unnamed: 0": "1.5.  Інші доходи",
+          "Unnamed: 1": null,
+          "Unnamed: 2": null,
+          "Unnamed: 3": null,
+          "Unnamed: 4": "1.000,00",
+          "Unnamed: 5": null
+        },
+        {
+          "Unnamed: 0": "1.6.  Надзвичайні доходи",
+          "Unnamed: 1": null,
+          "Unnamed: 2": null,
+          "Unnamed: 3": null,
+          "Unnamed: 4": null,
+          "Unnamed: 5": null
+        },
+        {
+          "Unnamed: 0": "1.7.  Всього доходів",
+          "Unnamed: 1": null,
+          "Unnamed: 2": null,
+          "Unnamed: 3": null,
+          "Unnamed: 4": "4.334.702,17",
+          "Unnamed: 5": null
+        },
+        {
+          "Unnamed: 0": "2.  Витрати",
+          "Unnamed: 1": null,
+          "Unnamed: 2": null,
+          "Unnamed: 3": null,
+          "Unnamed: 4": null,
+          "Unnamed: 5": null
+        },
+        {
+          "Unnamed: 0": "2.1.  Собівартість реалізованої продукції (товарів, робіт, послуг)",
+          "Unnamed: 1": null,
+          "Unnamed: 2": null,
+          "Unnamed: 3": null,
+          "Unnamed: 4": "3.541.766,70",
+          "Unnamed: 5": null
+        },
+        {
+          "Unnamed: 0": "2.2.  Адміністративні витрати",
+          "Unnamed: 1": null,
+          "Unnamed: 2": null,
+          "Unnamed: 3": null,
+          "Unnamed: 4": "124.445,00",
+          "Unnamed: 5": null
+        },
+        {
+          "Unnamed: 0": "2.3.  Витрати на збут",
+          "Unnamed: 1": null,
+          "Unnamed: 2": null,
+          "Unnamed: 3": null,
+          "Unnamed: 4": "1.000,00",
+          "Unnamed: 5": null
+        },
+        {
+          "Unnamed: 0": "2.4.  Інші операційні витрати",
+          "Unnamed: 1": null,
+          "Unnamed: 2": null,
+          "Unnamed: 3": null,
+          "Unnamed: 4": "1.000,00",
+          "Unnamed: 5": null
+        },
+        {
+          "Unnamed: 0": "2.5.  Фінансові витрати",
+          "Unnamed: 1": null,
+          "Unnamed: 2": null,
+          "Unnamed: 3": null,
+          "Unnamed: 4": null,
+          "Unnamed: 5": null
+        },
+        {
+          "Unnamed: 0": "2.6.  Інші витрати",
+          "Unnamed: 1": null,
+          "Unnamed: 2": null,
+          "Unnamed: 3": null,
+          "Unnamed: 4": null,
+          "Unnamed: 5": null
+        },
+        {
+          "Unnamed: 0": "2.7.  Надзвичайні витрати",
+          "Unnamed: 1": null,
+          "Unnamed: 2": null,
+          "Unnamed: 3": null,
+          "Unnamed: 4": null,
+          "Unnamed: 5": null
+        },
+        {
+          "Unnamed: 0": "2.8.  Всього витрат",
+          "Unnamed: 1": null,
+          "Unnamed: 2": null,
+          "Unnamed: 3": null,
+          "Unnamed: 4": "3.668.211,70",
+          "Unnamed: 5": null
+        },
+        {
+          "Unnamed: 0": "3.  Фінансовий результат",
+          "Unnamed: 1": null,
+          "Unnamed: 2": null,
+          "Unnamed: 3": null,
+          "Unnamed: 4": null,
+          "Unnamed: 5": null
+        },
+        {
+          "Unnamed: 0": "3.1.  Прибуток (збиток) від операційної діяльності",
+          "Unnamed: 1": null,
+          "Unnamed: 2": null,
+          "Unnamed: 3": null,
+          "Unnamed: 4": "666.490,47",
+          "Unnamed: 5": null
+        },
+        {
+          "Unnamed: 0": "3.2.  Дохід від участі в капіталі",
+          "Unnamed: 1": null,
+          "Unnamed: 2": null,
+          "Unnamed: 3": null,
+          "Unnamed: 4": null,
+          "Unnamed: 5": null
+        },
+        {
+          "Unnamed: 0": "3.3.  Інші доходи",
+          "Unnamed: 1": null,
+          "Unnamed: 2": null,
+          "Unnamed: 3": null,
+          "Unnamed: 4": null,
+          "Unnamed: 5": null
+        },
+        {
+          "Unnamed: 0": "3.4.  Фінансові витрати",
+          "Unnamed: 1": null,
+          "Unnamed: 2": null,
+          "Unnamed: 3": null,
+          "Unnamed: 4": null,
+          "Unnamed: 5": null
+        },
+        {
+          "Unnamed: 0": "3.5.  Податок на прибуток",
+          "Unnamed: 1": null,
+          "Unnamed: 2": null,
+          "Unnamed: 3": null,
+          "Unnamed: 4": "100.000,00",
+          "Unnamed: 5": null
+        },
+        {
+          "Unnamed: 0": "3.6.  Прибуток (збиток) від звичайної діяльності",
+          "Unnamed: 1": null,
+          "Unnamed: 2": null,
+          "Unnamed: 3": null,
+          "Unnamed: 4": "566.490,47",
+          "Unnamed: 5": null
+        },
+        {
+          "Unnamed: 0": "3.7.  Надзвичайний прибуток (збиток)",
+          "Unnamed: 1": null,
+          "Unnamed: 2": null,
+          "Unnamed: 3": null,
+          "Unnamed: 4": null,
+          "Unnamed: 5": null
+        },
+        {
+          "Unnamed: 0": "3.8.  Чистий прибуток (збиток)",
+          "Unnamed: 1": null,
+          "Unnamed: 2": null,
+          "Unnamed: 3": null,
+          "Unnamed: 4": "566.490,47",
+          "Unnamed: 5": null
+        },
+        {
+          "Unnamed: 0": "4.  Елементи операційних витрат",
+          "Unnamed: 1": null,
+          "Unnamed: 2": null,
+          "Unnamed: 3": null,
+          "Unnamed: 4": null,
+          "Unnamed: 5": null
+        },
+        {
+          "Unnamed: 0": "4.1.  Матеріальні затрати",
+          "Unnamed: 1": null,
+          "Unnamed: 2": null,
+          "Unnamed: 3": null,
+          "Unnamed: 4": "2.000,00",
+          "Unnamed: 5": null
+        },
+        {
+          "Unnamed: 0": "4.2.  Витрати на оплату праці",
+          "Unnamed: 1": null,
+          "Unnamed: 2": null,
+          "Unnamed: 3": null,
+          "Unnamed: 4": "200.000,00",
+          "Unnamed: 5": null
+        },
+        {
+          "Unnamed: 0": "4.3.  Відрахування на соціальні заходи",
+          "Unnamed: 1": null,
+          "Unnamed: 2": null,
+          "Unnamed: 3": null,
+          "Unnamed: 4": "100.000,00",
+          "Unnamed: 5": null
+        },
+        {
+          "Unnamed: 0": "4.4.  Амортизація",
+          "Unnamed: 1": null,
+          "Unnamed: 2": null,
+          "Unnamed: 3": null,
+          "Unnamed: 4": "100.000,00",
+          "Unnamed: 5": null
+        },
+        {
+          "Unnamed: 0": "4.5.  Інші операційні витрати",
+          "Unnamed: 1": null,
+          "Unnamed: 2": null,
+          "Unnamed: 3": null,
+          "Unnamed: 4": "100.000,00",
+          "Unnamed: 5": null
+        },
+        {
+          "Unnamed: 0": "5.  Розрахунок показників прибутковості акцій",
+          "Unnamed: 1": null,
+          "Unnamed: 2": null,
+          "Unnamed: 3": null,
+          "Unnamed: 4": null,
+          "Unnamed: 5": null
+        },
+        {
+          "Unnamed: 0": "5.1.  Середньорічна кількість простих акцій",
+          "Unnamed: 1": null,
+          "Unnamed: 2": null,
+          "Unnamed: 3": null,
+          "Unnamed: 4": "200.000,00",
+          "Unnamed: 5": null
+        },
+        {
+          "Unnamed: 0": "5.2.  Скоригований середньорічна кількість простих акцій",
+          "Unnamed: 1": null,
+          "Unnamed: 2": null,
+          "Unnamed: 3": null,
+          "Unnamed: 4": "200.000,00",
+          "Unnamed: 5": null
+        },
+        {
+          "Unnamed: 0": "5.3.  Чистий прибуток (збиток) на одну просту акцію",
+          "Unnamed: 1": null,
+          "Unnamed: 2": null,
+          "Unnamed: 3": null,
+          "Unnamed: 4": "2,83",
+          "Unnamed: 5": null
+        },
+        {
+          "Unnamed: 0": "5.4.  Скоригований чистий прибуток (збиток) на одну просту акцію",
+          "Unnamed: 1": null,
+          "Unnamed: 2": null,
+          "Unnamed: 3": null,
+          "Unnamed: 4": "2,83",
+          "Unnamed: 5": null
+        }
+      ],
+      "source_page": null
+    }
+  ]
+}

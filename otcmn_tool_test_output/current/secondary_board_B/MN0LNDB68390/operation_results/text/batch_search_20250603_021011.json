@@ -1,0 +1,102 @@
+{
+  "status": "success",
+  "message": "Found 5 similar items for 6 queries in security MN0LNDB68390",
+  "result": {
+    "distances": [
+      [
+        0.44789159297943115,
+        0.45290839672088623,
+        0.4833754599094391,
+        0.49390238523483276,
+        0.5000778436660767
+      ],
+      [
+        0.29221779108047485,
+        0.29960209131240845,
+        0.31454038619995117,
+        0.3330667018890381,
+        0.35068216919898987
+      ],
+      [
+        0.33280742168426514,
+        0.33515864610671997,
+        0.3399777412414551,
+        0.3500216603279114,
+        0.3714386820793152
+      ],
+      [
+        0.5176852941513062,
+        0.5751639604568481,
+        0.5913473963737488,
+        0.5921049118041992,
+        0.5973560810089111
+      ],
+      [
+        0.39300012588500977,
+        0.4166908860206604,
+        0.46672752499580383,
+        0.46988964080810547,
+        0.49126487970352173
+      ],
+      [
+        0.4273783564567566,
+        0.4604167938232422,
+        0.4843299984931946,
+        0.5054047107696533,
+        0.5201112031936646
+      ]
+    ],
+    "indices": [
+      [
+        160,
+        161,
+        164,
+        162,
+        158
+      ],
+      [
+        51,
+        62,
+        90,
+        95,
+        84
+      ],
+      [
+        90,
+        51,
+        62,
+        95,
+        84
+      ],
+      [
+        160,
+        161,
+        40,
+        150,
+        101
+      ],
+      [
+        164,
+        160,
+        90,
+        161,
+        158
+      ],
+      [
+        164,
+        90,
+        160,
+        127,
+        46
+      ]
+    ]
+  },
+  "queries": [
+    "What are the bond's security identifiers, currency, total issued principal, coupon rate type, exact annual coupon rate, coupon payment frequency, issue date, maturity date, trustee agent, any call or put provisions, governing law, default interest rate, minimum denomination, and listing venue?",
+    "Full historical financial statements and, most importantly, comprehensive Markdown tables containing official annual and quarterly reports, balance sheets (ХОРОНГО), income statements (Орлогын үзүүлэлтүүд), cash flow statements, statements of changes in equity, and key performance indicators (KPIs). Prioritize extracting data from Markdown tables that clearly present multi-year financial data with column and row headers and numerical values, focusing on the most recent and complete tables. Look for section headings like 'Тайлан тэнцлийн үзүүлэлтүүд' (Balance Sheet Indicators) and table headers such as 'ХОРОНГО' (Assets), 'ӨР ТӨЛБӨР' (Liabilities), 'ӨӨРИЙН ХӨРӨНГО' (Equity), 'Орлогын үзүүлэлтүүд' (Income/Revenue Indicators). Prefer tables over narrative or unstructured text whenever possible.",
+    "Issuer-provided financial projections, forecast tables, future financial outlook, projected income statements, projected balance sheets, and forward-looking metrics such as projected revenue, projected EBITDA, or future capital expenditures for all projection periods. Look for phrases like 'ирээдүйн таамаглал' (future forecast) or 'төлөвлөгөөт үзүүлэлтүүд' (planned indicators).",
+    "Describe the bond's seniority, specific collateral assets pledged (including asset type, description, valuation, and lien priority), collateral maintenance requirements, negative pledge clause, asset sale restrictions, financial covenants, information reporting requirements, and all specific events of default.",
+    "Provide details on the bond issuer's name, primary industry, business model summary, key products and services, competitive advantages, management team overview, ownership structure, and any significant governance notes.",
+    "Provide an overview of the industry, including key trends, competitive landscape, regulatory environment, and primary industry-specific risk factors relevant to the issuer."
+  ]
+}
