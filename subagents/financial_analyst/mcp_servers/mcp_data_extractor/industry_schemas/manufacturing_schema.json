@@ -1,0 +1,653 @@
+{
+    "manufacturing_schema": {
+      "schema_type": "manufacturing",
+      "description": "For companies that transform raw materials into finished products. Characterized by significant inventory management, production costs, and often substantial plant & equipment.",
+      "industry_indicators": ["inventory", "cost of goods sold", "raw materials", "work in process", "finished goods", "production", "manufacturing", "plant", "assembly", "factory"],
+      "common_business_types": ["automotive", "electronics", "food processing", "textiles", "construction materials", "machinery", "pharmaceuticals", "consumer goods", "chemicals"],
+  
+      "income_statement": {
+        "summation_plugs": {
+          "type": "object",
+          "level": "metadata",
+          "description": "A dictionary of generated adjustments to reconcile summation rules. Keys are the subtotal fields being reconciled, and values are the required adjustment amounts. This field should be incorporated by downstream models."
+        },
+        "product_sales": {
+          "type": ["number", "null"],
+          "sign": "positive",
+          "level": "component",
+          "subtotal_of": "total_revenue",
+          "description": "Primary revenue from selling manufactured products.",
+          "common_names": ["revenue", "sales", "net sales", "goods sold"]
+        },
+        "other_revenue": {
+          "type": ["number", "null"],
+          "sign": "positive",
+          "level": "component",
+          "subtotal_of": "total_revenue",
+          "description": "Secondary revenue streams, e.g., licensing, service contracts on products sold.",
+          "common_names": ["miscellaneous revenue", "other income"]
+        },
+        "total_revenue": {
+          "type": ["number", "null"],
+          "sign": "positive",
+          "level": "subtotal",
+          "subtotal_of": "gross_profit",
+          "description": "Sum of all revenue sources for the period.",
+          "common_names": ["total sales", "total income"]
+        },
+        "cost_of_goods_sold": {
+          "type": ["number", "null"],
+          "sign": "negative",
+          "level": "component",
+          "subtotal_of": "gross_profit",
+          "description": "Direct costs of manufacturing products, including raw materials, direct labor, and manufacturing overhead.",
+          "common_names": ["COGS", "cost of sales", "cost of revenue", "production costs", "manufacturing costs"]
+        },
+        "gross_profit": {
+          "type": ["number", "null"],
+          "sign": "positive",
+          "level": "subtotal",
+          "subtotal_of": "operating_profit",
+          "description": "Revenue minus direct production costs.",
+          "common_names": ["gross income", "gross margin"]
+        },
+        "research_development": {
+          "type": ["number", "null"],
+          "sign": "negative",
+          "level": "component",
+          "subtotal_of": "total_operating_expenses",
+          "description": "Expenses incurred for innovation, new product development, or process improvement.",
+          "common_names": ["R&D", "development costs"]
+        },
+        "selling_expenses": {
+          "type": ["number", "null"],
+          "sign": "negative",
+          "level": "component",
+          "subtotal_of": "total_operating_expenses",
+          "description": "Costs related to selling and distributing products, including sales force salaries, marketing, advertising, and distribution logistics.",
+          "common_names": ["sales expenses", "marketing expenses", "distribution costs", "S&M"]
+        },
+        "administrative_expenses": {
+          "type": ["number", "null"],
+          "sign": "negative",
+          "level": "component",
+          "subtotal_of": "total_operating_expenses",
+          "description": "General overhead costs not directly tied to production or selling, e.g., corporate salaries, office rent, legal, accounting.",
+          "common_names": ["admin expenses", "general expenses", "overhead", "G&A", "selling, general & administrative"]
+        },
+        "depreciation_amortization": {
+          "type": ["number", "null"],
+          "sign": "negative",
+          "level": "component",
+          "subtotal_of": "total_operating_expenses",
+          "schema_role": "NON_CASH_CHARGE_CFI",
+          "description": "Non-cash expense reflecting the decline in value of tangible (depreciation) and intangible (amortization) assets used in operations.",
+          "common_names": ["depreciation", "amortization", "D&A"]
+        },
+        "other_operating_expenses": {
+          "type": ["number", "null"],
+          "sign": "negative",
+          "level": "component",
+          "subtotal_of": "total_operating_expenses",
+          "description": "Any other significant costs incurred in normal operations not captured above.",
+          "common_names": ["miscellaneous operating expenses", "other expenses"]
+        },
+        "total_operating_expenses": {
+          "type": ["number", "null"],
+          "sign": "negative",
+          "level": "subtotal",
+          "subtotal_of": "operating_profit",
+          "description": "Sum of all expenses incurred in the normal course of business operations, excluding COGS.",
+          "common_names": ["operating costs", "total overhead"]
+        },
+        "operating_profit": {
+          "type": ["number", "null"],
+          "sign": "both",
+          "level": "subtotal",
+          "subtotal_of": "profit_before_tax",
+          "description": "Profit generated from core business operations before accounting for interest and taxes (EBIT).",
+          "common_names": ["operating income", "EBIT", "profit from operations"]
+        },
+        "interest_income": {
+          "type": ["number", "null"],
+          "sign": "positive",
+          "level": "component",
+          "subtotal_of": "profit_before_tax",
+          "description": "Income earned from interest-bearing assets like cash deposits or short-term investments.",
+          "common_names": ["investment income", "finance income"]
+        },
+        "interest_expense": {
+          "type": ["number", "null"],
+          "sign": "negative",
+          "level": "component",
+          "subtotal_of": "profit_before_tax",
+          "description": "Cost of borrowing, including interest paid on loans or bonds.",
+          "common_names": ["finance costs", "borrowing costs"]
+        },
+        "other_non_operating": {
+          "type": ["number", "null"],
+          "sign": "both",
+          "level": "component",
+          "subtotal_of": "profit_before_tax",
+          "description": "Gains or losses from activities outside of normal business operations, such as asset sales or unusual one-time events.",
+          "common_names": ["extraordinary items", "non-operating income/expense", "gain/loss on asset disposal"]
+        },
+        "profit_before_tax": {
+          "type": ["number", "null"],
+          "sign": "both",
+          "level": "subtotal",
+          "subtotal_of": "net_profit",
+          "description": "Profit remaining after all operating and non-operating expenses, but before income taxes (EBT).",
+          "common_names": ["EBT", "pre-tax profit"]
+        },
+        "income_tax_expense": {
+          "type": ["number", "null"],
+          "sign": "negative",
+          "level": "component",
+          "subtotal_of": "net_profit",
+          "description": "The amount of tax owed on the company's taxable income for the period.",
+          "common_names": ["tax expense", "taxes", "provision for income taxes"]
+        },
+        "net_profit": {
+          "type": ["number", "null"],
+          "sign": "both",
+          "level": "total",
+          "schema_role": "PROFIT_AND_LOSS_ANCHOR",
+          "description": "The final profit or loss remaining after all revenues and expenses, including taxes, have been accounted for (Net Income).",
+          "common_names": ["net income", "bottom line", "earnings"]
+        }
+      },
+  
+      "balance_sheet": {
+        "summation_plugs": {
+          "type": "object",
+          "level": "metadata",
+          "description": "A dictionary of generated adjustments to reconcile summation rules. Keys are the subtotal fields being reconciled, and values are the required adjustment amounts. This field should be incorporated by downstream models."
+        },
+        "cash_equivalents": {
+          "type": ["number", "null"],
+          "sign": "positive",
+          "level": "component",
+          "subtotal_of": "total_current_assets",
+          "description": "Highly liquid assets convertible to cash, including bank balances and short-term investments.",
+          "common_names": ["cash", "bank balance", "short-term investments"],
+          "cfs_classification": "CASH_EQUIVALENT"
+        },
+        "accounts_receivable": {
+          "type": ["number", "null"],
+          "sign": "positive",
+          "level": "component",
+          "subtotal_of": "total_current_assets",
+          "description": "Money owed to the company by customers for products already sold but not yet paid.",
+          "common_names": ["receivables", "A/R", "trade receivables"],
+          "cfs_classification": "CFO_OPERATING_ASSET"
+        },
+        "inventory": {
+          "type": ["number", "null"],
+          "sign": "positive",
+          "level": "component",
+          "subtotal_of": "total_current_assets",
+          "description": "Raw materials, work-in-process (WIP), and finished goods held for sale (critical for manufacturing).",
+          "common_names": ["stock", "goods on hand", "raw materials", "WIP", "finished goods"],
+          "cfs_classification": "CFO_OPERATING_ASSET"
+        },
+        "other_current_assets": {
+          "type": ["number", "null"],
+          "sign": "positive",
+          "level": "component",
+          "subtotal_of": "total_current_assets",
+          "description": "Any other assets expected to be converted to cash or used up within one year, e.g., prepaid expenses.",
+          "common_names": ["miscellaneous current assets", "short-term assets", "prepaids"],
+          "cfs_classification": "CFO_OPERATING_ASSET"
+        },
+        "total_current_assets": {
+          "type": ["number", "null"],
+          "sign": "positive",
+          "level": "subtotal",
+          "subtotal_of": "total_assets",
+          "description": "Sum of all assets expected to be converted to cash or consumed within the next 12 months.",
+          "common_names": ["current assets"]
+        },
+        "ppe_net": {
+          "type": ["number", "null"],
+          "sign": "positive",
+          "level": "component",
+          "subtotal_of": "total_non_current_assets",
+          "description": "Property, plant, and equipment (e.g., factory buildings, machinery, vehicles) at their cost less accumulated depreciation (highly significant for manufacturing).",
+          "common_names": ["fixed assets", "PP&E", "plant and equipment", "tangible assets"],
+          "cfs_classification": "CFI_INVESTING_ASSET"
+        },
+        "intangible_assets_net": {
+          "type": ["number", "null"],
+          "sign": "positive",
+          "level": "component",
+          "subtotal_of": "total_non_current_assets",
+          "description": "Non-physical assets with long-term value, such as patents, trademarks, or software licenses.",
+          "common_names": ["intangibles", "net intangibles"],
+          "cfs_classification": "CFI_INVESTING_ASSET"
+        },
+        "goodwill": {
+          "type": ["number", "null"],
+          "sign": "positive",
+          "level": "component",
+          "subtotal_of": "total_non_current_assets",
+          "description": "Excess of the purchase price over the fair value of identifiable net assets acquired in a business combination.",
+          "common_names": ["goodwill from acquisitions"],
+          "cfs_classification": "CFI_INVESTING_ASSET"
+        },
+        "other_non_current_assets": {
+          "type": ["number", "null"],
+          "sign": "positive",
+          "level": "component",
+          "subtotal_of": "total_non_current_assets",
+          "description": "Assets not expected to be converted to cash or used within one year, not fitting other categories (e.g., long-term investments).",
+          "common_names": ["long-term assets", "miscellaneous non-current assets"],
+          "cfs_classification": "CFO_OPERATING_ASSET"
+        },
+        "total_non_current_assets": {
+          "type": ["number", "null"],
+          "sign": "positive",
+          "level": "subtotal",
+          "subtotal_of": "total_assets",
+          "description": "Sum of all long-term assets.",
+          "common_names": ["non-current assets", "fixed and other assets"]
+        },
+        "total_assets": {
+          "type": ["number", "null"],
+          "sign": "positive",
+          "level": "total",
+          "subtotal_of": null,
+          "description": "Sum of all current and non-current assets owned by the company.",
+          "common_names": ["total assets"]
+        },
+        "accounts_payable": {
+          "type": ["number", "null"],
+          "sign": "negative",
+          "level": "component",
+          "subtotal_of": "total_current_liabilities",
+          "description": "Money owed by the company to its suppliers for raw materials or goods purchased on credit.",
+          "common_names": ["payables", "A/P", "trade payables"],
+          "cfs_classification": "CFO_OPERATING_LIABILITY"
+        },
+        "accrued_expenses": {
+          "type": ["number", "null"],
+          "sign": "negative",
+          "level": "component",
+          "subtotal_of": "total_current_liabilities",
+          "description": "Expenses incurred but not yet paid, such as wages payable, utility bills, or taxes payable.",
+          "common_names": ["accruals", "accrued liabilities"],
+          "cfs_classification": "CFO_OPERATING_LIABILITY"
+        },
+        "current_portion_lt_debt": {
+          "type": ["number", "null"],
+          "sign": "negative",
+          "level": "component",
+          "subtotal_of": "total_current_liabilities",
+          "description": "Portion of long-term debt that is due within the next 12 months.",
+          "common_names": ["current debt", "short-term borrowings"],
+          "cfs_classification": "CFF_FINANCING_LIABILITY"
+        },
+        "other_current_liabilities": {
+          "type": ["number", "null"],
+          "sign": "negative",
+          "level": "component",
+          "subtotal_of": "total_current_liabilities",
+          "description": "Any other obligations due within one year not specifically categorized.",
+          "common_names": ["miscellaneous current liabilities"],
+          "cfs_classification": "CFO_OPERATING_LIABILITY"
+        },
+        "total_current_liabilities": {
+          "type": ["number", "null"],
+          "sign": "negative",
+          "level": "subtotal",
+          "subtotal_of": "total_liabilities",
+          "description": "Sum of all obligations due within the next 12 months.",
+          "common_names": ["current liabilities"]
+        },
+        "long_term_debt": {
+          "type": ["number", "null"],
+          "sign": "negative",
+          "level": "component",
+          "subtotal_of": "total_non_current_liabilities",
+          "description": "Financial obligations that are due more than one year in the future, such as long-term loans or bonds.",
+          "common_names": ["long-term borrowings", "notes payable"],
+          "cfs_classification": "CFF_FINANCING_LIABILITY"
+        },
+        "deferred_tax_liabilities": {
+          "type": ["number", "null"],
+          "sign": "negative",
+          "level": "component",
+          "subtotal_of": "total_non_current_liabilities",
+          "description": "Taxes that are owed but not yet paid, often due to differences in accounting vs. tax rules.",
+          "common_names": ["deferred taxes"],
+          "cfs_classification": "CFO_OPERATING_LIABILITY"
+        },
+        "other_non_current_liabilities": {
+          "type": ["number", "null"],
+          "sign": "negative",
+          "level": "component",
+          "subtotal_of": "total_non_current_liabilities",
+          "description": "Any other long-term obligations not covered in specific categories (e.g., pension liabilities, long-term provisions).",
+          "common_names": ["miscellaneous non-current liabilities", "long-term provisions"],
+          "cfs_classification": "CFO_OPERATING_LIABILITY"
+        },
+        "total_non_current_liabilities": {
+          "type": ["number", "null"],
+          "sign": "negative",
+          "level": "subtotal",
+          "subtotal_of": "total_liabilities",
+          "description": "Sum of all long-term obligations.",
+          "common_names": ["non-current liabilities"]
+        },
+        "total_liabilities": {
+          "type": ["number", "null"],
+          "sign": "negative",
+          "level": "subtotal",
+          "subtotal_of": null,
+          "description": "Sum of all current and non-current liabilities.",
+          "common_names": ["total liabilities"]
+        },
+        "share_capital": {
+          "type": ["number", "null"],
+          "sign": "positive",
+          "level": "component",
+          "subtotal_of": "total_equity",
+          "description": "Capital contributed by shareholders in exchange for stock.",
+          "common_names": ["common stock", "paid-in capital"],
+          "cfs_classification": "CFF_EQUITY"
+        },
+        "retained_earnings": {
+          "type": ["number", "null"],
+          "sign": "both",
+          "level": "component",
+          "subtotal_of": "total_equity",
+          "schema_role": "EQUITY_ROLLFORWARD_ANCHOR",
+          "description": "Accumulated profits of the company not distributed as dividends.",
+          "common_names": ["accumulated earnings"],
+          "cfs_classification": "CFF_EQUITY"
+        },
+        "other_equity_components": {
+          "type": ["number", "null"],
+          "sign": "both",
+          "level": "component",
+          "subtotal_of": "total_equity",
+          "description": "Other components of equity, such as treasury stock, accumulated other comprehensive income, or other reserves.",
+          "common_names": ["AOCI", "treasury stock", "other reserves"],
+          "cfs_classification": "CFF_EQUITY"
+        },
+        "total_equity": {
+          "type": ["number", "null"],
+          "sign": "positive",
+          "level": "total",
+          "subtotal_of": null,
+          "description": "The residual interest in the assets of the company after deducting all its liabilities; represents shareholder's stake.",
+          "common_names": ["shareholder's equity", "owner's equity"]
+        }
+      },
+  
+      "cash_flow_statement": {
+        "summation_plugs": {
+          "type": "object",
+          "level": "metadata",
+          "description": "A dictionary of generated adjustments to reconcile summation rules. Keys are the subtotal fields being reconciled, and values are the required adjustment amounts. This field should be incorporated by downstream models."
+        },
+        "cf_net_profit": {
+          "type": ["number", "null"],
+          "sign": "both",
+          "level": "component",
+          "subtotal_of": "net_cash_operating",
+          "description": "Starting point for cash flow from operations, taken directly from the income statement.",
+          "common_names": ["net income", "profit after tax"],
+          "derivation_source": "IS_PROFIT_ANCHOR",
+          "derivation_type": "direct_from_is"
+        },
+        "cf_depreciation_amortization": {
+          "type": ["number", "null"],
+          "sign": "positive",
+          "level": "component",
+          "subtotal_of": "net_cash_operating",
+          "description": "Non-cash expense added back to net profit as it did not involve an outflow of cash.",
+          "common_names": ["D&A add-back", "non-cash expenses"],
+          "derivation_source": "NON_CASH_CHARGE_CFI",
+          "derivation_type": "non_cash_add_back_is_expense"
+        },
+        "cf_change_accounts_receivable": {
+          "type": ["number", "null"],
+          "sign": "both",
+          "level": "component",
+          "subtotal_of": "net_cash_operating",
+          "description": "Decrease in A/R (cash inflow) or increase (cash outflow) - reflects actual cash collection from customers.",
+          "common_names": ["change in A/R", "movement in receivables"],
+          "derivation_source": "balance_sheet.accounts_receivable",
+          "derivation_type": "delta_asset"
+        },
+        "cf_change_inventory": {
+          "type": ["number", "null"],
+          "sign": "both",
+          "level": "component",
+          "subtotal_of": "net_cash_operating",
+          "description": "Decrease in inventory (cash inflow from selling more than produced) or increase (cash outflow from producing more than sold). Critical for manufacturing.",
+          "common_names": ["change in stock", "inventory movement"],
+          "derivation_source": "balance_sheet.inventory",
+          "derivation_type": "delta_asset"
+        },
+        "cf_change_accounts_payable": {
+          "type": ["number", "null"],
+          "sign": "both",
+          "level": "component",
+          "subtotal_of": "net_cash_operating",
+          "description": "Increase in A/P (cash inflow as payments delayed) or decrease (cash outflow).",
+          "common_names": ["change in A/P", "movement in payables"],
+          "derivation_source": "balance_sheet.accounts_payable",
+          "derivation_type": "delta_liability"
+        },
+        "cf_change_other_operating_assets_liabilities": {
+          "type": ["number", "null"],
+          "sign": "both",
+          "level": "component",
+          "subtotal_of": "net_cash_operating",
+          "description": "Net change in other working capital items related to operations, e.g., prepaid expenses, accrued liabilities.",
+          "common_names": ["change in other current assets/liabilities"],
+          "derivation_source": "BALANCE_SHEET_CFO_REMAINDER",
+          "derivation_type": "delta_remainder_cfo"
+        },
+        "net_cash_operating": {
+          "type": ["number", "null"],
+          "sign": "both",
+          "level": "subtotal",
+          "subtotal_of": "net_change_in_cash",
+          "description": "Total cash generated or used by the company's primary business activities.",
+          "common_names": ["operating cash flow", "OCF", "cash from operations"]
+        },
+        "cf_capex": {
+          "type": ["number", "null"],
+          "sign": "negative",
+          "level": "component",
+          "subtotal_of": "net_cash_investing",
+          "description": "Cash spent on acquiring or improving long-term assets, particularly manufacturing plant and equipment (often substantial for manufacturing).",
+          "common_names": ["capital expenditures", "purchase of PPE", "investments in fixed assets"],
+          "derivation_source": "BALANCE_SHEET_CFI_ASSET_CHANGES",
+          "derivation_type": "derived_capex"
+        },
+        "cf_proceeds_asset_sales": {
+          "type": ["number", "null"],
+          "sign": "positive",
+          "level": "component",
+          "subtotal_of": "net_cash_investing",
+          "description": "Cash received from selling long-term assets.",
+          "common_names": ["sale of assets", "disposal of PPE"],
+          "derivation_source": "EXTERNAL_DATA",
+          "derivation_type": "direct_value_or_zero"
+        },
+        "cf_investments_other": {
+          "type": ["number", "null"],
+          "sign": "both",
+          "level": "component",
+          "subtotal_of": "net_cash_investing",
+          "description": "Cash used for or received from other investment activities (e.g., buying/selling financial investments, acquisitions).",
+          "common_names": ["purchase of investments", "sale of investments"],
+          "derivation_source": "EXTERNAL_DATA",
+          "derivation_type": "direct_value_or_zero"
+        },
+        "net_cash_investing": {
+          "type": ["number", "null"],
+          "sign": "both",
+          "level": "subtotal",
+          "subtotal_of": "net_change_in_cash",
+          "description": "Total cash generated or used from investment activities.",
+          "common_names": ["investing cash flow", "cash from investing"]
+        },
+        "cf_debt_issuance": {
+          "type": ["number", "null"],
+          "sign": "positive",
+          "level": "component",
+          "subtotal_of": "net_cash_financing",
+          "description": "Cash received from issuing new debt.",
+          "common_names": ["proceeds from borrowings", "new loans"],
+          "derivation_source": "EXTERNAL_DATA",
+          "derivation_type": "direct_value_or_zero"
+        },
+        "cf_debt_repayment": {
+          "type": ["number", "null"],
+          "sign": "negative",
+          "level": "component",
+          "subtotal_of": "net_cash_financing",
+          "description": "Cash used to repay principal on debt.",
+          "common_names": ["debt payments", "repayment of loans"],
+          "derivation_source": "EXTERNAL_DATA",
+          "derivation_type": "direct_value_or_zero"
+        },
+        "cf_equity_issuance": {
+          "type": ["number", "null"],
+          "sign": "positive",
+          "level": "component",
+          "subtotal_of": "net_cash_financing",
+          "description": "Cash received from issuing new equity (shares) to investors.",
+          "common_names": ["issuance of shares", "equity proceeds"],
+          "derivation_source": "balance_sheet.share_capital",
+          "derivation_type": "delta_equity_non_re"
+        },
+        "cf_dividends_paid": {
+          "type": ["number", "null"],
+          "sign": "negative",
+          "level": "component",
+          "subtotal_of": "net_cash_financing",
+          "description": "Cash distributed to shareholders as dividends.",
+          "common_names": ["dividends", "cash dividends"],
+          "derivation_source": "DERIVED_DIVIDEND_PLUG",
+          "derivation_type": "derived_dividend_plug"
+        },
+        "cf_share_repurchases": {
+          "type": ["number", "null"],
+          "sign": "negative",
+          "level": "component",
+          "subtotal_of": "net_cash_financing",
+          "description": "Cash used to buy back company shares from the market.",
+          "common_names": ["stock repurchases", "treasury stock purchases"],
+          "derivation_source": "EXTERNAL_DATA",
+          "derivation_type": "direct_value_or_zero"
+        },
+        "net_cash_financing": {
+          "type": ["number", "null"],
+          "sign": "both",
+          "level": "subtotal",
+          "subtotal_of": "net_change_in_cash",
+          "description": "Total cash generated or used from debt and equity activities.",
+          "common_names": ["financing cash flow", "cash from financing"]
+        },
+        "net_change_in_cash": {
+          "type": ["number", "null"],
+          "sign": "both",
+          "level": "total",
+          "subtotal_of": "N/A",
+          "description": "The net increase or decrease in cash and cash equivalents for the period.",
+          "common_names": ["increase/decrease in cash"]
+        },
+        "beginning_cash_balance": {
+          "type": ["number", "null"],
+          "sign": "positive",
+          "level": "component",
+          "subtotal_of": "ending_cash_balance",
+          "description": "Cash balance at the beginning of the reporting period.",
+          "common_names": ["cash at start of period", "prior period cash"]
+        },
+        "ending_cash_balance": {
+          "type": ["number", "null"],
+          "sign": "positive",
+          "level": "total",
+          "subtotal_of": null,
+          "description": "Cash balance at the end of the reporting period (beginning cash + net change in cash).",
+          "common_names": ["cash at end of period"]
+        }
+      },
+  
+      "key_ratios": {
+        "gross_margin_pct": {
+          "type": ["number", "null"],
+          "sign": "positive",
+          "description": "Indicates the profitability of each product sold after direct production costs. Calculation: (gross_profit / total_revenue) * 100",
+          "common_names": ["gross profit margin"]
+        },
+        "operating_margin_pct": {
+          "type": ["number", "null"],
+          "sign": "both",
+          "description": "Measures efficiency of operations after accounting for COGS and all operating expenses. Calculation: (operating_profit / total_revenue) * 100",
+          "common_names": ["EBIT margin"]
+        },
+        "net_profit_margin_pct": {
+          "type": ["number", "null"],
+          "sign": "both",
+          "description": "Overall profitability after all expenses and taxes. Calculation: (net_profit / total_revenue) * 100",
+          "common_names": ["net income margin"]
+        },
+        "inventory_turns": {
+          "type": ["number", "null"],
+          "sign": "positive",
+          "description": "Measures how many times inventory is sold and replaced over a period; indicates inventory management efficiency. Calculation: cost_of_goods_sold / average_inventory (requires average of beginning and ending inventory from balance sheet, or just ending if one period).",
+          "common_names": ["inventory turnover"]
+        },
+        "accounts_receivable_days": {
+          "type": ["number", "null"],
+          "sign": "positive",
+          "description": "Average number of days it takes for customers to pay after product sale. Calculation: (accounts_receivable / product_sales) * 365",
+          "common_names": ["days sales outstanding", "DSO"]
+        },
+        "current_ratio": {
+          "type": ["number", "null"],
+          "sign": "positive",
+          "description": "Measures short-term liquidity, ability to cover short-term liabilities with current assets. Calculation: total_current_assets / total_current_liabilities",
+          "common_names": ["working capital ratio"]
+        },
+        "debt_to_equity_ratio": {
+          "type": ["number", "null"],
+          "sign": "positive",
+          "description": "Indicates financial leverage, the proportion of financing from debt vs. equity. Calculation: (current_portion_lt_debt + long_term_debt) / total_equity",
+          "common_names": ["D/E ratio"]
+        },
+        "interest_coverage_ratio": {
+          "type": ["number", "null"],
+          "sign": "positive",
+          "description": "Ability to cover interest payments with operating earnings. Calculation: operating_profit / interest_expense",
+          "common_names": ["times interest earned"]
+        },
+        "operating_cash_flow_to_revenue_pct": {
+          "type": ["number", "null"],
+          "sign": "both",
+          "description": "Measures how efficiently revenue is converted into cash from operations. Calculation: (net_cash_operating / total_revenue) * 100",
+          "common_names": ["cash conversion ratio (operating)", "OCF margin"]
+        },
+        "capex_to_revenue_pct": {
+          "type": ["number", "null"],
+          "sign": "positive",
+          "description": "Indicates how much capital investment is required to generate revenue; typically higher for manufacturing. Calculation: (cf_capex * -1) / total_revenue (cf_capex is negative in CF statement, so multiply by -1 for a positive ratio)",
+          "common_names": ["capital intensity", "capex ratio"]
+        },
+        "free_cash_flow": {
+          "type": ["number", "null"],
+          "sign": "both",
+          "description": "Cash available after paying for operating expenses and capital expenditures; indicates financial flexibility. Calculation: net_cash_operating + cf_capex (cf_capex is negative in CF statement, so adding it back effectively subtracts it).",
+          "common_names": ["FCF"]
+        }
+      }
+    }
+  }

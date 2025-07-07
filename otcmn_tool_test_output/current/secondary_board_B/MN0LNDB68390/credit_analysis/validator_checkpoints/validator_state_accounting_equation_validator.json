@@ -1,0 +1,563 @@
+{
+  "security_id": "MN0LNDB68390",
+  "validator": "accounting_equation_validator",
+  "original_data": {
+    "base_unit_of_measure": "MNT",
+    "unit_conversion_notes": "Financial figures were extracted from various tables and paragraphs. Numbers from detailed financial statements (Documents 3, 4, 5, 6, 8-19) were multiplied by 1,000 as they appeared to be presented in thousands of MNT relative to the bond principal's magnitude (1,000,000,000 MNT). Numbers from summary tables labeled 'сая төгрөгөөр' or 'сая төгрөг' (Documents 3, 7) were multiplied by 1,000,000,000 as the presented values (tens/hundreds) needed to be scaled to the billion-level principal, overriding the 'million' label. Explicitly stated 'тэрбум төгрөг' values (Document 1) were used as is. Where multiple sources provided slightly different values for the same period and item, values from detailed statements or explicitly stated billion figures were prioritized.",
+    "mapped_historical_data": [
+      {
+        "reporting_period_end_date": "2022-12-31",
+        "reporting_period_type": "Annual",
+        "income_statement": {
+          "interest_income": 20214948000.0,
+          "interest_expense": -3949884000.0,
+          "net_interest_income": 16265064000.0,
+          "impairment_loss_on_loans": -1438655000.0,
+          "operating_income": 14826409000.0,
+          "management_and_operating_expenses": -7656249000.0,
+          "other_income_expense": -637914000.0,
+          "profit_before_tax": 6532246000.0,
+          "income_tax_expense": -1007265000.0,
+          "net_profit": 5524981000.0,
+          "depreciation_amortization": -433297000.0,
+          "summation_plugs": {
+            "operating_income": 1438655000.0,
+            "profit_before_tax": -1438655000.0
+          }
+        },
+        "balance_sheet": {
+          "total_assets": 76858757000.0,
+          "cash_and_equivalents": 5217581000.0,
+          "loans_receivable_net": 65506280000.0,
+          "loans_receivable_gross": 72883406000.0,
+          "loan_loss_reserve": -3297126000.0,
+          "other_assets": 768409000.0,
+          "fixed_assets": 373470000.0,
+          "intangible_assets": 401095000.0,
+          "total_liabilities": 52628856000.0,
+          "loans_payable": 11768024000.0,
+          "bonds_payable": 10769582000.0,
+          "trust_payables": 21688257000.0,
+          "asset_backed_securities": 4679661000.0,
+          "lease_liabilities": 285772000.0,
+          "other_payables": 2622414000.0,
+          "income_tax_payable": 815146000.0,
+          "total_equity": 24229901000.0,
+          "share_capital": 10756859000.0,
+          "treasury_stock": -2337547000.0,
+          "retained_earnings": 15753241000.0,
+          "other_equity": 57348000.0,
+          "non_performing_loans_amount": 2830000000.0,
+          "summation_plugs": {
+            "loans_receivable_net": 4080000000.0,
+            "total_non_current_assets": -4591922000.0
+          },
+          "other_current_assets": 0.0,
+          "total_current_assets": 70723861000.0,
+          "total_non_current_assets": 5366487000.0,
+          "total_liabilities_and_equity": 76858757000.0
+        },
+        "cash_flow_statement": {
+          "net_cash_from_operations": -28482167000.0,
+          "net_cash_from_investing": -284665000.0,
+          "net_cash_from_financing": 29080735000.0,
+          "net_change_in_cash": 313903000.0,
+          "capex": -112435000.0,
+          "cfs_net_profit": 0.0,
+          "depreciation_amortization": 0.0,
+          "beginning_cash_balance": 0.0,
+          "ending_cash_balance": 0.0
+        }
+      },
+      {
+        "reporting_period_end_date": "2023-12-31",
+        "reporting_period_type": "Annual",
+        "income_statement": {
+          "interest_income": 47842587000.0,
+          "interest_expense": -9527344000.0,
+          "net_interest_income": 38315243000.0,
+          "impairment_loss_on_loans": -2684956000.0,
+          "operating_income": 35630287000.0,
+          "management_and_operating_expenses": -10223598000.0,
+          "other_income_expense": -35966000.0,
+          "profit_before_tax": 25370723000.0,
+          "income_tax_expense": -5574907000.0,
+          "net_profit": 19795816000.0,
+          "depreciation_amortization": -615968000.0,
+          "summation_plugs": {
+            "operating_income": 2684956000.0,
+            "profit_before_tax": -2684956000.0
+          }
+        },
+        "balance_sheet": {
+          "total_assets": 133468951000.0,
+          "cash_and_equivalents": 7885968000.0,
+          "loans_receivable_net": 123462373000.0,
+          "loans_receivable_gross": 129129295000.0,
+          "loan_loss_reserve": -5666922000.0,
+          "other_assets": 415965000.0,
+          "fixed_assets": 306158000.0,
+          "intangible_assets": 355542000.0,
+          "total_liabilities": 90737012000.0,
+          "loans_payable": 28920602000.0,
+          "bonds_payable": 12058824000.0,
+          "trust_payables": 36466251000.0,
+          "asset_backed_securities": 4798243000.0,
+          "lease_liabilities": 981642000.0,
+          "other_payables": 3863865000.0,
+          "income_tax_payable": 3638541000.0,
+          "total_equity": 42731939000.0,
+          "share_capital": 10756859000.0,
+          "treasury_stock": -2337547000.0,
+          "retained_earnings": 34255279000.0,
+          "other_equity": 57348000.0,
+          "non_performing_loans_amount": 5160000000.0,
+          "summation_plugs": {
+            "total_non_current_assets": -1042945000.0,
+            "total_liabilities": -9044000.0
+          },
+          "other_current_assets": 0.0,
+          "total_current_assets": 131348341000.0,
+          "total_non_current_assets": 1704645000.0,
+          "total_liabilities_and_equity": 133468951000.0
+        },
+        "cash_flow_statement": {
+          "net_cash_from_operations": -16988694000.0,
+          "net_cash_from_investing": -284665000.0,
+          "net_cash_from_financing": 29080735000.0,
+          "net_change_in_cash": 313903000.0,
+          "capex": -112435000.0,
+          "cfs_net_profit": 0.0,
+          "depreciation_amortization": 0.0,
+          "beginning_cash_balance": 0.0,
+          "ending_cash_balance": 0.0
+        }
+      },
+      {
+        "reporting_period_end_date": "2024-06-30",
+        "reporting_period_type": "Semi-Annual",
+        "income_statement": {
+          "interest_income": 63913350000.0,
+          "interest_expense": -16209072000.0,
+          "net_interest_income": 47704277000.0,
+          "impairment_loss_on_loans": -3464687000.0,
+          "operating_income": 44239590000.0,
+          "management_and_operating_expenses": -19194466000.0,
+          "profit_before_tax": 35748040000.0,
+          "income_tax_expense": -8465283000.0,
+          "net_profit": 27282757000.0,
+          "summation_plugs": {
+            "net_interest_income": 1000.0,
+            "operating_income": 3464687000.0
+          },
+          "other_income_expense": 14167603000.0,
+          "depreciation_amortization": 0.0
+        },
+        "balance_sheet": {
+          "total_assets": 228114286000.0,
+          "cash_and_equivalents": 16234244000.0,
+          "loans_receivable_net": 200834900000.0,
+          "fixed_assets": 8354843000.0,
+          "intangible_assets": 2648977000.0,
+          "total_liabilities": 161160417000.0,
+          "loans_payable": 140830700000.0,
+          "other_payables": 19287170000.0,
+          "total_equity": 64963860000.0,
+          "share_capital": 10756859000.0,
+          "treasury_stock": -2337547000.0,
+          "retained_earnings": 55642200000.0,
+          "other_equity": 2902348000.0,
+          "summation_plugs": {
+            "total_assets": -11045142000.0,
+            "total_liabilities": -1042547000.0,
+            "total_equity": 2000000000.0
+          },
+          "loan_loss_reserve": 0.0,
+          "other_current_assets": 0.0,
+          "total_current_assets": 217069144000.0,
+          "total_non_current_assets": 11003820000.0,
+          "bonds_payable": 0.0,
+          "trust_payables": 0.0,
+          "total_liabilities_and_equity": 226124277000.0,
+          "non_performing_loans_amount": 0.0,
+          "loans_receivable_gross": 0.0,
+          "other_assets": 0.0,
+          "asset_backed_securities": 0.0,
+          "lease_liabilities": 0.0,
+          "income_tax_payable": 0.0
+        },
+        "cash_flow_statement": {
+          "cfs_net_profit": 0.0,
+          "net_cash_from_operations": 0.0,
+          "net_cash_from_investing": 0.0,
+          "net_cash_from_financing": 0.0,
+          "net_change_in_cash": 0.0,
+          "capex": 0.0,
+          "depreciation_amortization": 0.0,
+          "beginning_cash_balance": 0.0,
+          "ending_cash_balance": 0.0
+        }
+      },
+      {
+        "reporting_period_end_date": "2024-09-30",
+        "reporting_period_type": "Quarterly",
+        "income_statement": {
+          "net_profit": 27300000000.0,
+          "interest_income": 64000000000.0,
+          "interest_expense": -16300000000.0,
+          "net_interest_income": 40280000000.0,
+          "impairment_loss_on_loans": -3480000000.0,
+          "operating_income": 36000000000.0,
+          "management_and_operating_expenses": -9540000000.0,
+          "other_income_expense": 8250000000.0,
+          "profit_before_tax": 35510000000.0,
+          "income_tax_expense": -8420000000.0,
+          "summation_plugs": {
+            "net_interest_income": 7420000000.0,
+            "operating_income": 4280000000.0,
+            "profit_before_tax": -4280000000.0,
+            "net_profit": -210000000.0
+          },
+          "depreciation_amortization": 0.0
+        },
+        "balance_sheet": {
+          "total_assets": 226270000000.0,
+          "cash_and_equivalents": 10290000000.0,
+          "loans_receivable_net": 208590000000.0,
+          "loan_loss_reserve": -9160000000.0,
+          "other_current_assets": 4600000000.0,
+          "total_current_assets": 224480000000.0,
+          "fixed_assets": 1640000000.0,
+          "intangible_assets": 150000000.0,
+          "total_non_current_assets": 1790000000.0,
+          "total_liabilities": 159910000000.0,
+          "bonds_payable": 25270000000.0,
+          "trust_payables": 53480000000.0,
+          "loans_payable": 18990000000.0,
+          "other_payables": 62180000000.0,
+          "total_equity": 66410000000.0,
+          "share_capital": 10800000000.0,
+          "treasury_stock": -2340000000.0,
+          "retained_earnings": 55040000000.0,
+          "other_equity": 2500000000.0,
+          "total_liabilities_and_equity": 226320000000.0,
+          "non_performing_loans_amount": 8090000000.0,
+          "summation_plugs": {
+            "total_current_assets": -1000000000.0,
+            "total_liabilities": 10000000.0,
+            "total_equity": -410000000.0
+          },
+          "loans_receivable_gross": 217750000000.0,
+          "other_assets": 0.0,
+          "asset_backed_securities": 0.0,
+          "lease_liabilities": 0.0,
+          "income_tax_payable": 0.0
+        },
+        "cash_flow_statement": {
+          "cfs_net_profit": 0.0,
+          "net_cash_from_operations": 0.0,
+          "net_cash_from_investing": 0.0,
+          "net_cash_from_financing": 0.0,
+          "net_change_in_cash": 0.0,
+          "capex": 0.0,
+          "depreciation_amortization": 0.0,
+          "beginning_cash_balance": 0.0,
+          "ending_cash_balance": 0.0
+        }
+      }
+    ]
+  },
+  "result": {
+    "valid": true,
+    "errors": [],
+    "warnings": [
+      "Accounting equation discrepancy found in period 2. A plug of 1,990,009,000.00 was recorded for reconciliation.",
+      "Accounting equation discrepancy found in period 3. A plug of -50,000,000.00 was recorded for reconciliation."
+    ],
+    "transformations": [
+      {
+        "field": "mapped_historical_data[2].balance_sheet.summation_plugs.__accounting_equation__",
+        "original_value": null,
+        "new_value": 1990009000.0,
+        "reason": "Plug generated to reconcile A=L+E for downstream use.",
+        "validator": "accounting_equation_validator"
+      },
+      {
+        "field": "mapped_historical_data[3].balance_sheet.summation_plugs.__accounting_equation__",
+        "original_value": null,
+        "new_value": -50000000.0,
+        "reason": "Plug generated to reconcile A=L+E for downstream use.",
+        "validator": "accounting_equation_validator"
+      }
+    ],
+    "transformed_data": {
+      "base_unit_of_measure": "MNT",
+      "unit_conversion_notes": "Financial figures were extracted from various tables and paragraphs. Numbers from detailed financial statements (Documents 3, 4, 5, 6, 8-19) were multiplied by 1,000 as they appeared to be presented in thousands of MNT relative to the bond principal's magnitude (1,000,000,000 MNT). Numbers from summary tables labeled 'сая төгрөгөөр' or 'сая төгрөг' (Documents 3, 7) were multiplied by 1,000,000,000 as the presented values (tens/hundreds) needed to be scaled to the billion-level principal, overriding the 'million' label. Explicitly stated 'тэрбум төгрөг' values (Document 1) were used as is. Where multiple sources provided slightly different values for the same period and item, values from detailed statements or explicitly stated billion figures were prioritized.",
+      "mapped_historical_data": [
+        {
+          "reporting_period_end_date": "2022-12-31",
+          "reporting_period_type": "Annual",
+          "income_statement": {
+            "interest_income": 20214948000.0,
+            "interest_expense": -3949884000.0,
+            "net_interest_income": 16265064000.0,
+            "impairment_loss_on_loans": -1438655000.0,
+            "operating_income": 14826409000.0,
+            "management_and_operating_expenses": -7656249000.0,
+            "other_income_expense": -637914000.0,
+            "profit_before_tax": 6532246000.0,
+            "income_tax_expense": -1007265000.0,
+            "net_profit": 5524981000.0,
+            "depreciation_amortization": -433297000.0,
+            "summation_plugs": {
+              "operating_income": 1438655000.0,
+              "profit_before_tax": -1438655000.0
+            }
+          },
+          "balance_sheet": {
+            "total_assets": 76858757000.0,
+            "cash_and_equivalents": 5217581000.0,
+            "loans_receivable_net": 65506280000.0,
+            "loans_receivable_gross": 72883406000.0,
+            "loan_loss_reserve": -3297126000.0,
+            "other_assets": 768409000.0,
+            "fixed_assets": 373470000.0,
+            "intangible_assets": 401095000.0,
+            "total_liabilities": 52628856000.0,
+            "loans_payable": 11768024000.0,
+            "bonds_payable": 10769582000.0,
+            "trust_payables": 21688257000.0,
+            "asset_backed_securities": 4679661000.0,
+            "lease_liabilities": 285772000.0,
+            "other_payables": 2622414000.0,
+            "income_tax_payable": 815146000.0,
+            "total_equity": 24229901000.0,
+            "share_capital": 10756859000.0,
+            "treasury_stock": -2337547000.0,
+            "retained_earnings": 15753241000.0,
+            "other_equity": 57348000.0,
+            "non_performing_loans_amount": 2830000000.0,
+            "summation_plugs": {
+              "loans_receivable_net": 4080000000.0,
+              "total_non_current_assets": -4591922000.0
+            },
+            "other_current_assets": 0.0,
+            "total_current_assets": 70723861000.0,
+            "total_non_current_assets": 5366487000.0,
+            "total_liabilities_and_equity": 76858757000.0
+          },
+          "cash_flow_statement": {
+            "net_cash_from_operations": -28482167000.0,
+            "net_cash_from_investing": -284665000.0,
+            "net_cash_from_financing": 29080735000.0,
+            "net_change_in_cash": 313903000.0,
+            "capex": -112435000.0,
+            "cfs_net_profit": 0.0,
+            "depreciation_amortization": 0.0,
+            "beginning_cash_balance": 0.0,
+            "ending_cash_balance": 0.0
+          }
+        },
+        {
+          "reporting_period_end_date": "2023-12-31",
+          "reporting_period_type": "Annual",
+          "income_statement": {
+            "interest_income": 47842587000.0,
+            "interest_expense": -9527344000.0,
+            "net_interest_income": 38315243000.0,
+            "impairment_loss_on_loans": -2684956000.0,
+            "operating_income": 35630287000.0,
+            "management_and_operating_expenses": -10223598000.0,
+            "other_income_expense": -35966000.0,
+            "profit_before_tax": 25370723000.0,
+            "income_tax_expense": -5574907000.0,
+            "net_profit": 19795816000.0,
+            "depreciation_amortization": -615968000.0,
+            "summation_plugs": {
+              "operating_income": 2684956000.0,
+              "profit_before_tax": -2684956000.0
+            }
+          },
+          "balance_sheet": {
+            "total_assets": 133468951000.0,
+            "cash_and_equivalents": 7885968000.0,
+            "loans_receivable_net": 123462373000.0,
+            "loans_receivable_gross": 129129295000.0,
+            "loan_loss_reserve": -5666922000.0,
+            "other_assets": 415965000.0,
+            "fixed_assets": 306158000.0,
+            "intangible_assets": 355542000.0,
+            "total_liabilities": 90737012000.0,
+            "loans_payable": 28920602000.0,
+            "bonds_payable": 12058824000.0,
+            "trust_payables": 36466251000.0,
+            "asset_backed_securities": 4798243000.0,
+            "lease_liabilities": 981642000.0,
+            "other_payables": 3863865000.0,
+            "income_tax_payable": 3638541000.0,
+            "total_equity": 42731939000.0,
+            "share_capital": 10756859000.0,
+            "treasury_stock": -2337547000.0,
+            "retained_earnings": 34255279000.0,
+            "other_equity": 57348000.0,
+            "non_performing_loans_amount": 5160000000.0,
+            "summation_plugs": {
+              "total_non_current_assets": -1042945000.0,
+              "total_liabilities": -9044000.0
+            },
+            "other_current_assets": 0.0,
+            "total_current_assets": 131348341000.0,
+            "total_non_current_assets": 1704645000.0,
+            "total_liabilities_and_equity": 133468951000.0
+          },
+          "cash_flow_statement": {
+            "net_cash_from_operations": -16988694000.0,
+            "net_cash_from_investing": -284665000.0,
+            "net_cash_from_financing": 29080735000.0,
+            "net_change_in_cash": 313903000.0,
+            "capex": -112435000.0,
+            "cfs_net_profit": 0.0,
+            "depreciation_amortization": 0.0,
+            "beginning_cash_balance": 0.0,
+            "ending_cash_balance": 0.0
+          }
+        },
+        {
+          "reporting_period_end_date": "2024-06-30",
+          "reporting_period_type": "Semi-Annual",
+          "income_statement": {
+            "interest_income": 63913350000.0,
+            "interest_expense": -16209072000.0,
+            "net_interest_income": 47704277000.0,
+            "impairment_loss_on_loans": -3464687000.0,
+            "operating_income": 44239590000.0,
+            "management_and_operating_expenses": -19194466000.0,
+            "profit_before_tax": 35748040000.0,
+            "income_tax_expense": -8465283000.0,
+            "net_profit": 27282757000.0,
+            "summation_plugs": {
+              "net_interest_income": 1000.0,
+              "operating_income": 3464687000.0
+            },
+            "other_income_expense": 14167603000.0,
+            "depreciation_amortization": 0.0
+          },
+          "balance_sheet": {
+            "total_assets": 228114286000.0,
+            "cash_and_equivalents": 16234244000.0,
+            "loans_receivable_net": 200834900000.0,
+            "fixed_assets": 8354843000.0,
+            "intangible_assets": 2648977000.0,
+            "total_liabilities": 161160417000.0,
+            "loans_payable": 140830700000.0,
+            "other_payables": 19287170000.0,
+            "total_equity": 64963860000.0,
+            "share_capital": 10756859000.0,
+            "treasury_stock": -2337547000.0,
+            "retained_earnings": 55642200000.0,
+            "other_equity": 2902348000.0,
+            "summation_plugs": {
+              "total_assets": -11045142000.0,
+              "total_liabilities": -1042547000.0,
+              "total_equity": 2000000000.0,
+              "__accounting_equation__": 1990009000.0
+            },
+            "loan_loss_reserve": 0.0,
+            "other_current_assets": 0.0,
+            "total_current_assets": 217069144000.0,
+            "total_non_current_assets": 11003820000.0,
+            "bonds_payable": 0.0,
+            "trust_payables": 0.0,
+            "total_liabilities_and_equity": 226124277000.0,
+            "non_performing_loans_amount": 0.0,
+            "loans_receivable_gross": 0.0,
+            "other_assets": 0.0,
+            "asset_backed_securities": 0.0,
+            "lease_liabilities": 0.0,
+            "income_tax_payable": 0.0
+          },
+          "cash_flow_statement": {
+            "cfs_net_profit": 0.0,
+            "net_cash_from_operations": 0.0,
+            "net_cash_from_investing": 0.0,
+            "net_cash_from_financing": 0.0,
+            "net_change_in_cash": 0.0,
+            "capex": 0.0,
+            "depreciation_amortization": 0.0,
+            "beginning_cash_balance": 0.0,
+            "ending_cash_balance": 0.0
+          }
+        },
+        {
+          "reporting_period_end_date": "2024-09-30",
+          "reporting_period_type": "Quarterly",
+          "income_statement": {
+            "net_profit": 27300000000.0,
+            "interest_income": 64000000000.0,
+            "interest_expense": -16300000000.0,
+            "net_interest_income": 40280000000.0,
+            "impairment_loss_on_loans": -3480000000.0,
+            "operating_income": 36000000000.0,
+            "management_and_operating_expenses": -9540000000.0,
+            "other_income_expense": 8250000000.0,
+            "profit_before_tax": 35510000000.0,
+            "income_tax_expense": -8420000000.0,
+            "summation_plugs": {
+              "net_interest_income": 7420000000.0,
+              "operating_income": 4280000000.0,
+              "profit_before_tax": -4280000000.0,
+              "net_profit": -210000000.0
+            },
+            "depreciation_amortization": 0.0
+          },
+          "balance_sheet": {
+            "total_assets": 226270000000.0,
+            "cash_and_equivalents": 10290000000.0,
+            "loans_receivable_net": 208590000000.0,
+            "loan_loss_reserve": -9160000000.0,
+            "other_current_assets": 4600000000.0,
+            "total_current_assets": 224480000000.0,
+            "fixed_assets": 1640000000.0,
+            "intangible_assets": 150000000.0,
+            "total_non_current_assets": 1790000000.0,
+            "total_liabilities": 159910000000.0,
+            "bonds_payable": 25270000000.0,
+            "trust_payables": 53480000000.0,
+            "loans_payable": 18990000000.0,
+            "other_payables": 62180000000.0,
+            "total_equity": 66410000000.0,
+            "share_capital": 10800000000.0,
+            "treasury_stock": -2340000000.0,
+            "retained_earnings": 55040000000.0,
+            "other_equity": 2500000000.0,
+            "total_liabilities_and_equity": 226320000000.0,
+            "non_performing_loans_amount": 8090000000.0,
+            "summation_plugs": {
+              "total_current_assets": -1000000000.0,
+              "total_liabilities": 10000000.0,
+              "total_equity": -410000000.0,
+              "__accounting_equation__": -50000000.0
+            },
+            "loans_receivable_gross": 217750000000.0,
+            "other_assets": 0.0,
+            "asset_backed_securities": 0.0,
+            "lease_liabilities": 0.0,
+            "income_tax_payable": 0.0
+          },
+          "cash_flow_statement": {
+            "cfs_net_profit": 0.0,
+            "net_cash_from_operations": 0.0,
+            "net_cash_from_investing": 0.0,
+            "net_cash_from_financing": 0.0,
+            "net_change_in_cash": 0.0,
+            "capex": 0.0,
+            "depreciation_amortization": 0.0,
+            "beginning_cash_balance": 0.0,
+            "ending_cash_balance": 0.0
+          }
+        }
+      ]
+    },
+    "metadata": null
+  }
+}

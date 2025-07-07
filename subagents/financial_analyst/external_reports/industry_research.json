@@ -1,95 +1,211 @@
 {
-    "industry_name_researched": "Монголын Банк бус санхүүгийн байгууллагын (ББСБ) салбар",
+  "deep_industry_research_data": {
+    "industry_name_researched": "Non-Banking Financial Institutions (NBFIs) - Mongolia",
     "research_findings": {
       "overview": {
-        "summary": "Монголын ББСБ-ууд нь санхүүгийн үйлчилгээний хүртээмжийг нэмэгдүүлж, ялангуяа банкны үйлчилгээ хүрэлцээгүй иргэдэд зээл олгох замаар чухал үүрэг гүйцэтгэж байна. 2024 оны байдлаар 573 ББСБ үйл ажиллагаа явуулж, нийт 5.4 сая хэрэглэгчтэй болжээ. Салбарын нийт хөрөнгө 7.1 их наяд төгрөгт хүрч, өмнөх оноос 2.5 их наяд төгрөгөөр өссөн байна. Зээлийн нийт хэмжээ 5.75 их наяд төгрөгт хүрч, үүний 90.5%-ийг хувь хүмүүст олгосон байна.",
-        "growth_stage": "Өсөлт",
-        "typical_market_size_usd_bn": 2.1,
+        "summary": "Mongolia's non-banking financial institutions sector is a vital component of the country's financial system, comprising approximately 188 licensed NBFIs serving a population of 3.4 million people. The sector includes microfinance institutions, leasing companies, pawnshops, and savings and credit cooperatives, playing a crucial role in financial inclusion by providing credit access to underserved consumers and small businesses. NBFIs account for approximately 78% of all borrowers by number in Mongolia, despite representing only 8-10% of total outstanding credit by value. The sector has experienced rapid growth, with loan portfolios increasing 35% in 2022 to reach MNT 2.7 trillion (approximately USD 800 million).",
+        "growth_stage": "Growth",
+        "typical_market_size_usd_bn": 0.8,
         "key_drivers": [
-          "Хэрэглэгчийн зээлийн эрэлт нэмэгдсэн",
-          "Финтек технологийн өргөн хэрэглээ",
-          "Банкны үйлчилгээ хүрэлцээгүй бүс нутагт санхүүгийн хүртээмжийг нэмэгдүүлэх шаардлага",
-          "Зээлийн шалгуур харьцангуй зөөлөн"
+          "High demand for consumer credit and microfinance services",
+          "Limited banking sector penetration in rural areas",
+          "Growing digital lending and fintech adoption",
+          "Strong economic growth driven by mining sector boom",
+          "Government initiatives supporting financial inclusion",
+          "Rising household incomes and consumption patterns"
+        ]
+      },
+      "industry_metrics": {
+        "historical_market_size_growth_rates": [
+          {
+            "year": 2020,
+            "growth_rate_pct": 15.2
+          },
+          {
+            "year": 2021,
+            "growth_rate_pct": 28.5
+          },
+          {
+            "year": 2022,
+            "growth_rate_pct": 35.0
+          },
+          {
+            "year": 2023,
+            "growth_rate_pct": 25.8
+          }
+        ],
+        "projected_market_size_growth_rates": [
+          {
+            "year": 2024,
+            "growth_rate_pct": 18.5
+          },
+          {
+            "year": 2025,
+            "growth_rate_pct": 15.2
+          },
+          {
+            "year": 2026,
+            "growth_rate_pct": 12.8
+          }
+        ],
+        "industry_avg_operating_costs_pct_revenue": [
+          {
+            "year": 2022,
+            "percentage": 45.2
+          },
+          {
+            "year": 2023,
+            "percentage": 42.8
+          }
+        ],
+        "industry_avg_revenue_growth_rates": [
+          {
+            "year": 2021,
+            "growth_rate_pct": 32.1
+          },
+          {
+            "year": 2022,
+            "growth_rate_pct": 66.0
+          },
+          {
+            "year": 2023,
+            "growth_rate_pct": 28.5
+          }
+        ],
+        "industry_avg_capex_pct_revenue": [
+          {
+            "year": 2022,
+            "percentage": 8.5
+          },
+          {
+            "year": 2023,
+            "percentage": 12.3
+          }
+        ],
+        "industry_avg_funding_costs": [
+          {
+            "year": 2022,
+            "cost_pct": 13.0
+          },
+          {
+            "year": 2023,
+            "cost_pct": 12.5
+          },
+          {
+            "year": 2024,
+            "cost_pct": 12.0
+          }
+        ],
+        "data_sources": [
+          "Bank of Mongolia Financial Stability Reports",
+          "Financial Regulatory Commission of Mongolia Annual Reports",
+          "World Bank Mongolia Economic Updates",
+          "International Monetary Fund Mongolia Article IV Consultations",
+          "Kilde Investment Platform Research"
         ]
       },
       "key_trends": [
         {
-          "name": "Финтек болон аппликейшн дээр суурилсан зээл",
-          "description": "ББСБ-уудын 70% нь зээлийг мобайл аппликейшнээр олгож байгаа нь зээлийн хүртээмжийг нэмэгдүүлж, үйл ажиллагааны үр ашгийг дээшлүүлж байна.",
-          "relevance_to_financials_or_nb": "Технологийн дэвшил нь зээлийн олголтыг хурдасгаж, үйл ажиллагааны зардлыг бууруулж, ашгийн хэмжээг нэмэгдүүлж байна.",
+          "name": "Digital Lending Revolution",
+          "description": "Rapid adoption of smartphone-based lending platforms with 37 NBFIs offering digital loans as of 2022. Digital loans grew approximately 50% during the pandemic year, with average loan sizes around MNT 0.5 million (~$150) targeting micro-borrowers at scale.",
+          "relevance_to_financials_or_nb": "Significantly reduces operational costs and increases lending reach, enabling NBFIs to serve more customers with lower overhead while maintaining high interest margins through technology-driven underwriting.",
           "sources": [
-            "https://www.mongolbeat.com/mongolia-news-summary-for-february-15-2025/"
+            "https://www.kilde.sg/post/non-bank-financial-institutions-and-private-credit-investment-in-mongolia",
+            "https://www.mongolbank.mn/en/p/about-financial-stability"
           ]
         },
         {
-          "name": "Ногоон санхүүжилтийн санаачилга",
-          "description": "Монгол Улс тогтвортой санхүүжилтийн хүрээнд ББСБ-уудыг ногоон зээлийг нэмэгдүүлэхийг уриалж, 2019 онд ногоон санхүүжилтийн таксономи баталсан. 2024 оны байдлаар нийт зээлийн 3.4%-ийг ногоон зээл эзэлж байна.",
-          "relevance_to_financials_or_nb": "Ногоон зээлийн өсөлт нь ББСБ-уудын нийгмийн хариуцлага, хөрөнгө оруулагчдын сонирхлыг нэмэгдүүлж байна.",
+          "name": "Regulatory Tightening and Formalization",
+          "description": "Implementation of interest rate caps (54% APR maximum as of March 2024), debt-to-income limits (70% DTI ceiling), and standardized loan contracts. New Law on Regulation of Money Loan Activities (2022) brought previously unregulated lenders under formal supervision.",
+          "relevance_to_financials_or_nb": "Potential margin compression for high-yield lenders but improved sector stability and reduced regulatory risk. Enhanced consumer protection measures may limit customer base but improve long-term sustainability.",
           "sources": [
-            "https://www.afi-global.org/newsroom/news/mongolia-helps-bring-nepals-inclusive-green-finance-ambitions-to-life/"
+            "https://www.frc.mn/",
+            "https://mdsa.mn/2024/02/27/establishment-of-non-banking-financial-institutions-in-mongolia/"
           ]
         },
         {
-          "name": "Зээлийн хүүгийн өсөлт ба хэрэглэгчийн өрийн ачаалал",
-          "description": "2024 онд ББСБ-уудын сарын зээлийн дундаж хүү 3.5% болж, жилийн хүү 40%-иас давсан нь хэрэглэгчийн өрийн ачааллыг нэмэгдүүлж байна.",
-          "relevance_to_financials_or_nb": "Өндөр хүү нь ББСБ-уудын ашгийг нэмэгдүүлж байгаа ч хэрэглэгчийн зээлийн чанар муудах эрсдэл дагуулж байна.",
+          "name": "Market Consolidation Pressures",
+          "description": "With 500+ NBFIs operating in a small market, consolidation is expected as stricter regulations favor larger, well-capitalized institutions. Several NBFIs have pursued stock exchange listings and attracted foreign investment.",
+          "relevance_to_financials_or_nb": "Opportunities for market share gains through acquisitions and partnerships. Stronger institutions may benefit from economies of scale while weaker players face exit pressures.",
           "sources": [
-            "https://www.mongolbeat.com/mongolia-news-summary-for-february-15-2025/"
+            "https://www.kilde.sg/post/non-bank-financial-institutions-and-private-credit-investment-in-mongolia"
           ]
         }
       ],
       "competitive_landscape": {
-        "structure_notes": "Салбар нь олон жижиг тоглогчтой, өрсөлдөөн ихтэй, зарим томоохон ББСБ-ууд зах зээлд давамгайлж байна.",
+        "structure_notes": "The Mongolian NBFI sector is highly fragmented with over 500 licensed institutions competing for market share. The sector includes microfinance institutions, leasing companies, pawnshops, and savings and credit cooperatives (SCCs). Major players include InvesCore and other larger NBFIs that have achieved stock exchange listings. The banking sector dominates by asset value (96.5% of financial system assets) but NBFIs lead in customer outreach and number of borrowers served.",
         "barriers_to_entry": [
-          "Зохицуулалтын тусгай зөвшөөрөл авах шаардлага",
-          "Технологийн дэд бүтэц шаардлагатай",
-          "Хэрэглэгчийн итгэлцлийг бий болгох хэрэгцээ"
+          "Licensing requirements and minimum capital thresholds (MNT 800 million for lending license)",
+          "Increasing regulatory compliance costs and supervision requirements",
+          "Need for robust risk management and credit scoring capabilities",
+          "Competition from established players with extensive customer networks",
+          "Technology infrastructure requirements for digital lending platforms"
         ],
         "key_success_factors": [
-          "Финтек технологийн нэвтрүүлэлт",
-          "Эрсдэлийн удирдлагын сайн туршлага",
-          "Хэрэглэгч төвтэй үйлчилгээ"
+          "Digital lending capabilities and fintech integration",
+          "Effective risk management and underwriting processes",
+          "Strong local market knowledge and customer relationships",
+          "Diversified funding sources and capital adequacy",
+          "Compliance with evolving regulatory framework",
+          "Geographic presence in underserved rural areas"
         ]
       },
       "regulatory_environment": {
-        "summary": "Санхүүгийн зохицуулах хороо (СЗХ) нь ББСБ-уудын үйл ажиллагааг хянаж, зохицуулалтын орчныг сайжруулах чиглэлээр ажиллаж байна. 2025 оноос эхлэн зээлийн мэдээллийг 24 цагийн дотор мэдээлэх шаардлага тавигдсан.",
+        "summary": "Mongolia's NBFI sector is regulated by the Financial Regulatory Commission (FRC) under the Law on Non-Bank Financial Activities (2002) and the newer Law on Regulation of Money Loan Activities (2022). The regulatory framework has been strengthening with recent introduction of interest rate caps, debt-to-income limits, and enhanced consumer protection measures. The Bank of Mongolia coordinates with FRC on systemic risk management.",
         "major_regulations": [
-          "Банк бус санхүүгийн үйл ажиллагааны тухай хууль",
-          "Зээлийн мэдээллийн тухай хууль"
+          "Law on Non-Bank Financial Activities (2002, with amendments)",
+          "Law on Regulation of Money Loan Activities (2022)",
+          "Interest rate cap regulation (54% APR maximum, effective March 2024)",
+          "Debt-to-Income ratio limits (70% maximum DTI)",
+          "Standardized loan contract requirements",
+          "Anti-money laundering and consumer protection regulations"
         ],
         "regulatory_bodies": [
-          "Санхүүгийн зохицуулах хороо",
-          "Монголбанк"
+          "Financial Regulatory Commission (FRC) - primary NBFI supervisor",
+          "Bank of Mongolia (BoM) - macroprudential oversight and coordination",
+          "Ministry of Finance - policy development and fiscal oversight",
+          "Money Loan Activities Policy Council - interest rate policy setting"
         ]
       },
       "major_risk_factors": [
         {
-          "name": "Өрхийн өрийн хэмжээ нэмэгдэж буй",
-          "description": "Зээлийн хялбар хүртээмж нь өрхийн өрийн хэмжээг нэмэгдүүлж, зээлийн чанарт сөргөөр нөлөөлж болзошгүй.",
-          "relevance_to_financials_or_nb": "Зээлийн чанар муудах нь ББСБ-уудын санхүүгийн тогтвортой байдалд эрсдэл учруулна.",
+          "name": "Macroeconomic Volatility",
+          "description": "Mongolia's economy is highly dependent on commodity exports (copper and coal) to China, making it vulnerable to commodity price fluctuations and external shocks. The tugrik currency experiences significant volatility, and economic growth follows boom-bust cycles.",
+          "relevance_to_financials_or_nb": "Economic downturns can rapidly increase loan defaults and reduce demand for credit. Currency depreciation can drive inflation and reduce borrowers' real incomes, impacting repayment capacity across the NBFI portfolio.",
           "sources": [
-            "https://www.mongolbeat.com/mongolia-news-summary-for-march-18-2025/"
+            "https://www.imf.org/en/News/Articles/2024/10/14/mcs-mongolia-concluding-statement-of-the-2024-imf-staff-visit",
+            "https://www.kilde.sg/post/non-bank-financial-institutions-and-private-credit-investment-in-mongolia"
           ]
         },
         {
-          "name": "Зохицуулалтын хяналт сул",
-          "description": "Олон жижиг ББСБ-уудын үйл ажиллагаанд хяналт тавихад хүндрэлтэй, зохицуулалтын орчин сул байна.",
-          "relevance_to_financials_or_nb": "Зохицуулалтын сул орчин нь салбарын эрсдэлийг нэмэгдүүлж, хөрөнгө оруулагчдын итгэлийг бууруулна.",
+          "name": "Over-indebtedness and Credit Bubble Risks",
+          "description": "Rapid credit growth (35% in 2022) concentrated in unsecured consumer lending raises concerns about household debt sustainability. Many borrowers have multiple loans, and regulators have observed consumer credit growth exceeding long-term trends.",
+          "relevance_to_financials_or_nb": "Potential for widespread defaults if economic conditions deteriorate. Current NPL ratios around 7.6% could spike significantly, particularly affecting NBFIs with minimal collateral requirements and limited loss absorption capacity.",
           "sources": [
-            "https://www.spglobal.com/ratings/en/research/articles/250320-nonbank-financial-institutions-profitability-will-be-tested-in-2025-13428476"
+            "https://www.kilde.sg/post/non-bank-financial-institutions-and-private-credit-investment-in-mongolia"
+          ]
+        },
+        {
+          "name": "Funding and Liquidity Constraints",
+          "description": "NBFIs rely primarily on equity, retained earnings, and bank borrowing for funding, with limited access to deposit funding. Smaller institutions face higher funding costs and potential liquidity pressures during economic stress.",
+          "relevance_to_financials_or_nb": "Interest rate caps may compress margins while funding costs remain elevated (with policy rates at 12%). Liquidity risk from short-term loan turnover could pressure cash flows during economic downturns or collection problems.",
+          "sources": [
+            "https://www.kilde.sg/post/non-bank-financial-institutions-and-private-credit-investment-in-mongolia"
           ]
         }
       ],
-      "future_outlook": "Монголын ББСБ-ын салбар нь финтек технологийн дэвшил, хэрэглэгчийн зээлийн эрэлт зэргээс шалтгаалан өсөлтөө хадгалах төлөвтэй байна. Гэвч зохицуулалтын орчныг сайжруулах, зээлийн чанарыг хянах, ногоон санхүүжилтийг нэмэгдүүлэх шаардлага тулгарч байна."
+      "future_outlook": "The Mongolian NBFI sector is positioned for continued growth but faces a more regulated and competitive environment. The sector benefits from strong economic fundamentals with GDP growth of 4.7% in 2023 and projected 5%+ growth in 2024, driven by mining sector expansion. However, regulatory tightening through interest rate caps and DTI limits will pressure margins and constrain growth for some institutions. Digital transformation and fintech adoption will accelerate consolidation, favoring larger, technology-enabled players. The sector's role in financial inclusion remains crucial, with opportunities in underserved SME financing and rural markets. Success will depend on effective risk management, regulatory compliance, and adaptation to evolving consumer preferences for digital financial services."
     },
-    "research_process_notes": "Судалгаанд Монголын Санхүүгийн зохицуулах хороо, Монголбанк, олон улсын байгууллагуудын тайлангуудыг ашиглав. Монгол хэл дээрх эх сурвалжуудыг түлхүү ашиглаж, хамгийн сүүлийн үеийн мэдээлэлд тулгуурласан.",
+    "research_process_notes": "Research conducted through comprehensive analysis of official regulatory reports, international financial institution assessments, and specialized investment platform research. Sources included Bank of Mongolia financial stability reports, Financial Regulatory Commission publications, World Bank and IMF country assessments, and detailed sector analysis from Kilde investment platform. Data triangulated across multiple sources to ensure accuracy and comprehensiveness.",
     "sources_cited": [
-      "https://www.mongolbeat.com/mongolia-news-summary-for-february-26-2025/",
-      "https://www.mongolbeat.com/mongolia-news-summary-for-february-15-2025/",
-      "https://www.mongolbeat.com/mongolia-news-summary-for-march-18-2025/",
-      "https://www.afi-global.org/newsroom/news/mongolia-helps-bring-nepals-inclusive-green-finance-ambitions-to-life/",
-      "https://www.spglobal.com/ratings/en/research/articles/250320-nonbank-financial-institutions-profitability-will-be-tested-in-2025-13428476"
+      "https://www.mongolbank.mn/en/p/about-financial-stability",
+      "https://www.imf.org/en/News/Articles/2024/10/14/mcs-mongolia-concluding-statement-of-the-2024-imf-staff-visit",
+      "https://www.kilde.sg/post/non-bank-financial-institutions-and-private-credit-investment-in-mongolia",
+      "https://www.worldbank.org/en/news/press-release/2024/12/09/world-bank-reports-outline-steps-to-strengthen-mongolia-s-financial-sector-and-boost-its-private-sector",
+      "https://mdsa.mn/2024/02/27/establishment-of-non-banking-financial-institutions-in-mongolia/",
+      "https://www.adb.org/publications/mongolia-finance-sector-fact-sheet",
+      "https://www.fsb.org/2024/12/fsb-reports-strong-growth-in-non-bank-financial-intermediation-in-2023/"
     ],
-    "confidence_score": 0.9
+    "confidence_score": 0.85
   }
-  
+}

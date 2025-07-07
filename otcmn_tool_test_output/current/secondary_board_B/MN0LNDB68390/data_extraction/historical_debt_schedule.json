@@ -1,0 +1,52 @@
+{
+  "historical_debt_schedule": [
+    {
+      "instrument_name": "Ordinary Bond (Planned Issuance)",
+      "currency": "MNT",
+      "principal_amount_issued": 5000000000.0,
+      "issuance_date": "2024-12-15",
+      "maturity_date": "2025-12-15",
+      "maturity_duration": "12 months",
+      "interest_rate_pa": "18.5%",
+      "principal_repayments_made_during_period": null,
+      "source_document_reference": "Document Excerpts 2 & 6",
+      "notes": "This bond is part of a planned 6 billion MNT issuance as per the underwriting agreements dated December 2024. Excerpt 2 states the interest rate as 18.3%, while Excerpt 6 states 18.5%. Using 18.5% from Excerpt 6. Interest is payable quarterly. Issuance and maturity dates are estimated based on the agreement date and stated 12-month duration, and confirmed by cash flow projections mentioning repayment in Dec 2025."
+    },
+    {
+      "instrument_name": "Liquidity Bond (Planned Issuance)",
+      "currency": "MNT",
+      "principal_amount_issued": 1000000000.0,
+      "issuance_date": "2024-12-15",
+      "maturity_date": "2025-12-15",
+      "maturity_duration": "12 months",
+      "interest_rate_pa": "12.0%",
+      "principal_repayments_made_during_period": null,
+      "source_document_reference": "Document Excerpts 2 & 6",
+      "notes": "This bond is part of a planned 6 billion MNT issuance as per the underwriting agreements dated December 2024. Interest is payable quarterly. Issuance and maturity dates are estimated based on the agreement date and stated 12-month duration, and confirmed by cash flow projections mentioning repayment in Dec 2025."
+    },
+    {
+      "instrument_name": "Closed Bond (Rated)",
+      "currency": "MNT",
+      "principal_amount_issued": 30000000000.0,
+      "issuance_date": null,
+      "maturity_date": null,
+      "maturity_duration": "Unknown",
+      "interest_rate_pa": "Unknown",
+      "principal_repayments_made_during_period": null,
+      "source_document_reference": "Document Excerpt 4",
+      "notes": "This bond is mentioned in the issuer rating report dated 2024-11-28. The amount stated (30 billion MNT) is likely the issued amount or program size being rated. The interest rate and maturity duration/date are not provided in the excerpt. The rating review date is 2025-11-18."
+    },
+    {
+      "instrument_name": "Closed Bond (Rated)",
+      "currency": "MNT",
+      "principal_amount_issued": 50000000000.0,
+      "issuance_date": null,
+      "maturity_date": null,
+      "maturity_duration": "Unknown",
+      "interest_rate_pa": "Unknown",
+      "principal_repayments_made_during_period": null,
+      "source_document_reference": "Document Excerpt 4",
+      "notes": "This bond is mentioned in the issuer rating report dated 2024-11-28. The amount stated (50 billion MNT) is likely the issued amount or program size being rated. The status 'Paid until completion' is ambiguous but listed under active securities being rated. The interest rate and maturity duration/date are not provided in the excerpt."
+    }
+  ]
+}

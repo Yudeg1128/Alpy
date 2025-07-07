@@ -7,7 +7,7 @@
     "bond_metadata": {
       "type": "object",
       "description": "Fundamental identifying information for the bond.",
-      "faiss_query_optimal": "security_id, ISIN, currency, principal_amount_issued, coupon_rate_type, coupon_rate, coupon_frequency, issue_date, maturity_date, trustee_agent, call_provisions, put_provisions, governing_law, default_interest_rate, denomination, listing_venue", 
+      "faiss_query_optimal": "bond identification, bond details, security ID, ISIN code, bond currency, bond amount, principal issued, coupon information, interest rate, coupon type, fixed rate, floating rate, coupon payment frequency, annual, semi-annual, quarterly, issue date, maturity date, bond underwriter, lead manager, call options, call provisions, put options, put provisions, bond denomination, face value, par value, industry classification, sector type; Монгол: бондын дугаар, бондын мэдээлэл, ISIN код, валют, үндсэн дүн, хүүгийн төрөл, хүүгийн хэмжээ, хүү төлөх давтамж, жил бүр, хагас жил, улирал бүр, гаргасан огноо, эргэн төлөгдөх огноо, баталгаажуулагч, lead bank, дуудлага худалдаа, татах эрх, нэрлэсэн үнэ, салбарын ангилал, үйл ажиллагааны чиглэл", 
       "properties": {
         "security_id": {
           "type": "string",
@@ -63,9 +63,9 @@
             {"format": "date-time"}
           ]
         },
-        "trustee_agent": {
+        "underwriter": {
           "type": "string",
-          "description": "Name of the bond trustee or paying agent. Null if not specified.",
+          "description": "Name of the lead underwriter(s) for the bond issuance. Null if not specified.",
           "nullable": true
         },
         "call_provisions": {
@@ -78,27 +78,17 @@
           "description": "Summary of any bondholder put options, including dates, prices, and conditions. Use 'Absent' if no put provisions are present.",
           "enum": ["Absent", "Details Provided"]
         },
-        "governing_law": {
-          "type": ["string", "null"],
-          "description": "The legal jurisdiction (e.g., 'Mongolian Law', 'New York Law') under which the bond agreement is governed. Null if not specified.",
-          "nullable": true
-        },
-        "default_interest_rate": {
-          "type": ["number", "null"],
-          "description": "The increased annual interest rate (as a decimal) that applies to overdue principal or interest payments upon an event of default. Null if not specified.",
-          "minimum": 0,
-          "nullable": true
-        },
         "denomination": {
           "type": ["number", "null"],
           "description": "The minimum face value (par amount) in which the bond can be traded or purchased, in the bond's denomination currency. Null if not specified.",
           "minimum": 0,
           "nullable": true
         },
-        "listing_venue": {
-          "type": ["string", "null"],
-          "description": "The exchange or market where the bond is listed or traded (e.g., 'Mongolian Stock Exchange', 'OTC'). Null if not specified.",
-          "nullable": true
+        "industry_type": {
+          "type": "string",
+          "description": "The industry classification of the bond issuer, which determines the financial reporting schema to use.",
+          "enum": ["asset_heavy", "finance", "manufacturing", "services", "trading_volatile"],
+          "nullable": false
         }
       },
       "comments": {
@@ -107,14 +97,19 @@
       },
       "required": [
         "security_id",
+        "isin",
         "currency",
         "principal_amount_issued",
         "coupon_rate_type",
+        "coupon_rate",
         "coupon_frequency",
         "issue_date",
         "maturity_date",
+        "underwriter",
         "call_provisions",
-        "put_provisions"
+        "put_provisions",
+        "denomination",
+        "industry_type"
       ],
       "additionalProperties": false
     },
@@ -160,25 +155,46 @@
                 },
                 "minProperties": 1,
                 "example": {
-                  "total_revenue": 50000000000.00,
-                  "ebitda": 15000000000.00,
-                  "net_income": 8000000000.00,
-                  "total_debt": 30000000000.00,
-                  "cash_and_equivalents": 5000000000.00,
-                  "total_assets": 70000000000.00,
-                  "total_equity": 40000000000.00,
-                  "interest_expense": 1500000000.00,
-                  "cash_from_operations": 12000000000.00,
-                  "capital_expenditures": 3000000000.00,
-                  "retained_earnings": 1000000000.00,
-                  "cogs": 20000000000.00,
-                  "gross_profit": 30000000000.00,
-                  "sga_expenses": 5000000000.00,
-                  "income_tax_expense": 2000000000.00,
-                  "long_term_debt": 25000000000.00,
-                  "current_assets": 10000000000.00,
-                  "current_liabilities": 8000000000.00,
-                  "working_capital": 2000000000.00
+                  "income_statement": {
+                    "total_revenue": 50000000000.00,
+                    "cost_of_goods_sold": 20000000000.00,
+                    "gross_profit": 30000000000.00,
+                    "operating_expenses": 18000000000.00,
+                    "sga_expenses": 5000000000.00,
+                    "ebitda": 15000000000.00,
+                    "ebit": 12000000000.00,
+                    "interest_expense": 1500000000.00,
+                    "income_tax_expense": 2000000000.00,
+                    "net_income": 8000000000.00,
+                    "eps_basic": 8.00,
+                    "eps_diluted": 7.85
+                  },
+                  "balance_sheet": {
+                    "cash_and_equivalents": 5000000000.00,
+                    "accounts_receivable": 3000000000.00,
+                    "inventory": 2000000000.00,
+                    "current_assets": 10000000000.00,
+                    "total_assets": 70000000000.00,
+                    "accounts_payable": 2500000000.00,
+                    "current_liabilities": 8000000000.00,
+                    "long_term_debt": 25000000000.00,
+                    "total_debt": 30000000000.00,
+                    "total_liabilities": 45000000000.00,
+                    "total_equity": 25000000000.00,
+                    "retained_earnings": 1000000000.00,
+                    "working_capital": 2000000000.00
+                  },
+                  "cash_flow_statement": {
+                    "net_income": 8000000000.00,
+                    "depreciation_amortization": 3000000000.00,
+                    "changes_in_working_capital": -500000000.00,
+                    "cash_from_operations": 12000000000.00,
+                    "capital_expenditures": -3000000000.00,
+                    "free_cash_flow": 9000000000.00,
+                    "cash_from_investing": -3500000000.00,
+                    "cash_from_financing": -1000000000.00,
+                    "net_change_in_cash": 750000000.00
+                  }
                 }
               }
             },
@@ -189,66 +205,6 @@
         }
       },
       "required": ["base_unit_of_measure", "unit_conversion_notes", "historical_financial_statements"],
-      "additionalProperties": false
-    },
-    "bond_financials_projections": {
-      "type": "object",
-      "description": "Explicit issuer-provided financial projections.",
-      "faiss_query_optimal": "Issuer-provided financial projections, forecast tables, future financial outlook, projected income statements, projected balance sheets, and forward-looking metrics such as projected revenue, projected EBITDA, or future capital expenditures for all projection periods. Look for phrases like 'ирээдүйн таамаглал' (future forecast) or 'төлөвлөгөөт үзүүлэлтүүд' (planned indicators).",
-      "properties": {
-        "base_unit_of_measure": {
-          "type": "string",
-          "description": "The currency and scale to which all projections are normalized (e.g., 'MNT', 'USD'). All values in 'financials' dicts must be in this unit."
-        },
-        "unit_conversion_notes": {
-          "type": "string",
-          "description": "Explanation of how units were determined and converted, including any ambiguities or assumptions."
-        },
-        "issuer_projections": {
-          "type": ["object", "null"],
-          "description": "Explicit issuer-provided financial projections, if available. Null if no projections are found.",
-          "properties": {
-            "projection_period_start_date": {
-              "type": "string",
-              "description": "Start date or datetime of the projection period. Accepts 'YYYY-MM-DD' or 'YYYY-MM-DD HH:MM' (ISO 8601). Time is optional.",
-              "anyOf": [
-                {"format": "date"},
-                {"format": "date-time"}
-              ]
-            },
-            "projection_period_end_date": {
-              "type": "string",
-              "description": "End date or datetime of the projection period. Accepts 'YYYY-MM-DD' or 'YYYY-MM-DD HH:MM' (ISO 8601). Time is optional.",
-              "anyOf": [
-                {"format": "date"},
-                {"format": "date-time"}
-              ]
-            },
-            "projected_metrics": {
-              "type": "object",
-              "description": "Dictionary of projected numerical line items (e.g., 'projected_revenue', 'projected_ebitda', 'projected_capex' for future periods). Keys should be snake_case. Use 'null' if a specific data point is mentioned but its value is not found.",
-              "patternProperties": {
-                "^[a-zA-Z_]+$": {
-                  "type": ["number", "null"]
-                }
-              },
-              "minProperties": 1,
-              "example": {
-                "projected_total_revenue_next_year": 60000000000.00,
-                "projected_ebitda_next_year": 18000000000.00,
-                "projected_capital_expenditures_next_year": 4000000000.00
-              }
-            }
-          },
-          "required": ["projection_period_start_date", "projection_period_end_date", "projected_metrics"],
-          "additionalProperties": false
-        }
-      },
-      "comments": {
-        "type": ["string", "null"],
-        "description": "LLM-generated notes on extraction quality, missing data, or encountered problems."
-      },
-      "required": ["issuer_projections"],
       "additionalProperties": false
     },
     "collateral_and_protective_clauses": {
@@ -430,57 +386,69 @@
       ],
       "additionalProperties": false
     },
-    "industry_profile": {
-      "type": "object",
-      "description": "General information and analysis of the industry in which the issuer operates.",
-      "faiss_query_optimal": "Retrieve any content blocks (narrative, descriptive, analytical, or tabular) that mention or discuss the issuer's industry, sector, business area, market, regulatory context, or economic environment. Include sections or paragraphs that provide even partial information about the issuer's sector, market, business activities, regulatory environment, competitive context, or industry risks. Prioritize but do not require blocks titled or mentioning 'Industry Overview', 'Market Analysis', 'Sector Trends', 'Competitive Landscape', 'Industry Risks', 'Regulatory Environment', 'Opportunities and Threats', or similar. If no dedicated industry section is present, include any content that describes what the issuer does, its business model, or its place in the market or economy.",
-      "properties": {
-        "industry_overview": {
-          "type": "string",
-          "description": "General description and context of the industry, including its size, growth prospects, and key characteristics. Use 'N/A' if not available."
+    "historical_debt_schedule": {
+      "type": "array",
+      "description": "Array of historical debt schedule items showing outstanding debt instruments over time.",
+      "faiss_query_optimal": "debt schedule, loan amortization, debt maturity profile, outstanding debt, loan repayment schedule, borrowings, debt instruments, principal amounts, interest rates, maturity dates, debt repayment, new borrowings; Монгол: зээлийн хуваарь, зээлийн эргэн төлөлт, өр төлбөрийн хуваарь, зээлийн үлдэгдэл, зээлийн хүү, эргэн төлөгдөх хугацаа, зээлийн төлбөрийн хуваарь",
+      "items": {
+        "type": "object",
+        "properties": {
+          "instrument_name": {
+            "type": "string",
+            "description": "Name or type of the debt instrument (e.g., '7.5% Senior Notes due 2028', 'Term Loan B')"
+          },
+          "currency": {
+            "type": "string",
+            "description": "Currency of the amounts, if specified and not uniform for the issuer."
+          },
+          "principal_amount_issued": {
+            "type": ["number", "null"],
+            "description": "Original principal amount issued for this debt instrument.",
+            "minimum": 0
+          },
+          "issuance_date": {
+            "type": ["string", "null"],
+            "description": "Date when the debt instrument was originally issued.",
+            "format": "date"
+          },
+          "maturity_date": {
+            "type": "string",
+            "description": "Maturity date of the debt instrument when the principal is due to be repaid.",
+            "format": "date"
+          },
+          "maturity_duration": {
+            "type": ["string", "null"],
+            "description": "Original duration of the debt instrument from issuance to maturity (e.g., '5 years', '36 months')."
+          },
+          "interest_rate_pa": {
+            "type": "string",
+            "description": "Annual interest rate or terms (e.g., '5.25%', 'SOFR + 300bps')."
+          },
+          "principal_repayments_made_during_period": {
+            "type": ["number", "null"],
+            "description": "Principal repayments made for this instrument during the period, if available.",
+            "minimum": 0
+          },
+          "source_document_reference": {
+            "type": "string",
+            "description": "Reference to the source document and page number (e.g., '2022 Annual Report, p. 55')."
+          },
+          "notes": {
+            "type": ["string", "null"],
+            "description": "Any additional notes or context for this debt item."
+          }
         },
-        "key_industry_trends": {
-          "type": "array",
-          "description": "List of major trends impacting the industry (e.g., 'Digitalization', 'Commodity Price Volatility', 'Regulatory changes', 'Technological disruption').",
-          "items": { "type": "string" },
-          "minItems": 0
-        },
-        "competitive_landscape_notes": {
-          "type": "string",
-          "description": "Notes on the competitive environment within the industry (e.g., 'Fragmented market with many small players', 'Few dominant players with high barriers to entry', 'Intense price competition'). Use 'N/A' if not available."
-        },
-        "regulatory_environment_notes": {
-          "type": "string",
-          "description": "Key regulations, regulatory bodies, or licensing requirements significantly impacting the industry and the issuer's operations. Use 'N/A' if not available."
-        },
-        "industry_risk_factors": {
-          "type": "array",
-          "description": "List of specific risks inherent to the industry that could impact the issuer's performance (e.g., 'Supply chain disruptions', 'Geopolitical risks', 'Environmental regulations').",
-          "items": { "type": "string" },
-          "minItems": 0
-        }
-      },
-      "comments": {
-        "type": ["string", "null"],
-        "description": "LLM-generated notes on extraction quality, missing data, or encountered problems."
-      },
-      "required": [
-        "industry_overview",
-        "key_industry_trends",
-        "competitive_landscape_notes",
-        "regulatory_environment_notes",
-        "industry_risk_factors"
-      ],
-      "additionalProperties": false
+        "required": ["instrument_name", "principal_amount_issued", "maturity_duration", "interest_rate_pa"],
+        "additionalProperties": false
+      }
     }
   },
   "required": [
     "bond_metadata",
     "bond_financials_historical",
-    "bond_financials_projections",
     "collateral_and_protective_clauses",
     "issuer_business_profile",
-    "industry_profile"
+    "historical_debt_schedule"
   ],
   "additionalProperties": false
 }

@@ -1,0 +1,98 @@
+2025-07-03 17:18:19,801 - __main__ - INFO - --- Starting Projection Run for MN0LNDB68390 ---
+2025-07-03 17:18:19,801 - __main__ - INFO - [MN0LNDB68390] Initializing ProjectionEngine for 5 years.
+2025-07-03 17:18:19,801 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-03 17:18:19,801 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-03 17:18:19,802 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-03 17:18:19,802 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-03 17:18:19,802 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-03 17:18:19,807 - __main__ - INFO - Loaded historical data from: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390/credit_analysis/projection_master_dataframe.csv
+2025-07-03 17:18:19,808 - __main__ - INFO - Loaded baseline drivers from: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390/credit_analysis/projections/baseline_projection_drivers.json
+2025-07-03 17:18:19,808 - __main__ - INFO - Loaded 'finance' schema.
+2025-07-03 17:18:19,809 - __main__ - INFO - [MN0LNDB68390] Base year for projection identified as: 2023
+2025-07-03 17:18:19,809 - __main__ - INFO - [MN0LNDB68390] Running projection for scenario: 'base_case'
+2025-07-03 17:18:19,809 - __main__ - INFO - Performing base-year plug neutralization.
+2025-07-03 17:18:19,809 - __main__ - INFO - Adjusted Retained Earnings by 1,033,902,000.00 to neutralize BS plugs.
+2025-07-03 17:18:19,810 - __main__ - INFO - --- Projecting Year: 2024 (T+1) ---
+2025-07-03 17:18:19,827 - __main__ - DEBUG - Convergence iteration 1 for year 2024
+2025-07-03 17:18:19,835 - __main__ - DEBUG - [BS] Starting balance sheet forecast for year 2024
+2025-07-03 17:18:19,835 - __main__ - DEBUG - [BS] Pass 1: Processing 21 balance sheet items
+2025-07-03 17:18:19,836 - __main__ - DEBUG - [BS] Pass 2: Processing roll-forwards with RE key: retained_earnings
+2025-07-03 17:18:19,837 - __main__ - DEBUG - [BS] Pass 3: Processing dependent drivers and summations
+2025-07-03 17:18:19,842 - __main__ - DEBUG - [BS] Finalizing with total assets: 157,718,013,958.67
+2025-07-03 17:18:19,853 - __main__ - DEBUG - Convergence iteration 2 for year 2024
+2025-07-03 17:18:19,861 - __main__ - DEBUG - [BS] Starting balance sheet forecast for year 2024
+2025-07-03 17:18:19,861 - __main__ - DEBUG - [BS] Pass 1: Processing 21 balance sheet items
+2025-07-03 17:18:19,862 - __main__ - DEBUG - [BS] Pass 2: Processing roll-forwards with RE key: retained_earnings
+2025-07-03 17:18:19,863 - __main__ - DEBUG - [BS] Pass 3: Processing dependent drivers and summations
+2025-07-03 17:18:19,867 - __main__ - DEBUG - [BS] Finalizing with total assets: 183,446,701,815.76
+2025-07-03 17:18:19,877 - __main__ - INFO - Model converged for year 2024 in 2 iterations.
+2025-07-03 17:18:19,881 - __main__ - INFO - --- Projecting Year: 2025 (T+2) ---
+2025-07-03 17:18:19,900 - __main__ - DEBUG - Convergence iteration 1 for year 2025
+2025-07-03 17:18:19,908 - __main__ - DEBUG - [BS] Starting balance sheet forecast for year 2025
+2025-07-03 17:18:19,908 - __main__ - DEBUG - [BS] Pass 1: Processing 21 balance sheet items
+2025-07-03 17:18:19,908 - __main__ - DEBUG - [BS] Pass 2: Processing roll-forwards with RE key: retained_earnings
+2025-07-03 17:18:19,910 - __main__ - DEBUG - [BS] Pass 3: Processing dependent drivers and summations
+2025-07-03 17:18:19,914 - __main__ - DEBUG - [BS] Finalizing with total assets: 189,363,185,214.42
+2025-07-03 17:18:19,924 - __main__ - DEBUG - Convergence iteration 2 for year 2025
+2025-07-03 17:18:19,933 - __main__ - DEBUG - [BS] Starting balance sheet forecast for year 2025
+2025-07-03 17:18:19,933 - __main__ - DEBUG - [BS] Pass 1: Processing 21 balance sheet items
+2025-07-03 17:18:19,933 - __main__ - DEBUG - [BS] Pass 2: Processing roll-forwards with RE key: retained_earnings
+2025-07-03 17:18:19,935 - __main__ - DEBUG - [BS] Pass 3: Processing dependent drivers and summations
+2025-07-03 17:18:19,939 - __main__ - DEBUG - [BS] Finalizing with total assets: 219,834,704,853.04
+2025-07-03 17:18:19,949 - __main__ - DEBUG - Convergence iteration 3 for year 2025
+2025-07-03 17:18:19,957 - __main__ - DEBUG - [BS] Starting balance sheet forecast for year 2025
+2025-07-03 17:18:19,957 - __main__ - DEBUG - [BS] Pass 1: Processing 21 balance sheet items
+2025-07-03 17:18:19,958 - __main__ - DEBUG - [BS] Pass 2: Processing roll-forwards with RE key: retained_earnings
+2025-07-03 17:18:19,959 - __main__ - DEBUG - [BS] Pass 3: Processing dependent drivers and summations
+2025-07-03 17:18:19,963 - __main__ - DEBUG - [BS] Finalizing with total assets: 224,300,029,827.49
+2025-07-03 17:18:19,974 - __main__ - INFO - Model converged for year 2025 in 3 iterations.
+2025-07-03 17:18:19,977 - __main__ - INFO - --- Projecting Year: 2026 (T+3) ---
+2025-07-03 17:18:19,996 - __main__ - DEBUG - Convergence iteration 1 for year 2026
+2025-07-03 17:18:20,005 - __main__ - DEBUG - [BS] Starting balance sheet forecast for year 2026
+2025-07-03 17:18:20,005 - __main__ - DEBUG - [BS] Pass 1: Processing 21 balance sheet items
+2025-07-03 17:18:20,006 - __main__ - DEBUG - [BS] Pass 2: Processing roll-forwards with RE key: retained_earnings
+2025-07-03 17:18:20,007 - __main__ - DEBUG - [BS] Pass 3: Processing dependent drivers and summations
+2025-07-03 17:18:20,011 - __main__ - DEBUG - [BS] Finalizing with total assets: 222,214,645,548.64
+2025-07-03 17:18:20,022 - __main__ - DEBUG - Convergence iteration 2 for year 2026
+2025-07-03 17:18:20,030 - __main__ - DEBUG - [BS] Starting balance sheet forecast for year 2026
+2025-07-03 17:18:20,030 - __main__ - DEBUG - [BS] Pass 1: Processing 21 balance sheet items
+2025-07-03 17:18:20,031 - __main__ - DEBUG - [BS] Pass 2: Processing roll-forwards with RE key: retained_earnings
+2025-07-03 17:18:20,033 - __main__ - DEBUG - [BS] Pass 3: Processing dependent drivers and summations
+2025-07-03 17:18:20,037 - __main__ - DEBUG - [BS] Finalizing with total assets: 257,563,199,586.37
+2025-07-03 17:18:20,048 - __main__ - DEBUG - Convergence iteration 3 for year 2026
+2025-07-03 17:18:20,056 - __main__ - DEBUG - [BS] Starting balance sheet forecast for year 2026
+2025-07-03 17:18:20,056 - __main__ - DEBUG - [BS] Pass 1: Processing 21 balance sheet items
+2025-07-03 17:18:20,057 - __main__ - DEBUG - [BS] Pass 2: Processing roll-forwards with RE key: retained_earnings
+2025-07-03 17:18:20,058 - __main__ - DEBUG - [BS] Pass 3: Processing dependent drivers and summations
+2025-07-03 17:18:20,062 - __main__ - DEBUG - [BS] Finalizing with total assets: 262,744,833,171.34
+2025-07-03 17:18:20,073 - __main__ - INFO - Model converged for year 2026 in 3 iterations.
+2025-07-03 17:18:20,075 - __main__ - INFO - --- Projecting Year: 2027 (T+4) ---
+2025-07-03 17:18:20,093 - __main__ - DEBUG - Convergence iteration 1 for year 2027
+2025-07-03 17:18:20,101 - __main__ - DEBUG - [BS] Starting balance sheet forecast for year 2027
+2025-07-03 17:18:20,101 - __main__ - DEBUG - [BS] Pass 1: Processing 21 balance sheet items
+2025-07-03 17:18:20,102 - __main__ - DEBUG - [BS] Pass 2: Processing roll-forwards with RE key: retained_earnings
+2025-07-03 17:18:20,103 - __main__ - DEBUG - [BS] Pass 3: Processing dependent drivers and summations
+2025-07-03 17:18:20,107 - __main__ - DEBUG - [BS] Finalizing with total assets: 257,666,460,164.34
+2025-07-03 17:18:20,118 - __main__ - DEBUG - Convergence iteration 2 for year 2027
+2025-07-03 17:18:20,125 - __main__ - DEBUG - [BS] Starting balance sheet forecast for year 2027
+2025-07-03 17:18:20,125 - __main__ - DEBUG - [BS] Pass 1: Processing 21 balance sheet items
+2025-07-03 17:18:20,126 - __main__ - DEBUG - [BS] Pass 2: Processing roll-forwards with RE key: retained_earnings
+2025-07-03 17:18:20,127 - __main__ - DEBUG - [BS] Pass 3: Processing dependent drivers and summations
+2025-07-03 17:18:20,131 - __main__ - DEBUG - [BS] Finalizing with total assets: 298,453,857,443.94
+2025-07-03 17:18:20,142 - __main__ - INFO - Model converged for year 2027 in 2 iterations.
+2025-07-03 17:18:20,145 - __main__ - INFO - --- Projecting Year: 2028 (T+5) ---
+2025-07-03 17:18:20,163 - __main__ - DEBUG - Convergence iteration 1 for year 2028
+2025-07-03 17:18:20,171 - __main__ - DEBUG - [BS] Starting balance sheet forecast for year 2028
+2025-07-03 17:18:20,172 - __main__ - DEBUG - [BS] Pass 1: Processing 21 balance sheet items
+2025-07-03 17:18:20,172 - __main__ - DEBUG - [BS] Pass 2: Processing roll-forwards with RE key: retained_earnings
+2025-07-03 17:18:20,174 - __main__ - DEBUG - [BS] Pass 3: Processing dependent drivers and summations
+2025-07-03 17:18:20,178 - __main__ - DEBUG - [BS] Finalizing with total assets: 295,801,823,971.12
+2025-07-03 17:18:20,188 - __main__ - DEBUG - Convergence iteration 2 for year 2028
+2025-07-03 17:18:20,196 - __main__ - DEBUG - [BS] Starting balance sheet forecast for year 2028
+2025-07-03 17:18:20,196 - __main__ - DEBUG - [BS] Pass 1: Processing 21 balance sheet items
+2025-07-03 17:18:20,197 - __main__ - DEBUG - [BS] Pass 2: Processing roll-forwards with RE key: retained_earnings
+2025-07-03 17:18:20,199 - __main__ - DEBUG - [BS] Pass 3: Processing dependent drivers and summations
+2025-07-03 17:18:20,204 - __main__ - DEBUG - [BS] Finalizing with total assets: 342,404,879,294.46
+2025-07-03 17:18:20,215 - __main__ - INFO - Model converged for year 2028 in 2 iterations.
+2025-07-03 17:18:20,221 - __main__ - INFO - Successfully saved projection to: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390/credit_analysis/projections/projection_output_base_case_2028.csv
+2025-07-03 17:18:20,221 - __main__ - INFO - --- Projection Run for MN0LNDB68390 Completed Successfully ---

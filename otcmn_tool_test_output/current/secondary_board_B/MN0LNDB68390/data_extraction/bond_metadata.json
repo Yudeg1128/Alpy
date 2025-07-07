@@ -9,14 +9,12 @@
     "coupon_frequency": "Quarterly",
     "issue_date": "2025-02-28 18:00",
     "maturity_date": "2026-03-02",
-    "trustee_agent": null,
+    "underwriter": "Tavan Bogd Capital",
     "call_provisions": "Absent",
     "put_provisions": "Absent",
-    "governing_law": "Mongolian Law",
-    "default_interest_rate": null,
     "denomination": 100000,
-    "listing_venue": null
+    "industry_type": "finance"
   },
-  "comments": "Extracted core bond metadata. Trustee/Paying Agent, Default Interest Rate, Call/Put provisions, and Listing Venue were not explicitly stated in the provided documents. Listing venue is inferred as not publicly listed based on the description 'хаалттай хүрээнд' (closed circle/private placement). Issue date is taken from the 'Announced Date' as the closest available date related to the bond offering start.",
-  "input_quality": "Extraction relied primarily on documents 1, 2, and 5, which contained the most direct information about the specific bond (ISIN MN0LNDB68390). Document 3 and 6 provided supporting evidence for the typical denomination used by the issuer. Document 4 was irrelevant. The principal amount was confirmed across multiple sources and matched the authoritative source value."
+  "comments": "Issue date is inferred from the 'Announced Date' as the specific issue date was not explicitly stated. Principal amount confirmed against multiple sources and unit conversion performed as per instructions. Denomination derived from Issue Price and Minimum Trading Quantity.",
+  "input_quality": "All five provided documents were used to extract and cross-reference the bond metadata, including security details, market data, underwriter report details, and company charter information."
 }

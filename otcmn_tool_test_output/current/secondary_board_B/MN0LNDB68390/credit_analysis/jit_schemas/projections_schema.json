@@ -1,0 +1,305 @@
+{
+  "__reasoning_log__": {
+    "Difficult Mappings": "The most difficult mappings involved interpreting standard financial statement line items within the context of an NBFI and the provided schema. Specifically, mapping 'loans_receivable_net' to 'balance_sheet.accounts_receivable.items.main_receivables' required understanding that for a lender, loans are the primary 'receivable' asset driving revenue, despite the schema using a typical trade receivables name. Similarly, mapping 'interest_expense' to 'income_statement.cost_of_revenue.items.cost_of_revenue_1' was necessary as interest expense represents the cost of funding the lending activity, fitting the 'cost of revenue' concept for this business model, although the schema's driver ('cogs_as_percent_of_revenue') is more suited to traditional COGS.",
+    "Key Model Selection": "The single most important projection_model selection was 'BS_Driven' for 'income_statement.revenue.items.revenue_stream_1'. This was directly justified by the <BUSINESS_PROFILE> stating the issuer is 'primarily engaged in lending activities' and generates revenue from 'interest income on its loan portfolio'. This confirms that revenue is directly tied to the balance sheet asset (loans), making an asset-yield driven model the most appropriate choice (Rule B.1).",
+    "Most Significant Driver": "The single most significant driver baseline value generated is the 'days_sales_outstanding' for 'balance_sheet.accounts_receivable.items.main_receivables' (mapped to Net Loans). The calculated baseline is 942 days. Confidence in the *calculation* is high as it follows the standard DSO formula using the provided 2023 historical data. However, confidence in the *interpretability* of this driver in a lending context (where it represents the average collection period of a loan book relative to annual interest income, not typical trade receivables turnover) is moderate. It highlights a potential limitation of applying a standard schema designed for commercial/industrial companies to an NBFI without specific NBFI-centric drivers.",
+    "Confidence Score": "0.95",
+    "Justification": "The populated schema is a financially logical representation of the issuer based on the provided data and schema constraints. All historical data points were mapped or accounted for (Rule A.1, A.2). Projection models were selected based on the business profile and schema rules (Rule B.1, B.2, B.3). All required drivers were populated with calculated baselines from historical data (Rule C.1), and every driver includes a justification referencing the source data (Rule C.2). The structure adheres strictly to the schema contract, including handling of derived items and scheduled debt placeholders. The only minor deduction is due to the inherent limitations of mapping NBFI specific concepts (like loans as receivables, interest expense as COGS, and loan book turnover as DSO) onto a potentially generic schema, which might slightly reduce the intuitive financial logic in those specific instances, but the mapping and model selection followed the rules precisely."
+  },
+  "income_statement": {
+    "revenue": {
+      "__description__": "The engine sums all items in this group to calculate total revenue.",
+      "items": {
+        "revenue_stream_1": {
+          "historical_account_key": "income_statement.interest_income",
+          "projection_model": "BS_Driven",
+          "drivers": {
+            "bs_driven_asset_yield": {
+              "baseline": 0.5063,
+              "justification": "Baseline calculated as 2023 Interest Income (47842587000) divided by the average of 2022 and 2023 Net Loans (average of 65506280000 and 123462373000 is 94484326500), as per <HISTORICAL_DATA>. This represents the yield on the loan portfolio.",
+              "trends": {
+                "short_term": 0.5063,
+                "medium_term": 0.5063,
+                "terminal": 0.5063
+              }
+            }
+          }
+        }
+      }
+    },
+    "cost_of_revenue": {
+      "items": {
+        "cost_of_revenue_1": {
+          "historical_account_key": "income_statement.interest_expense",
+          "projection_model": "Margin_Driven",
+          "drivers": {
+            "cogs_as_percent_of_revenue": {
+              "baseline": 0.1991,
+              "justification": "Baseline calculated as the absolute value of 2023 Interest Expense (9527344000) divided by 2023 Interest Income (47842587000), as per <HISTORICAL_DATA>. This represents the cost of funding as a percentage of interest income.",
+              "trends": {
+                "short_term": 0.1991,
+                "medium_term": 0.1991,
+                "terminal": 0.1991
+              }
+            }
+          }
+        }
+      }
+    },
+    "operating_expenses": {
+      "items": {
+        "sga_expense": {
+          "historical_account_key": "income_statement.management_and_operating_expenses",
+          "projection_model": "Growth_Rate_Driven",
+          "drivers": {
+            "sga_expense_growth_rate": {
+              "baseline": 0.3353,
+              "justification": "Baseline calculated as the year-over-year growth rate of Management and Operating Expenses from 2022 (7656249000) to 2023 (10223598000), as per <HISTORICAL_DATA>.",
+              "trends": {
+                "short_term": 0.3353,
+                "medium_term": 0.3353,
+                "terminal": 0.3353
+              }
+            }
+          }
+        },
+        "provision_for_credit_losses": {
+          "historical_account_key": "income_statement.impairment_loss_on_loans",
+          "projection_model": "Ratio_To_BS_Item",
+          "drivers": {
+            "ratio_target_account": "balance_sheet.accounts_receivable.items.main_receivables",
+            "provision_rate": {
+              "baseline": 0.0218,
+              "justification": "Baseline calculated as the absolute value of 2023 Impairment Loss on Loans (2684956000) divided by 2023 Net Loans Receivable (123462373000), as per <HISTORICAL_DATA>. This represents the provision rate relative to the loan book.",
+              "trends": {
+                "short_term": 0.0218,
+                "medium_term": 0.0218,
+                "terminal": 0.0218
+              }
+            }
+          }
+        }
+      }
+    },
+    "depreciation_and_amortization": {
+      "items": {
+        "depreciation_amortization": {
+          "historical_account_key": "income_statement.depreciation_amortization",
+          "projection_model": "Ratio_To_BS_Item",
+          "drivers": {
+            "ratio_target_account": "balance_sheet.property_plant_equipment.items.net_ppe",
+            "depreciation_as_percent_of_ppe": {
+              "baseline": 2.0118,
+              "justification": "Baseline calculated as the absolute value of 2023 Depreciation Amortization (615968000) divided by 2023 Fixed Assets (306158000), as per <HISTORICAL_DATA>. Note: This ratio is very high, potentially indicating short asset lives or other factors.",
+              "trends": {
+                "short_term": 2.0118,
+                "medium_term": 2.0118,
+                "terminal": 2.0118
+              }
+            }
+          }
+        }
+      }
+    },
+    "interest_expense": {
+      "__description__": "Interest is calculated by the engine based on debt balances and system-wide rates. The LLM does not map historical interest; it is reconciled by the engine.",
+      "items": {
+        "interest_on_revolver": {
+          "projection_model": "Calculated_Interest"
+        },
+        "interest_on_scheduled_debt": {
+          "projection_model": "Calculated_Interest"
+        }
+      }
+    },
+    "income_tax": {
+      "items": {
+        "income_tax_expense": {
+          "historical_account_key": "income_statement.income_tax_expense",
+          "projection_model": "Tax_Rate_Of_EBT",
+          "drivers": {
+            "effective_tax_rate": {
+              "baseline": 0.2197,
+              "justification": "Baseline calculated as the absolute value of 2023 Income Tax Expense (5574907000) divided by 2023 Profit Before Tax (25370723000), as per <HISTORICAL_DATA>.",
+              "trends": {
+                "short_term": 0.2197,
+                "medium_term": 0.2197,
+                "terminal": 0.2197
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "balance_sheet": {
+    "cash_and_equivalents": {
+      "items": {
+        "cash": {
+          "historical_account_key": "balance_sheet.cash_and_equivalents",
+          "projection_model": "Derived_From_CFS"
+        }
+      }
+    },
+    "accounts_receivable": {
+      "items": {
+        "main_receivables": {
+          "historical_account_key": "balance_sheet.loans_receivable_net",
+          "projection_model": "DSO_Driven",
+          "drivers": {
+            "days_sales_outstanding": {
+              "baseline": 942,
+              "justification": "Baseline calculated as (2023 Net Loans Receivable (123462373000) / 2023 Interest Income (47842587000)) * 365, as per <HISTORICAL_DATA>. This represents the average collection period of the loan book relative to annual interest income.",
+              "trends": {
+                "short_term": 942,
+                "medium_term": 942,
+                "terminal": 942
+              }
+            }
+          }
+        }
+      }
+    },
+    "inventory": {
+      "items": {
+        "main_inventory": {
+          "historical_account_key": null,
+          "projection_model": null,
+          "drivers": {
+            "days_inventory_held": {
+              "baseline": 0,
+              "justification": null,
+              "trends": {
+                "short_term": 0,
+                "medium_term": 0,
+                "terminal": 0
+              }
+            }
+          }
+        }
+      }
+    },
+    "property_plant_equipment": {
+      "items": {
+        "net_ppe": {
+          "historical_account_key": "balance_sheet.fixed_assets",
+          "projection_model": "Capex_Roll_Forward",
+          "drivers": {
+            "capex_projection_model": "Ratio_Driven",
+            "capex_as_percent_of_revenue": {
+              "baseline": 0.0115,
+              "justification": "Baseline calculated as the absolute value of 2023 CFS Derived Capex (548656000) divided by 2023 Interest Income (47842587000), as per <HISTORICAL_DATA>.",
+              "trends": {
+                "short_term": 0.0115,
+                "medium_term": 0.0115,
+                "terminal": 0.0115
+              }
+            }
+          }
+        }
+      }
+    },
+    "accounts_payable": {
+      "items": {
+        "main_payables": {
+          "historical_account_key": "balance_sheet.other_payables",
+          "projection_model": "DPO_Driven",
+          "drivers": {
+            "days_payable_outstanding": {
+              "baseline": 138,
+              "justification": "Baseline calculated as (2023 Other Payables (3863865000) / 2023 Management and Operating Expenses (10223598000)) * 365, as per <HISTORICAL_DATA>.",
+              "trends": {
+                "short_term": 138,
+                "medium_term": 138,
+                "terminal": 138
+              }
+            }
+          }
+        }
+      }
+    },
+    "debt": {
+      "__description__": "Debt is segregated into three distinct categories for analytical clarity and modeling robustness.",
+      "revolver_debt": {
+        "items": {
+          "revolver": {
+            "historical_account_key": null,
+            "projection_model": "Balancing_Plug_Debt"
+          }
+        }
+      },
+      "scheduled_short_term_debt": {
+        "__description__": "The engine iterates through this list of planned, existing short-term debt facilities.",
+        "items": {}
+      },
+      "scheduled_long_term_debt": {
+        "__description__": "The engine iterates through this list of planned, existing long-term debt facilities.",
+        "items": {
+          "loans_payable": {
+            "historical_account_key": "balance_sheet.loans_payable",
+            "projection_model": null,
+            "drivers": {}
+          },
+          "bonds_payable": {
+            "historical_account_key": "balance_sheet.bonds_payable",
+            "projection_model": null,
+            "drivers": {}
+          }
+        }
+      }
+    },
+    "equity": {
+      "items": {
+        "common_stock": {
+          "historical_account_key": "balance_sheet.share_capital",
+          "projection_model": "Share_Activity_Driven"
+        },
+        "retained_earnings": {
+          "historical_account_key": "balance_sheet.retained_earnings",
+          "projection_model": "Retained_Earnings_Roll_Forward",
+          "drivers": {
+            "dividend_payout_ratio": {
+              "baseline": 0.0654,
+              "justification": "Baseline calculated as the absolute value of 2023 CFS Dividends Paid (1293778000) divided by 2023 Net Profit (19795816000), as per <HISTORICAL_DATA>.",
+              "trends": {
+                "short_term": 0.0654,
+                "medium_term": 0.0654,
+                "terminal": 0.0654
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "cash_flow_statement": {
+    "__description__": "100% DERIVED. The engine calculates all values by analyzing changes in the Income Statement and Balance Sheet. The LLM only maps historicals for reconciliation.",
+    "net_cash_from_operations": {
+      "historical_account_key": "cash_flow_statement.net_cash_from_operations"
+    },
+    "net_cash_from_investing": {
+      "historical_account_key": "cash_flow_statement.net_cash_from_investing"
+    },
+    "net_cash_from_financing": {
+      "historical_account_key": "cash_flow_statement.net_cash_from_financing"
+    },
+    "net_change_in_cash": {
+      "historical_account_key": "cash_flow_statement.net_change_in_cash"
+    },
+    "capex": {
+      "historical_account_key": "cash_flow_statement.capex"
+    },
+    "cfs_net_profit": {
+      "historical_account_key": "cash_flow_statement.cfs_net_profit"
+    },
+    "depreciation_amortization": {
+      "historical_account_key": "cash_flow_statement.depreciation_amortization"
+    },
+    "beginning_cash_balance": {
+      "historical_account_key": "cash_flow_statement.beginning_cash_balance"
+    },
+    "ending_cash_balance": {
+      "historical_account_key": "cash_flow_statement.ending_cash_balance"
+    }
+  }
+}

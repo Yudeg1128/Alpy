@@ -1,0 +1,160 @@
+{
+  "cash_flow_statement": {
+    "net_cash_from_operations": {
+      "description": "Cash flow generated or used by the core business activities.",
+      "level": "subtotal",
+      "subtotal_of": "net_change_in_cash",
+      "calculation_template": null
+    },
+    "cfs_net_profit": {
+      "description": "Net profit as reported in the income statement, the starting point for indirect cash flow derivation.",
+      "level": "component",
+      "subtotal_of": "net_cash_from_operations",
+      "calculation_template": "[income_statement.net_profit]"
+    },
+    "cfs_depreciation_amortization_add_back": {
+      "description": "Non-cash expense added back to net profit.",
+      "level": "component",
+      "subtotal_of": "net_cash_from_operations",
+      "calculation_template": "-1 * [income_statement.depreciation_amortization]"
+    },
+    "cf_from_change_in_orphaned_loans_receivable_net": {
+      "description": "Cash flow from the change in net loans receivable, derived from the total balance due to orphaned components.",
+      "level": "component",
+      "subtotal_of": "net_cash_from_operations",
+      "calculation_template": "[balance_sheet.loans_receivable_net_prior] - [balance_sheet.loans_receivable_net]"
+    },
+    "cf_from_change_in_other_assets": {
+      "description": "Cash flow from the change in other assets.",
+      "level": "component",
+      "subtotal_of": "net_cash_from_operations",
+      "calculation_template": "[balance_sheet.other_assets_prior] - [balance_sheet.other_assets]"
+    },
+    "cf_from_change_in_other_current_assets": {
+      "description": "Cash flow from the change in other current assets.",
+      "level": "component",
+      "subtotal_of": "net_cash_from_operations",
+      "calculation_template": "[balance_sheet.other_current_assets_prior] - [balance_sheet.other_current_assets]"
+    },
+    "cf_from_change_in_other_payables": {
+      "description": "Cash flow from the change in other payables.",
+      "level": "component",
+      "subtotal_of": "net_cash_from_operations",
+      "calculation_template": "[balance_sheet.other_payables] - [balance_sheet.other_payables_prior]"
+    },
+    "cf_from_change_in_income_tax_payable": {
+      "description": "Cash flow from the change in income tax payable.",
+      "level": "component",
+      "subtotal_of": "net_cash_from_operations",
+      "calculation_template": "[balance_sheet.income_tax_payable] - [balance_sheet.income_tax_payable_prior]"
+    },
+    "cf_reversal_of_accounting_plugs": {
+      "description": "Cash flow adjustment to neutralize the impact of accounting and summation plugs.",
+      "level": "component",
+      "subtotal_of": "net_cash_from_operations",
+      "calculation_template": "-1 * (([balance_sheet.summation_plugs.loans_receivable_net] - [balance_sheet.summation_plugs.loans_receivable_net_prior]) + ([balance_sheet.summation_plugs.total_non_current_assets] - [balance_sheet.summation_plugs.total_non_current_assets_prior]) + ([balance_sheet.summation_plugs.total_liabilities] - [balance_sheet.summation_plugs.total_liabilities_prior]) + ([balance_sheet.summation_plugs.total_assets] - [balance_sheet.summation_plugs.total_assets_prior]) + ([balance_sheet.summation_plugs.total_equity] - [balance_sheet.summation_plugs.total_equity_prior]) + ([balance_sheet.summation_plugs.total_current_assets] - [balance_sheet.summation_plugs.total_current_assets_prior]) + ([balance_sheet.summation_plugs.__accounting_equation__] - [balance_sheet.summation_plugs.__accounting_equation___prior]) + ([income_statement.summation_plugs.operating_income] - [income_statement.summation_plugs.operating_income_prior]) + ([income_statement.summation_plugs.profit_before_tax] - [income_statement.summation_plugs.profit_before_tax_prior]) + ([income_statement.summation_plugs.net_interest_income] - [income_statement.summation_plugs.net_interest_income_prior]) + ([income_statement.summation_plugs.net_profit] - [income_statement.summation_plugs.net_profit_prior]))"
+    },
+    "cfs_unexplained_cash_movement": {
+      "description": "Balancing item to reconcile derived cash flow with the change in balance sheet cash.",
+      "level": "component",
+      "subtotal_of": "net_cash_from_operations",
+      "calculation_template": "([balance_sheet.cash_and_equivalents] - [balance_sheet.cash_and_equivalents_prior]) - ( [cfs_net_profit] + [cfs_depreciation_amortization_add_back] + [cf_from_change_in_orphaned_loans_receivable_net] + [cf_from_change_in_other_assets] + [cf_from_change_in_other_current_assets] + [cf_from_change_in_other_payables] + [cf_from_change_in_income_tax_payable] + [cf_reversal_of_accounting_plugs] + [cfs_derived_capex] + [cf_from_change_in_intangible_assets] + [cfs_dividends_paid] + [cf_from_change_in_loans_payable] + [cf_from_change_in_bonds_payable] + [cf_from_change_in_trust_payables] + [cf_from_change_in_asset_backed_securities] + [cf_from_change_in_lease_liabilities] + [cf_from_change_in_share_capital] + [cf_from_change_in_treasury_stock] + [cf_from_change_in_other_equity] )"
+    },
+    "net_cash_from_investing": {
+      "description": "Cash flow generated or used by investment activities.",
+      "level": "subtotal",
+      "subtotal_of": "net_change_in_cash",
+      "calculation_template": null
+    },
+    "cfs_derived_capex": {
+      "description": "Capital expenditures derived from the change in fixed assets and depreciation.",
+      "level": "component",
+      "subtotal_of": "net_cash_from_investing",
+      "calculation_template": "-1 * ([balance_sheet.fixed_assets] - [balance_sheet.fixed_assets_prior] - [income_statement.depreciation_amortization])"
+    },
+    "cf_from_change_in_intangible_assets": {
+      "description": "Cash flow from the change in intangible assets.",
+      "level": "component",
+      "subtotal_of": "net_cash_from_investing",
+      "calculation_template": "[balance_sheet.intangible_assets_prior] - [balance_sheet.intangible_assets]"
+    },
+    "net_cash_from_financing": {
+      "description": "Cash flow generated or used by financing activities.",
+      "level": "subtotal",
+      "subtotal_of": "net_change_in_cash",
+      "calculation_template": null
+    },
+    "cfs_dividends_paid": {
+      "description": "Dividends paid derived from the change in retained earnings and net profit.",
+      "level": "component",
+      "subtotal_of": "net_cash_from_financing",
+      "calculation_template": "-1 * ([balance_sheet.retained_earnings_prior] + [income_statement.net_profit] - [balance_sheet.retained_earnings])"
+    },
+    "cf_from_change_in_loans_payable": {
+      "description": "Cash flow from the change in loans payable.",
+      "level": "component",
+      "subtotal_of": "net_cash_from_financing",
+      "calculation_template": "[balance_sheet.loans_payable] - [balance_sheet.loans_payable_prior]"
+    },
+    "cf_from_change_in_bonds_payable": {
+      "description": "Cash flow from the change in bonds payable.",
+      "level": "component",
+      "subtotal_of": "net_cash_from_financing",
+      "calculation_template": "[balance_sheet.bonds_payable] - [balance_sheet.bonds_payable_prior]"
+    },
+    "cf_from_change_in_trust_payables": {
+      "description": "Cash flow from the change in trust payables.",
+      "level": "component",
+      "subtotal_of": "net_cash_from_financing",
+      "calculation_template": "[balance_sheet.trust_payables] - [balance_sheet.trust_payables_prior]"
+    },
+    "cf_from_change_in_asset_backed_securities": {
+      "description": "Cash flow from the change in asset backed securities.",
+      "level": "component",
+      "subtotal_of": "net_cash_from_financing",
+      "calculation_template": "[balance_sheet.asset_backed_securities] - [balance_sheet.asset_backed_securities_prior]"
+    },
+    "cf_from_change_in_lease_liabilities": {
+      "description": "Cash flow from the change in lease liabilities.",
+      "level": "component",
+      "subtotal_of": "net_cash_from_financing",
+      "calculation_template": "[balance_sheet.lease_liabilities] - [balance_sheet.lease_liabilities_prior]"
+    },
+    "cf_from_change_in_share_capital": {
+      "description": "Cash flow from the change in share capital.",
+      "level": "component",
+      "subtotal_of": "net_cash_from_financing",
+      "calculation_template": "[balance_sheet.share_capital] - [balance_sheet.share_capital_prior]"
+    },
+    "cf_from_change_in_treasury_stock": {
+      "description": "Cash flow from the change in treasury stock.",
+      "level": "component",
+      "subtotal_of": "net_cash_from_financing",
+      "calculation_template": "[balance_sheet.treasury_stock] - [balance_sheet.treasury_stock_prior]"
+    },
+    "cf_from_change_in_other_equity": {
+      "description": "Cash flow from the change in other equity.",
+      "level": "component",
+      "subtotal_of": "net_cash_from_financing",
+      "calculation_template": "[balance_sheet.other_equity] - [balance_sheet.other_equity_prior]"
+    },
+    "net_change_in_cash": {
+      "description": "The total change in cash and cash equivalents during the period.",
+      "level": "total",
+      "subtotal_of": null,
+      "calculation_template": null
+    },
+    "beginning_cash_balance": {
+      "description": "Cash and cash equivalents at the beginning of the period.",
+      "level": "total",
+      "subtotal_of": null,
+      "calculation_template": "[balance_sheet.cash_and_equivalents_prior]"
+    },
+    "ending_cash_balance": {
+      "description": "Cash and cash equivalents at the end of the period.",
+      "level": "total",
+      "subtotal_of": null,
+      "calculation_template": "[balance_sheet.cash_and_equivalents]"
+    }
+  }
+}

@@ -1,0 +1,432 @@
+{
+  "amortization_pct_intangible_assets": {
+    "description": "Annual amortization rate for intangible assets as a percentage of the prior period's intangible asset balance.",
+    "baseline": 0.2,
+    "justification": "Baseline rate is set at a standard percentage (20%) reflecting a typical useful life for intangible assets (approx. 5 years). This deviates from the extremely high rate implied by historical data (approx. 80% in 2023), which is considered anomalous or unrepresentative. Trends are held constant assuming a stable amortization policy.",
+    "trends": {
+      "short_term": 0.2,
+      "medium_term": 0.2,
+      "terminal": 0.2
+    }
+  },
+  "asset_backed_securities_inflow_amount": {
+    "description": "Cash inflow from issuing new asset-backed securities.",
+    "baseline": 100000000.0,
+    "justification": "Baseline amount is set based on the magnitude of the net change in asset-backed securities observed in 2023. Trends are held constant as a simplifying assumption due to lack of detailed issuance schedules in historical data.",
+    "trends": {
+      "short_term": 100000000.0,
+      "medium_term": 100000000.0,
+      "terminal": 100000000.0
+    }
+  },
+  "asset_backed_securities_outflow_amount": {
+    "description": "Cash outflow for repaying asset-backed securities.",
+    "baseline": 50000000.0,
+    "justification": "Baseline amount is set as a fixed value representing assumed repayments, based on the magnitude of the net change in asset-backed securities observed in 2023. Trends are held constant as a simplifying assumption due to lack of detailed repayment schedules in historical data.",
+    "trends": {
+      "short_term": 50000000.0,
+      "medium_term": 50000000.0,
+      "terminal": 50000000.0
+    }
+  },
+  "bonds_payable_inflow_amount": {
+    "description": "Cash inflow from issuing new bonds.",
+    "baseline": 15000000000.0,
+    "justification": "Baseline amount is set based on the significant net increase in bonds payable observed in 9M 2024, reflecting continued funding needs. Trends are held constant as a simplifying assumption due to lack of detailed issuance schedules in historical data.",
+    "trends": {
+      "short_term": 15000000000.0,
+      "medium_term": 15000000000.0,
+      "terminal": 15000000000.0
+    }
+  },
+  "bonds_payable_outflow_amount": {
+    "description": "Cash outflow for redeeming bonds payable.",
+    "baseline": 1200000000.0,
+    "justification": "Baseline amount is set as a fixed value representing assumed redemptions, based on a percentage of the prior year balance (2023). Trends are held constant as a simplifying assumption due to lack of detailed repayment schedules in historical data.",
+    "trends": {
+      "short_term": 1200000000.0,
+      "medium_term": 1200000000.0,
+      "terminal": 1200000000.0
+    }
+  },
+  "capex_amount": {
+    "description": "Cash spent on acquiring fixed assets (Capital Expenditures).",
+    "baseline": 548656000.0,
+    "justification": "Baseline amount is set based on the reported capital expenditures in the 2023 cash flow statement. Trends are held constant as a simplifying assumption due to lack of specific investment plans.",
+    "trends": {
+      "short_term": 550000000.0,
+      "medium_term": 550000000.0,
+      "terminal": 550000000.0
+    }
+  },
+  "cash_minimum_policy_amount": {
+    "description": "Minimum cash balance the company aims to maintain.",
+    "baseline": 8000000000.0,
+    "justification": "Baseline amount is set based on recent historical cash balances (around 8-10 billion MNT), representing a prudent minimum liquidity level.",
+    "trends": {
+      "short_term": 8000000000.0,
+      "medium_term": 8000000000.0,
+      "terminal": 8000000000.0
+    }
+  },
+  "depreciation_pct_fixed_assets": {
+    "description": "Annual depreciation rate for fixed assets as a percentage of the prior period's fixed asset balance.",
+    "baseline": 0.15,
+    "justification": "Baseline rate is set at a standard percentage (15%) reflecting a typical useful life for fixed assets (approx. 6.7 years). This deviates from the extremely high rate implied by historical data (approx. 80% in 2023), which is considered anomalous or unrepresentative. Trends are held constant assuming a stable depreciation policy.",
+    "trends": {
+      "short_term": 0.15,
+      "medium_term": 0.15,
+      "terminal": 0.15
+    }
+  },
+  "dividends_paid_amount": {
+    "description": "Cash paid out as dividends to shareholders.",
+    "baseline": 1293778000.0,
+    "justification": "Baseline amount is set based on the reported dividends paid in the 2023 cash flow statement. Trends are held constant as a simplifying assumption due to lack of a stated dividend policy.",
+    "trends": {
+      "short_term": 1300000000.0,
+      "medium_term": 1300000000.0,
+      "terminal": 1300000000.0
+    }
+  },
+  "driver_key": {
+    "description": "Placeholder driver key. This driver is not used in the provided schema.",
+    "baseline": 0.0,
+    "justification": "This driver was included as it was present in the required list, but it is not referenced in the provided projection schema. Values are set to zero.",
+    "trends": {
+      "short_term": 0.0,
+      "medium_term": 0.0,
+      "terminal": 0.0
+    }
+  },
+  "impairment_loss_pct_gross_loans": {
+    "description": "Provision for loan losses as a percentage of gross loans receivable.",
+    "baseline": 0.03,
+    "justification": "Baseline rate is set based on the annualized impairment loss percentage observed in the 9M 2024 interim data (approx. 3.2%), reflecting a recent increase from 2023 (2.08%) and potential risks noted in industry research (over-indebtedness). Trends reflect a slight increase in the short term due to macro risks, then a gradual decline towards a stable long-term rate as risk management matures.",
+    "trends": {
+      "short_term": 0.032,
+      "medium_term": 0.03,
+      "terminal": 0.028
+    }
+  },
+  "income_tax_payable_pct_tax_expense": {
+    "description": "Income tax payable as a percentage of income tax expense.",
+    "baseline": 0.653,
+    "justification": "Baseline rate is set based on the ratio of income tax payable to income tax expense in the 2023 annual data (65.3%). Trends are held constant assuming consistent tax payment timing.",
+    "trends": {
+      "short_term": 0.653,
+      "medium_term": 0.653,
+      "terminal": 0.653
+    }
+  },
+  "income_tax_pct_pbt": {
+    "description": "Income tax expense as a percentage of profit before tax.",
+    "baseline": 0.237,
+    "justification": "Baseline rate is set based on the effective tax rate observed in the 2024 interim data (approx. 23.7%), which is higher than 2023 (22.0%) and 2022 (15.4%). Trends are held constant assuming the effective tax rate remains stable.",
+    "trends": {
+      "short_term": 0.237,
+      "medium_term": 0.237,
+      "terminal": 0.237
+    }
+  },
+  "intangible_asset_additions_amount": {
+    "description": "Cash spent on acquiring intangible assets.",
+    "baseline": 45553000.0,
+    "justification": "Baseline amount is set based on the reported intangible asset additions in the 2023 cash flow statement. Trends are held constant as a simplifying assumption due to lack of specific investment plans, noting this seems low given the fintech nature.",
+    "trends": {
+      "short_term": 50000000.0,
+      "medium_term": 50000000.0,
+      "terminal": 50000000.0
+    }
+  },
+  "interest_rate_asset_backed_securities": {
+    "description": "Assumed annual interest rate on asset-backed securities.",
+    "baseline": 0.12,
+    "justification": "Baseline rate is an assumption based on typical funding costs for NBFIs in Mongolia (industry average 12-13%) and the nature of secured funding. Trends are held constant as a simplifying assumption.",
+    "trends": {
+      "short_term": 0.12,
+      "medium_term": 0.12,
+      "terminal": 0.12
+    }
+  },
+  "interest_rate_bonds_payable": {
+    "description": "Assumed annual interest rate on bonds payable.",
+    "baseline": 0.13,
+    "justification": "Baseline rate is an assumption based on typical funding costs for NBFIs in Mongolia (industry average 12-13%) and market rates for corporate bonds, set slightly higher than other debt types to reflect market risk. Trends are held constant as a simplifying assumption.",
+    "trends": {
+      "short_term": 0.13,
+      "medium_term": 0.13,
+      "terminal": 0.13
+    }
+  },
+  "interest_rate_cash": {
+    "description": "Assumed annual interest rate earned on cash balances.",
+    "baseline": 0.08,
+    "justification": "Baseline rate is an assumption based on typical rates for liquid funds, set below the policy rate (10%) to reflect lower-risk investments. Trends are held constant as a simplifying assumption.",
+    "trends": {
+      "short_term": 0.08,
+      "medium_term": 0.08,
+      "terminal": 0.08
+    }
+  },
+  "interest_rate_lease_liabilities": {
+    "description": "Assumed annual interest rate on lease liabilities.",
+    "baseline": 0.14,
+    "justification": "Baseline rate is an assumption based on typical financing costs for leased assets, set slightly higher than general debt rates. Trends are held constant as a simplifying assumption.",
+    "trends": {
+      "short_term": 0.14,
+      "medium_term": 0.14,
+      "terminal": 0.14
+    }
+  },
+  "interest_rate_loans_payable": {
+    "description": "Assumed annual interest rate on loans payable.",
+    "baseline": 0.12,
+    "justification": "Baseline rate is an assumption based on typical funding costs for NBFIs in Mongolia (industry average 12-13%) and the policy rate (10%). Trends are held constant as a simplifying assumption.",
+    "trends": {
+      "short_term": 0.12,
+      "medium_term": 0.12,
+      "terminal": 0.12
+    }
+  },
+  "interest_rate_loans_receivable": {
+    "description": "Assumed annual interest yield on gross loans receivable.",
+    "baseline": 0.4737,
+    "justification": "Baseline yield is set based on the calculated yield from the 2023 annual data (47.37%), reflecting the high-yield nature of NBFI lending, which is below the 54% APR cap. Trends show a gradual decline reflecting potential pressure from regulation, competition, and a shift towards potentially lower-yield, larger loans (Business, Long-term consumer) as the portfolio mix evolves.",
+    "trends": {
+      "short_term": 0.46,
+      "medium_term": 0.44,
+      "terminal": 0.42
+    }
+  },
+  "interest_rate_revolver": {
+    "description": "Assumed annual interest rate on the revolving credit facility.",
+    "baseline": 0.12,
+    "justification": "Baseline rate is an assumption based on the current policy rate (10%) plus a spread for credit risk, reflecting the cost of short-term borrowing. Trends are held constant as a simplifying assumption.",
+    "trends": {
+      "short_term": 0.12,
+      "medium_term": 0.12,
+      "terminal": 0.12
+    }
+  },
+  "interest_rate_trust_payables": {
+    "description": "Assumed annual interest rate on trust payables.",
+    "baseline": 0.125,
+    "justification": "Baseline rate is an assumption based on typical funding costs for NBFIs in Mongolia (industry average 12-13%). Trends are held constant as a simplifying assumption.",
+    "trends": {
+      "short_term": 0.125,
+      "medium_term": 0.125,
+      "terminal": 0.125
+    }
+  },
+  "lease_liabilities_inflow_amount": {
+    "description": "Cash inflow from new lease financing.",
+    "baseline": 700000000.0,
+    "justification": "Baseline amount is set based on the magnitude of the net change in lease liabilities observed in 2023. Trends are held constant as a simplifying assumption due to lack of detailed lease schedules.",
+    "trends": {
+      "short_term": 700000000.0,
+      "medium_term": 700000000.0,
+      "terminal": 700000000.0
+    }
+  },
+  "lease_liabilities_outflow_amount": {
+    "description": "Cash outflow for lease payments.",
+    "baseline": 200000000.0,
+    "justification": "Baseline amount is set as a fixed value representing assumed lease payments, based on the magnitude of the net change in lease liabilities observed in 2023. Trends are held constant as a simplifying assumption due to lack of detailed lease schedules.",
+    "trends": {
+      "short_term": 200000000.0,
+      "medium_term": 200000000.0,
+      "terminal": 200000000.0
+    }
+  },
+  "loan_loss_reserve_pct_gross_loans": {
+    "description": "Allowance for loan losses as a percentage of gross loans receivable.",
+    "baseline": 0.042,
+    "justification": "Baseline rate is set based on the ratio of loan loss reserve to gross loans receivable in the 9M 2024 interim data (4.21%), which is consistent with the 2023 annual rate (4.39%). Trends are held constant assuming a stable provisioning policy relative to the portfolio size.",
+    "trends": {
+      "short_term": 0.042,
+      "medium_term": 0.042,
+      "terminal": 0.042
+    }
+  },
+  "loans_payable_inflow_amount": {
+    "description": "Cash inflow from new loans payable.",
+    "baseline": 30000000000.0,
+    "justification": "Baseline amount is set based on the significant net increase in loans payable observed in 2023 and 9M 2024, reflecting the need to fund rapid asset growth. Trends are held constant as a simplifying assumption due to lack of detailed debt maturity/issuance schedules in historical data.",
+    "trends": {
+      "short_term": 30000000000.0,
+      "medium_term": 30000000000.0,
+      "terminal": 30000000000.0
+    }
+  },
+  "loans_payable_outflow_amount": {
+    "description": "Cash outflow for repaying loans payable.",
+    "baseline": 4300000000.0,
+    "justification": "Baseline amount is set as a fixed value representing assumed repayments, based on a percentage of the prior year balance (2023). Trends are held constant as a simplifying assumption due to lack of detailed repayment schedules in historical data.",
+    "trends": {
+      "short_term": 4300000000.0,
+      "medium_term": 4300000000.0,
+      "terminal": 4300000000.0
+    }
+  },
+  "loans_receivable_gross_growth_rate": {
+    "description": "Annual growth rate of gross loans receivable.",
+    "baseline": 0.5,
+    "justification": "Baseline growth rate is set at 50%, reflecting continued strong growth observed in 2023 (77%) and 9M 2024 (annualized >100%), but moderating from recent peaks due to regulatory tightening (interest rate caps, DTI limits) and market maturation. Trends show a gradual decline towards a sustainable long-term rate (7%) slightly above projected terminal inflation/GDP, reflecting the NBFI sector's growth stage and the company's fintech advantage.",
+    "trends": {
+      "short_term": 0.35,
+      "medium_term": 0.12,
+      "terminal": 0.07
+    }
+  },
+  "operating_expense_pct_operating_income": {
+    "description": "Management and operating expenses as a percentage of operating income.",
+    "baseline": 0.28,
+    "justification": "Baseline rate is set based on the 2023 annual ratio (28.7%), adjusted slightly downwards to reflect the trend observed in 9M 2024 (26.5%) and the expected efficiency gains from the fintech model. Trends show a slight further decline in the short/medium term due to scale, stabilizing below the industry average (42-45%) in the terminal period.",
+    "trends": {
+      "short_term": 0.27,
+      "medium_term": 0.26,
+      "terminal": 0.26
+    }
+  },
+  "other_assets_growth_rate": {
+    "description": "Annual growth rate of other assets.",
+    "baseline": 0.1,
+    "justification": "Baseline growth rate is an assumption reflecting moderate growth, lower than core loan growth, due to volatility in historical data (-46% in 2023). Trends show a gradual decline towards a sustainable long-term rate.",
+    "trends": {
+      "short_term": 0.08,
+      "medium_term": 0.06,
+      "terminal": 0.05
+    }
+  },
+  "other_current_assets_growth_rate": {
+    "description": "Annual growth rate of other current assets.",
+    "baseline": 0.2,
+    "justification": "Baseline growth rate is an assumption reflecting growth from the non-zero balance observed in 9M 2024, as the 2023 balance was zero (imputed). Trends show a gradual decline towards a sustainable long-term rate, acknowledging the limitation of projecting growth from a zero historical base.",
+    "trends": {
+      "short_term": 0.15,
+      "medium_term": 0.1,
+      "terminal": 0.07
+    }
+  },
+  "other_equity_inflow_amount": {
+    "description": "Cash inflow related to other equity activities.",
+    "baseline": 0.0,
+    "justification": "Baseline amount is set to zero due to the lack of significant or consistent historical cash flows related to other equity, and volatility in interim balances.",
+    "trends": {
+      "short_term": 0.0,
+      "medium_term": 0.0,
+      "terminal": 0.0
+    }
+  },
+  "other_equity_outflow_amount": {
+    "description": "Cash outflow related to other equity activities.",
+    "baseline": 0.0,
+    "justification": "Baseline amount is set to zero due to the lack of significant or consistent historical cash flows related to other equity, and volatility in interim balances.",
+    "trends": {
+      "short_term": 0.0,
+      "medium_term": 0.0,
+      "terminal": 0.0
+    }
+  },
+  "other_income_expense_growth_rate": {
+    "description": "Annual growth rate of other income/expense.",
+    "baseline": 0.0,
+    "justification": "Baseline growth rate is set to 0% due to the high volatility and inconsistent sign of this line item in historical data, including large positive values in 2024 interim periods following negative values in prior years. This assumes the item does not exhibit a predictable growth trend and will remain relatively stable or fade in significance relative to core operations.",
+    "trends": {
+      "short_term": 0.0,
+      "medium_term": 0.0,
+      "terminal": 0.0
+    }
+  },
+  "other_payables_growth_rate": {
+    "description": "Annual growth rate of other payables.",
+    "baseline": 0.5,
+    "justification": "Baseline growth rate is set at 50%, reflecting the extremely high growth observed in 2023 (47%) and particularly in 9M 2024. Trends show a rapid decline towards a sustainable long-term rate (7%) as this item is assumed to normalize relative to overall business growth after the recent surge.",
+    "trends": {
+      "short_term": 0.3,
+      "medium_term": 0.15,
+      "terminal": 0.07
+    }
+  },
+  "revenue_growth_rate": {
+    "description": "Annual growth rate of total revenue (Interest Income + Other Income/Expense). Note: This driver is not used in the provided projection schema, where revenue components are calculated separately.",
+    "baseline": 0.4,
+    "justification": "Baseline growth rate is an estimate based on the expected outcome of the core drivers (loan growth, yield) and industry trends, implying high but moderating revenue growth. This driver is included as required but is not utilized in the provided calculation templates.",
+    "trends": {
+      "short_term": 0.3,
+      "medium_term": 0.15,
+      "terminal": 0.07
+    }
+  },
+  "revolver_capacity_limit": {
+    "description": "Maximum available balance on the revolving credit facility.",
+    "baseline": 20000000000.0,
+    "justification": "Baseline amount is an assumption for the maximum borrowing capacity on the revolver, set at a level (approx. 15% of 2023 assets) deemed reasonable for a company of this size and growth stage. Trends are held constant.",
+    "trends": {
+      "short_term": 20000000000.0,
+      "medium_term": 20000000000.0,
+      "terminal": 20000000000.0
+    }
+  },
+  "share_capital_inflow_amount": {
+    "description": "Cash inflow from issuing new shares.",
+    "baseline": 100000000.0,
+    "justification": "Baseline amount is set as a small fixed inflow, reflecting a minor increase observed in 9M 2024 after being constant in prior years. Trends are held constant as a simplifying assumption.",
+    "trends": {
+      "short_term": 100000000.0,
+      "medium_term": 100000000.0,
+      "terminal": 100000000.0
+    }
+  },
+  "share_capital_outflow_amount": {
+    "description": "Cash outflow for repurchasing shares.",
+    "baseline": 0.0,
+    "justification": "Baseline amount is set to zero based on historical data showing no share repurchases. Trends are held constant assuming no future repurchases.",
+    "trends": {
+      "short_term": 0.0,
+      "medium_term": 0.0,
+      "terminal": 0.0
+    }
+  },
+  "treasury_stock_inflow_amount": {
+    "description": "Cash inflow from reissuing treasury stock.",
+    "baseline": 0.0,
+    "justification": "Baseline amount is set to zero based on historical data showing no reissuance of treasury stock. Trends are held constant assuming no future reissuances.",
+    "trends": {
+      "short_term": 0.0,
+      "medium_term": 0.0,
+      "terminal": 0.0
+    }
+  },
+  "treasury_stock_outflow_amount": {
+    "description": "Cash paid for acquiring treasury stock.",
+    "baseline": 0.0,
+    "justification": "Baseline amount is set to zero based on historical data showing no acquisition of treasury stock. Trends are held constant assuming no future acquisitions.",
+    "trends": {
+      "short_term": 0.0,
+      "medium_term": 0.0,
+      "terminal": 0.0
+    }
+  },
+  "trust_payables_inflow_amount": {
+    "description": "Cash inflow related to trust activities.",
+    "baseline": 20000000000.0,
+    "justification": "Baseline amount is set based on the significant net increase in trust payables observed in 2023 and 9M 2024, reflecting continued funding needs. Trends are held constant as a simplifying assumption due to lack of detailed schedules.",
+    "trends": {
+      "short_term": 20000000000.0,
+      "medium_term": 20000000000.0,
+      "terminal": 20000000000.0
+    }
+  },
+  "trust_payables_outflow_amount": {
+    "description": "Cash outflow related to trust activities.",
+    "baseline": 3600000000.0,
+    "justification": "Baseline amount is set as a fixed value representing assumed outflows, based on a percentage of the prior year balance (2023). Trends are held constant as a simplifying assumption due to lack of detailed schedules.",
+    "trends": {
+      "short_term": 3600000000.0,
+      "medium_term": 3600000000.0,
+      "terminal": 3600000000.0
+    }
+  }
+}

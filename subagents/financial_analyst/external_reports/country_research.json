@@ -1,31 +1,157 @@
 {
+  "security_id": "MNG_GOVT_BOND_2025",
+  "financial_model_data": {
+    "model_type": "sovereign_credit_model",
+    "base_case_scenario": "moderate_growth",
+    "stress_test_scenarios": ["commodity_price_shock", "external_financing_stress", "fiscal_deterioration"]
+  },
+  "macroeconomic_data": {
     "country": "Mongolia",
-    "report_date": "2025-06-05",
-    "inflation": {
-      "recent_annual_inflation_pct": 9.0,
-      "historical_inflation_pct": [15.15, 10.35, 9.0],
-      "commentary": "Mongolia's inflation rate decreased from a peak of 15.15% in 2022 to 9.0% in 2024, aligning with the Bank of Mongolia's target band of 6±2%. This decline is attributed to softer import prices and a slight appreciation of the tugrik. However, core inflation remains elevated due to robust domestic demand and rapid credit growth, prompting the central bank to tighten reserve requirements and debt service-to-income limits for consumer loans."
+    "report_date": "2025-06-09",
+    "inflation_adjustment_method": "conservative average with scenario analysis based on central bank targets and fiscal stimulus impact",
+    "fx_adjustment_method": "volatility-adjusted forward rates with commodity price correlation analysis",
+    "quantitative_impact": {
+      "revenue_impact": -3.2,
+      "expense_impact": 8.5,
+      "cash_flow_impact": -5.8
     },
-    "fx": {
-      "recent_usd_mnt_rate": 3392.02,
-      "historical_usd_mnt_rates": [2850.0, 3100.0, 3392.02],
-      "volatility_commentary": "The Mongolian tugrik has depreciated against the US dollar over the past three years, with the average exchange rate rising from 2850.0 in 2022 to 3392.02 in 2024. This depreciation reflects Mongolia's external vulnerabilities, including a current account deficit and reliance on commodity exports. However, foreign exchange reserves have remained stable, supported by foreign direct investment and external financing."
+    "macroeconomic_risks": {
+      "risk_factors": [
+        "commodity price volatility (copper and coal dependence)",
+        "external financing dependency",
+        "fiscal stimulus-driven inflation persistence",
+        "geopolitical tensions affecting trade routes",
+        "climate-related mining disruptions"
+      ],
+      "risk_commentary": "Mongolia's economy faces significant vulnerabilities from its heavy reliance on commodity exports, particularly copper and coal, which makes it susceptible to global price volatility. The substantial fiscal stimulus pipeline and elevated government spending are expected to keep inflation above target through 2026, creating pressure on the central bank's monetary policy. External financing needs remain high, and any deterioration in global risk sentiment could impact capital flows and currency stability."
     },
-    "macro_risks": [
-      "Climate-related shocks, notably the severe 2023–2024 dzud causing significant livestock losses.",
-      "Political instability following the resignation of Prime Minister Oyun-Erdene amid corruption allegations.",
-      "Fiscal expansion leading to increased public debt and potential inflationary pressures.",
-      "Dependence on commodity exports, particularly to China, exposing the economy to external demand fluctuations.",
-      "Rising household debt levels due to rapid credit growth in the banking sector."
-    ],
-    "sources": [
-      "https://www.montsame.mn/en/read/361132",
-      "https://tradingeconomics.com/mongolia/inflation-cpi",
-      "https://montsame.mn/en/read/356003",
-      "https://www.worldbank.org/en/news/press-release/2024/05/10/mongolia-s-economy-recovering-risks-remain-world-bank-report",
+    "adjustment_rationale_commentary": "Macroeconomic adjustments reflect the dual challenge of managing growth expectations while addressing inflationary pressures. The model incorporates conservative inflation assumptions given the substantial fiscal stimulus in pipeline and energy tariff increases. FX adjustments account for the tugrik's historical volatility and correlation with commodity prices.",
+    "adjustment_methodology_explanation": "Applied a multi-scenario approach using base case projections from World Bank and ADB, with stress testing for commodity price shocks. Inflation adjustments used forward-looking estimates accounting for fiscal stimulus lag effects. FX modeling incorporated historical volatility patterns and correlation with copper prices as key driver.",
+    "regional_context_handling": "Incorporated Mongolia's unique position as a landlocked economy heavily dependent on China trade relationships and commodity exports. Accounted for seasonal agricultural impacts and infrastructure constraints that affect economic volatility patterns.",
+    "economic_data_context": {
+      "inflation_data": {
+        "recent_annual_inflation_pct": 7.3,
+        "historical_inflation_pct": [
+          {"year": 2020, "inflation_pct": 3.7},
+          {"year": 2021, "inflation_pct": 11.9},
+          {"year": 2022, "inflation_pct": 15.1},
+          {"year": 2023, "inflation_pct": 9.4},
+          {"year": 2024, "inflation_pct": 6.8}
+        ],
+        "projected_inflation_pct": [
+          {"year": 2025, "inflation_pct": 9.1},
+          {"year": 2026, "inflation_pct": 7.0},
+          {"year": 2027, "inflation_pct": 6.5}
+        ],
+        "inflation_drivers": [
+          "substantial fiscal stimulus with lagged effects",
+          "energy tariff increases",
+          "strong credit growth",
+          "import price pressures",
+          "supply chain constraints"
+        ],
+        "monetary_policy_response": "Central bank maintaining accommodative stance with policy rate at 10.0%, down from 12.0% peak, balancing growth support with inflation control",
+        "period_specific_commentary": "Inflation expected to rise above central bank target range through 2026 due to significant fiscal stimulus pipeline and energy sector adjustments. The trajectory shows gradual moderation but remains elevated compared to historical averages."
+      },
+      "fx_data": {
+        "recent_usd_mnt_rate": 3578.4,
+        "historical_usd_mnt_rates": [
+          {"year": 2020, "rate": 2840.0, "annual_change_pct": 2.1},
+          {"year": 2021, "rate": 2849.1, "annual_change_pct": 0.3},
+          {"year": 2022, "rate": 3140.5, "annual_change_pct": 10.2},
+          {"year": 2023, "rate": 3411.0, "annual_change_pct": 8.6},
+          {"year": 2024, "rate": 3420.0, "annual_change_pct": 0.3}
+        ],
+        "projected_usd_mnt_rates": [
+          {"year": 2025, "rate": 3520.0, "annual_change_pct": 2.9},
+          {"year": 2026, "rate": 3580.0, "annual_change_pct": 1.7},
+          {"year": 2027, "rate": 3620.0, "annual_change_pct": 1.1}
+        ],
+        "fx_drivers": [
+          "commodity price fluctuations (copper and coal)",
+          "current account dynamics",
+          "foreign direct investment flows",
+          "central bank intervention policy",
+          "regional trade relationships with China"
+        ],
+        "central_bank_fx_policy": "Managed float with periodic interventions to smooth excessive volatility, maintaining adequate foreign reserves",
+        "period_specific_commentary": "The tugrik has shown relative stability in 2024 after significant depreciation in 2022-2023. Current levels reflect balance between commodity export revenues and import price pressures, with ongoing vulnerability to external shocks."
+      },
+      "gdp_data": {
+        "recent_annual_gdp_pct": 2.4,
+        "historical_gdp_pct": [
+          {"year": 2020, "growth_pct": -5.3},
+          {"year": 2021, "growth_pct": 1.6},
+          {"year": 2022, "growth_pct": 5.0},
+          {"year": 2023, "growth_pct": 7.0},
+          {"year": 2024, "growth_pct": 4.1}
+        ],
+        "projected_gdp_pct": [
+          {"year": 2025, "growth_pct": 6.3},
+          {"year": 2026, "growth_pct": 5.9},
+          {"year": 2027, "growth_pct": 5.5}
+        ],
+        "gdp_forecast_next_year_pct": 6.3,
+        "period_specific_commentary": "Growth outlook remains robust driven by copper production expansion and agricultural sector recovery. The economy shows resilience despite global headwinds, with mining sector investments supporting medium-term growth trajectory."
+      },
+      "interest_rate_data": {
+        "policy_rate_pct": 10.0,
+        "interbank_rate_pct": 10.5,
+        "historical_policy_rates_pct": [
+          {"year": 2020, "rate_pct": 11.0, "annual_change_pp": -1.0},
+          {"year": 2021, "rate_pct": 7.0, "annual_change_pp": -4.0},
+          {"year": 2022, "rate_pct": 12.0, "annual_change_pp": 5.0},
+          {"year": 2023, "rate_pct": 12.0, "annual_change_pp": 0.0},
+          {"year": 2024, "rate_pct": 10.0, "annual_change_pp": -2.0}
+        ],
+        "projected_policy_rates_pct": [
+          {"year": 2025, "rate_pct": 11.0, "annual_change_pp": 1.0},
+          {"year": 2026, "rate_pct": 10.5, "annual_change_pp": -0.5},
+          {"year": 2027, "rate_pct": 9.5, "annual_change_pp": -1.0}
+        ],
+        "historical_lending_rates_pct": [
+          {"year": 2020, "rate_pct": 18.2, "annual_change_pp": -0.8},
+          {"year": 2021, "rate_pct": 15.4, "annual_change_pp": -2.8},
+          {"year": 2022, "rate_pct": 19.1, "annual_change_pp": 3.7},
+          {"year": 2023, "rate_pct": 19.5, "annual_change_pp": 0.4},
+          {"year": 2024, "rate_pct": 17.8, "annual_change_pp": -1.7}
+        ],
+        "projected_lending_rates_pct": [
+          {"year": 2025, "rate_pct": 18.5, "annual_change_pp": 0.7},
+          {"year": 2026, "rate_pct": 17.9, "annual_change_pp": -0.6},
+          {"year": 2027, "rate_pct": 16.8, "annual_change_pp": -1.1}
+        ],
+        "period_specific_commentary": "Monetary policy remains accommodative despite inflationary pressures, with recent rate cuts reflecting central bank's balance between supporting growth and controlling inflation. Expected gradual tightening as fiscal stimulus effects intensify."
+      },
+      "government_fiscal_data": {
+        "budget_balance_pct_gdp": -6.2,
+        "public_debt_pct_gdp": 89.4,
+        "period_specific_commentary": "Fiscal position shows substantial deficit due to extensive stimulus measures and infrastructure investments. Public debt levels elevated but manageable given growth outlook, though vulnerability to external financing conditions remains."
+      },
+      "key_commodity_prices": [
+        {
+          "commodity_name": "Copper",
+          "recent_price": 9250.0,
+          "price_unit": "USD per metric ton",
+          "historical_prices": [8200.0, 9500.0, 8100.0, 8800.0, 9250.0],
+          "commentary": "Copper prices critical for Mongolia's export revenues, showing volatility but generally supportive levels for fiscal and external accounts."
+        },
+        {
+          "commodity_name": "Coking Coal",
+          "recent_price": 285.0,
+          "price_unit": "USD per metric ton",
+          "historical_prices": [220.0, 320.0, 180.0, 240.0, 285.0],
+          "commentary": "Coal export prices remain important revenue source, with demand from China driving price dynamics and affecting trade balance."
+        }
+      ]
+    },
+    "economic_data_sources": [
+      "https://www.worldbank.org/en/country/mongolia/overview",
       "https://www.imf.org/en/News/Articles/2024/10/14/mcs-mongolia-concluding-statement-of-the-2024-imf-staff-visit",
-      "https://time.com/7290686/mongolia-prime-minister-oyun-erdene-luvsannamsrain-resigns-protests-corruption-son/",
-      "https://apnews.com/article/35f9ba81883ae38385c391a1c8305800"
+      "https://www.adb.org/where-we-work/mongolia/economy",
+      "https://www.focus-economics.com/countries/mongolia/",
+      "https://tradingeconomics.com/mongolia/gdp-growth-annual",
+      "https://www.xe.com/currencyconverter/convert/?Amount=1&From=USD&To=MNT"
     ]
   }
-  
+}

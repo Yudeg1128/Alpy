@@ -14,9 +14,18 @@
           "items": { "type": "number" },
           "description": "Annual inflation rates for recent years, percent"
         },
-        "commentary": { "type": "string" }
+        "commentary": { "type": "string" },
+        "inflation_drivers": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Key factors driving inflation (e.g., supply-side, demand-side, import prices)"
+        },
+        "monetary_policy_response": {
+          "type": "string",
+          "description": "Central bank's response to inflation (e.g., rate hikes, reserve requirements)"
+        }
       },
-      "required": ["recent_annual_inflation_pct", "historical_inflation_pct"]
+      "required": ["recent_annual_inflation_pct", "historical_inflation_pct", "commentary"]
     },
     "fx": {
       "type": "object",
@@ -27,14 +36,83 @@
           "items": { "type": "number" },
           "description": "Annual average USD/MNT rates for recent years"
         },
-        "volatility_commentary": { "type": "string" }
+        "volatility_commentary": { "type": "string" },
+        "fx_drivers": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Key factors influencing FX rate (e.g., current account, FDI, commodity prices)"
+        },
+        "central_bank_fx_policy": {
+          "type": "string",
+          "description": "Central bank's intervention or stance on FX"
+        }
       },
-      "required": ["recent_usd_mnt_rate", "historical_usd_mnt_rates"]
+      "required": ["recent_usd_mnt_rate", "historical_usd_mnt_rates", "volatility_commentary"]
     },
     "macro_risks": {
       "type": "array",
       "items": { "type": "string" },
-      "description": "Key macroeconomic risks (e.g., commodity, policy, external shocks)"
+      "description": "Key macroeconomic risks (e.g., commodity, policy, external shocks)",
+      "minItems": 1
+    },
+    "gdp_growth": {
+      "type": "object",
+      "properties": {
+        "recent_annual_gdp_pct": { "type": "number" },
+        "historical_gdp_pct": {
+          "type": "array",
+          "items": { "type": "number" },
+          "description": "Annual real GDP growth rates for recent years, percent"
+        },
+        "gdp_forecast_next_year_pct": {
+          "type": "number",
+          "description": "Forecasted real GDP growth for the next year, percent"
+        },
+        "commentary": { "type": "string" }
+      },
+      "required": ["recent_annual_gdp_pct", "historical_gdp_pct", "commentary"]
+    },
+    "interest_rates": {
+      "type": "object",
+      "properties": {
+        "policy_rate_pct": { "type": "number", "description": "Current central bank policy rate, percent" },
+        "interbank_rate_pct": { "type": "number", "description": "Current interbank lending rate, percent" },
+        "historical_policy_rates_pct": {
+          "type": "array",
+          "items": { "type": "number" },
+          "description": "Historical central bank policy rates, percent"
+        },
+        "commentary": { "type": "string" }
+      },
+      "required": ["policy_rate_pct", "historical_policy_rates_pct", "commentary"]
+    },
+    "government_fiscal": {
+      "type": "object",
+      "properties": {
+        "budget_balance_pct_gdp": { "type": "number", "description": "Recent government budget balance as percent of GDP" },
+        "public_debt_pct_gdp": { "type": "number", "description": "Recent public debt as percent of GDP" },
+        "commentary": { "type": "string" }
+      },
+      "required": ["budget_balance_pct_gdp", "public_debt_pct_gdp", "commentary"]
+    },
+    "key_commodity_prices": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "commodity_name": { "type": "string" },
+          "recent_price": { "type": "number" },
+          "price_unit": { "type": "string" },
+          "historical_prices": {
+            "type": "array",
+            "items": { "type": "number" },
+            "description": "Historical prices for the commodity"
+          },
+          "commentary": { "type": "string" }
+        },
+        "required": ["commodity_name", "recent_price", "price_unit", "historical_prices"]
+      },
+      "description": "Prices of key commodities impacting the economy (e.g., copper, coal)"
     },
     "sources": {
       "type": "array",
@@ -42,5 +120,15 @@
       "minItems": 1
     }
   },
-  "required": ["country", "report_date", "inflation", "fx", "macro_risks", "sources"]
+  "required": [
+    "country",
+    "report_date",
+    "inflation",
+    "fx",
+    "macro_risks",
+    "gdp_growth",
+    "interest_rates",
+    "government_fiscal",
+    "sources"
+  ]
 }

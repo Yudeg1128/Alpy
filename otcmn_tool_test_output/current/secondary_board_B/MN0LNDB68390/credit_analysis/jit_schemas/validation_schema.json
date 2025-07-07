@@ -1,0 +1,540 @@
+{
+  "income_statement": {
+    "interest_income": {
+      "description": "Revenue generated from interest on loans and other interest-bearing assets.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "sign": "positive",
+      "level": "component",
+      "subtotal_of": "net_interest_income",
+      "schema_role": null
+    },
+    "interest_expense": {
+      "description": "Costs incurred from interest on borrowings, bonds, and other interest-bearing liabilities.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "sign": "negative",
+      "level": "component",
+      "subtotal_of": "net_interest_income",
+      "schema_role": null
+    },
+    "net_interest_income": {
+      "description": "The difference between interest income and interest expense, representing the core profitability of lending activities.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "sign": "both",
+      "level": "subtotal",
+      "subtotal_of": "operating_income",
+      "schema_role": null
+    },
+    "impairment_loss_on_loans": {
+      "description": "Expense recognized for the expected or actual losses on the loan portfolio.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "sign": "negative",
+      "level": "component",
+      "subtotal_of": "profit_before_tax",
+      "schema_role": null
+    },
+    "operating_income": {
+      "description": "Income generated from the company's primary business operations, typically including net interest income and other operating revenues.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "sign": "both",
+      "level": "subtotal",
+      "subtotal_of": "profit_before_tax",
+      "schema_role": null
+    },
+    "management_and_operating_expenses": {
+      "description": "Costs associated with running the business, excluding interest and income tax.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "sign": "negative",
+      "level": "component",
+      "subtotal_of": "profit_before_tax",
+      "schema_role": null
+    },
+    "other_income_expense": {
+      "description": "Income or expenses from activities outside the core lending operations.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "sign": "both",
+      "level": "component",
+      "subtotal_of": "profit_before_tax",
+      "schema_role": null
+    },
+    "profit_before_tax": {
+      "description": "Earnings before deducting income tax expense.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "sign": "both",
+      "level": "subtotal",
+      "subtotal_of": "net_profit",
+      "schema_role": null
+    },
+    "income_tax_expense": {
+      "description": "The amount of tax provisioned for the reporting period's income.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "sign": "negative",
+      "level": "component",
+      "subtotal_of": "net_profit",
+      "schema_role": null
+    },
+    "net_profit": {
+      "description": "The final profit or loss after all expenses, including taxes, have been deducted.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "sign": "both",
+      "level": "total",
+      "subtotal_of": null,
+      "schema_role": "IS_PROFIT_ANCHOR"
+    },
+    "depreciation_amortization": {
+      "description": "Non-cash expense reflecting the allocation of the cost of tangible and intangible assets over their useful lives.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "sign": "negative",
+      "level": "component",
+      "subtotal_of": null,
+      "schema_role": "IS_DEPRECIATION_AMORTIZATION"
+    }
+  },
+  "balance_sheet": {
+    "total_assets": {
+      "description": "The sum of all current and non-current assets owned by the company.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "sign": "positive",
+      "level": "total",
+      "subtotal_of": null,
+      "cfs_classification": null,
+      "schema_role": "BS_TOTAL_ASSETS_ANCHOR"
+    },
+    "cash_and_equivalents": {
+      "description": "Highly liquid assets readily convertible to known amounts of cash.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "sign": "positive",
+      "level": "component",
+      "subtotal_of": "total_current_assets",
+      "cfs_classification": "CASH_EQUIVALENT",
+      "schema_role": null
+    },
+    "loans_receivable_net": {
+      "description": "The outstanding balance of loans owed to the company, net of allowances for loan losses.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "sign": "positive",
+      "level": "subtotal",
+      "subtotal_of": "total_current_assets",
+      "cfs_classification": "CFO",
+      "schema_role": null
+    },
+    "loan_loss_reserve": {
+      "description": "An allowance set aside to cover potential future losses on the loan portfolio.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "sign": "negative",
+      "level": "component",
+      "subtotal_of": "loans_receivable_net",
+      "cfs_classification": "CFO",
+      "schema_role": null
+    },
+    "other_current_assets": {
+      "description": "Assets expected to be converted to cash or used within one year, not classified elsewhere.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "sign": "positive",
+      "level": "component",
+      "subtotal_of": "total_current_assets",
+      "cfs_classification": "CFO",
+      "schema_role": null
+    },
+    "total_current_assets": {
+      "description": "The sum of assets expected to be converted to cash or used within one year.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "sign": "positive",
+      "level": "subtotal",
+      "subtotal_of": "total_assets",
+      "cfs_classification": null,
+      "schema_role": null
+    },
+    "fixed_assets": {
+      "description": "Long-term tangible assets used in the business operations.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "sign": "positive",
+      "level": "component",
+      "subtotal_of": "total_non_current_assets",
+      "cfs_classification": "CFI",
+      "schema_role": null
+    },
+    "intangible_assets": {
+      "description": "Long-term non-physical assets, such as software or licenses.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "sign": "positive",
+      "level": "component",
+      "subtotal_of": "total_non_current_assets",
+      "cfs_classification": "CFI",
+      "schema_role": null
+    },
+    "total_non_current_assets": {
+      "description": "The sum of assets not expected to be converted to cash or used within one year.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "sign": "positive",
+      "level": "subtotal",
+      "subtotal_of": "total_assets",
+      "cfs_classification": null,
+      "schema_role": null
+    },
+    "total_liabilities": {
+      "description": "The sum of all current and non-current obligations of the company.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "sign": "positive",
+      "level": "subtotal",
+      "subtotal_of": "total_liabilities_and_equity",
+      "cfs_classification": null,
+      "schema_role": "BS_TOTAL_LIABILITIES_ANCHOR"
+    },
+    "bonds_payable": {
+      "description": "The outstanding principal amount of bonds issued by the company.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "sign": "positive",
+      "level": "component",
+      "subtotal_of": "total_liabilities",
+      "cfs_classification": "CFF",
+      "schema_role": null
+    },
+    "trust_payables": {
+      "description": "Obligations related to trust services or funds held in trust.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "sign": "positive",
+      "level": "component",
+      "subtotal_of": "total_liabilities",
+      "cfs_classification": "CFF",
+      "schema_role": null
+    },
+    "loans_payable": {
+      "description": "The outstanding principal amount of loans owed by the company.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "sign": "positive",
+      "level": "component",
+      "subtotal_of": "total_liabilities",
+      "cfs_classification": "CFF",
+      "schema_role": null
+    },
+    "other_payables": {
+      "description": "Other short-term obligations not classified elsewhere.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "sign": "positive",
+      "level": "component",
+      "subtotal_of": "total_liabilities",
+      "cfs_classification": "CFO",
+      "schema_role": null
+    },
+    "total_equity": {
+      "description": "The residual interest in the assets of the company after deducting all its liabilities.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "sign": "positive",
+      "level": "subtotal",
+      "subtotal_of": "total_liabilities_and_equity",
+      "cfs_classification": null,
+      "schema_role": "BS_TOTAL_EQUITY_ANCHOR"
+    },
+    "share_capital": {
+      "description": "The amount of funds raised by the company from issuing shares.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "sign": "positive",
+      "level": "component",
+      "subtotal_of": "total_equity",
+      "cfs_classification": "CFF",
+      "schema_role": null
+    },
+    "treasury_stock": {
+      "description": "Shares of the company's own stock that it has repurchased.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "sign": "negative",
+      "level": "component",
+      "subtotal_of": "total_equity",
+      "cfs_classification": "CFF",
+      "schema_role": null
+    },
+    "retained_earnings": {
+      "description": "The cumulative net earnings of the company that have not been distributed as dividends.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "sign": "both",
+      "level": "component",
+      "subtotal_of": "total_equity",
+      "cfs_classification": "CFF",
+      "schema_role": null
+    },
+    "other_equity": {
+      "description": "Other components of equity not classified as share capital or retained earnings.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "sign": "both",
+      "level": "component",
+      "subtotal_of": "total_equity",
+      "cfs_classification": "CFF",
+      "schema_role": null
+    },
+    "total_liabilities_and_equity": {
+      "description": "The sum of total liabilities and total equity, which must equal total assets.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "sign": "positive",
+      "level": "total",
+      "subtotal_of": null,
+      "cfs_classification": null,
+      "schema_role": null
+    },
+    "non_performing_loans_amount": {
+      "description": "The total amount of loans for which the borrower is in default or significantly behind on payments.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "sign": "positive",
+      "level": "component",
+      "subtotal_of": null,
+      "cfs_classification": "IGNORE",
+      "schema_role": null
+    },
+    "loans_receivable_gross": {
+      "description": "The total outstanding balance of loans owed to the company before deducting allowances for loan losses.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "sign": "positive",
+      "level": "component",
+      "subtotal_of": "loans_receivable_net",
+      "cfs_classification": "CFO",
+      "schema_role": null
+    },
+    "other_assets": {
+      "description": "Assets not classified as current, fixed, or intangible assets.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "sign": "positive",
+      "level": "component",
+      "subtotal_of": "total_assets",
+      "cfs_classification": "CFO",
+      "schema_role": null
+    },
+    "asset_backed_securities": {
+      "description": "Securities whose income payments and principal repayments are derived from a pool of underlying assets, such as loans.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "sign": "positive",
+      "level": "component",
+      "subtotal_of": "total_liabilities",
+      "cfs_classification": "CFF",
+      "schema_role": null
+    },
+    "lease_liabilities": {
+      "description": "Obligations arising from lease agreements.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "sign": "positive",
+      "level": "component",
+      "subtotal_of": "total_liabilities",
+      "cfs_classification": "CFF",
+      "schema_role": null
+    },
+    "income_tax_payable": {
+      "description": "The amount of income tax owed to the tax authorities.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "sign": "positive",
+      "level": "component",
+      "subtotal_of": "total_liabilities",
+      "cfs_classification": "CFO",
+      "schema_role": null
+    }
+  },
+  "cash_flow_statement": {
+    "cfs_net_profit": {
+      "description": "Net profit as reported on the income statement, used as the starting point for the indirect cash flow from operations calculation.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "sign": "both",
+      "level": "component",
+      "subtotal_of": "net_cash_from_operations",
+      "schema_role": "CFS_NET_PROFIT_ARTICULATION"
+    },
+    "net_cash_from_operations": {
+      "description": "Cash generated or used by the company's core business activities.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "sign": "both",
+      "level": "subtotal",
+      "subtotal_of": "net_change_in_cash",
+      "schema_role": "CFS_OPERATING_ANCHOR"
+    },
+    "net_cash_from_investing": {
+      "description": "Cash generated or used by investment activities, such as purchasing or selling long-term assets.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "sign": "both",
+      "level": "subtotal",
+      "subtotal_of": "net_change_in_cash",
+      "schema_role": "CFS_INVESTING_ANCHOR"
+    },
+    "net_cash_from_financing": {
+      "description": "Cash generated or used by financing activities, such as borrowing funds or issuing stock.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "sign": "both",
+      "level": "subtotal",
+      "subtotal_of": "net_change_in_cash",
+      "schema_role": "CFS_FINANCING_ANCHOR"
+    },
+    "net_change_in_cash": {
+      "description": "The total increase or decrease in cash and cash equivalents during the reporting period.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "sign": "both",
+      "level": "subtotal",
+      "subtotal_of": "ending_cash_balance",
+      "schema_role": "CFS_NET_CHANGE_IN_CASH_ANCHOR"
+    },
+    "capex": {
+      "description": "Capital expenditures, representing funds used by a company to acquire, upgrade, and maintain physical assets.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "sign": "negative",
+      "level": "component",
+      "subtotal_of": "net_cash_from_investing",
+      "schema_role": null
+    },
+    "depreciation_amortization": {
+      "description": "Non-cash expense added back in the operating section of the cash flow statement.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "sign": "positive",
+      "level": "component",
+      "subtotal_of": "net_cash_from_operations",
+      "schema_role": null
+    },
+    "beginning_cash_balance": {
+      "description": "The balance of cash and cash equivalents at the start of the reporting period.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "sign": "positive",
+      "level": "component",
+      "subtotal_of": "ending_cash_balance",
+      "schema_role": "CFS_BEGINNING_CASH_ANCHOR"
+    },
+    "ending_cash_balance": {
+      "description": "The balance of cash and cash equivalents at the end of the reporting period.",
+      "type": [
+        "number",
+        "null"
+      ],
+      "sign": "positive",
+      "level": "total",
+      "subtotal_of": null,
+      "schema_role": "CFS_ENDING_CASH_ANCHOR"
+    }
+  }
+}

@@ -1,0 +1,144 @@
+{
+  "__description__": "The definitive, self-documenting Master Financial Template. The engine is hardcoded to parse this exact structure. The JIT LLM's sole responsibility is to populate the 'historical_account_key' for mapping, select the appropriate 'projection_model', and provide all values for the fully-specified 'drivers' object for each line item, using the definitions provided herein.",
+
+  "__schema_definitions__": {
+    "drivers": {
+      "description": "Defines the structure and meaning of the driver object used to control all projections.",
+      "baseline": {
+        "definition": "The starting value for the driver, to be applied in the first projection period (T+1). This value must be calculated or inferred from the provided historical data."
+      },
+      "justification": {
+        "definition": "A mandatory, human-readable rationale explaining the choice of the baseline and trend values. This must reference the source data or context."
+      },
+      "trends": {
+        "definition": "Defines the single, constant value the driver will take during each subsequent, hardcoded forecast horizon.",
+        "structure": {
+          "short_term": {
+            "definition": "The value to be used for projection years 2 and 3."
+          },
+          "medium_term": {
+            "definition": "The value to be used for projection years 4 through 9."
+          },
+          "terminal": {
+            "definition": "The value to be used for all projection years from 10 onwards."
+          }
+        }
+      }
+    }
+  },
+
+  "income_statement": {
+    "revenue": {
+      "__description__": "The engine sums all items in this group to calculate total revenue.",
+      "items": {
+        "revenue_stream_1": {
+          "historical_account_key": null,
+          "projection_model": "BS_Driven",
+          "drivers": {
+            "bs_driven_asset_yield": {
+              "baseline": 0.0,
+              "justification": null,
+              "trends": { "short_term": 0.0, "medium_term": 0.0, "terminal": 0.0 }
+            }
+          }
+        }
+      }
+    },
+    "cost_of_revenue": {
+      "items": {
+        "cost_of_revenue_1": {
+          "historical_account_key": null,
+          "projection_model": "Margin_Driven",
+          "drivers": {
+            "cogs_as_percent_of_revenue": {
+              "baseline": 0.0,
+              "justification": null,
+              "trends": { "short_term": 0.0, "medium_term": 0.0, "terminal": 0.0 }
+            }
+          }
+        }
+      }
+    },
+    "operating_expenses": {
+      "items": {
+        "sga_expense": {
+          "historical_account_key": null,
+          "projection_model": "Growth_Rate_Driven",
+          "drivers": { "sga_expense_growth_rate": { "baseline": 0.0, "justification": null, "trends": { "short_term": 0.0, "medium_term": 0.0, "terminal": 0.0 } } }
+        },
+        "provision_for_credit_losses": {
+          "historical_account_key": null,
+          "projection_model": "Ratio_To_BS_Item",
+          "drivers": { "ratio_target_account": "balance_sheet.accounts_receivable.items.main_receivables", "provision_rate": { "baseline": 0.0, "justification": null, "trends": { "short_term": 0.0, "medium_term": 0.0, "terminal": 0.0 } } }
+        }
+      }
+    },
+    "depreciation_and_amortization": {
+      "items": {
+        "depreciation_amortization": {
+          "historical_account_key": null,
+          "projection_model": "Ratio_To_BS_Item",
+          "drivers": { "ratio_target_account": "balance_sheet.property_plant_equipment.items.net_ppe", "depreciation_as_percent_of_ppe": { "baseline": 0.0, "justification": null, "trends": { "short_term": 0.0, "medium_term": 0.0, "terminal": 0.0 } } }
+        }
+      }
+    },
+    "interest_expense": {
+      "__description__": "Interest is calculated by the engine based on debt balances and system-wide rates. The LLM does not map historical interest; it is reconciled by the engine.",
+      "items": {
+        "interest_on_revolver": { "projection_model": "Calculated_Interest" },
+        "interest_on_scheduled_debt": { "projection_model": "Calculated_Interest" }
+      }
+    },
+    "income_tax": {
+      "items": {
+        "income_tax_expense": {
+          "historical_account_key": null,
+          "projection_model": "Tax_Rate_Of_EBT",
+          "drivers": { "effective_tax_rate": { "baseline": 0.0, "justification": null, "trends": { "short_term": 0.0, "medium_term": 0.0, "terminal": 0.0 } } }
+        }
+      }
+    }
+  },
+
+  "balance_sheet": {
+    "cash_and_equivalents": {
+      "items": { "cash": { "historical_account_key": null, "projection_model": "Derived_From_CFS" } }
+    },
+    "accounts_receivable": {
+      "items": { "main_receivables": { "historical_account_key": null, "projection_model": "DSO_Driven", "drivers": { "days_sales_outstanding": { "baseline": 0, "justification": null, "trends": { "short_term": 0, "medium_term": 0, "terminal": 0 } } } } }
+    },
+    "inventory": {
+      "items": { "main_inventory": { "historical_account_key": null, "projection_model": "DIH_Driven", "drivers": { "days_inventory_held": { "baseline": 0, "justification": null, "trends": { "short_term": 0, "medium_term": 0, "terminal": 0 } } } } }
+    },
+    "property_plant_equipment": {
+      "items": { "net_ppe": { "historical_account_key": null, "projection_model": "Capex_Roll_Forward", "drivers": { "capex_projection_model": "Ratio_Driven", "capex_as_percent_of_revenue": { "baseline": 0.0, "justification": null, "trends": { "short_term": 0.0, "medium_term": 0.0, "terminal": 0.0 } } } } }
+    },
+    "accounts_payable": {
+      "items": { "main_payables": { "historical_account_key": null, "projection_model": "DPO_Driven", "drivers": { "days_payable_outstanding": { "baseline": 0, "justification": null, "trends": { "short_term": 0, "medium_term": 0, "terminal": 0 } } } } }
+    },
+    "debt": {
+      "__description__": "Debt is segregated into three distinct categories for analytical clarity and modeling robustness.",
+      "revolver_debt": {
+        "items": { "revolver": { "historical_account_key": null, "projection_model": "Balancing_Plug_Debt" } }
+      },
+      "scheduled_short_term_debt": {
+        "__description__": "The engine iterates through this list of planned, existing short-term debt facilities.",
+        "items": {}
+      },
+      "scheduled_long_term_debt": {
+        "__description__": "The engine iterates through this list of planned, existing long-term debt facilities.",
+        "items": {}
+      }
+    },
+    "equity": {
+      "items": {
+        "common_stock": { "historical_account_key": null, "projection_model": "Share_Activity_Driven" },
+        "retained_earnings": { "historical_account_key": null, "projection_model": "Retained_Earnings_Roll_Forward", "drivers": { "dividend_payout_ratio": { "baseline": 0.0, "justification": null, "trends": { "short_term": 0.0, "medium_term": 0.0, "terminal": 0.0 } } } }
+      }
+    }
+  },
+
+  "cash_flow_statement": {
+    "__description__": "100% DERIVED. The engine calculates all values by analyzing changes in the Income Statement and Balance Sheet. The LLM only maps historicals for reconciliation."
+  }
+}

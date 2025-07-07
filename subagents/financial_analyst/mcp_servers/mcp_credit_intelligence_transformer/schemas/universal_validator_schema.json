@@ -1,0 +1,107 @@
+{
+    "income_statement": {
+      "<issuer_specific_line_item_name>": {
+        "description": "A concise, AI-generated explanation of what this specific line item represents based on its name and context in the financial statements.",
+        "type": [
+          "number",
+          "null"
+        ],
+        "sign": "positive",
+        "level": "component",
+        "subtotal_of": "<another_issuer_specific_line_item_name>",
+        "schema_role": null
+      }
+    },
+    "balance_sheet": {
+      "<issuer_specific_line_item_name>": {
+        "description": "A concise, AI-generated explanation of what this specific line item represents based on its name and context in the financial statements.",
+        "type": [
+          "number",
+          "null"
+        ],
+        "sign": "positive",
+        "level": "component",
+        "subtotal_of": "<another_issuer_specific_line_item_name>",
+        "cfs_classification": "CFO",
+        "schema_role": null
+      }
+    },
+    "cash_flow_statement": {
+      "<issuer_specific_line_item_name>": {
+        "description": "A concise, AI-generated explanation of what this specific line item represents based on its name and context in the financial statements.",
+        "type": [
+          "number",
+          "null"
+        ],
+        "sign": "both",
+        "level": "component",
+        "subtotal_of": "<another_issuer_specific_line_item_name>",
+        "schema_role": null
+      }
+    },
+    "__metadata_definitions__": {
+      "description": "This section defines the valid properties and values for the metadata object applied to each line item. The JIT Engine must conform to these definitions as they directly correspond to the requirements of the deterministic validator engines.",
+      "properties": {
+        "description": {
+          "purpose": "A human-readable explanation of the line item's financial meaning, as inferred by the JIT Engine."
+        },
+        "type": {
+          "purpose": "Defines the permissible data types for the line item's value.",
+          "enum": [
+            "number",
+            "string",
+            "boolean",
+            "null"
+          ]
+        },
+        "sign": {
+          "purpose": "The expected mathematical sign of a numerical value.",
+          "enum": [
+            "positive",
+            "negative",
+            "both"
+          ]
+        },
+        "level": {
+          "purpose": "The item's position in a hierarchical summation.",
+          "enum": [
+            "component",
+            "subtotal",
+            "total"
+          ]
+        },
+        "subtotal_of": {
+          "purpose": "The key of the parent item to which this item sums. The value must be another key within the same statement. This value must be 'null' if the item is a top-level total or does not sum into another item."
+        },
+        "cfs_classification": {
+          "purpose": "For Balance Sheet items only. Determines where the change (delta) in this account's balance is reflected in the derived Cash Flow Statement. The naming conforms to the expectations of the CFSDerivabilityAssessor.",
+          "enum": [
+            "CFO",
+            "CFI",
+            "CFF",
+            "CASH_EQUIVALENT",
+            "IGNORE",
+            null
+          ]
+        },
+        "schema_role": {
+          "purpose": "A stable, machine-readable tag identifying the item's specific functional purpose for the validator engines. The prefix indicates the statement type (BS=Balance Sheet, IS=Income Statement, CFS=Cash Flow Statement). This list is derived from the explicit needs of the validator code.",
+          "enum": [
+            "BS_TOTAL_ASSETS_ANCHOR",
+            "BS_TOTAL_LIABILITIES_ANCHOR",
+            "BS_TOTAL_EQUITY_ANCHOR",
+            "IS_PROFIT_ANCHOR",
+            "IS_DEPRECIATION_AMORTIZATION",
+            "CFS_OPERATING_ANCHOR",
+            "CFS_INVESTING_ANCHOR",
+            "CFS_FINANCING_ANCHOR",
+            "CFS_NET_CHANGE_IN_CASH_ANCHOR",
+            "CFS_BEGINNING_CASH_ANCHOR",
+            "CFS_ENDING_CASH_ANCHOR",
+            "CFS_NET_PROFIT_ARTICULATION",
+            null
+          ]
+        }
+      }
+    }
+  }

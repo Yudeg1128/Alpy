@@ -1,0 +1,125 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Universal, Structurally-Sound Projection Driver (Revolver-Based)",
+  "description": "A truly industry-agnostic driver schema for an integrated three-statement model. It uses a Revolving Credit Facility as the balancing item to ensure logical consistency and simulate real-world corporate finance.",
+  "type": "object",
+  "properties": {
+    "company_info": {
+      "type": "object",
+      "properties": {
+        "security_id": { "type": "string" },
+        "company_name": { "type": "string" }
+      },
+      "required": ["security_id"]
+    },
+    "balance_sheet_balancer": {
+      "type": "object",
+      "description": "Defines the mechanism for ensuring the Balance Sheet balances via a revolving line of credit.",
+      "properties": {
+        "revolver_account": {
+          "type": "string",
+          "description": "The specific short-term debt account on the Balance Sheet that will be used to draw down or pay back to meet cash targets (e.g., 'balance_sheet.short_term_debt')."
+        },
+        "minimum_cash_policy": {
+          "type": "object",
+          "description": "The company's policy for its minimum desired cash balance.",
+          "properties": {
+            "driver_type": { "type": "string", "enum": ["fixed_value", "ratio_of_revenue"] },
+            "value": { "type": "number", "description": "The fixed cash amount or the ratio (e.g., 0.02 for 2%)." }
+          },
+          "required": ["driver_type", "value"]
+        }
+      },
+      "required": ["revolver_account", "minimum_cash_policy"]
+    },
+    "primary_driver": {
+      "type": "object",
+      "description": "The single most important driver that dictates the scale of the entire business.",
+      "properties": {
+        "driver_name": {
+          "type": "string",
+          "description": "The top-line item driving the business (e.g., 'income_statement.total_revenue' or 'balance_sheet.loans_gross')."
+        },
+        "growth_projection": { "$ref": "#/definitions/Projection" }
+      },
+      "required": ["driver_name", "growth_projection"]
+    },
+    "linked_drivers": {
+      "type": "array",
+      "description": "A list of all other key financial items, defined as a stable ratio to a logical denominator. ALL RATIOS MUST BE POSITIVE.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "target_item": { "type": "string" },
+          "denominator_item": {
+            "type": "string",
+            "description": "The item the target is a ratio of (e.g., the Primary Driver, or 'income_statement.total_revenue')."
+          },
+          "ratio_projection": { "$ref": "#/definitions/Projection" }
+        },
+        "required": ["target_item", "denominator_item", "ratio_projection"]
+      }
+    },
+    "fixed_value_drivers": {
+        "type": "array",
+        "description": "Items that do not scale with the business and should remain at a fixed value (e.g., Share Capital).",
+        "items": {
+            "type": "object",
+            "properties": {
+                "target_item": { "type": "string" },
+                "value": { "type": "number" }
+            },
+            "required": ["target_item", "value"]
+        }
+    },
+    "payout_policy": {
+        "type": "object",
+        "description": "Defines the company's policy for distributing profits to shareholders.",
+        "properties": {
+            "payout_item": { "type": "string", "default": "cash_flow_statement.cf_dividends_paid" },
+            "payout_ratio_of_net_income": { "type": "number" }
+        },
+        "required": ["payout_item", "payout_ratio_of_net_income"]
+    },
+    "overall_justification": {
+      "type": "string",
+      "description": "A high-level narrative explaining the key assumptions and chosen projection path."
+    }
+  },
+  "required": [
+    "company_info",
+    "balance_sheet_balancer",
+    "primary_driver",
+    "linked_drivers",
+    "payout_policy",
+    "overall_justification"
+  ],
+  "definitions": {
+    "Projection": {
+      "type": "object",
+      "properties": {
+        "base_value": { "type": "number", "description": "The starting growth rate or ratio. Must be positive for ratios." },
+        "trends": {
+          "type": "object",
+          "description": "Annual changes to be applied to the base value over time.",
+          "properties": {
+            "short_term_annual_change": {
+              "type": "number",
+              "description": "The value to add to the driver each year for the first 3 years (e.g., 0.001 for +0.1% a year)."
+            },
+            "medium_term_annual_change": {
+              "type": "number",
+              "description": "The value to add each year for years 4-9."
+            },
+            "long_term_terminal_value": {
+              "type": "number",
+              "description": "The stable value the driver is assumed to hold in perpetuity from year 10 onwards."
+            }
+          },
+          "required": ["short_term_annual_change", "medium_term_annual_change", "long_term_terminal_value"]
+        }
+      },
+      "required": ["base_value", "trends"]
+    }
+  }
+}

@@ -36,10 +36,9 @@ class DataExtractorTool(BaseTool, BaseModel):
 
         "1. bond_metadata: Extract bond_metadata section.\n"
         "2. bond_financials_historical: Extract historical financials.\n"
-        "3. bond_financials_projections: Extract projections.\n"
         "4. collateral_and_protective_clauses: Extract collateral and protective clauses.\n"
         "5. issuer_business_profile: Extract issuer business profile.\n"
-        "6. industry_profile: Extract industry profile.\n"
+        "6. historical_debt_schedule: Extract historical debt schedule data.\n"
         "7. finalize_data_extraction: Assemble the final complete_data.json from all section JSONs.\n"
         "\n"
         "EXACT TOOL CALL FORMATS (JSON):\n"
@@ -53,6 +52,12 @@ class DataExtractorTool(BaseTool, BaseModel):
         "  Action:\n"
         "  ```json\n"
         "  {\n    \"action\": \"data_extractor\",\n    \"action_input\": {\n      \"security_id\": \"SECURITY_ID\",\n      \"action\": \"bond_metadata\",\n      \"repair_prompt\": \"IMPROVE trustee_agent data\"\n    }\n  }\n"
+        "  ```\n"
+
+        "- To extract historical_debt_schedule:\n"
+        "  Action:\n"
+        "  ```json\n"
+        "  {\n    \"action\": \"data_extractor\",\n    \"action_input\": {\n      \"security_id\": \"SECURITY_ID\",\n      \"action\": \"historical_debt_schedule\"\n    }\n  }\n"
         "  ```\n"
         "- To finalize and combine all extracted section data:\n"
         "  Action:\n"
@@ -172,7 +177,7 @@ async def test_bond_financials_historical(security_id=None, repair_prompt=None):
     logger.info("Starting bond_financials_historical extraction test...")
     input_data = ExtractionInput(security_id=security_id, repair_prompt=repair_prompt)
     if repair_prompt:
-        logger.info(f"Using repair prompt: {repair_prompt}")
+        logger.info(f"Using repair prompExtractionInputt: {repair_prompt}")
     result = await bond_financials_historical(input_data)
     print("\n=== bond_financials_historical Extraction Result ===")
     print(result)
@@ -194,22 +199,6 @@ async def test_issuer_business_profile(security_id=None):
     print(f"\n=== issuer_business_profile Extraction Result ===\n{result}")
     print("Test finished.")
 
-async def test_industry_profile(security_id=None):
-    print("Starting industry_profile extraction test...")
-    from mcp_servers.mcp_data_extractor.server import industry_profile, ExtractionInput
-    input_data = ExtractionInput(security_id=security_id)
-    result = await industry_profile(input_data)
-    print(f"\n=== industry_profile Extraction Result ===\n{result}")
-    print("Test finished.")
-
-async def test_bond_financials_projections(security_id=None):
-    print("Starting bond_financials_projections extraction test...")
-    from mcp_servers.mcp_data_extractor.server import bond_financials_projections, ExtractionInput
-    input_data = ExtractionInput(security_id=security_id)
-    result = await bond_financials_projections(input_data)
-    print(f"\n=== bond_financials_projections Extraction Result ===\n{result}")
-    print("Test finished.")
-
 async def test_finalize_data_extraction(security_id=None):
     print("Starting finalize_data_extraction test...")
     from mcp_servers.mcp_data_extractor.server import ExtractionInput, finalize_data_extraction
@@ -218,26 +207,41 @@ async def test_finalize_data_extraction(security_id=None):
     print(f"\n=== finalize_data_extraction Result ===\n{result}")
     print("Test finished.")
 
+async def test_historical_debt_schedule(security_id=None, repair_prompt=None):
+    print("Starting historical_debt_schedule extraction test...")
+    # Ensure correct import path for ExtractionInput and the tool function
+    from mcp_servers.mcp_data_extractor.server import historical_debt_schedule, ExtractionInput 
+    input_data = ExtractionInput(security_id=security_id, repair_prompt=repair_prompt)
+    if repair_prompt:
+        logger.info(f"Using repair prompt: {repair_prompt}")
+    result = await historical_debt_schedule(input_data)
+    print("\n=== historical_debt_schedule Extraction Result ===")
+    # Assuming result is a Pydantic model with model_dump()
+    try:
+        print(json.dumps(result.model_dump(), indent=2))
+    except AttributeError:
+        print(result) # Fallback if model_dump is not available
+    logger.info("Test finished.")
+
 if __name__ == "__main__":
+
     import argparse
     parser = argparse.ArgumentParser(description="Run DataExtractorTool tests")
     parser.add_argument("--security_id", type=str, help="Security ID for testing")
-    parser.add_argument("--test", type=str, choices=["bond_metadata", "bond_financials_historical", "bond_financials_projections", "collateral_and_protective_clauses", "issuer_business_profile", "industry_profile", "finalize_data_extraction"], help="Test to run")
+    parser.add_argument("--test", type=str, choices=["bond_metadata", "bond_financials_historical", "collateral_and_protective_clauses", "issuer_business_profile", "historical_debt_schedule", "finalize_data_extraction"], help="Test to run")
     parser.add_argument("--repair_prompt", type=str, help="Repair prompt for testing")
     args = parser.parse_args()
     if args.test == "bond_metadata":
         asyncio.run(test_bond_metadata(security_id=args.security_id))
     elif args.test == "bond_financials_historical":
         asyncio.run(test_bond_financials_historical(security_id=args.security_id, repair_prompt=args.repair_prompt))
-    elif args.test == "bond_financials_projections":
-        asyncio.run(test_bond_financials_projections(security_id=args.security_id))
     elif args.test == "collateral_and_protective_clauses":
         asyncio.run(test_collateral_and_protective_clauses(security_id=args.security_id))
     elif args.test == "issuer_business_profile":
         asyncio.run(test_issuer_business_profile(security_id=args.security_id))
-    elif args.test == "industry_profile":
-        asyncio.run(test_industry_profile(security_id=args.security_id))
     elif args.test == "finalize_data_extraction":
         asyncio.run(test_finalize_data_extraction(security_id=args.security_id))
+    elif args.test == "historical_debt_schedule":
+        asyncio.run(test_historical_debt_schedule(security_id=args.security_id, repair_prompt=args.repair_prompt))
     else:
         parser.print_help()
