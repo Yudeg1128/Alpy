@@ -2218,7 +2218,7 @@ async def generate_jit_projections_schema(security_id: str) -> dict:
     prompt = f"""
     ### SECTION I: ROLE AND OBJECTIVE DEFINITION
 
-    You are an expert financial modeler and a meticulous data-mapping specialist. Your single, non-negotiable task is to correctly populate the provided master_template.json with the financial data and context supplied. Your output must be a syntactically perfect and financially logical JSON object. All explanations must be confined to the justification field within each driver.
+    You are an expert financial modeler and a meticulous data-mapping specialist. Your single, non-negotiable task is to correctly populate the provided master_template.json with the financial data and context supplied. Your output must be a syntactically perfect and financially logical JSON object. All explanations must be confined to the `justification` field within each driver.
 
     ### SECTION II: STRUCTURED CONTEXTUAL DATA
 
@@ -2243,35 +2243,87 @@ async def generate_jit_projections_schema(security_id: str) -> dict:
     {master_projections_template}
     </SCHEMA_CONTRACT>
 
-    SECTION III: THE ALGORITHMIC MANDATE
+    ### SECTION III: THE ALGORITHMIC MANDATE
     MASTER DIRECTIVE: PRECISION IN POPULATION
-    Your primary directive is to populate the <SCHEMA_CONTRACT> with absolute precision. Every decision—from mapping a historical account to selecting a projection model—must be a direct and logical application of the rules below.
+    Your primary directive is to populate the <SCHEMA_CONTRACT> with absolute precision. Every decision must be a direct and logical application of the rules below. You must not include cash_flow_statement in the result, because it is not defined in the <SCHEMA_CONTRACT>.
+
     Rule 0 (The Supreme Law of Precedence & Conflict Resolution): The rules are organized into a strict, non-negotiable hierarchy. A rule from a higher pillar always overrides a rule from a lower pillar. Within a pillar, a rule with a lower number takes absolute precedence over a rule with a higher number.
     Pillar A (Mapping & Structural Integrity) > Pillar B (Model Selection & Causality) > Pillar C (Driver Population & Analytics)
-    A. Pillar I: Mapping & Structural Integrity
+
+    A. Pillar A: Mapping & Structural Integrity
     This pillar governs the correct mapping of historical data onto the Master Template.
-    Rule A.1 (The Law of Exhaustive Mapping): You MUST attempt to map every financial line item from <HISTORICAL_DATA> to its single most logical slot in the <SCHEMA_CONTRACT>. The target for the mapping is the historical_account_key property.
-    Rule A.2 (The Law of Null Mapping): If a line item in the Master Template has no corresponding data in the historicals (e.g., inventory for a bank), its historical_account_key MUST be null. You are forbidden from mapping an unrelated historical account to fill a blank slot.
-    Rule A.3 (The Law of Granularity for Lists): For sections in the Master Template that can accept multiple items (e.g., scheduled_long_term_debt), you are mandated to create a distinct entry for each corresponding debt instrument found in the historical data. You are strictly forbidden from pre-aggregating these items yourself.
-    B. Pillar II: Model Selection & Causality
-    This pillar governs the logical heart of the model: selecting the correct projection methodology.
-    Rule B.1 (The Law of Model Selection): For every projectable line item in the Master Template, you MUST select the most appropriate projection_model from the list of available options defined in the <SCHEMA_CONTRACT>. This selection must be directly justified by the company's profile in <BUSINESS_PROFILE>.
-    * Example: If <BUSINESS_PROFILE> states "The company is a commercial bank," you are mandated to select BS_Driven for the primary revenue line.
-    Rule B.2 (The Law of The Inviolate Plug): The revolver in the debt section MUST have its projection_model set to Balancing_Plug_Debt. The cash item MUST be set to Derived_From_CFS. These are non-negotiable and override all other considerations.
-    Rule B.3 (The Law of The Derived Cash Flow Statement): All line items within the cash_flow_statement section of the template are derived by the engine. You are forbidden from assigning any projection_model or drivers to them.
-    C. Pillar III: Driver Population & Analytics
+
+    Rule A.1 (The Law of Mandated Mapping and Data Integrity): Your primary duty under this rule is to ensure the absolute integrity of the provided historical data. You are mandated to map **every single financial line item** from the <HISTORICAL_DATA> block to its single most logical slot in the <SCHEMA_CONTRACT>. **There must be no unmapped historical items, regardless of your own accounting knowledge or interpretation.** If an item exists in the source data, it MUST be mapped. This rule's purpose is to ensure a perfect `Assets = Liabilities + Equity` reconciliation for the historical periods. Ignoring a source data line item is a fatal error.
+    Rule A.1.1 (The Law of Flexible Mapping): The <SCHEMA_CONTRACT> contains flexible line items (e.g., `other_asset_1`, `other_liability_1`). If a historical line item does not have a clear, specific slot, you are mandated to use one of these flexible items to ensure 100% mapping coverage.
+    Rule A.1.2 (The Law of Shared Sources): Shared sources are permitted ONLY when:
+    - The historical item represents an aggregated amount that logically belongs to multiple schema categories (e.g., combined depreciation and amortization)
+    - AND the economic substance supports the split
+    Rule A.1.3 (The Law of Double-Booking Prohibition):
+    - A single historical item cannot be mapped to multiple schema items if doing so would violate basic accounting principles (e.g., an asset cannot simultaneously be a liability)
+    - In such cases, map to the PRIMARY logical category only    Rule A.2 (The Law of Null Mapping): If a line item in the Master Template has no corresponding data in the historicals (e.g., inventory for a bank), its `historical_account_key` MUST be `null`. You are forbidden from mapping an unrelated historical account to fill a blank slot.
+    Rule A.3 (The Law of Granularity for Lists): For sections in the Master Template that can accept multiple items (e.g., `scheduled_debt`), you are mandated to create a distinct entry for each corresponding instrument found in the historical data. You are strictly forbidden from pre-aggregating these items yourself.
+
+    B. Pillar B: Model Selection & Causality
+    This pillar governs the logical heart of the model. Note that your ability to select models is now highly constrained.
+
+    Rule B.1 (The Law of Singular Model Selection): Your ONLY model selection task is for the primary `revenue` item. You MUST populate its `projection_configuration.selected_model` key by choosing ONE of the complete object structures provided in `projection_configuration.__model_options__`. The choice must be directly justified by the company's profile in <BUSINESS_PROFILE>.
+        * Example: If <BUSINESS_PROFILE> states "The company is a commercial bank," you are mandated to select the 'Asset_Yield_Driven' model structure and populate its corresponding drivers.
+
+        B.1.1. Your ONLY model selection task is for the primary `revenue` item. You MUST do the following EXACTLY:
+            Take ONE of the complete object structures provided in `projection_configuration.__model_options__`.
+            Assign this ENTIRE object structure to the `projection_configuration.selected_model` key.
+            DO NOT add any model configuration details (like model_name, target_asset_account, driver) directly to the projection_configuration object itself.
+            DO NOT leave `selected_model` as null.
+            NEVER create a structure where both `projection_configuration` has direct model properties AND `selected_model` exists as null.
+            * Example of CORRECT structure:
+                "projection_configuration": {{
+                    "__model_options__": {{...}},
+                    "selected_model": {{
+                        "model_name": "Asset_Yield_Driven",
+                        "target_asset_account": "balance_sheet.loans_receivable_net",
+                        "driver": {{...}}
+                    }}
+                }}
+            * Example of INCORRECT structure:
+                "projection_configuration": {{
+                    "__model_options__": {{...}},
+                    "model_name": "Asset_Yield_Driven",
+                    "target_asset_account": "balance_sheet.loans_receivable_net", 
+                    "driver": {{...}},
+                    "selected_model": null
+                }}
+
+    Rule B.2 (The Law of Implicit Logic): The projection logic for most items (e.g., `cash`, `revolver`, expenses, working capital) is now hardcoded in the engine and not configurable. You can identify these by the `__engine_logic__` key or the absence of model options. You are forbidden from adding or modifying keys like `projection_model` or `__engine_logic__`. Your sole responsibility is to map historicals and populate the provided `drivers` objects where they exist.
+
+    Rule B.3 (The Law of The Derived Cash Flow Statement): All line items within the `cash_flow_statement` section of the template are 100% derived by the engine. You are forbidden from assigning any drivers or mappings to this section beyond what is specified in the template.
+
+    C. Pillar C: Driver Population & Analytics
     This pillar governs the quality and auditability of the financial assumptions.
-    Rule C.1 (The Law of Required Drivers): Once a projection_model is selected for a line item, you MUST populate its drivers object with all the required driver keys specified for that model in the <SCHEMA_CONTRACT>.
-    Rule C.2 (The Law of Auditable Justification): The justification field for every single driver MUST contain a concise, logical reason for the chosen baseline value. This justification must explicitly reference <HISTORICAL_DATA> or <BUSINESS_PROFILE>.
-    * Correct Example: "justification": "Baseline set to the T-1 historical calculated Gross Margin of 45.2% as per <HISTORICAL_DATA>."
-    * Forbidden Example: "justification": "This is a reasonable assumption."
-    SECTION IV: DEBUGGING AND REASONING LOG
-    You WILL add a top-level key to the final JSON called __reasoning_log__. The value of this key will be an object containing your analysis of the modeling task, addressing the following points concisely:
-    Difficult Mappings: "Which historical accounts were the most difficult to map to a slot in the Master Template, and why?"
-    Key Model Selection: "What was the single most important projection_model selection you made (e.g., choosing BS_Driven for revenue), and what specific text in the <BUSINESS_PROFILE> justified it?"
-    Most Significant Driver: "What is the single most significant driver baseline value you generated, and how confident are you in its calculation?"
-    Confidence Score: "Provide a 'Confidence Score' from 0.0 to 1.0 that the populated schema is a financially logical representation of the issuer, and briefly justify it."
-    SECTION V: FINAL OUTPUT INSTRUCTION
+
+    Rule C.1 (The Law of Mandatory Drivers): For every item in the `<SCHEMA_CONTRACT>` that contains a pre-defined `drivers` object, you are mandated to populate all fields within that object (`baseline`, `justification`, `trends`). If an item in the template does not have a `drivers` object, you are forbidden from adding one.
+
+    Rule C.2 (The Law of Auditable Justification): The `justification` field for every single driver MUST contain a concise, logical reason for the chosen baseline value. This justification must explicitly reference <HISTORICAL_DATA>, <BUSINESS_PROFILE>, or another context block.
+        * Correct Example: `"justification": "Baseline set to the T-1 historical calculated Gross Margin of 45.2% as per <HISTORICAL_DATA>."`
+        * Forbidden Example: `"justification": "This is a reasonable assumption."`
+
+    Rule D (The Law of Structural Integrity): You MUST adhere strictly to the structure of the Master Template. For items with multiple drivers (like `property_plant_equipment`), ensure all drivers are placed within the single `drivers` object belonging to that specific item (e.g., `ppe_item_1`). Do NOT create separate or misplaced `drivers` objects at a higher level.
+
+    Rule E (The Law of Mirrored Operations): You MUST treat the primary operational revenue and its direct cost as two sides of the same coin. For each primary `revenue_stream_X` you map (e.g., `interest_income` for a bank), you MUST map its direct, corresponding primary expense to the matching `cost_of_revenue_X` item (e.g., `interest_expense` for a bank). It is a fatal error to leave the primary `cost_of_revenue` item unmapped if a primary `revenue_stream` is mapped.
+
+    Rule F (The Law of Derived Intelligence): You are mandated to calculate all rates and ratios intelligently. When an explicit value for a driver is not available in `<HISTORICAL_DATA>`, you MUST attempt to derive a logical baseline by combining other available data points. For example, if an explicit interest rate for a debt instrument is missing, you MUST calculate an `implied interest rate` by dividing the relevant `Interest Expense` by the average balance of the corresponding debt liability. Defaulting to zero when a reasonable calculation is possible is a fatal error.
+
+    Rule G (Exclusions): You are mandated to IGNORE and exclude from the results the cashf low statement and summation plugs.
+
+    ### SECTION IV: DEBUGGING AND REASONING LOG
+
+    You WILL add a top-level key to the final JSON called `__reasoning_log__`. The value of this key will be an object containing your analysis of the modeling task, addressing the following points concisely:
+    *   Difficult Mappings: "Which historical accounts were the most difficult to map to a slot in the Master Template, and why?"
+    *   Key Model Selection: "What was the projection model selection you made for revenue, and what specific text in the <BUSINESS_PROFILE> justified it?"
+    *   Most Significant Driver: "What is the single most significant driver baseline value you generated (e.g., revenue growth, DSO, operating margin), and how confident are you in its calculation and applicability?"
+    *   Confidence Score: "Provide a 'Confidence Score' from 0.0 to 1.0 that the populated schema is a financially logical representation of the issuer, and briefly justify it."
+
+    ### SECTION V: FINAL OUTPUT INSTRUCTION
+
     Your final and only output MUST be a single JSON markdown block containing the fully populated Master Template. The output must be complete and syntactically perfect.
     """
 

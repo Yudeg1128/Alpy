@@ -4258,3 +4258,824 @@
 2025-07-07 19:38:29,046 - MCPCreditIntelligenceTransformer - INFO - Successfully extracted JSON schema from LLM response markdown block.
 2025-07-07 19:38:29,046 - MCPCreditIntelligenceTransformer - INFO - Successfully saved JIT projections schema to /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390/credit_analysis/jit_schemas/projections_schema.json
 2025-07-07 19:38:29,046 - MCPCreditIntelligenceTransformer - INFO - === generate_jit_projections_schema completed successfully ===
+2025-07-07 20:42:06,528 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-07 20:42:06,528 - MCPCreditIntelligenceTransformer - INFO - Starting MCP Credit Intelligence Transformer server
+2025-07-07 20:42:06,528 - MCPCreditIntelligenceTransformer - INFO - Logging to /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/logs/debt_reconciliation.log
+2025-07-07 20:42:06,528 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-08 10:54:41,415 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-08 10:54:41,415 - MCPCreditIntelligenceTransformer - INFO - Starting MCP Credit Intelligence Transformer server
+2025-07-08 10:54:41,415 - MCPCreditIntelligenceTransformer - INFO - Logging to /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/logs/debt_reconciliation.log
+2025-07-08 10:54:41,415 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-08 10:54:41,448 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-07-08 10:54:41,448 - MCPCreditIntelligenceTransformer - INFO - === Starting generate_jit_projections_schema ===
+2025-07-08 10:54:41,448 - MCPCreditIntelligenceTransformer - INFO - Starting JIT projections schema generation for security_id: MN0LNDB68390
+2025-07-08 10:54:41,448 - MCPCreditIntelligenceTransformer - INFO - [1/7] Validating security_id: MN0LNDB68390
+2025-07-08 10:54:41,449 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-08 10:54:41,449 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-08 10:54:41,449 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-08 10:54:41,449 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-08 10:54:41,449 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-08 10:54:41,449 - MCPCreditIntelligenceTransformer - INFO - [2/7] Loading issuer's final derived financial data
+2025-07-08 10:54:41,450 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded and filtered final derived financial data.
+2025-07-08 10:54:41,450 - MCPCreditIntelligenceTransformer - INFO - [3/7] Loading industry and country research data
+2025-07-08 10:54:41,451 - MCPCreditIntelligenceTransformer - INFO - [4/7] Loading the Universal Projections Schema
+2025-07-08 10:54:41,451 - MCPCreditIntelligenceTransformer - INFO - Looking for projections schema template at: /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/schemas/universal_projections_schema.json
+2025-07-08 10:54:41,451 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded Universal Projections Schema.
+2025-07-08 10:54:41,451 - MCPCreditIntelligenceTransformer - INFO - [5/7] Loading issuer business profile
+2025-07-08 10:54:41,451 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-08 10:54:41,451 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-08 10:54:41,451 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-08 10:54:41,451 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-08 10:54:41,452 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-08 10:54:41,452 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded issuer business profile.
+2025-07-08 10:54:41,452 - MCPCreditIntelligenceTransformer - INFO - [6/7] Preparing LLM prompt for projections schema generation
+2025-07-08 10:54:41,452 - MCPCreditIntelligenceTransformer - INFO - [7/7] Initializing LLM and invoking projections schema generation...
+2025-07-08 10:55:35,486 - MCPCreditIntelligenceTransformer - INFO - LLM API call completed successfully.
+2025-07-08 10:55:35,486 - MCPCreditIntelligenceTransformer - INFO - [8/8] Processing LLM response and saving generated JIT projections schema
+2025-07-08 10:55:35,487 - MCPCreditIntelligenceTransformer - INFO - Successfully extracted JSON schema from LLM response markdown block.
+2025-07-08 10:55:35,495 - MCPCreditIntelligenceTransformer - INFO - Successfully saved JIT projections schema to /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390/credit_analysis/jit_schemas/projections_schema.json
+2025-07-08 10:55:35,495 - MCPCreditIntelligenceTransformer - INFO - === generate_jit_projections_schema completed successfully ===
+2025-07-08 12:22:13,590 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-08 12:22:13,590 - MCPCreditIntelligenceTransformer - INFO - Starting MCP Credit Intelligence Transformer server
+2025-07-08 12:22:13,590 - MCPCreditIntelligenceTransformer - INFO - Logging to /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/logs/debt_reconciliation.log
+2025-07-08 12:22:13,590 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-08 12:22:13,618 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-07-08 12:22:13,618 - MCPCreditIntelligenceTransformer - INFO - === Starting generate_jit_projections_schema ===
+2025-07-08 12:22:13,618 - MCPCreditIntelligenceTransformer - INFO - Starting JIT projections schema generation for security_id: MN0LNDB68390
+2025-07-08 12:22:13,618 - MCPCreditIntelligenceTransformer - INFO - [1/7] Validating security_id: MN0LNDB68390
+2025-07-08 12:22:13,619 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-08 12:22:13,619 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-08 12:22:13,619 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-08 12:22:13,619 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-08 12:22:13,619 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-08 12:22:13,620 - MCPCreditIntelligenceTransformer - INFO - [2/7] Loading issuer's final derived financial data
+2025-07-08 12:22:13,620 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded and filtered final derived financial data.
+2025-07-08 12:22:13,620 - MCPCreditIntelligenceTransformer - INFO - [3/7] Loading industry and country research data
+2025-07-08 12:22:13,621 - MCPCreditIntelligenceTransformer - INFO - [4/7] Loading the Universal Projections Schema
+2025-07-08 12:22:13,621 - MCPCreditIntelligenceTransformer - INFO - Looking for projections schema template at: /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/schemas/universal_projections_schema.json
+2025-07-08 12:22:13,621 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded Universal Projections Schema.
+2025-07-08 12:22:13,621 - MCPCreditIntelligenceTransformer - INFO - [5/7] Loading issuer business profile
+2025-07-08 12:22:13,621 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-08 12:22:13,621 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-08 12:22:13,622 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-08 12:22:13,622 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-08 12:22:13,622 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-08 12:22:13,622 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded issuer business profile.
+2025-07-08 12:22:13,622 - MCPCreditIntelligenceTransformer - INFO - [6/7] Preparing LLM prompt for projections schema generation
+2025-07-08 12:22:13,622 - MCPCreditIntelligenceTransformer - INFO - [7/7] Initializing LLM and invoking projections schema generation...
+2025-07-08 12:23:13,017 - MCPCreditIntelligenceTransformer - INFO - LLM API call completed successfully.
+2025-07-08 12:23:13,017 - MCPCreditIntelligenceTransformer - INFO - [8/8] Processing LLM response and saving generated JIT projections schema
+2025-07-08 12:23:13,018 - MCPCreditIntelligenceTransformer - INFO - Successfully extracted JSON schema from LLM response markdown block.
+2025-07-08 12:23:13,019 - MCPCreditIntelligenceTransformer - INFO - Successfully saved JIT projections schema to /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390/credit_analysis/jit_schemas/projections_schema.json
+2025-07-08 12:23:13,019 - MCPCreditIntelligenceTransformer - INFO - === generate_jit_projections_schema completed successfully ===
+2025-07-08 21:30:17,500 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-08 21:30:17,500 - MCPCreditIntelligenceTransformer - INFO - Starting MCP Credit Intelligence Transformer server
+2025-07-08 21:30:17,500 - MCPCreditIntelligenceTransformer - INFO - Logging to /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/logs/debt_reconciliation.log
+2025-07-08 21:30:17,500 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-08 21:30:17,526 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-07-08 21:30:17,526 - MCPCreditIntelligenceTransformer - INFO - === Starting generate_jit_projections_schema ===
+2025-07-08 21:30:17,527 - MCPCreditIntelligenceTransformer - INFO - Starting JIT projections schema generation for security_id: MN0LNDB68390
+2025-07-08 21:30:17,527 - MCPCreditIntelligenceTransformer - INFO - [1/7] Validating security_id: MN0LNDB68390
+2025-07-08 21:30:17,527 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-08 21:30:17,527 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-08 21:30:17,527 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-08 21:30:17,527 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-08 21:30:17,527 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-08 21:30:17,527 - MCPCreditIntelligenceTransformer - INFO - [2/7] Loading issuer's final derived financial data
+2025-07-08 21:30:17,528 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded and filtered final derived financial data.
+2025-07-08 21:30:17,528 - MCPCreditIntelligenceTransformer - INFO - [3/7] Loading industry and country research data
+2025-07-08 21:30:17,528 - MCPCreditIntelligenceTransformer - INFO - [4/7] Loading the Universal Projections Schema
+2025-07-08 21:30:17,528 - MCPCreditIntelligenceTransformer - INFO - Looking for projections schema template at: /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/schemas/universal_projections_schema.json
+2025-07-08 21:30:17,529 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded Universal Projections Schema.
+2025-07-08 21:30:17,529 - MCPCreditIntelligenceTransformer - INFO - [5/7] Loading issuer business profile
+2025-07-08 21:30:17,529 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-08 21:30:17,529 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-08 21:30:17,529 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-08 21:30:17,529 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-08 21:30:17,529 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-08 21:30:17,529 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded issuer business profile.
+2025-07-08 21:30:17,529 - MCPCreditIntelligenceTransformer - INFO - [6/7] Preparing LLM prompt for projections schema generation
+2025-07-08 21:30:17,530 - MCPCreditIntelligenceTransformer - INFO - [7/7] Initializing LLM and invoking projections schema generation...
+2025-07-08 21:31:06,435 - MCPCreditIntelligenceTransformer - INFO - LLM API call completed successfully.
+2025-07-08 21:31:06,435 - MCPCreditIntelligenceTransformer - INFO - [8/8] Processing LLM response and saving generated JIT projections schema
+2025-07-08 21:31:06,436 - MCPCreditIntelligenceTransformer - INFO - Successfully extracted JSON schema from LLM response markdown block.
+2025-07-08 21:31:06,437 - MCPCreditIntelligenceTransformer - INFO - Successfully saved JIT projections schema to /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390/credit_analysis/jit_schemas/projections_schema.json
+2025-07-08 21:31:06,437 - MCPCreditIntelligenceTransformer - INFO - === generate_jit_projections_schema completed successfully ===
+2025-07-08 22:11:47,239 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-08 22:11:47,239 - MCPCreditIntelligenceTransformer - INFO - Starting MCP Credit Intelligence Transformer server
+2025-07-08 22:11:47,239 - MCPCreditIntelligenceTransformer - INFO - Logging to /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/logs/debt_reconciliation.log
+2025-07-08 22:11:47,239 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-08 22:11:47,263 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-07-08 22:11:47,263 - MCPCreditIntelligenceTransformer - INFO - === Starting generate_jit_projections_schema ===
+2025-07-08 22:11:47,263 - MCPCreditIntelligenceTransformer - INFO - Starting JIT projections schema generation for security_id: MN0LNDB68390
+2025-07-08 22:11:47,263 - MCPCreditIntelligenceTransformer - INFO - [1/7] Validating security_id: MN0LNDB68390
+2025-07-08 22:11:47,264 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-08 22:11:47,264 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-08 22:11:47,264 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-08 22:11:47,264 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-08 22:11:47,264 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-08 22:11:47,264 - MCPCreditIntelligenceTransformer - INFO - [2/7] Loading issuer's final derived financial data
+2025-07-08 22:11:47,264 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded and filtered final derived financial data.
+2025-07-08 22:11:47,265 - MCPCreditIntelligenceTransformer - INFO - [3/7] Loading industry and country research data
+2025-07-08 22:11:47,265 - MCPCreditIntelligenceTransformer - INFO - [4/7] Loading the Universal Projections Schema
+2025-07-08 22:11:47,265 - MCPCreditIntelligenceTransformer - INFO - Looking for projections schema template at: /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/schemas/universal_projections_schema.json
+2025-07-08 22:11:47,265 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded Universal Projections Schema.
+2025-07-08 22:11:47,265 - MCPCreditIntelligenceTransformer - INFO - [5/7] Loading issuer business profile
+2025-07-08 22:11:47,265 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-08 22:11:47,265 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-08 22:11:47,265 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-08 22:11:47,265 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-08 22:11:47,265 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-08 22:11:47,266 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded issuer business profile.
+2025-07-08 22:11:47,266 - MCPCreditIntelligenceTransformer - INFO - [6/7] Preparing LLM prompt for projections schema generation
+2025-07-08 22:11:47,266 - MCPCreditIntelligenceTransformer - INFO - [7/7] Initializing LLM and invoking projections schema generation...
+2025-07-08 22:13:39,711 - MCPCreditIntelligenceTransformer - INFO - LLM API call completed successfully.
+2025-07-08 22:13:39,712 - MCPCreditIntelligenceTransformer - INFO - [8/8] Processing LLM response and saving generated JIT projections schema
+2025-07-08 22:13:39,713 - MCPCreditIntelligenceTransformer - INFO - Successfully extracted JSON schema from LLM response markdown block.
+2025-07-08 22:13:39,715 - MCPCreditIntelligenceTransformer - INFO - Successfully saved JIT projections schema to /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390/credit_analysis/jit_schemas/projections_schema.json
+2025-07-08 22:13:39,715 - MCPCreditIntelligenceTransformer - INFO - === generate_jit_projections_schema completed successfully ===
+2025-07-08 22:54:09,201 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-08 22:54:09,201 - MCPCreditIntelligenceTransformer - INFO - Starting MCP Credit Intelligence Transformer server
+2025-07-08 22:54:09,201 - MCPCreditIntelligenceTransformer - INFO - Logging to /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/logs/debt_reconciliation.log
+2025-07-08 22:54:09,201 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-08 22:54:09,228 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-07-08 22:54:09,228 - MCPCreditIntelligenceTransformer - INFO - === Starting generate_jit_projections_schema ===
+2025-07-08 22:54:09,228 - MCPCreditIntelligenceTransformer - INFO - Starting JIT projections schema generation for security_id: MN0LNDB68390
+2025-07-08 22:54:09,228 - MCPCreditIntelligenceTransformer - INFO - [1/7] Validating security_id: MN0LNDB68390
+2025-07-08 22:54:09,229 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-08 22:54:09,229 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-08 22:54:09,229 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-08 22:54:09,229 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-08 22:54:09,229 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-08 22:54:09,229 - MCPCreditIntelligenceTransformer - INFO - [2/7] Loading issuer's final derived financial data
+2025-07-08 22:54:09,229 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded and filtered final derived financial data.
+2025-07-08 22:54:09,230 - MCPCreditIntelligenceTransformer - INFO - [3/7] Loading industry and country research data
+2025-07-08 22:54:09,230 - MCPCreditIntelligenceTransformer - INFO - [4/7] Loading the Universal Projections Schema
+2025-07-08 22:54:09,230 - MCPCreditIntelligenceTransformer - INFO - Looking for projections schema template at: /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/schemas/universal_projections_schema.json
+2025-07-08 22:54:09,230 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded Universal Projections Schema.
+2025-07-08 22:54:09,230 - MCPCreditIntelligenceTransformer - INFO - [5/7] Loading issuer business profile
+2025-07-08 22:54:09,230 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-08 22:54:09,230 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-08 22:54:09,230 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-08 22:54:09,230 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-08 22:54:09,230 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-08 22:54:09,231 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded issuer business profile.
+2025-07-08 22:54:09,231 - MCPCreditIntelligenceTransformer - INFO - [6/7] Preparing LLM prompt for projections schema generation
+2025-07-08 22:54:09,231 - MCPCreditIntelligenceTransformer - INFO - [7/7] Initializing LLM and invoking projections schema generation...
+2025-07-08 22:55:20,242 - MCPCreditIntelligenceTransformer - INFO - LLM API call completed successfully.
+2025-07-08 22:55:20,242 - MCPCreditIntelligenceTransformer - INFO - [8/8] Processing LLM response and saving generated JIT projections schema
+2025-07-08 22:55:20,243 - MCPCreditIntelligenceTransformer - INFO - Successfully extracted JSON schema from LLM response markdown block.
+2025-07-08 22:55:20,244 - MCPCreditIntelligenceTransformer - INFO - Successfully saved JIT projections schema to /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390/credit_analysis/jit_schemas/projections_schema.json
+2025-07-08 22:55:20,244 - MCPCreditIntelligenceTransformer - INFO - === generate_jit_projections_schema completed successfully ===
+2025-07-08 23:12:18,493 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-08 23:12:18,493 - MCPCreditIntelligenceTransformer - INFO - Starting MCP Credit Intelligence Transformer server
+2025-07-08 23:12:18,494 - MCPCreditIntelligenceTransformer - INFO - Logging to /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/logs/debt_reconciliation.log
+2025-07-08 23:12:18,494 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-08 23:12:18,522 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-07-08 23:12:18,522 - MCPCreditIntelligenceTransformer - INFO - === Starting generate_jit_projections_schema ===
+2025-07-08 23:12:18,522 - MCPCreditIntelligenceTransformer - INFO - Starting JIT projections schema generation for security_id: MN0LNDB68390
+2025-07-08 23:12:18,522 - MCPCreditIntelligenceTransformer - INFO - [1/7] Validating security_id: MN0LNDB68390
+2025-07-08 23:12:18,523 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-08 23:12:18,523 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-08 23:12:18,523 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-08 23:12:18,523 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-08 23:12:18,523 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-08 23:12:18,523 - MCPCreditIntelligenceTransformer - INFO - [2/7] Loading issuer's final derived financial data
+2025-07-08 23:12:18,524 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded and filtered final derived financial data.
+2025-07-08 23:12:18,524 - MCPCreditIntelligenceTransformer - INFO - [3/7] Loading industry and country research data
+2025-07-08 23:12:18,524 - MCPCreditIntelligenceTransformer - INFO - [4/7] Loading the Universal Projections Schema
+2025-07-08 23:12:18,524 - MCPCreditIntelligenceTransformer - INFO - Looking for projections schema template at: /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/schemas/universal_projections_schema.json
+2025-07-08 23:12:18,524 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded Universal Projections Schema.
+2025-07-08 23:12:18,524 - MCPCreditIntelligenceTransformer - INFO - [5/7] Loading issuer business profile
+2025-07-08 23:12:18,525 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-08 23:12:18,525 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-08 23:12:18,525 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-08 23:12:18,525 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-08 23:12:18,525 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-08 23:12:18,525 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded issuer business profile.
+2025-07-08 23:12:18,525 - MCPCreditIntelligenceTransformer - INFO - [6/7] Preparing LLM prompt for projections schema generation
+2025-07-08 23:12:18,525 - MCPCreditIntelligenceTransformer - INFO - [7/7] Initializing LLM and invoking projections schema generation...
+2025-07-08 23:13:37,953 - MCPCreditIntelligenceTransformer - INFO - LLM API call completed successfully.
+2025-07-08 23:13:37,953 - MCPCreditIntelligenceTransformer - INFO - [8/8] Processing LLM response and saving generated JIT projections schema
+2025-07-08 23:13:37,953 - MCPCreditIntelligenceTransformer - INFO - Successfully extracted JSON schema from LLM response markdown block.
+2025-07-08 23:13:37,954 - MCPCreditIntelligenceTransformer - INFO - Successfully saved JIT projections schema to /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390/credit_analysis/jit_schemas/projections_schema.json
+2025-07-08 23:13:37,954 - MCPCreditIntelligenceTransformer - INFO - === generate_jit_projections_schema completed successfully ===
+2025-07-09 00:12:01,589 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-09 00:12:01,590 - MCPCreditIntelligenceTransformer - INFO - Starting MCP Credit Intelligence Transformer server
+2025-07-09 00:12:01,590 - MCPCreditIntelligenceTransformer - INFO - Logging to /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/logs/debt_reconciliation.log
+2025-07-09 00:12:01,590 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-09 00:12:01,617 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-07-09 00:12:01,617 - MCPCreditIntelligenceTransformer - INFO - === Starting generate_jit_projections_schema ===
+2025-07-09 00:12:01,617 - MCPCreditIntelligenceTransformer - INFO - Starting JIT projections schema generation for security_id: MN0LNDB68390
+2025-07-09 00:12:01,617 - MCPCreditIntelligenceTransformer - INFO - [1/7] Validating security_id: MN0LNDB68390
+2025-07-09 00:12:01,618 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-09 00:12:01,618 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-09 00:12:01,618 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-09 00:12:01,618 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-09 00:12:01,618 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-09 00:12:01,618 - MCPCreditIntelligenceTransformer - INFO - [2/7] Loading issuer's final derived financial data
+2025-07-09 00:12:01,619 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded and filtered final derived financial data.
+2025-07-09 00:12:01,619 - MCPCreditIntelligenceTransformer - INFO - [3/7] Loading industry and country research data
+2025-07-09 00:12:01,619 - MCPCreditIntelligenceTransformer - INFO - [4/7] Loading the Universal Projections Schema
+2025-07-09 00:12:01,620 - MCPCreditIntelligenceTransformer - INFO - Looking for projections schema template at: /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/schemas/universal_projections_schema.json
+2025-07-09 00:12:01,620 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded Universal Projections Schema.
+2025-07-09 00:12:01,620 - MCPCreditIntelligenceTransformer - INFO - [5/7] Loading issuer business profile
+2025-07-09 00:12:01,620 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-09 00:12:01,620 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-09 00:12:01,620 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-09 00:12:01,620 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-09 00:12:01,620 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-09 00:12:01,620 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded issuer business profile.
+2025-07-09 00:12:01,620 - MCPCreditIntelligenceTransformer - INFO - [6/7] Preparing LLM prompt for projections schema generation
+2025-07-09 00:12:01,621 - MCPCreditIntelligenceTransformer - INFO - [7/7] Initializing LLM and invoking projections schema generation...
+2025-07-09 00:13:13,468 - MCPCreditIntelligenceTransformer - INFO - LLM API call completed successfully.
+2025-07-09 00:13:13,468 - MCPCreditIntelligenceTransformer - INFO - [8/8] Processing LLM response and saving generated JIT projections schema
+2025-07-09 00:13:13,469 - MCPCreditIntelligenceTransformer - INFO - Successfully extracted JSON schema from LLM response markdown block.
+2025-07-09 00:13:13,470 - MCPCreditIntelligenceTransformer - INFO - Successfully saved JIT projections schema to /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390/credit_analysis/jit_schemas/projections_schema.json
+2025-07-09 00:13:13,470 - MCPCreditIntelligenceTransformer - INFO - === generate_jit_projections_schema completed successfully ===
+2025-07-09 00:21:42,549 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-09 00:21:42,549 - MCPCreditIntelligenceTransformer - INFO - Starting MCP Credit Intelligence Transformer server
+2025-07-09 00:21:42,556 - MCPCreditIntelligenceTransformer - INFO - Logging to /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/logs/debt_reconciliation.log
+2025-07-09 00:21:42,556 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-09 00:21:42,583 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-07-09 00:21:42,584 - MCPCreditIntelligenceTransformer - INFO - === Starting generate_jit_projections_schema ===
+2025-07-09 00:21:42,584 - MCPCreditIntelligenceTransformer - INFO - Starting JIT projections schema generation for security_id: MN0LNDB68390
+2025-07-09 00:21:42,584 - MCPCreditIntelligenceTransformer - INFO - [1/7] Validating security_id: MN0LNDB68390
+2025-07-09 00:21:42,584 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-09 00:21:42,584 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-09 00:21:42,584 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-09 00:21:42,585 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-09 00:21:42,585 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-09 00:21:42,585 - MCPCreditIntelligenceTransformer - INFO - [2/7] Loading issuer's final derived financial data
+2025-07-09 00:21:42,585 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded and filtered final derived financial data.
+2025-07-09 00:21:42,585 - MCPCreditIntelligenceTransformer - INFO - [3/7] Loading industry and country research data
+2025-07-09 00:21:42,586 - MCPCreditIntelligenceTransformer - INFO - [4/7] Loading the Universal Projections Schema
+2025-07-09 00:21:42,586 - MCPCreditIntelligenceTransformer - INFO - Looking for projections schema template at: /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/schemas/universal_projections_schema.json
+2025-07-09 00:21:42,586 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded Universal Projections Schema.
+2025-07-09 00:21:42,586 - MCPCreditIntelligenceTransformer - INFO - [5/7] Loading issuer business profile
+2025-07-09 00:21:42,586 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-09 00:21:42,586 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-09 00:21:42,586 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-09 00:21:42,586 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-09 00:21:42,586 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-09 00:21:42,587 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded issuer business profile.
+2025-07-09 00:21:42,587 - MCPCreditIntelligenceTransformer - INFO - [6/7] Preparing LLM prompt for projections schema generation
+2025-07-09 00:21:42,587 - MCPCreditIntelligenceTransformer - INFO - [7/7] Initializing LLM and invoking projections schema generation...
+2025-07-09 00:22:35,424 - MCPCreditIntelligenceTransformer - INFO - LLM API call completed successfully.
+2025-07-09 00:22:35,424 - MCPCreditIntelligenceTransformer - INFO - [8/8] Processing LLM response and saving generated JIT projections schema
+2025-07-09 00:22:35,425 - MCPCreditIntelligenceTransformer - INFO - Successfully extracted JSON schema from LLM response markdown block.
+2025-07-09 00:22:35,427 - MCPCreditIntelligenceTransformer - INFO - Successfully saved JIT projections schema to /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390/credit_analysis/jit_schemas/projections_schema.json
+2025-07-09 00:22:35,427 - MCPCreditIntelligenceTransformer - INFO - === generate_jit_projections_schema completed successfully ===
+2025-07-09 00:29:45,793 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-09 00:29:45,793 - MCPCreditIntelligenceTransformer - INFO - Starting MCP Credit Intelligence Transformer server
+2025-07-09 00:29:45,793 - MCPCreditIntelligenceTransformer - INFO - Logging to /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/logs/debt_reconciliation.log
+2025-07-09 00:29:45,793 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-09 00:29:45,824 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-07-09 00:29:45,824 - MCPCreditIntelligenceTransformer - INFO - === Starting generate_jit_projections_schema ===
+2025-07-09 00:29:45,824 - MCPCreditIntelligenceTransformer - INFO - Starting JIT projections schema generation for security_id: MN0LNDB68390
+2025-07-09 00:29:45,824 - MCPCreditIntelligenceTransformer - INFO - [1/7] Validating security_id: MN0LNDB68390
+2025-07-09 00:29:45,825 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-09 00:29:45,825 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-09 00:29:45,825 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-09 00:29:45,825 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-09 00:29:45,825 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-09 00:29:45,826 - MCPCreditIntelligenceTransformer - INFO - [2/7] Loading issuer's final derived financial data
+2025-07-09 00:29:45,826 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded and filtered final derived financial data.
+2025-07-09 00:29:45,826 - MCPCreditIntelligenceTransformer - INFO - [3/7] Loading industry and country research data
+2025-07-09 00:29:45,827 - MCPCreditIntelligenceTransformer - INFO - [4/7] Loading the Universal Projections Schema
+2025-07-09 00:29:45,827 - MCPCreditIntelligenceTransformer - INFO - Looking for projections schema template at: /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/schemas/universal_projections_schema.json
+2025-07-09 00:29:45,827 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded Universal Projections Schema.
+2025-07-09 00:29:45,827 - MCPCreditIntelligenceTransformer - INFO - [5/7] Loading issuer business profile
+2025-07-09 00:29:45,828 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-09 00:29:45,828 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-09 00:29:45,828 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-09 00:29:45,828 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-09 00:29:45,828 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-09 00:29:45,828 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded issuer business profile.
+2025-07-09 00:29:45,828 - MCPCreditIntelligenceTransformer - INFO - [6/7] Preparing LLM prompt for projections schema generation
+2025-07-09 00:29:45,829 - MCPCreditIntelligenceTransformer - INFO - [7/7] Initializing LLM and invoking projections schema generation...
+2025-07-09 00:30:51,923 - MCPCreditIntelligenceTransformer - INFO - LLM API call completed successfully.
+2025-07-09 00:30:51,923 - MCPCreditIntelligenceTransformer - INFO - [8/8] Processing LLM response and saving generated JIT projections schema
+2025-07-09 00:30:51,924 - MCPCreditIntelligenceTransformer - INFO - Successfully extracted JSON schema from LLM response markdown block.
+2025-07-09 00:30:51,925 - MCPCreditIntelligenceTransformer - INFO - Successfully saved JIT projections schema to /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390/credit_analysis/jit_schemas/projections_schema.json
+2025-07-09 00:30:51,925 - MCPCreditIntelligenceTransformer - INFO - === generate_jit_projections_schema completed successfully ===
+2025-07-09 00:36:32,352 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-09 00:36:32,353 - MCPCreditIntelligenceTransformer - INFO - Starting MCP Credit Intelligence Transformer server
+2025-07-09 00:36:32,353 - MCPCreditIntelligenceTransformer - INFO - Logging to /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/logs/debt_reconciliation.log
+2025-07-09 00:36:32,353 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-09 00:36:32,380 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-07-09 00:36:32,380 - MCPCreditIntelligenceTransformer - INFO - === Starting generate_jit_projections_schema ===
+2025-07-09 00:36:32,380 - MCPCreditIntelligenceTransformer - INFO - Starting JIT projections schema generation for security_id: MN0LNDB68390
+2025-07-09 00:36:32,380 - MCPCreditIntelligenceTransformer - INFO - [1/7] Validating security_id: MN0LNDB68390
+2025-07-09 00:36:32,381 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-09 00:36:32,381 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-09 00:36:32,381 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-09 00:36:32,381 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-09 00:36:32,381 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-09 00:36:32,381 - MCPCreditIntelligenceTransformer - INFO - [2/7] Loading issuer's final derived financial data
+2025-07-09 00:36:32,382 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded and filtered final derived financial data.
+2025-07-09 00:36:32,382 - MCPCreditIntelligenceTransformer - INFO - [3/7] Loading industry and country research data
+2025-07-09 00:36:32,382 - MCPCreditIntelligenceTransformer - INFO - [4/7] Loading the Universal Projections Schema
+2025-07-09 00:36:32,382 - MCPCreditIntelligenceTransformer - INFO - Looking for projections schema template at: /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/schemas/universal_projections_schema.json
+2025-07-09 00:36:32,382 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded Universal Projections Schema.
+2025-07-09 00:36:32,383 - MCPCreditIntelligenceTransformer - INFO - [5/7] Loading issuer business profile
+2025-07-09 00:36:32,383 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-09 00:36:32,383 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-09 00:36:32,383 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-09 00:36:32,383 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-09 00:36:32,383 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-09 00:36:32,383 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded issuer business profile.
+2025-07-09 00:36:32,383 - MCPCreditIntelligenceTransformer - INFO - [6/7] Preparing LLM prompt for projections schema generation
+2025-07-09 00:36:32,384 - MCPCreditIntelligenceTransformer - INFO - [7/7] Initializing LLM and invoking projections schema generation...
+2025-07-09 00:38:03,164 - MCPCreditIntelligenceTransformer - INFO - LLM API call completed successfully.
+2025-07-09 00:38:03,164 - MCPCreditIntelligenceTransformer - INFO - [8/8] Processing LLM response and saving generated JIT projections schema
+2025-07-09 00:38:03,166 - MCPCreditIntelligenceTransformer - INFO - Successfully extracted JSON schema from LLM response markdown block.
+2025-07-09 00:38:03,168 - MCPCreditIntelligenceTransformer - INFO - Successfully saved JIT projections schema to /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390/credit_analysis/jit_schemas/projections_schema.json
+2025-07-09 00:38:03,168 - MCPCreditIntelligenceTransformer - INFO - === generate_jit_projections_schema completed successfully ===
+2025-07-09 12:12:37,948 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-09 12:12:37,949 - MCPCreditIntelligenceTransformer - INFO - Starting MCP Credit Intelligence Transformer server
+2025-07-09 12:12:37,949 - MCPCreditIntelligenceTransformer - INFO - Logging to /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/logs/debt_reconciliation.log
+2025-07-09 12:12:37,949 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-09 12:12:37,976 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-07-09 12:12:37,976 - MCPCreditIntelligenceTransformer - INFO - === Starting generate_jit_projections_schema ===
+2025-07-09 12:12:37,976 - MCPCreditIntelligenceTransformer - INFO - Starting JIT projections schema generation for security_id: MN0LNDB68390
+2025-07-09 12:12:37,976 - MCPCreditIntelligenceTransformer - INFO - [1/7] Validating security_id: MN0LNDB68390
+2025-07-09 12:12:37,977 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-09 12:12:37,977 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-09 12:12:37,977 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-09 12:12:37,977 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-09 12:12:37,977 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-09 12:12:37,977 - MCPCreditIntelligenceTransformer - INFO - [2/7] Loading issuer's final derived financial data
+2025-07-09 12:12:37,979 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded and filtered final derived financial data.
+2025-07-09 12:12:37,979 - MCPCreditIntelligenceTransformer - INFO - [3/7] Loading industry and country research data
+2025-07-09 12:12:37,979 - MCPCreditIntelligenceTransformer - INFO - [4/7] Loading the Universal Projections Schema
+2025-07-09 12:12:37,979 - MCPCreditIntelligenceTransformer - INFO - Looking for projections schema template at: /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/schemas/universal_projections_schema.json
+2025-07-09 12:12:37,980 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded Universal Projections Schema.
+2025-07-09 12:12:37,980 - MCPCreditIntelligenceTransformer - INFO - [5/7] Loading issuer business profile
+2025-07-09 12:12:37,980 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-09 12:12:37,980 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-09 12:12:37,980 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-09 12:12:37,980 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-09 12:12:37,980 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-09 12:12:37,980 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded issuer business profile.
+2025-07-09 12:12:37,980 - MCPCreditIntelligenceTransformer - INFO - [6/7] Preparing LLM prompt for projections schema generation
+2025-07-09 12:12:37,981 - MCPCreditIntelligenceTransformer - INFO - [7/7] Initializing LLM and invoking projections schema generation...
+2025-07-09 12:13:38,193 - MCPCreditIntelligenceTransformer - INFO - LLM API call completed successfully.
+2025-07-09 12:13:38,193 - MCPCreditIntelligenceTransformer - INFO - [8/8] Processing LLM response and saving generated JIT projections schema
+2025-07-09 12:13:38,194 - MCPCreditIntelligenceTransformer - INFO - Successfully extracted JSON schema from LLM response markdown block.
+2025-07-09 12:13:38,195 - MCPCreditIntelligenceTransformer - INFO - Successfully saved JIT projections schema to /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390/credit_analysis/jit_schemas/projections_schema.json
+2025-07-09 12:13:38,195 - MCPCreditIntelligenceTransformer - INFO - === generate_jit_projections_schema completed successfully ===
+2025-07-12 14:45:18,997 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-12 14:45:18,997 - MCPCreditIntelligenceTransformer - INFO - Starting MCP Credit Intelligence Transformer server
+2025-07-12 14:45:18,997 - MCPCreditIntelligenceTransformer - INFO - Logging to /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/logs/debt_reconciliation.log
+2025-07-12 14:45:18,997 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-12 14:45:19,021 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-07-12 14:45:19,021 - MCPCreditIntelligenceTransformer - INFO - === Starting generate_jit_projections_schema ===
+2025-07-12 14:45:19,021 - MCPCreditIntelligenceTransformer - INFO - Starting JIT projections schema generation for security_id: MN0LNDB68390
+2025-07-12 14:45:19,021 - MCPCreditIntelligenceTransformer - INFO - [1/7] Validating security_id: MN0LNDB68390
+2025-07-12 14:45:19,022 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-12 14:45:19,022 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-12 14:45:19,022 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-12 14:45:19,022 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 14:45:19,022 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 14:45:19,022 - MCPCreditIntelligenceTransformer - INFO - [2/7] Loading issuer's final derived financial data
+2025-07-12 14:45:19,023 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded and filtered final derived financial data.
+2025-07-12 14:45:19,023 - MCPCreditIntelligenceTransformer - INFO - [3/7] Loading industry and country research data
+2025-07-12 14:45:19,023 - MCPCreditIntelligenceTransformer - INFO - [4/7] Loading the Universal Projections Schema
+2025-07-12 14:45:19,023 - MCPCreditIntelligenceTransformer - INFO - Looking for projections schema template at: /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/schemas/universal_projections_schema.json
+2025-07-12 14:45:19,024 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded Universal Projections Schema.
+2025-07-12 14:45:19,024 - MCPCreditIntelligenceTransformer - INFO - [5/7] Loading issuer business profile
+2025-07-12 14:45:19,024 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-12 14:45:19,024 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-12 14:45:19,024 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-12 14:45:19,024 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 14:45:19,024 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 14:45:19,024 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded issuer business profile.
+2025-07-12 14:45:19,024 - MCPCreditIntelligenceTransformer - INFO - [6/7] Preparing LLM prompt for projections schema generation
+2025-07-12 14:45:19,025 - MCPCreditIntelligenceTransformer - INFO - [7/7] Initializing LLM and invoking projections schema generation...
+2025-07-12 14:46:21,439 - MCPCreditIntelligenceTransformer - INFO - LLM API call completed successfully.
+2025-07-12 14:46:21,439 - MCPCreditIntelligenceTransformer - INFO - [8/8] Processing LLM response and saving generated JIT projections schema
+2025-07-12 14:46:21,440 - MCPCreditIntelligenceTransformer - INFO - Successfully extracted JSON schema from LLM response markdown block.
+2025-07-12 14:46:21,443 - MCPCreditIntelligenceTransformer - INFO - Successfully saved JIT projections schema to /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390/credit_analysis/jit_schemas/projections_schema.json
+2025-07-12 14:46:21,443 - MCPCreditIntelligenceTransformer - INFO - === generate_jit_projections_schema completed successfully ===
+2025-07-12 15:02:55,369 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-12 15:02:55,369 - MCPCreditIntelligenceTransformer - INFO - Starting MCP Credit Intelligence Transformer server
+2025-07-12 15:02:55,369 - MCPCreditIntelligenceTransformer - INFO - Logging to /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/logs/debt_reconciliation.log
+2025-07-12 15:02:55,369 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-12 15:02:55,393 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-07-12 15:02:55,393 - MCPCreditIntelligenceTransformer - INFO - === Starting generate_jit_projections_schema ===
+2025-07-12 15:02:55,393 - MCPCreditIntelligenceTransformer - INFO - Starting JIT projections schema generation for security_id: MN0LNDB68390
+2025-07-12 15:02:55,394 - MCPCreditIntelligenceTransformer - INFO - [1/7] Validating security_id: MN0LNDB68390
+2025-07-12 15:02:55,394 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-12 15:02:55,394 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-12 15:02:55,394 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-12 15:02:55,394 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 15:02:55,394 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 15:02:55,394 - MCPCreditIntelligenceTransformer - INFO - [2/7] Loading issuer's final derived financial data
+2025-07-12 15:02:55,395 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded and filtered final derived financial data.
+2025-07-12 15:02:55,395 - MCPCreditIntelligenceTransformer - INFO - [3/7] Loading industry and country research data
+2025-07-12 15:02:55,395 - MCPCreditIntelligenceTransformer - INFO - [4/7] Loading the Universal Projections Schema
+2025-07-12 15:02:55,395 - MCPCreditIntelligenceTransformer - INFO - Looking for projections schema template at: /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/schemas/universal_projections_schema.json
+2025-07-12 15:02:55,396 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded Universal Projections Schema.
+2025-07-12 15:02:55,396 - MCPCreditIntelligenceTransformer - INFO - [5/7] Loading issuer business profile
+2025-07-12 15:02:55,396 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-12 15:02:55,396 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-12 15:02:55,396 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-12 15:02:55,396 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 15:02:55,396 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 15:02:55,396 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded issuer business profile.
+2025-07-12 15:02:55,396 - MCPCreditIntelligenceTransformer - INFO - [6/7] Preparing LLM prompt for projections schema generation
+2025-07-12 15:02:55,397 - MCPCreditIntelligenceTransformer - INFO - [7/7] Initializing LLM and invoking projections schema generation...
+2025-07-12 15:04:10,080 - MCPCreditIntelligenceTransformer - INFO - LLM API call completed successfully.
+2025-07-12 15:04:10,080 - MCPCreditIntelligenceTransformer - INFO - [8/8] Processing LLM response and saving generated JIT projections schema
+2025-07-12 15:04:10,081 - MCPCreditIntelligenceTransformer - INFO - Successfully extracted JSON schema from LLM response markdown block.
+2025-07-12 15:04:10,083 - MCPCreditIntelligenceTransformer - INFO - Successfully saved JIT projections schema to /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390/credit_analysis/jit_schemas/projections_schema.json
+2025-07-12 15:04:10,083 - MCPCreditIntelligenceTransformer - INFO - === generate_jit_projections_schema completed successfully ===
+2025-07-12 15:26:36,016 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-12 15:26:36,017 - MCPCreditIntelligenceTransformer - INFO - Starting MCP Credit Intelligence Transformer server
+2025-07-12 15:26:36,017 - MCPCreditIntelligenceTransformer - INFO - Logging to /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/logs/debt_reconciliation.log
+2025-07-12 15:26:36,017 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-12 15:26:36,042 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-07-12 15:26:36,042 - MCPCreditIntelligenceTransformer - INFO - === Starting generate_jit_projections_schema ===
+2025-07-12 15:26:36,042 - MCPCreditIntelligenceTransformer - INFO - Starting JIT projections schema generation for security_id: MN0LNDB68390
+2025-07-12 15:26:36,042 - MCPCreditIntelligenceTransformer - INFO - [1/7] Validating security_id: MN0LNDB68390
+2025-07-12 15:26:36,043 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-12 15:26:36,043 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-12 15:26:36,043 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-12 15:26:36,043 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 15:26:36,043 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 15:26:36,043 - MCPCreditIntelligenceTransformer - INFO - [2/7] Loading issuer's final derived financial data
+2025-07-12 15:26:36,044 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded and filtered final derived financial data.
+2025-07-12 15:26:36,044 - MCPCreditIntelligenceTransformer - INFO - [3/7] Loading industry and country research data
+2025-07-12 15:26:36,045 - MCPCreditIntelligenceTransformer - INFO - [4/7] Loading the Universal Projections Schema
+2025-07-12 15:26:36,045 - MCPCreditIntelligenceTransformer - INFO - Looking for projections schema template at: /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/schemas/universal_projections_schema.json
+2025-07-12 15:26:36,045 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded Universal Projections Schema.
+2025-07-12 15:26:36,045 - MCPCreditIntelligenceTransformer - INFO - [5/7] Loading issuer business profile
+2025-07-12 15:26:36,045 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-12 15:26:36,046 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-12 15:26:36,046 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-12 15:26:36,046 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 15:26:36,046 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 15:26:36,046 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded issuer business profile.
+2025-07-12 15:26:36,046 - MCPCreditIntelligenceTransformer - INFO - [6/7] Loading historical debt schedule data
+2025-07-12 15:26:36,046 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-12 15:26:36,046 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-12 15:26:36,046 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-12 15:26:36,046 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 15:26:36,046 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 15:26:36,047 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded historical debt schedule data.
+2025-07-12 15:26:36,047 - MCPCreditIntelligenceTransformer - INFO - [6/7] Preparing LLM prompt for projections schema generation
+2025-07-12 15:26:36,047 - MCPCreditIntelligenceTransformer - INFO - [7/7] Initializing LLM and invoking projections schema generation...
+2025-07-12 15:27:40,510 - MCPCreditIntelligenceTransformer - INFO - LLM API call completed successfully.
+2025-07-12 15:27:40,510 - MCPCreditIntelligenceTransformer - INFO - [8/8] Processing LLM response and saving generated JIT projections schema
+2025-07-12 15:27:40,511 - MCPCreditIntelligenceTransformer - INFO - Successfully extracted JSON schema from LLM response markdown block.
+2025-07-12 15:27:40,513 - MCPCreditIntelligenceTransformer - INFO - Successfully saved JIT projections schema to /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390/credit_analysis/jit_schemas/projections_schema.json
+2025-07-12 15:27:40,513 - MCPCreditIntelligenceTransformer - INFO - === generate_jit_projections_schema completed successfully ===
+2025-07-12 15:35:56,555 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-12 15:35:56,568 - MCPCreditIntelligenceTransformer - INFO - Starting MCP Credit Intelligence Transformer server
+2025-07-12 15:35:56,568 - MCPCreditIntelligenceTransformer - INFO - Logging to /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/logs/debt_reconciliation.log
+2025-07-12 15:35:56,568 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-12 15:35:56,626 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-07-12 15:35:56,626 - MCPCreditIntelligenceTransformer - INFO - === Starting generate_jit_projections_schema ===
+2025-07-12 15:35:56,626 - MCPCreditIntelligenceTransformer - INFO - Starting JIT projections schema generation for security_id: MN0LNDB68390
+2025-07-12 15:35:56,626 - MCPCreditIntelligenceTransformer - INFO - [1/7] Validating security_id: MN0LNDB68390
+2025-07-12 15:35:56,635 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-12 15:35:56,635 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-12 15:35:56,638 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-12 15:35:56,640 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 15:35:56,641 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 15:35:56,641 - MCPCreditIntelligenceTransformer - INFO - [2/7] Loading issuer's final derived financial data
+2025-07-12 15:35:56,642 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded and filtered final derived financial data.
+2025-07-12 15:35:56,642 - MCPCreditIntelligenceTransformer - INFO - [3/7] Loading industry and country research data
+2025-07-12 15:35:56,643 - MCPCreditIntelligenceTransformer - INFO - [4/7] Loading the Universal Projections Schema
+2025-07-12 15:35:56,643 - MCPCreditIntelligenceTransformer - INFO - Looking for projections schema template at: /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/schemas/universal_projections_schema.json
+2025-07-12 15:35:56,644 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded Universal Projections Schema.
+2025-07-12 15:35:56,644 - MCPCreditIntelligenceTransformer - INFO - [5/7] Loading issuer business profile
+2025-07-12 15:35:56,644 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-12 15:35:56,644 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-12 15:35:56,644 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-12 15:35:56,644 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 15:35:56,644 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 15:35:56,644 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded issuer business profile.
+2025-07-12 15:35:56,645 - MCPCreditIntelligenceTransformer - INFO - [6/7] Preparing LLM prompt for projections schema generation
+2025-07-12 15:35:56,645 - MCPCreditIntelligenceTransformer - INFO - [7/7] Initializing LLM and invoking projections schema generation...
+2025-07-12 15:38:19,915 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-12 15:38:19,915 - MCPCreditIntelligenceTransformer - INFO - Starting MCP Credit Intelligence Transformer server
+2025-07-12 15:38:19,915 - MCPCreditIntelligenceTransformer - INFO - Logging to /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/logs/debt_reconciliation.log
+2025-07-12 15:38:19,915 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-12 15:38:19,943 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-07-12 15:38:19,943 - MCPCreditIntelligenceTransformer - INFO - === Starting generate_jit_projections_schema ===
+2025-07-12 15:38:19,943 - MCPCreditIntelligenceTransformer - INFO - Starting JIT projections schema generation for security_id: MN0LNDB68390
+2025-07-12 15:38:19,943 - MCPCreditIntelligenceTransformer - INFO - [1/7] Validating security_id: MN0LNDB68390
+2025-07-12 15:38:19,944 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-12 15:38:19,944 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-12 15:38:19,944 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-12 15:38:19,944 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 15:38:19,944 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 15:38:19,945 - MCPCreditIntelligenceTransformer - INFO - [2/7] Loading issuer's final derived financial data
+2025-07-12 15:38:19,945 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded and filtered final derived financial data.
+2025-07-12 15:38:19,945 - MCPCreditIntelligenceTransformer - INFO - [3/7] Loading industry and country research data
+2025-07-12 15:38:19,946 - MCPCreditIntelligenceTransformer - INFO - [4/7] Loading the Universal Projections Schema
+2025-07-12 15:38:19,946 - MCPCreditIntelligenceTransformer - INFO - Looking for projections schema template at: /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/schemas/universal_projections_schema.json
+2025-07-12 15:38:19,946 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded Universal Projections Schema.
+2025-07-12 15:38:19,946 - MCPCreditIntelligenceTransformer - INFO - [5/7] Loading issuer business profile
+2025-07-12 15:38:19,946 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-12 15:38:19,946 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-12 15:38:19,946 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-12 15:38:19,947 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 15:38:19,947 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 15:38:19,947 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded issuer business profile.
+2025-07-12 15:38:19,947 - MCPCreditIntelligenceTransformer - INFO - [6/7] Preparing LLM prompt for projections schema generation
+2025-07-12 15:38:19,948 - MCPCreditIntelligenceTransformer - INFO - [7/7] Initializing LLM and invoking projections schema generation...
+2025-07-12 15:39:21,591 - MCPCreditIntelligenceTransformer - INFO - LLM API call completed successfully.
+2025-07-12 15:39:21,592 - MCPCreditIntelligenceTransformer - INFO - [8/8] Processing LLM response and saving generated JIT projections schema
+2025-07-12 15:39:21,592 - MCPCreditIntelligenceTransformer - INFO - Successfully extracted JSON schema from LLM response markdown block.
+2025-07-12 15:39:21,594 - MCPCreditIntelligenceTransformer - INFO - Successfully saved JIT projections schema to /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390/credit_analysis/jit_schemas/projections_schema.json
+2025-07-12 15:39:21,594 - MCPCreditIntelligenceTransformer - INFO - === generate_jit_projections_schema completed successfully ===
+2025-07-12 15:52:31,803 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-12 15:52:31,803 - MCPCreditIntelligenceTransformer - INFO - Starting MCP Credit Intelligence Transformer server
+2025-07-12 15:52:31,803 - MCPCreditIntelligenceTransformer - INFO - Logging to /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/logs/debt_reconciliation.log
+2025-07-12 15:52:31,803 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-12 15:52:31,839 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-07-12 15:52:31,839 - MCPCreditIntelligenceTransformer - INFO - === Starting generate_jit_projections_schema ===
+2025-07-12 15:52:31,839 - MCPCreditIntelligenceTransformer - INFO - Starting JIT projections schema generation for security_id: MN0LNDB68390
+2025-07-12 15:52:31,839 - MCPCreditIntelligenceTransformer - INFO - [1/7] Validating security_id: MN0LNDB68390
+2025-07-12 15:52:31,842 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-12 15:52:31,842 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-12 15:52:31,842 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-12 15:52:31,842 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 15:52:31,842 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 15:52:31,842 - MCPCreditIntelligenceTransformer - INFO - [2/7] Loading issuer's final derived financial data
+2025-07-12 15:52:31,843 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded and filtered final derived financial data.
+2025-07-12 15:52:31,843 - MCPCreditIntelligenceTransformer - INFO - [3/7] Loading industry and country research data
+2025-07-12 15:52:31,844 - MCPCreditIntelligenceTransformer - INFO - [4/7] Loading the Universal Projections Schema
+2025-07-12 15:52:31,844 - MCPCreditIntelligenceTransformer - INFO - Looking for projections schema template at: /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/schemas/universal_projections_schema.json
+2025-07-12 15:52:31,844 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded Universal Projections Schema.
+2025-07-12 15:52:31,844 - MCPCreditIntelligenceTransformer - INFO - [5/7] Loading issuer business profile
+2025-07-12 15:52:31,844 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-12 15:52:31,844 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-12 15:52:31,844 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-12 15:52:31,844 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 15:52:31,844 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 15:52:31,845 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded issuer business profile.
+2025-07-12 15:52:31,845 - MCPCreditIntelligenceTransformer - INFO - [6/7] Preparing LLM prompt for projections schema generation
+2025-07-12 15:52:31,846 - MCPCreditIntelligenceTransformer - INFO - [7/7] Initializing LLM and invoking projections schema generation...
+2025-07-12 15:53:55,487 - MCPCreditIntelligenceTransformer - INFO - LLM API call completed successfully.
+2025-07-12 15:53:55,487 - MCPCreditIntelligenceTransformer - INFO - [8/8] Processing LLM response and saving generated JIT projections schema
+2025-07-12 15:53:55,487 - MCPCreditIntelligenceTransformer - INFO - Successfully extracted JSON schema from LLM response markdown block.
+2025-07-12 15:53:55,489 - MCPCreditIntelligenceTransformer - INFO - Successfully saved JIT projections schema to /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390/credit_analysis/jit_schemas/projections_schema.json
+2025-07-12 15:53:55,489 - MCPCreditIntelligenceTransformer - INFO - === generate_jit_projections_schema completed successfully ===
+2025-07-12 16:06:49,934 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-12 16:06:49,934 - MCPCreditIntelligenceTransformer - INFO - Starting MCP Credit Intelligence Transformer server
+2025-07-12 16:06:49,934 - MCPCreditIntelligenceTransformer - INFO - Logging to /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/logs/debt_reconciliation.log
+2025-07-12 16:06:49,934 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-12 16:06:49,965 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-07-12 16:06:49,965 - MCPCreditIntelligenceTransformer - INFO - === Starting generate_jit_projections_schema ===
+2025-07-12 16:06:49,965 - MCPCreditIntelligenceTransformer - INFO - Starting JIT projections schema generation for security_id: MN0LNDB68390
+2025-07-12 16:06:49,965 - MCPCreditIntelligenceTransformer - INFO - [1/7] Validating security_id: MN0LNDB68390
+2025-07-12 16:06:49,966 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-12 16:06:49,966 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-12 16:06:49,966 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-12 16:06:49,966 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 16:06:49,966 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 16:06:49,966 - MCPCreditIntelligenceTransformer - INFO - [2/7] Loading issuer's final derived financial data
+2025-07-12 16:06:49,967 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded and filtered final derived financial data.
+2025-07-12 16:06:49,967 - MCPCreditIntelligenceTransformer - INFO - [3/7] Loading industry and country research data
+2025-07-12 16:06:49,967 - MCPCreditIntelligenceTransformer - INFO - [4/7] Loading the Universal Projections Schema
+2025-07-12 16:06:49,967 - MCPCreditIntelligenceTransformer - INFO - Looking for projections schema template at: /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/schemas/universal_projections_schema.json
+2025-07-12 16:06:49,968 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded Universal Projections Schema.
+2025-07-12 16:06:49,968 - MCPCreditIntelligenceTransformer - INFO - [5/7] Loading issuer business profile
+2025-07-12 16:06:49,968 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-12 16:06:49,968 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-12 16:06:49,968 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-12 16:06:49,968 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 16:06:49,968 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 16:06:49,968 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded issuer business profile.
+2025-07-12 16:06:49,968 - MCPCreditIntelligenceTransformer - INFO - [6/7] Preparing LLM prompt for projections schema generation
+2025-07-12 16:06:49,969 - MCPCreditIntelligenceTransformer - INFO - [7/7] Initializing LLM and invoking projections schema generation...
+2025-07-12 16:08:04,044 - MCPCreditIntelligenceTransformer - INFO - LLM API call completed successfully.
+2025-07-12 16:08:04,044 - MCPCreditIntelligenceTransformer - INFO - [8/8] Processing LLM response and saving generated JIT projections schema
+2025-07-12 16:08:04,045 - MCPCreditIntelligenceTransformer - INFO - Successfully extracted JSON schema from LLM response markdown block.
+2025-07-12 16:08:04,046 - MCPCreditIntelligenceTransformer - INFO - Successfully saved JIT projections schema to /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390/credit_analysis/jit_schemas/projections_schema.json
+2025-07-12 16:08:04,046 - MCPCreditIntelligenceTransformer - INFO - === generate_jit_projections_schema completed successfully ===
+2025-07-12 16:43:17,720 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-12 16:43:17,721 - MCPCreditIntelligenceTransformer - INFO - Starting MCP Credit Intelligence Transformer server
+2025-07-12 16:43:17,721 - MCPCreditIntelligenceTransformer - INFO - Logging to /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/logs/debt_reconciliation.log
+2025-07-12 16:43:17,721 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-12 16:43:17,777 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-07-12 16:43:17,778 - MCPCreditIntelligenceTransformer - INFO - === Starting generate_jit_projections_schema ===
+2025-07-12 16:43:17,778 - MCPCreditIntelligenceTransformer - INFO - Starting JIT projections schema generation for security_id: MN0LNDB68390
+2025-07-12 16:43:17,778 - MCPCreditIntelligenceTransformer - INFO - [1/7] Validating security_id: MN0LNDB68390
+2025-07-12 16:43:17,780 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-12 16:43:17,781 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-12 16:43:17,781 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-12 16:43:17,781 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 16:43:17,781 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 16:43:17,782 - MCPCreditIntelligenceTransformer - INFO - [2/7] Loading issuer's final derived financial data
+2025-07-12 16:43:17,784 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded and filtered final derived financial data.
+2025-07-12 16:43:17,784 - MCPCreditIntelligenceTransformer - INFO - [3/7] Loading industry and country research data
+2025-07-12 16:43:17,786 - MCPCreditIntelligenceTransformer - INFO - [4/7] Loading the Universal Projections Schema
+2025-07-12 16:43:17,786 - MCPCreditIntelligenceTransformer - INFO - Looking for projections schema template at: /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/schemas/universal_projections_schema.json
+2025-07-12 16:43:17,788 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded Universal Projections Schema.
+2025-07-12 16:43:17,789 - MCPCreditIntelligenceTransformer - INFO - [5/7] Loading issuer business profile
+2025-07-12 16:43:17,789 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-12 16:43:17,790 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-12 16:43:17,790 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-12 16:43:17,790 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 16:43:17,791 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 16:43:17,793 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded issuer business profile.
+2025-07-12 16:43:17,793 - MCPCreditIntelligenceTransformer - INFO - [6/7] Preparing LLM prompt for projections schema generation
+2025-07-12 16:43:17,797 - MCPCreditIntelligenceTransformer - INFO - [7/7] Initializing LLM and invoking projections schema generation...
+2025-07-12 16:44:10,980 - MCPCreditIntelligenceTransformer - INFO - LLM API call completed successfully.
+2025-07-12 16:44:10,980 - MCPCreditIntelligenceTransformer - INFO - [8/8] Processing LLM response and saving generated JIT projections schema
+2025-07-12 16:44:10,982 - MCPCreditIntelligenceTransformer - INFO - Successfully extracted JSON schema from LLM response markdown block.
+2025-07-12 16:44:10,984 - MCPCreditIntelligenceTransformer - INFO - Successfully saved JIT projections schema to /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390/credit_analysis/jit_schemas/projections_schema.json
+2025-07-12 16:44:10,984 - MCPCreditIntelligenceTransformer - INFO - === generate_jit_projections_schema completed successfully ===
+2025-07-12 16:55:42,938 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-12 16:55:42,939 - MCPCreditIntelligenceTransformer - INFO - Starting MCP Credit Intelligence Transformer server
+2025-07-12 16:55:42,939 - MCPCreditIntelligenceTransformer - INFO - Logging to /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/logs/debt_reconciliation.log
+2025-07-12 16:55:42,939 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-12 16:55:43,083 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-07-12 16:55:43,085 - MCPCreditIntelligenceTransformer - INFO - === Starting generate_jit_projections_schema ===
+2025-07-12 16:55:43,086 - MCPCreditIntelligenceTransformer - INFO - Starting JIT projections schema generation for security_id: MN0LNDB68390
+2025-07-12 16:55:43,087 - MCPCreditIntelligenceTransformer - INFO - [1/7] Validating security_id: MN0LNDB68390
+2025-07-12 16:55:43,089 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-12 16:55:43,089 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-12 16:55:43,089 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-12 16:55:43,090 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 16:55:43,090 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 16:55:43,090 - MCPCreditIntelligenceTransformer - INFO - [2/7] Loading issuer's final derived financial data
+2025-07-12 16:55:43,093 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded and filtered final derived financial data.
+2025-07-12 16:55:43,093 - MCPCreditIntelligenceTransformer - INFO - [3/7] Loading industry and country research data
+2025-07-12 16:55:43,095 - MCPCreditIntelligenceTransformer - INFO - [4/7] Loading the Universal Projections Schema
+2025-07-12 16:55:43,096 - MCPCreditIntelligenceTransformer - INFO - Looking for projections schema template at: /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/schemas/universal_projections_schema.json
+2025-07-12 16:55:43,097 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded Universal Projections Schema.
+2025-07-12 16:55:43,098 - MCPCreditIntelligenceTransformer - INFO - [5/7] Loading issuer business profile
+2025-07-12 16:55:43,098 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-12 16:55:43,098 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-12 16:55:43,099 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-12 16:55:43,099 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 16:55:43,099 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 16:55:43,100 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded issuer business profile.
+2025-07-12 16:55:43,100 - MCPCreditIntelligenceTransformer - INFO - [6/7] Preparing LLM prompt for projections schema generation
+2025-07-12 16:55:43,102 - MCPCreditIntelligenceTransformer - INFO - [7/7] Initializing LLM and invoking projections schema generation...
+2025-07-12 17:00:23,925 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-12 17:00:23,925 - MCPCreditIntelligenceTransformer - INFO - Starting MCP Credit Intelligence Transformer server
+2025-07-12 17:00:23,925 - MCPCreditIntelligenceTransformer - INFO - Logging to /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/logs/debt_reconciliation.log
+2025-07-12 17:00:23,925 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-12 17:00:23,952 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-07-12 17:00:23,952 - MCPCreditIntelligenceTransformer - INFO - === Starting generate_jit_projections_schema ===
+2025-07-12 17:00:23,952 - MCPCreditIntelligenceTransformer - INFO - Starting JIT projections schema generation for security_id: MN0LNDB68390
+2025-07-12 17:00:23,952 - MCPCreditIntelligenceTransformer - INFO - [1/7] Validating security_id: MN0LNDB68390
+2025-07-12 17:00:23,953 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-12 17:00:23,953 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-12 17:00:23,953 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-12 17:00:23,953 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 17:00:23,953 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 17:00:23,953 - MCPCreditIntelligenceTransformer - INFO - [2/7] Loading issuer's final derived financial data
+2025-07-12 17:00:23,954 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded and filtered final derived financial data.
+2025-07-12 17:00:23,954 - MCPCreditIntelligenceTransformer - INFO - [3/7] Loading industry and country research data
+2025-07-12 17:00:23,954 - MCPCreditIntelligenceTransformer - INFO - [4/7] Loading the Universal Projections Schema
+2025-07-12 17:00:23,955 - MCPCreditIntelligenceTransformer - INFO - Looking for projections schema template at: /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/schemas/universal_projections_schema.json
+2025-07-12 17:00:23,955 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded Universal Projections Schema.
+2025-07-12 17:00:23,955 - MCPCreditIntelligenceTransformer - INFO - [5/7] Loading issuer business profile
+2025-07-12 17:00:23,955 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-12 17:00:23,955 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-12 17:00:23,955 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-12 17:00:23,955 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 17:00:23,955 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 17:00:23,955 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded issuer business profile.
+2025-07-12 17:00:23,955 - MCPCreditIntelligenceTransformer - INFO - [6/7] Preparing LLM prompt for projections schema generation
+2025-07-12 17:00:23,956 - MCPCreditIntelligenceTransformer - INFO - [7/7] Initializing LLM and invoking projections schema generation...
+2025-07-12 17:01:38,543 - MCPCreditIntelligenceTransformer - INFO - LLM API call completed successfully.
+2025-07-12 17:01:38,543 - MCPCreditIntelligenceTransformer - INFO - [8/8] Processing LLM response and saving generated JIT projections schema
+2025-07-12 17:01:38,544 - MCPCreditIntelligenceTransformer - INFO - Successfully extracted JSON schema from LLM response markdown block.
+2025-07-12 17:01:38,545 - MCPCreditIntelligenceTransformer - INFO - Successfully saved JIT projections schema to /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390/credit_analysis/jit_schemas/projections_schema.json
+2025-07-12 17:01:38,546 - MCPCreditIntelligenceTransformer - INFO - === generate_jit_projections_schema completed successfully ===
+2025-07-12 17:02:17,951 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-12 17:02:17,951 - MCPCreditIntelligenceTransformer - INFO - Starting MCP Credit Intelligence Transformer server
+2025-07-12 17:02:17,951 - MCPCreditIntelligenceTransformer - INFO - Logging to /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/logs/debt_reconciliation.log
+2025-07-12 17:02:17,951 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-12 17:02:17,978 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-07-12 17:02:17,978 - MCPCreditIntelligenceTransformer - INFO - === Starting generate_jit_projections_schema ===
+2025-07-12 17:02:17,978 - MCPCreditIntelligenceTransformer - INFO - Starting JIT projections schema generation for security_id: MN0LNDB68390
+2025-07-12 17:02:17,978 - MCPCreditIntelligenceTransformer - INFO - [1/7] Validating security_id: MN0LNDB68390
+2025-07-12 17:02:17,979 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-12 17:02:17,979 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-12 17:02:17,979 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-12 17:02:17,979 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 17:02:17,979 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 17:02:17,979 - MCPCreditIntelligenceTransformer - INFO - [2/7] Loading issuer's final derived financial data
+2025-07-12 17:02:17,980 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded and filtered final derived financial data.
+2025-07-12 17:02:17,980 - MCPCreditIntelligenceTransformer - INFO - [3/7] Loading industry and country research data
+2025-07-12 17:02:17,980 - MCPCreditIntelligenceTransformer - INFO - [4/7] Loading the Universal Projections Schema
+2025-07-12 17:02:17,981 - MCPCreditIntelligenceTransformer - INFO - Looking for projections schema template at: /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/schemas/universal_projections_schema.json
+2025-07-12 17:02:17,981 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded Universal Projections Schema.
+2025-07-12 17:02:17,981 - MCPCreditIntelligenceTransformer - INFO - [5/7] Loading issuer business profile
+2025-07-12 17:02:17,981 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-12 17:02:17,981 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-12 17:02:17,981 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-12 17:02:17,981 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 17:02:17,981 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 17:02:17,981 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded issuer business profile.
+2025-07-12 17:02:17,981 - MCPCreditIntelligenceTransformer - INFO - [6/7] Preparing LLM prompt for projections schema generation
+2025-07-12 17:02:17,982 - MCPCreditIntelligenceTransformer - INFO - [7/7] Initializing LLM and invoking projections schema generation...
+2025-07-12 17:03:12,380 - MCPCreditIntelligenceTransformer - INFO - LLM API call completed successfully.
+2025-07-12 17:03:12,380 - MCPCreditIntelligenceTransformer - INFO - [8/8] Processing LLM response and saving generated JIT projections schema
+2025-07-12 17:03:12,381 - MCPCreditIntelligenceTransformer - INFO - Successfully extracted JSON schema from LLM response markdown block.
+2025-07-12 17:03:12,382 - MCPCreditIntelligenceTransformer - INFO - Successfully saved JIT projections schema to /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390/credit_analysis/jit_schemas/projections_schema.json
+2025-07-12 17:03:12,382 - MCPCreditIntelligenceTransformer - INFO - === generate_jit_projections_schema completed successfully ===
+2025-07-12 17:23:25,769 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-12 17:23:25,769 - MCPCreditIntelligenceTransformer - INFO - Starting MCP Credit Intelligence Transformer server
+2025-07-12 17:23:25,769 - MCPCreditIntelligenceTransformer - INFO - Logging to /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/logs/debt_reconciliation.log
+2025-07-12 17:23:25,770 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-12 17:23:25,817 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-07-12 17:23:25,818 - MCPCreditIntelligenceTransformer - INFO - === Starting generate_jit_projections_schema ===
+2025-07-12 17:23:25,818 - MCPCreditIntelligenceTransformer - INFO - Starting JIT projections schema generation for security_id: MN0LNDB68390
+2025-07-12 17:23:25,818 - MCPCreditIntelligenceTransformer - INFO - [1/7] Validating security_id: MN0LNDB68390
+2025-07-12 17:23:25,819 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-12 17:23:25,819 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-12 17:23:25,819 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-12 17:23:25,819 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 17:23:25,820 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 17:23:25,820 - MCPCreditIntelligenceTransformer - INFO - [2/7] Loading issuer's final derived financial data
+2025-07-12 17:23:25,821 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded and filtered final derived financial data.
+2025-07-12 17:23:25,821 - MCPCreditIntelligenceTransformer - INFO - [3/7] Loading industry and country research data
+2025-07-12 17:23:25,822 - MCPCreditIntelligenceTransformer - INFO - [4/7] Loading the Universal Projections Schema
+2025-07-12 17:23:25,822 - MCPCreditIntelligenceTransformer - INFO - Looking for projections schema template at: /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/schemas/universal_projections_schema.json
+2025-07-12 17:23:25,822 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded Universal Projections Schema.
+2025-07-12 17:23:25,822 - MCPCreditIntelligenceTransformer - INFO - [5/7] Loading issuer business profile
+2025-07-12 17:23:25,823 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-12 17:23:25,823 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-12 17:23:25,823 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-12 17:23:25,823 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 17:23:25,823 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 17:23:25,824 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded issuer business profile.
+2025-07-12 17:23:25,824 - MCPCreditIntelligenceTransformer - INFO - [6/7] Preparing LLM prompt for projections schema generation
+2025-07-12 17:23:25,825 - MCPCreditIntelligenceTransformer - INFO - [7/7] Initializing LLM and invoking projections schema generation...
+2025-07-12 17:24:25,136 - MCPCreditIntelligenceTransformer - INFO - LLM API call completed successfully.
+2025-07-12 17:24:25,136 - MCPCreditIntelligenceTransformer - INFO - [8/8] Processing LLM response and saving generated JIT projections schema
+2025-07-12 17:24:25,138 - MCPCreditIntelligenceTransformer - INFO - Successfully extracted JSON schema from LLM response markdown block.
+2025-07-12 17:24:25,140 - MCPCreditIntelligenceTransformer - INFO - Successfully saved JIT projections schema to /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390/credit_analysis/jit_schemas/projections_schema.json
+2025-07-12 17:24:25,141 - MCPCreditIntelligenceTransformer - INFO - === generate_jit_projections_schema completed successfully ===
+2025-07-12 17:49:27,612 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-12 17:49:27,612 - MCPCreditIntelligenceTransformer - INFO - Starting MCP Credit Intelligence Transformer server
+2025-07-12 17:49:27,613 - MCPCreditIntelligenceTransformer - INFO - Logging to /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/logs/debt_reconciliation.log
+2025-07-12 17:49:27,613 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-12 17:49:27,803 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-07-12 17:49:27,805 - MCPCreditIntelligenceTransformer - INFO - === Starting generate_jit_projections_schema ===
+2025-07-12 17:49:27,805 - MCPCreditIntelligenceTransformer - INFO - Starting JIT projections schema generation for security_id: MN0LNDB68390
+2025-07-12 17:49:27,806 - MCPCreditIntelligenceTransformer - INFO - [1/7] Validating security_id: MN0LNDB68390
+2025-07-12 17:49:27,811 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-12 17:49:27,812 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-12 17:49:27,812 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-12 17:49:27,813 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 17:49:27,813 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 17:49:27,814 - MCPCreditIntelligenceTransformer - INFO - [2/7] Loading issuer's final derived financial data
+2025-07-12 17:49:27,821 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded and filtered final derived financial data.
+2025-07-12 17:49:27,822 - MCPCreditIntelligenceTransformer - INFO - [3/7] Loading industry and country research data
+2025-07-12 17:49:27,826 - MCPCreditIntelligenceTransformer - INFO - [4/7] Loading the Universal Projections Schema
+2025-07-12 17:49:27,827 - MCPCreditIntelligenceTransformer - INFO - Looking for projections schema template at: /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/schemas/universal_projections_schema.json
+2025-07-12 17:49:27,829 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded Universal Projections Schema.
+2025-07-12 17:49:27,829 - MCPCreditIntelligenceTransformer - INFO - [5/7] Loading issuer business profile
+2025-07-12 17:49:27,831 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-12 17:49:27,831 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-12 17:49:27,832 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-12 17:49:27,833 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 17:49:27,834 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 17:49:27,835 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded issuer business profile.
+2025-07-12 17:49:27,836 - MCPCreditIntelligenceTransformer - INFO - [6/7] Preparing LLM prompt for projections schema generation
+2025-07-12 17:49:27,840 - MCPCreditIntelligenceTransformer - INFO - [7/7] Initializing LLM and invoking projections schema generation...
+2025-07-12 17:50:21,472 - MCPCreditIntelligenceTransformer - INFO - LLM API call completed successfully.
+2025-07-12 17:50:21,473 - MCPCreditIntelligenceTransformer - INFO - [8/8] Processing LLM response and saving generated JIT projections schema
+2025-07-12 17:50:21,478 - MCPCreditIntelligenceTransformer - INFO - Successfully extracted JSON schema from LLM response markdown block.
+2025-07-12 17:50:21,494 - MCPCreditIntelligenceTransformer - INFO - Successfully saved JIT projections schema to /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390/credit_analysis/jit_schemas/projections_schema.json
+2025-07-12 17:50:21,494 - MCPCreditIntelligenceTransformer - INFO - === generate_jit_projections_schema completed successfully ===
+2025-07-12 17:59:44,140 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-12 17:59:44,147 - MCPCreditIntelligenceTransformer - INFO - Starting MCP Credit Intelligence Transformer server
+2025-07-12 17:59:44,147 - MCPCreditIntelligenceTransformer - INFO - Logging to /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/logs/debt_reconciliation.log
+2025-07-12 17:59:44,148 - MCPCreditIntelligenceTransformer - INFO - ================================================================================
+2025-07-12 17:59:44,519 - mcp.server.lowlevel.server - INFO - Processing request of type CallToolRequest
+2025-07-12 17:59:44,522 - MCPCreditIntelligenceTransformer - INFO - === Starting generate_jit_projections_schema ===
+2025-07-12 17:59:44,523 - MCPCreditIntelligenceTransformer - INFO - Starting JIT projections schema generation for security_id: MN0LNDB68390
+2025-07-12 17:59:44,524 - MCPCreditIntelligenceTransformer - INFO - [1/7] Validating security_id: MN0LNDB68390
+2025-07-12 17:59:44,531 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-12 17:59:44,532 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-12 17:59:44,533 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-12 17:59:44,533 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 17:59:44,534 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 17:59:44,535 - MCPCreditIntelligenceTransformer - INFO - [2/7] Loading issuer's final derived financial data
+2025-07-12 17:59:44,551 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded and filtered final derived financial data.
+2025-07-12 17:59:44,552 - MCPCreditIntelligenceTransformer - INFO - [3/7] Loading industry and country research data
+2025-07-12 17:59:44,558 - MCPCreditIntelligenceTransformer - INFO - [4/7] Loading the Universal Projections Schema
+2025-07-12 17:59:44,559 - MCPCreditIntelligenceTransformer - INFO - Looking for projections schema template at: /home/me/CascadeProjects/Alpy/subagents/financial_analyst/mcp_servers/mcp_credit_intelligence_transformer/schemas/universal_projections_schema.json
+2025-07-12 17:59:44,565 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded Universal Projections Schema.
+2025-07-12 17:59:44,566 - MCPCreditIntelligenceTransformer - INFO - [5/7] Loading issuer business profile
+2025-07-12 17:59:44,567 - financial_analyst.security_folder_utils - INFO - [DEBUG] Searching for security_id=MN0LNDB68390 in board_dirs=[PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_C'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_B'), PosixPath('/home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/primary_board_A')]
+2025-07-12 17:59:44,568 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_A/MN0LNDB68390
+2025-07-12 17:59:44,569 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_C/MN0LNDB68390
+2025-07-12 17:59:44,570 - financial_analyst.security_folder_utils - INFO - [DEBUG] Checking candidate: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 17:59:44,571 - financial_analyst.security_folder_utils - INFO - [DEBUG] Found security folder: /home/me/CascadeProjects/Alpy/otcmn_tool_test_output/current/secondary_board_B/MN0LNDB68390
+2025-07-12 17:59:44,573 - MCPCreditIntelligenceTransformer - INFO - Successfully loaded issuer business profile.
+2025-07-12 17:59:44,573 - MCPCreditIntelligenceTransformer - INFO - [6/7] Preparing LLM prompt for projections schema generation
+2025-07-12 17:59:44,580 - MCPCreditIntelligenceTransformer - INFO - [7/7] Initializing LLM and invoking projections schema generation...
