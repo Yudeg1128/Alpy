@@ -1,5 +1,5 @@
 {
-  "__description__": "Universal Projection Schema v7.0. A template for generating a complete, self-contained instruction set for the Projections Engine. The JIT LLM's role is strictly limited to: 1) Mapping 'historical_account_key' for all relevant items. 2) Selecting the 'projection_model' FOR REVENUE ONLY. 3) Populating the 'drivers' object ONLY for the specific items where it is provided in this template. All other calculation logic is hardcoded in the engine.",
+  "__description__": "Universal Projection Schema v7.0. A template for generating a complete, self-contained instruction set for the Projections Engine. The JIT LLM's role is strictly limited to: 1) Mapping 'historical_account_key' for all relevant items. 2) Selecting the 'projection_model' FOR REVENUE AND COST_OF_REVENUE ONLY. 3) Populating the 'drivers' object ONLY for the specific items where it is provided in this template. All other calculation logic is hardcoded in the engine. Wherever there is `items` present, it can be populated with a number of items such as revenue_stream_1, revenue_stream_2 etc. The engine will calculate the total based on the historical account keys provided.",
 
   "__schema_definitions__": {
     "driver_object": {
@@ -8,10 +8,10 @@
         "baseline": { "definition": "The starting value for the driver in the first projection period (T+1). Must be calculated/inferred from historical data." },
         "justification": { "definition": "A mandatory, human-readable rationale explaining the baseline value, referencing source data." },
         "trends": {
-          "definition": "Defines the driver's value for subsequent forecast horizons.",
-          "short_term": { "definition": "The value for projection years 2 and 3." },
-          "medium_term": { "definition": "The value for projection years 4 through 9." },
-          "terminal": { "definition": "The value for all projection years from 10 onwards." }
+          "definition": "Defines the driver's value for subsequent forecast horizons. The driver value is the projected absolute driver value to directly apply to the projected item, it is NOT a delta of the baseline.",
+          "short_term": { "definition": "The value for projection driver for years 2 and 3." },
+          "medium_term": { "definition": "The value for projection driver for years 4 through 9." },
+          "terminal": { "definition": "The value for all projection driver for years from 10 onwards." }
         }
       }
     }
@@ -19,35 +19,41 @@
 
   "income_statement": {
     "revenue": {
-      "__description__": "Revenue is the only section where the LLM selects the projection model. It must populate the 'projection_configuration' object with one of the two explicit structures defined below. Multiple revenue streams can be mapped here as needed.",
+      "__description__": "The LLM MUST select a projection model for each revenue stream. The model choice dictates the required drivers.",
       "items": {
         "revenue_stream_1": {
           "historical_account_key": null,
           "projection_configuration": {
             "__instruction__": "LLM MUST REPLACE THIS NULL VALUE with ONE of the complete object structures from the __model_options__ below.",
             "__model_options__": {
-              "Top_Line_Growth": {
-                "definition": "Use this model when revenue is expected to grow at a specific, independent rate. Best for non-financial companies or when revenue is not directly tied to a specific balance sheet asset.",
+              "Unit_Economics": {
+                "definition": "Use this model for businesses driven by volume and price (e.g., manufacturing, retail, SaaS). Revenue = Units * Price per Unit.",
                 "structure_template": {
-                  "model_name": "Top_Line_Growth",
-                  "driver": {
-                    "revenue_growth_rate": {
+                  "model_name": "Unit_Economics",
+                  "drivers": {
+                    "unit_growth": {
                       "baseline": 0.0,
-                      "justification": null,
+                      "justification": "Rationale for the growth in units sold/customers, referencing market trends, capacity, etc. MUST specify what a 'unit' is.",
+                      "trends": { "short_term": 0.0, "medium_term": 0.0, "terminal": 0.0 }
+                    },
+                    "price_per_unit_growth": {
+                      "baseline": 0.0,
+                      "justification": "Rationale for the growth in average price per unit, referencing inflation, product mix, pricing power, etc.",
                       "trends": { "short_term": 0.0, "medium_term": 0.0, "terminal": 0.0 }
                     }
                   }
                 }
               },
               "Asset_Yield_Driven": {
-                "definition": "Use this model when revenue is generated directly from a balance sheet asset (e.g., interest income from a loan portfolio). Revenue = Asset Balance * Yield.",
+                "definition": "Use this model when revenue is generated directly from a balance sheet asset (e.g., interest income, lease income). Revenue = Asset Balance * Yield Rate. LLM MUST populate target_asset_account with the full path to the HISTORICAL account key from the <HISTORICAL_DATA> block (e.g., 'balance_sheet.loans_receivable_net'). DO NOT use the schema path. The engine will resolve the mapping internally.",
                 "structure_template": {
                   "model_name": "Asset_Yield_Driven",
+                  "is_lender": null,
                   "target_asset_account": null,
                   "driver": {
                     "asset_yield": {
                       "baseline": 0.0,
-                      "justification": null,
+                      "justification": "Rationale for the asset yield, referencing historical yield, interest rates, or portfolio composition.",
                       "trends": { "short_term": 0.0, "medium_term": 0.0, "terminal": 0.0 }
                     }
                   }
@@ -60,90 +66,122 @@
       }
     },
     "cost_of_revenue": {
-      "__description__": "Multiple cost of revenue items can be mapped here with consistent projection logic.",
+      "__description__": "The LLM MUST select a projection model for each cost of revenue stream. For Lenders (COGS=Interest Expense), the engine will IGNORE this selection and use the Balance Sheet drivers instead.",
       "items": {
         "cost_of_revenue_1": {
-          "historical_account_key": null
+          "historical_account_key": null,
+          "projection_configuration": {
+            "__instruction__": "LLM MUST REPLACE THIS NULL VALUE with ONE of the complete object structures from the __model_options__ below.",
+            "__model_options__": {
+              "Unit_Economics_Cost": {
+                "definition": "Use this model when COGS is driven by volume (e.g., manufacturing, retail). COGS = Units * Cost per Unit. The 'units' are assumed to be the same as the revenue units.",
+                "structure_template": {
+                  "model_name": "Unit_Economics_Cost",
+                  "drivers": {
+                    "cost_per_unit_growth": {
+                      "baseline": 0.0,
+                      "justification": "Rationale for the growth in average cost per unit, referencing input cost inflation, supplier negotiations, efficiency gains, etc.",
+                      "trends": { "short_term": 0.0, "medium_term": 0.0, "terminal": 0.0 }
+                    }
+                  }
+                }
+              },
+              "Asset_Yield_Driven_Cost": {
+                "definition": "Use this model when COGS is a function of a balance sheet asset's value (e.g., depreciation on leased assets). COGS = Asset Balance * Cost Rate.",
+                "structure_template": {
+                  "model_name": "Asset_Yield_Driven_Cost",
+                  "target_asset_account": null,
+                  "is_lender": null,
+                  "driver": {
+                    "cost_rate_on_asset": {
+                      "baseline": 0.0,
+                      "justification": "Rationale for the cost rate, e.g., 'This is the depreciation rate based on the asset's useful life.'",
+                      "trends": { "short_term": 0.0, "medium_term": 0.0, "terminal": 0.0 }
+                    }
+                  }
+                }
+              }
+            },
+            "selected_model": null
+          }
         }
       }
     },
+
     "operating_expenses": {
       "__description__": "Multiple operating expense items can be mapped here with consistent projection logic.",
-      "items": {
-        "sga_expense": {
-          "historical_account_key": null
-        },
-        "research_and_development": {
-          "historical_account_key": null
-        },
-        "depreciation_expense": {
-          "historical_account_key": null
-        },
-        "amortization_expense": {
-          "historical_account_key": null
-        },
-        "other_operating_expenses": {
-          "historical_account_key": null
+      "sga_expense": {
+        "historical_account_key": null,
+        "drivers": {
+          "sga_expense_as_percent_of_revenue": {
+            "baseline": 0.0,
+            "justification": null,
+            "trends": { "short_term": 0.0, "medium_term": 0.0, "terminal": 0.0 }
+          }
         }
+      },
+      "research_and_development": {
+        "historical_account_key": null
+      },
+      "depreciation_expense": {
+        "historical_account_key": null
+      },
+      "amortization_expense": {
+        "historical_account_key": null
+      },
+      "other_operating_expenses": {
+        "historical_account_key": null
       }
     },
     "industry_specific_operating_expenses": {
       "__description__": "Category for industry-specific operating expenses. All items belong here. For example: provision_for_credit_losses for lenders, rental_property_operating_expenses for REITS, fuel_costs for transportation etc",
       "items": {
         "industry_specific_operating_expense_1": {
-          "historical_account_key": null
-        }
-      },
-      "driver": {
-        "industry_specific_operating_expense_as_percent_of_revenue": {
-          "baseline": 0.0,
-          "justification": null,
-          "trends": { "short_term": 0.0, "medium_term": 0.0, "terminal": 0.0 }
+          "historical_account_key": null,
+          "driver": {
+            "industry_specific_operating_expense_as_percent_of_revenue": {
+              "baseline": 0.0,
+              "justification": null,
+              "trends": { "short_term": 0.0, "medium_term": 0.0, "terminal": 0.0 }
+            }
+          }
         }
       }
     },
     "non_operating_income_expense": {
       "__description__": "Category for income/expenses not related to core operations.",
-      "items": {
-        "interest_income": {
-          "historical_account_key": null
-        },
-        "interest_expense": {
-          "historical_account_key": null
-        },
-        "gain_or_loss_on_sale_of_assets": {
-          "historical_account_key": null
-        },
-        "foreign_exchange_gain_or_loss": {
-          "historical_account_key": null
-        },
-        "other_non_operating_income": {
-          "historical_account_key": null
-        }
+      "interest_income": {
+        "historical_account_key": null
+      },
+      "interest_expense": {
+        "historical_account_key": null
+      },
+      "gain_or_loss_on_sale_of_assets": {
+        "historical_account_key": null
+      },
+      "foreign_exchange_gain_or_loss": {
+        "historical_account_key": null
+      },
+      "other_non_operating_income": {
+        "historical_account_key": null
       }
     },
-    "income_tax": {
-      "items": {
-        "income_tax_expense": {
-          "historical_account_key": null
-        }
-      }
+    "income_tax_expense": {
+      "historical_account_key": null
     },
     "subtotals_income_statement": {
       "__description__": "These are key subtotals. The engine calculates them, but the LLM must map the historical values for reconciliation and display.",
-      "items": {
-        "gross_profit": {
-          "historical_account_key": null
-        },
-        "operating_income": {
-          "historical_account_key": null
-        },
-        "ebt": {
-          "historical_account_key": null
-        },
-        "net_income": {
-          "historical_account_key": null
-        }
+      "gross_profit": {
+        "historical_account_key": null
+      },
+      "operating_income": {
+        "historical_account_key": null
+      },
+      "ebt": {
+        "historical_account_key": null
+      },
+      "net_income": {
+        "historical_account_key": null
       }
     }
   },
@@ -203,8 +241,7 @@
             "ppe_item_1": {
               "historical_account_key": null,
               "drivers": {
-                "capex_as_percent_of_revenue": { "baseline": 0.0, "justification": null, "trends": { "short_term": 0.0, "medium_term": 0.0, "terminal": 0.0 } },
-                "depreciation_rate": { "baseline": 0.1, "justification": null, "trends": { "short_term": 0.1, "medium_term": 0.1, "terminal": 0.1 } }
+                "capex_amount_annual": { "baseline": 0.0, "justification": null, "trends": { "short_term": 0.0, "medium_term": 0.0, "terminal": 0.0 } }
               }
             }
           }
@@ -215,8 +252,7 @@
             "intangible_asset_1": {
               "historical_account_key": null,
               "drivers": {
-                "intangible_additions_annual": { "baseline": 0.0, "justification": null, "trends": { "short_term": 0.0, "medium_term": 0.0, "terminal": 0.0 } },
-                "amortization_rate": { "baseline": 0.1, "justification": null, "trends": { "short_term": 0.1, "medium_term": 0.1, "terminal": 0.1 } }
+                "intangible_additions_annual": { "baseline": 0.0, "justification": null, "trends": { "short_term": 0.0, "medium_term": 0.0, "terminal": 0.0 } }
               }
             }
           }
@@ -231,8 +267,7 @@
       "contra_assets": {
         "__description__": "A generic category for all contra-asset accounts. These accounts have credit balances but are presented on the asset side of the balance sheet, reducing the value of other assets. The engine MUST treat their balances as negative values when summing total assets.",
         "items": {
-          "contra_asset_1": { "historical_account_key": null },
-          "contra_asset_2": { "historical_account_key": null }
+          "contra_asset_1": { "historical_account_key": null }
         }
       }
     },
@@ -269,10 +304,9 @@
       },
       "non_current_liabilities": {
         "long_term_debt": {
-          "__description__": "Multiple debt instruments can be mapped here, each with their own payment schedules and interest rates.",
+          "__description__": "Multiple debt instruments can be mapped here, The JIT LLM MUST provide the drivers for the long_term_debt as aggregate. The average_interest_rate is the average of the debt instruments included here. The target_debt_as_percent_of_assets must be long_term_debt as percent of total_assets. IMPORTANT: all interest-bearing NCL must be mapped here.",
           "drivers": {
-            "_comment_": "A single set of drivers that apply to all debt instruments.",
-            "interest_rate": { "baseline": 0, "justification": null, "trends": { "short_term": 0, "medium_term": 0, "terminal": 0 } },
+            "average_interest_rate": { "baseline": 0, "justification": null, "trends": { "short_term": 0, "medium_term": 0, "terminal": 0 } },
             "target_debt_as_percent_of_assets": { "baseline": 0, "justification": null, "trends": { "short_term": 0, "medium_term": 0, "terminal": 0 } }
           },
           "items": {
@@ -282,7 +316,7 @@
           }
         },
         "other_non_current_liabilities": {
-          "__description__": "Pension obligations, deferred tax liabilities, and other long-term liabilities.",
+          "__description__": "Pension obligations, deferred tax liabilities, and other long-term liabilities. ONLY non-interest-bearing liabilities are allowed here.",
           "items": {
             "other_non_current_liability_1": { "historical_account_key": null }
           }
@@ -291,56 +325,69 @@
     },
     "equity": {
       "__description__": "Multiple equity components can be mapped here with appropriate projection logic.",
-      "items": {
-        "common_stock": {
-          "historical_account_key": null,
-          "drivers": {
-            "net_share_issuance": { "baseline": 0.0, "justification": null, "trends": { "short_term": 0.0, "medium_term": 0.0, "terminal": 0.0 } }
+      "common_stock": {
+        "historical_account_key": null,
+        "drivers": {
+          "net_share_issuance": { "baseline": 0.0, "justification": null, "trends": { "short_term": 0.0, "medium_term": 0.0, "terminal": 0.0 } }
+        }
+      },
+      "retained_earnings": {
+        "historical_account_key": null,
+        "drivers": {
+          "dividend_payout_ratio": { "baseline": 0.0, "justification": null, "trends": { "short_term": 0.0, "medium_term": 0.0, "terminal": 0.0 } }
+        }
+      },
+      "contra_equity": {
+        "historical_account_key": null
+      },
+      "other_equity": {
+        "items":{
+          "other_equity_1": {
+            "historical_account_key": null
           }
-        },
-        "retained_earnings": {
-          "historical_account_key": null,
-          "drivers": {
-            "dividend_payout_ratio": { "baseline": 0.0, "justification": null, "trends": { "short_term": 0.0, "medium_term": 0.0, "terminal": 0.0 } }
-          }
-        },
-        "contra_equity": {
-          "historical_account_key": null
-        },
-        "other_equity_1": {
-          "historical_account_key": null
         }
       }
     },
     "industry_specific_items": {
-      "__description__": "A generic category for significant assets or liabilities that are specific to an industry model and do not fit into standard universal categories. This signals to the engine that they may have unique projection logic.",
-      "items": {
-        "industry_specific_asset_1": { 
-          "historical_account_key": null,
-          "drivers": {
-            "industry_specific_asset_growth_rate": { "baseline": 0.0, "justification": null, "trends": { "short_term": 0.0, "medium_term": 0.0, "terminal": 0.0 } }
-          }
-        },
-        "industry_specific_liability_1": { 
-          "historical_account_key": null,           
-          "drivers": {
-            "industry_specific_liability_growth_rate": { "baseline": 0.0, "justification": null, "trends": { "short_term": 0.0, "medium_term": 0.0, "terminal": 0.0 } }
+      "__description__": "A generic category for significant assets or liabilities or balance sheet subtotals that are specific to an industry model and do not fit into standard universal categories. This signals to the engine that they may have unique projection logic.",
+      "industry_specific_assets": {
+        "items": {
+          "industry_specific_asset_1": { 
+            "historical_account_key": null,
+            "drivers": {
+              "industry_specific_asset_growth_rate": { "baseline": 0.0, "justification": null, "trends": { "short_term": 0.0, "medium_term": 0.0, "terminal": 0.0 } }
+            }
           }
         }
-      }
+      },
+      "industry_specific_liabilities": {
+        "items": {
+          "industry_specific_liability_1": { 
+            "historical_account_key": null,           
+            "drivers": {
+              "industry_specific_liability_growth_rate": { "baseline": 0.0, "justification": null, "trends": { "short_term": 0.0, "medium_term": 0.0, "terminal": 0.0 } }
+            }
+          }
+        } 
+      },
+      "industry_specific_subtotals": {
+        "items": {
+          "industry_specific_subtotal_1": {
+            "historical_account_key": null
+          }
+        }
+      }      
     },
     "subtotals_balance_sheet": {
-      "__description__": "These are key subtotals. The engine calculates them, but the LLM must map the historical values for reconciliation and display.",
-      "items": {
-        "total_current_assets": { "historical_account_key": null },
-        "total_non_current_assets": { "historical_account_key": null },
-        "total_assets": { "historical_account_key": null },
-        "total_current_liabilities": { "historical_account_key": null },
-        "total_non_current_liabilities": { "historical_account_key": null },
-        "total_liabilities": { "historical_account_key": null },
-        "total_equity": { "historical_account_key": null },
-        "total_liabilities_and_equity": { "historical_account_key": null }
-      }
+    "__description__": "These are key subtotals. The engine calculates them, but the LLM must map the historical values for reconciliation and display.",
+    "total_current_assets": { "historical_account_key": null },
+    "total_non_current_assets": { "historical_account_key": null },
+    "total_assets": { "historical_account_key": null },
+    "total_current_liabilities": { "historical_account_key": null },
+    "total_non_current_liabilities": { "historical_account_key": null },
+    "total_liabilities": { "historical_account_key": null },
+    "total_equity": { "historical_account_key": null },
+    "total_liabilities_and_equity": { "historical_account_key": null }
     }
   }
 }

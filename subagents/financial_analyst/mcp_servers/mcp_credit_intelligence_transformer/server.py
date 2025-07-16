@@ -219,47 +219,47 @@ async def reclassify_financial_plugs(security_id: str) -> dict:
             """Helper function to reallocate a plug value to target items using weighted distribution and log it."""
             # Initialize target to None if not found
             if plug_item_name not in statement_data:
-                logger.debug(f"Plug item {plug_item_name} not found in statement data")
+                logger.info(f"Plug item {plug_item_name} not found in statement data")
                 return
                 
             plug_value = statement_data[plug_item_name]
-            logger.debug(f"\n=== Processing {plug_item_name} = {plug_value:,.2f} for {period_date} ===")
+            logger.info(f"\n=== Processing {plug_item_name} = {plug_value:,.2f} for {period_date} ===")
             
             if plug_value is None or plug_value == 0:
-                logger.debug(f"Skipping {plug_item_name} - zero or no value")
+                logger.info(f"Skipping {plug_item_name} - zero or no value")
                 return
 
-            logger.debug(f"Target candidates: {target_candidates}")
+            logger.info(f"Target candidates: {target_candidates}")
             
             # Get weights for this plug type from PLUG_WEIGHTS
             weights = PLUG_WEIGHTS.get(plug_item_name, {})
-            logger.debug(f"Weights for {plug_item_name}: {weights}")
+            logger.info(f"Weights for {plug_item_name}: {weights}")
             
             # If no weights defined, use equal distribution among target_candidates
             if not weights:
-                logger.debug(f"No weights defined for {plug_item_name}, using equal distribution")
+                logger.info(f"No weights defined for {plug_item_name}, using equal distribution")
                 weights = {t: 1.0 for t in target_candidates}
             
-            logger.debug(f"Using weights: {weights}")
-            logger.debug(f"Raw statement data for {period_date}: {statement_data}")
+            logger.info(f"Using weights: {weights}")
+            logger.info(f"Raw statement data for {period_date}: {statement_data}")
             
             # Initialize any missing targets with zero
             for target in weights.keys():
                 if target not in statement_data:
                     statement_data[target] = 0.0
-                    logger.debug(f"Initialized missing target field {target} to 0.0")
-                logger.debug(f"Current value of {target}: {statement_data.get(target)}")
+                    logger.info(f"Initialized missing target field {target} to 0.0")
+                logger.info(f"Current value of {target}: {statement_data.get(target)}")
             
             # Filter valid targets (must be in statement_data and have numeric values)
             valid_targets = {}
             for target, weight in weights.items():
                 if target not in statement_data or not isinstance(statement_data[target], (int, float)):
-                    logger.debug(f"Skipping invalid target: {target} (value: {statement_data.get(target)}) or not numeric")
+                    logger.info(f"Skipping invalid target: {target} (value: {statement_data.get(target)}) or not numeric")
                 else:
                     valid_targets[target] = weight
-                    logger.debug(f"Valid target: {target} (value: {statement_data.get(target)})")
+                    logger.info(f"Valid target: {target} (value: {statement_data.get(target)})")
             
-            logger.debug(f"Valid weighted targets for {plug_item_name}: {valid_targets}")
+            logger.info(f"Valid weighted targets for {plug_item_name}: {valid_targets}")
             
             if not valid_targets:
                 error_msg = f"No valid weighted targets found for {plug_item_name}"
@@ -275,9 +275,9 @@ async def reclassify_financial_plugs(security_id: str) -> dict:
                 notes_list.append(f"[ERROR] {error_msg}")
                 return
 
-            logger.debug(f"Total weight for {plug_item_name}: {total_weight}")
+            logger.info(f"Total weight for {plug_item_name}: {total_weight}")
             if total_weight == 0:
-                logger.debug(f"Total weight is zero for {plug_item_name}. Skipping reallocation.")
+                logger.info(f"Total weight is zero for {plug_item_name}. Skipping reallocation.")
                 return
 
             # Calculate distribution amounts
@@ -289,10 +289,10 @@ async def reclassify_financial_plugs(security_id: str) -> dict:
             for i, (target, weight) in enumerate(sorted_targets):
                 # Calculate the exact amount based on weight proportion
                 proportional_amount = plug_value * (weight / total_weight)
-                logger.debug(f"Calculated proportional amount for {target}: {proportional_amount} (weight: {weight})")
+                logger.info(f"Calculated proportional amount for {target}: {proportional_amount} (weight: {weight})")
                 # Round to 2 decimal places for financial accuracy
                 amount_to_distribute = round(proportional_amount, 2)
-                logger.debug(f"Rounded amount to distribute for {target}: {amount_to_distribute}")
+                logger.info(f"Rounded amount to distribute for {target}: {amount_to_distribute}")
                 
                 # Skip if amount is effectively zero (avoiding -0.0 or tiny values)
                 if abs(amount_to_distribute) < 0.01:
@@ -305,7 +305,7 @@ async def reclassify_financial_plugs(security_id: str) -> dict:
                     f"Reallocated {abs(amount_to_distribute):,.2f} from {plug_item_name} to {target} "
                     f"({original:,.2f} → {statement_data[target]:,.2f}) at {weight/total_weight:.1%} weight"
                 )
-                logger.debug(f"Reallocated {amount_to_distribute} from {plug_item_name} to {target} (weight: {weight/total_weight:.1%})")
+                logger.info(f"Reallocated {amount_to_distribute} from {plug_item_name} to {target} (weight: {weight/total_weight:.1%})")
                 
 
 
@@ -314,7 +314,7 @@ async def reclassify_financial_plugs(security_id: str) -> dict:
                 if plug_item_name == "balance_sheet_equation_equity_plug" and plug_value != 0:
                     original_equity = statement_data.get("total_equity", 0)
                     statement_data["total_equity"] = original_equity + plug_value
-                    logger.debug(f"Updated total_equity: {original_equity:,.2f} → {statement_data['total_equity']:,.2f}")
+                    logger.info(f"Updated total_equity: {original_equity:,.2f} → {statement_data['total_equity']:,.2f}")
                     notes_list.append(f"Updated total_equity by adding {plug_value:,.2f} from {plug_item_name}")
                 
                 statement_data[plug_item_name] = 0.0  # Clear the plug
@@ -1337,7 +1337,7 @@ async def map_historical_data_to_schema(security_id: str) -> dict:
         with open(data_path, "r", encoding="utf-8") as f:
             input_data = json.load(f)
         logger.info("Successfully loaded complete_data.json")
-        logger.debug(f"Input data keys: {list(input_data.keys())}")
+        logger.info(f"Input data keys: {list(input_data.keys())}")
     except Exception as e:
         logger.error(f"Error loading complete_data.json: {str(e)}")
         raise
@@ -1356,7 +1356,7 @@ async def map_historical_data_to_schema(security_id: str) -> dict:
                 with open(report_file, "r", encoding="utf-8") as f:
                     external_reports_data[report_file.stem] = json.load(f)
                     logger.info(f"Successfully loaded external report: {report_file.name}")
-                    logger.debug(f"Report keys: {list(external_reports_data[report_file.stem].keys())}")
+                    logger.info(f"Report keys: {list(external_reports_data[report_file.stem].keys())}")
             except Exception as e:
                 logger.warning(f"Failed to load external report {report_file.name}: {e}")
     else:
@@ -1377,7 +1377,7 @@ async def map_historical_data_to_schema(security_id: str) -> dict:
         with open(metadata_path, "r", encoding="utf-8") as f:
             bond_metadata = json.load(f)
         logger.info("Successfully loaded bond_metadata.json")
-        logger.debug(f"Bond metadata keys: {list(bond_metadata.keys())}")
+        logger.info(f"Bond metadata keys: {list(bond_metadata.keys())}")
     except Exception as e:
         logger.error(f"Error loading bond_metadata.json: {str(e)}")
         raise
@@ -1413,7 +1413,7 @@ async def map_historical_data_to_schema(security_id: str) -> dict:
         with open(schema_path, "r", encoding="utf-8") as f:
             schema_data = json.load(f)
         logger.info("Successfully loaded schema file")
-        logger.debug(f"Schema data keys: {list(schema_data.keys())}")
+        logger.info(f"Schema data keys: {list(schema_data.keys())}")
     except Exception as e:
         logger.error(f"Error loading schema file: {str(e)}")
         raise
@@ -1422,7 +1422,7 @@ async def map_historical_data_to_schema(security_id: str) -> dict:
     schema_key = f"{industry_type.lower()}_schema"
     industry_schema = schema_data.get(schema_key, {})
     logger.info(f"Retrieved schema for key: {schema_key}")
-    logger.debug(f"Industry schema keys: {list(industry_schema.keys())}")
+    logger.info(f"Industry schema keys: {list(industry_schema.keys())}")
     
     # Create a clean copy of the schema, preserving summation_plugs
     clean_industry_schema = {}
@@ -1553,11 +1553,11 @@ async def map_historical_data_to_schema(security_id: str) -> dict:
     
     # Call LLM for mapping
     logger.info("[10/10] Calling LLM to map historical data to standardized schema...")
-    logger.debug(f"Prompt length: {len(prompt)} characters")
+    logger.info(f"Prompt length: {len(prompt)} characters")
     try:
         response = await llm.ainvoke([HumanMessage(content=prompt)])
         logger.info("LLM API call completed successfully")
-        logger.debug(f"Response type: {type(response)}")
+        logger.info(f"Response type: {type(response)}")
     except Exception as e:
         logger.error(f"LLM API call failed: {str(e)}")
         raise
@@ -1567,11 +1567,11 @@ async def map_historical_data_to_schema(security_id: str) -> dict:
     logger.info("Processing LLM response")
     mapped_data = {}
     response_content = response.content if hasattr(response, 'content') else str(response)
-    logger.debug(f"Response content type: {type(response_content)}")
-    logger.debug(f"First 500 chars of response: {response_content[:500]}...")
+    logger.info(f"Response content type: {type(response_content)}")
+    logger.info(f"First 500 chars of response: {response_content[:500]}...")
     
     pattern = r'```(?:json)?\s*({[\s\S]*?})\s*```'
-    logger.debug("Searching for JSON in response using pattern")
+    logger.info("Searching for JSON in response using pattern")
     matches = re.findall(pattern, response_content)
     logger.info(f"Found {len(matches)} JSON block(s) in response")
     
@@ -1580,7 +1580,7 @@ async def map_historical_data_to_schema(security_id: str) -> dict:
         try:
             mapped_data = json.loads(matches[0])
             logger.info("Successfully extracted JSON from LLM response")
-            logger.debug(f"Mapped data keys: {list(mapped_data.keys())}")
+            logger.info(f"Mapped data keys: {list(mapped_data.keys())}")
         except json.JSONDecodeError as e:
             logger.error(f"Failed to parse JSON from LLM response: {e}")
             # Try to extract any JSON object
@@ -1591,7 +1591,7 @@ async def map_historical_data_to_schema(security_id: str) -> dict:
                 end_idx = response_content.rfind('}')
                 if start_idx != -1 and end_idx != -1 and end_idx > start_idx:
                     json_str = response_content[start_idx:end_idx+1]
-                    logger.debug(f"Extracted JSON string (first 200 chars): {json_str[:200]}...")
+                    logger.info(f"Extracted JSON string (first 200 chars): {json_str[:200]}...")
                     mapped_data = json.loads(json_str)
                     logger.info("Successfully extracted JSON using fallback method")
                 else:
@@ -2253,16 +2253,32 @@ async def generate_jit_projections_schema(security_id: str) -> dict:
     A. Pillar A: Mapping & Structural Integrity
     This pillar governs the correct mapping of historical data onto the Master Template.
 
-    Rule A.1 (The Law of Mandated Mapping and Data Integrity): Your primary duty under this rule is to ensure the absolute integrity of the provided historical data. You are mandated to map **every single financial line item** from the <HISTORICAL_DATA> block to its single most logical slot in the <SCHEMA_CONTRACT>. **There must be no unmapped historical items, regardless of your own accounting knowledge or interpretation.** If an item exists in the source data, it MUST be mapped. This rule's purpose is to ensure a perfect `Assets = Liabilities + Equity` reconciliation for the historical periods. Ignoring a source data line item is a fatal error.
+    Rule A.0: The Law of Economic Primacy (HIGHEST PRIORITY)
+    Before all other mapping rules, you must first determine the company's primary business model from the `<BUSINESS_PROFILE>`. For core operating items, you **MUST** map them to the primary operational slots (`revenue`, `cost_of_revenue`) even if more specific but non-operating slots exist elsewhere.
+    **Example for Lenders/Financial Institutions:** For a company identified as a bank or lender, the historical `interest_income` item MUST be mapped to `revenue.items.revenue_stream_1`. The historical `interest_expense` item MUST be mapped to `cost_of_revenue.items.cost_of_revenue_1`. The corresponding slots in the `non_operating_income_expense` section MUST then be set to `null` as per Rule A.2.
+    Rule A.1 (The Law of Mandated Mapping and Data Integrity): Your primary duty is to ensure the absolute integrity of the provided historical data. You are mandated to map **every single financial line item** from the `<HISTORICAL_DATA>` block to its most logical slot(s) in the `<SCHEMA_CONTRACT>`. **There must be no unmapped historical items, regardless of your own accounting knowledge or interpretation.** This rule's purpose is to ensure a perfect `Assets = Liabilities + Equity` reconciliation for the historical periods. Ignoring a source data line item is a fatal error.
     Rule A.1.1 (The Law of Flexible Mapping): The <SCHEMA_CONTRACT> contains flexible line items (e.g., `other_asset_1`, `other_liability_1`). If a historical line item does not have a clear, specific slot, you are mandated to use one of these flexible items to ensure 100% mapping coverage.
-    Rule A.1.2 (The Law of Shared Sources): Shared sources are permitted ONLY when:
-    - The historical item represents an aggregated amount that logically belongs to multiple schema categories (e.g., combined depreciation and amortization)
-    - AND the economic substance supports the split
+    Rule A.1.2 (The Law of Required Duplication): If a historical item is clearly aggregated (e.g., the historical account is named 'Depreciation & Amortization'), you **MUST** map this same historical key to **ALL** corresponding schema slots (i.e., both `depreciation_expense` and `amortization_expense`). The engine is responsible for the allocation. Failing to map to all relevant slots is a violation of this rule.
+    - **You MUST NEVER apply this law to any account whose name contains 'total' or 'subtotal', or to any item described as a subtotal or total in the schema.**
+    - You MUST NOT use this law for accounts that are NOT aggregates.
+    - The Law of Required Duplication applies only to historical accounts that are aggregates of accounts that are separately defined in the <SCHEMA_CONTRACT> and are NOT totals or subtotals.
+    - **Negative Example:** If the historical account is 'total_liabilities', you MUST map it only to the `total_liabilities` slot in the schema. You MUST NOT map it to both `total_current_liabilities` and `total_liabilities`, nor to any of its components. This also applies to any account whose name includes 'total' or 'subtotal', or which is described as a subtotal/total in the schema.
+
+    Rule A.1.2.1 (The Law of Industry-Specific Subtotals):
+    If a historical account is a subtotal or aggregate—this includes any account whose name contains 'gross', 'total', 'aggregate', or is described as a subtotal in the schema's __description__—you MUST map it to an `industry_specific_subtotals` slot, NOT to an asset slot under `industry_specific_assets`.
+    - Example: If the historical account is `loans_receivable_gross`, you MUST map it to `industry_specific_subtotals.items.industry_specific_subtotal_1` (or the appropriate subtotal slot). You MUST NOT map it to any `industry_specific_asset_X` slot.
+
     Rule A.1.3 (The Law of Double-Booking Prohibition):
     - A single historical item cannot be mapped to multiple schema items if doing so would violate basic accounting principles (e.g., an asset cannot simultaneously be a liability)
-    - In such cases, map to the PRIMARY logical category only    Rule A.2 (The Law of Null Mapping): If a line item in the Master Template has no corresponding data in the historicals (e.g., inventory for a bank), its `historical_account_key` MUST be `null`. You are forbidden from mapping an unrelated historical account to fill a blank slot.
+    - In such cases, map to the PRIMARY logical category only    
+    Rule A.2 (The Law of Null Mapping): If a line item in the Master Template has no corresponding data in the historicals (e.g., inventory for a bank, or after applying Rule A.0), its `historical_account_key` MUST be `null`. You are forbidden from mapping an unrelated historical account just to fill a blank slot.
     Rule A.3 (The Law of Granularity for Lists): For sections in the Master Template that can accept multiple items (e.g., `scheduled_debt`), you are mandated to create a distinct entry for each corresponding instrument found in the historical data. You are strictly forbidden from pre-aggregating these items yourself.
-
+    Rule A.4 (The Law of Categorical Integrity) Certain schema categories are designed for specific accounting treatments and have **intentionally limited or no drivers**. The engine is solely responsible for their projection logic.
+    You are **STRICTLY FORBIDDEN** from mapping items that belong in these categories to other categories (like `industry_specific_items`) simply to "take advantage of a driver." The correctness of the category mapping is paramount.
+    This applies specifically to:
+    - **`contra_assets`** (e.g., Loan Loss Reserve)
+    - **`contra_equity`** (e.g., Treasury Stock)
+    - **Standard Working Capital** (`accounts_receivable`, `inventory`, `accounts_payable`)
     B. Pillar B: Model Selection & Causality
     This pillar governs the logical heart of the model. Note that your ability to select models is now highly constrained.
 
@@ -2275,7 +2291,7 @@ async def generate_jit_projections_schema(security_id: str) -> dict:
             DO NOT add any model configuration details (like model_name, target_asset_account, driver) directly to the projection_configuration object itself.
             DO NOT leave `selected_model` as null.
             NEVER create a structure where both `projection_configuration` has direct model properties AND `selected_model` exists as null.
-            * Example of CORRECT structure:
+            * Example of CORRECT structure. NOTE: For a lending institution, you are **MANDATED** to use `balance_sheet.loans_receivable_net` as the `target_asset_account`. Using `loans_receivable_gross` is a FATAL error.
                 "projection_configuration": {{
                     "__model_options__": {{...}},
                     "selected_model": {{
@@ -2334,20 +2350,61 @@ async def generate_jit_projections_schema(security_id: str) -> dict:
     try:
         # NOTE: Model and parameters might be adjusted for this more complex task
         llm = ChatGoogleGenerativeAI(
-            model="gemini-2.5-flash-preview-04-17",
+            model="gemini-2.5-flash",
             temperature=0.0,
             top_p=getattr(config, "LLM_TOP_P", 1.0),
             google_api_key=getattr(config, "GOOGLE_API_KEY", None),
         )
         response = await llm.ainvoke([HumanMessage(content=prompt)])
         logger.info("LLM API call completed successfully.")
+        
+        # Debug logging to inspect the response object
+        logger.info(f"Response type: {type(response)}")
+        logger.info(f"Response dir: {dir(response)}")
+        logger.info(f"Response content type: {type(response.content)}")
+        logger.info(f"Response content length: {len(str(response.content)) if hasattr(response, 'content') else 'None'}")
+        # logger.info(f"Response content repr: {repr(response.content)}")
+        # logger.info(f"Response content str: {str(response.content)}")
+        # logger.info(f"Response object repr: {repr(response)}")
+        # logger.info(f"Response object str: {str(response)}")
+        
+        # Try different ways to access the content
+        if hasattr(response, 'content'):
+            response_content = response.content
+        elif hasattr(response, 'text'):
+            response_content = response.text
+        else:
+            response_content = str(response)
+
+        # If the response content is a list (e.g., [json_string]), extract the first element
+        if isinstance(response_content, list):
+            if len(response_content) > 0:
+                response_content = response_content[0]
+            else:
+                response_content = ''
+        # Ensure it's a string
+        if not isinstance(response_content, str):
+            response_content = str(response_content)
+
     except Exception as e:
         logger.error(f"LLM API call failed: {str(e)}")
         raise
 
     # 8. Process response and save the generated schema (Pattern replicated)
     logger.info("[8/8] Processing LLM response and saving generated JIT projections schema")
-    response_content = response.content
+    
+    # Save the raw LLM response to a file for debugging
+    debug_folder = credit_analysis_folder / "debug"
+    debug_folder.mkdir(exist_ok=True, parents=True)
+    debug_file = debug_folder / f"llm_response_{security_id}.txt"
+    
+    try:
+        with open(debug_file, "w", encoding="utf-8") as f:
+            f.write(response_content)
+        logger.info(f"Saved LLM response to {debug_file}")
+    except Exception as e:
+        logger.error(f"Failed to save LLM response to file: {e}")
+    
     generated_schema = {}
     
     pattern = r'```(?:json)?\s*({[\s\S]*?})\s*```'
@@ -2362,6 +2419,7 @@ async def generate_jit_projections_schema(security_id: str) -> dict:
             raise ValueError(f"Could not extract valid JSON from LLM response: {e}")
     else:
         logger.error(f"LLM response did not contain a valid JSON markdown block.")
+        logger.error(f"LLM response saved to {debug_file} for inspection")
         raise ValueError("Could not extract valid JSON from LLM response.")
 
     jit_schemas_folder = credit_analysis_folder / "jit_schemas"
@@ -2623,8 +2681,6 @@ async def generate_projection_drivers(security_id: str) -> dict:
 
     logger.info("=== generate_projection_drivers completed successfully ===")
     return generated_drivers
-
-
 
 
 @mcp_app.tool()
@@ -3423,7 +3479,7 @@ async def reconcile_debt_schedule(security_id: str) -> dict:
                             
                     except (KeyError, ValueError) as e:
                         logger.warning(f"Error processing debt entry: {str(e)}")
-                        logger.debug(f"Problematic debt entry: {debt}", exc_info=True)
+                        logger.info(f"Problematic debt entry: {debt}", exc_info=True)
                         continue
                 
                 logger.info(f"Period {period_end}: Calculated ST Debt: {short_term_debt}, LT Debt: {long_term_debt})")
