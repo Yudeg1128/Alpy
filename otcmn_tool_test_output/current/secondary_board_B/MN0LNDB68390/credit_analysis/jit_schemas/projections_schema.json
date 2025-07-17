@@ -5,14 +5,61 @@
         "revenue_stream_1": {
           "historical_account_key": "income_statement.interest_income",
           "projection_configuration": {
+            "__model_options__": {
+              "Unit_Economics": {
+                "definition": "Use this model for businesses driven by volume and price (e.g., manufacturing, retail, SaaS). Revenue = Units * Price per Unit.",
+                "structure_template": {
+                  "model_name": "Unit_Economics",
+                  "drivers": {
+                    "unit_growth": {
+                      "baseline": 0.0,
+                      "justification": "Rationale for the growth in units sold/customers, referencing market trends, capacity, etc. MUST specify what a 'unit' is.",
+                      "trends": {
+                        "short_term": 0.0,
+                        "medium_term": 0.0,
+                        "terminal": 0.0
+                      }
+                    },
+                    "price_per_unit_growth": {
+                      "baseline": 0.0,
+                      "justification": "Rationale for the growth in average price per unit, referencing inflation, product mix, pricing power, etc.",
+                      "trends": {
+                        "short_term": 0.0,
+                        "medium_term": 0.0,
+                        "terminal": 0.0
+                      }
+                    }
+                  }
+                }
+              },
+              "Asset_Yield_Driven": {
+                "definition": "Use this model when revenue is generated directly from a balance sheet asset (e.g., interest income, lease income). Revenue = Asset Balance * Yield Rate. LLM MUST populate target_asset_account with the full path to the HISTORICAL account key from the <HISTORICAL_DATA> block (e.g., 'balance_sheet.loans_receivable_net'). DO NOT use the schema path. The engine will resolve the mapping internally.",
+                "structure_template": {
+                  "model_name": "Asset_Yield_Driven",
+                  "is_lender": null,
+                  "target_asset_account": null,
+                  "drivers": {
+                    "asset_yield": {
+                      "baseline": 0.0,
+                      "justification": "Rationale for the asset yield, referencing historical yield, interest rates, or portfolio composition.",
+                      "trends": {
+                        "short_term": 0.0,
+                        "medium_term": 0.0,
+                        "terminal": 0.0
+                      }
+                    }
+                  }
+                }
+              }
+            },
             "selected_model": {
               "model_name": "Asset_Yield_Driven",
               "is_lender": true,
               "target_asset_account": "balance_sheet.loans_receivable_net",
-              "driver": {
+              "drivers": {
                 "asset_yield": {
                   "baseline": 0.3875,
-                  "justification": "Baseline calculated as 2023 historical interest income (47,842,587,000 MNT) divided by 2023 historical net loans receivable (123,462,373,000 MNT), as per <HISTORICAL_DATA>. This represents the yield on the primary lending asset.",
+                  "justification": "Baseline calculated as 2023 Interest Income (47,842,587,000 MNT) divided by 2023 Loans Receivable Net (123,462,373,000 MNT) from <HISTORICAL_DATA>, resulting in a yield of 38.75%. This reflects the company's high-yield micro-lending business model. Trends reflect a slight moderation due to potential regulatory tightening (54% APR cap) and market maturity as noted in <MACRO_CONTEXT>.",
                   "trends": {
                     "short_term": 0.38,
                     "medium_term": 0.37,
@@ -30,18 +77,57 @@
         "cost_of_revenue_1": {
           "historical_account_key": "income_statement.interest_expense",
           "projection_configuration": {
+            "__instruction__": "LLM MUST REPLACE THIS NULL VALUE with ONE of the complete object structures from the __model_options__ below.",
+            "__model_options__": {
+              "Unit_Economics_Cost": {
+                "definition": "Use this model when COGS is driven by volume (e.g., manufacturing, retail). COGS = Units * Cost per Unit. The 'units' are assumed to be the same as the revenue units.",
+                "structure_template": {
+                  "model_name": "Unit_Economics_Cost",
+                  "drivers": {
+                    "cost_per_unit_growth": {
+                      "baseline": 0.0,
+                      "justification": "Rationale for the growth in average cost per unit, referencing input cost inflation, supplier negotiations, efficiency gains, etc.",
+                      "trends": {
+                        "short_term": 0.0,
+                        "medium_term": 0.0,
+                        "terminal": 0.0
+                      }
+                    }
+                  }
+                }
+              },
+              "Asset_Yield_Driven_Cost": {
+                "definition": "Use this model when COGS is a function of a balance sheet asset's value (e.g., depreciation on leased assets). COGS = Asset Balance * Cost Rate.",
+                "structure_template": {
+                  "model_name": "Asset_Yield_Driven_Cost",
+                  "target_asset_account": null,
+                  "is_lender": null,
+                  "drivers": {
+                    "cost_rate_on_asset": {
+                      "baseline": 0.0,
+                      "justification": "Rationale for the cost rate, e.g., 'This is the depreciation rate based on the asset's useful life.'",
+                      "trends": {
+                        "short_term": 0.0,
+                        "medium_term": 0.0,
+                        "terminal": 0.0
+                      }
+                    }
+                  }
+                }
+              }
+            },
             "selected_model": {
               "model_name": "Asset_Yield_Driven_Cost",
               "is_lender": true,
-              "target_asset_account": null,
-              "driver": {
+              "target_asset_account": "balance_sheet.liabilities.non_current_liabilities.long_term_debt",
+              "drivers": {
                 "cost_rate_on_asset": {
-                  "baseline": 0,
-                  "justification": "For lenders, the engine's hardcoded logic for interest expense (cost of revenue) is driven by balance sheet liabilities and their associated interest rates, not by a direct cost rate on an asset. This driver is therefore set to 0 as per schema instructions for lenders.",
+                  "baseline": 0.1145,
+                  "justification": "Baseline calculated as 2023 absolute Interest Expense (9,527,344,000 MNT) divided by 2023 total interest-bearing liabilities (83,227,562,000 MNT) from <HISTORICAL_DATA>, resulting in a cost rate of 11.45%. This is lower than the industry average funding cost (12.5% in 2023) from <MACRO_CONTEXT>, reflecting the company's specific funding structure. Trends reflect a slight increase towards industry averages and projected policy rates.",
                   "trends": {
-                    "short_term": 0,
-                    "medium_term": 0,
-                    "terminal": 0
+                    "short_term": 0.115,
+                    "medium_term": 0.11,
+                    "terminal": 0.105
                   }
                 }
               }
@@ -56,7 +142,7 @@
         "drivers": {
           "sga_expense_as_percent_of_revenue": {
             "baseline": 0.2137,
-            "justification": "Baseline calculated as 2023 historical management and operating expenses (10,223,598,000 MNT) divided by 2023 historical interest income (47,842,587,000 MNT), as per <HISTORICAL_DATA>. This reflects the company's operational efficiency.",
+            "justification": "Baseline calculated as 2023 Management and Operating Expenses (10,223,598,000 MNT) divided by 2023 Interest Income (47,842,587,000 MNT) from <HISTORICAL_DATA>, resulting in 21.37%. This is significantly lower than the industry average operating costs (42.8% in 2023) from <MACRO_CONTEXT>, reflecting the company's efficient fintech-based operating model. Trends assume continued efficiency.",
             "trends": {
               "short_term": 0.21,
               "medium_term": 0.205,
@@ -82,14 +168,14 @@
       "items": {
         "industry_specific_operating_expense_1": {
           "historical_account_key": "income_statement.impairment_loss_on_loans",
-          "driver": {
+          "drivers": {
             "industry_specific_operating_expense_as_percent_of_revenue": {
               "baseline": 0.0561,
-              "justification": "Baseline calculated as 2023 historical impairment loss on loans (2,684,956,000 MNT) divided by 2023 historical interest income (47,842,587,000 MNT), as per <HISTORICAL_DATA>. This reflects the credit risk profile relative to lending activity. Trends reflect potential increase due to 'Over-indebtedness and Credit Bubble Risks' noted in <MACRO_CONTEXT>.",
+              "justification": "Baseline calculated as 2023 Impairment Loss on Loans (2,684,956,000 MNT) divided by 2023 Interest Income (47,842,587,000 MNT) from <HISTORICAL_DATA>, resulting in 5.61%. This reflects the provision for credit losses, a key expense for a lending institution. Trends assume a slight increase due to potential over-indebtedness risks and regulatory tightening mentioned in <MACRO_CONTEXT>.",
               "trends": {
-                "short_term": 0.06,
-                "medium_term": 0.065,
-                "terminal": 0.07
+                "short_term": 0.057,
+                "medium_term": 0.058,
+                "terminal": 0.058
               }
             }
           }
@@ -138,17 +224,20 @@
           "items": {
             "cash_item_1": {
               "historical_account_key": "balance_sheet.cash_and_equivalents"
+            },
+            "marketable_securities_1": {
+              "historical_account_key": null
             }
           },
           "cash_policy": {
             "drivers": {
               "min_cash_as_percent_of_revenue": {
                 "baseline": 0.1648,
-                "justification": "Baseline calculated as 2023 historical cash and equivalents (7,885,968,000 MNT) divided by 2023 historical interest income (47,842,587,000 MNT), as per <HISTORICAL_DATA>. This represents the company's cash holding policy relative to its primary revenue.",
+                "justification": "Baseline calculated as 2023 Cash and Equivalents (7,885,968,000 MNT) divided by 2023 Interest Income (47,842,587,000 MNT) from <HISTORICAL_DATA>, resulting in 16.48%. This reflects the company's cash management relative to its primary revenue stream. Trends assume slight improvement in cash efficiency.",
                 "trends": {
                   "short_term": 0.16,
-                  "medium_term": 0.16,
-                  "terminal": 0.16
+                  "medium_term": 0.155,
+                  "terminal": 0.15
                 }
               }
             }
@@ -156,12 +245,12 @@
           "income_policy": {
             "drivers": {
               "yield_on_cash_and_investments": {
-                "baseline": 0.1,
-                "justification": "Baseline set to Mongolia's 2024 projected policy rate of 10.0% from <MACRO_CONTEXT.country_research.macroeconomic_data.economic_data_context.interest_rate_data>, as a proxy for yield on cash and short-term investments.",
+                "baseline": 0.08,
+                "justification": "Baseline set at 8%, a conservative yield based on Mongolia's 2024 policy rate of 10.0% and interbank rate of 10.5% from <MACRO_CONTEXT>. Trends reflect projected policy rate movements.",
                 "trends": {
-                  "short_term": 0.11,
-                  "medium_term": 0.105,
-                  "terminal": 0.095
+                  "short_term": 0.085,
+                  "medium_term": 0.09,
+                  "terminal": 0.09
                 }
               }
             }
@@ -184,6 +273,9 @@
         "other_current_assets": {
           "items": {
             "other_current_asset_1": {
+              "historical_account_key": "balance_sheet.other_assets"
+            },
+            "other_current_asset_2": {
               "historical_account_key": "balance_sheet.other_current_assets"
             }
           }
@@ -197,11 +289,11 @@
               "drivers": {
                 "capex_amount_annual": {
                   "baseline": 548656000.0,
-                  "justification": "Baseline set to 2023 historical derived capital expenditures (548,656,000 MNT) from the cash flow statement in <HISTORICAL_DATA>. Trends assume a modest annual growth.",
+                  "justification": "Baseline set to 2023 CFS derived capex of 548,656,000 MNT from <HISTORICAL_DATA>. This is significantly lower than industry average capex as a percentage of revenue, reflecting the company's fintech-based, asset-light business model. Trends assume modest growth in line with business expansion.",
                   "trends": {
-                    "short_term": 576088800.0,
-                    "medium_term": 604893240.0,
-                    "terminal": 635137902.0
+                    "short_term": 600000000.0,
+                    "medium_term": 650000000.0,
+                    "terminal": 700000000.0
                   }
                 }
               }
@@ -215,11 +307,11 @@
               "drivers": {
                 "intangible_additions_annual": {
                   "baseline": 45553000.0,
-                  "justification": "Baseline set to 2023 historical change in intangible assets (45,553,000 MNT) from the cash flow statement in <HISTORICAL_DATA>, representing net additions. Trends assume a stable level of intangible investments.",
+                  "justification": "Baseline set to 2023 Cash Flow Statement's 'cf_from_change_in_intangible_assets' of 45,553,000 MNT from <HISTORICAL_DATA>, used as a proxy for annual additions. Trends assume modest growth in line with continued technology investment.",
                   "trends": {
-                    "short_term": 45553000.0,
-                    "medium_term": 45553000.0,
-                    "terminal": 45553000.0
+                    "short_term": 50000000.0,
+                    "medium_term": 55000000.0,
+                    "terminal": 60000000.0
                   }
                 }
               }
@@ -229,7 +321,7 @@
         "other_non_current_assets": {
           "items": {
             "other_non_current_asset_1": {
-              "historical_account_key": "balance_sheet.other_assets"
+              "historical_account_key": null
             }
           }
         }
@@ -247,7 +339,7 @@
         "accounts_payable": {
           "items": {
             "main_payables": {
-              "historical_account_key": "balance_sheet.other_payables"
+              "historical_account_key": null
             }
           }
         },
@@ -261,14 +353,14 @@
         "short_term_debt": {
           "items": {
             "short_term_debt_1": {
-              "historical_account_key": "balance_sheet.loans_payable"
+              "historical_account_key": null
             }
           }
         },
         "other_current_liabilities": {
           "items": {
             "other_current_liability_1": {
-              "historical_account_key": "balance_sheet.lease_liabilities"
+              "historical_account_key": "balance_sheet.other_payables"
             }
           }
         }
@@ -277,33 +369,39 @@
         "long_term_debt": {
           "drivers": {
             "average_interest_rate": {
-              "baseline": 0.1453,
-              "justification": "Baseline calculated as 2023 historical interest expense (9,527,344,000 MNT) divided by the average of 2022 and 2023 total interest-bearing liabilities (loans payable, bonds payable, trust payables, asset-backed securities) from <HISTORICAL_DATA>. Average total debt: (82,243,920,000 MNT + 48,905,524,000 MNT) / 2 = 65,574,722,000 MNT. Rate = 9,527,344,000 / 65,574,722,000 = 14.53%. Trends reflect a slight increase then moderation, aligning with projected lending rates and industry funding costs from <MACRO_CONTEXT>.",
+              "baseline": 0.1145,
+              "justification": "Baseline calculated as 2023 absolute Interest Expense (9,527,344,000 MNT) divided by 2023 total interest-bearing liabilities (83,227,562,000 MNT) from <HISTORICAL_DATA>, resulting in 11.45%. This rate reflects the blended cost of all long-term debt instruments. Trends reflect a slight increase towards industry averages and projected policy rates from <MACRO_CONTEXT>.",
               "trends": {
-                "short_term": 0.15,
-                "medium_term": 0.145,
-                "terminal": 0.14
+                "short_term": 0.115,
+                "medium_term": 0.11,
+                "terminal": 0.105
               }
             },
             "target_debt_as_percent_of_assets": {
-              "baseline": 0.6162,
-              "justification": "Baseline calculated as 2023 total interest-bearing liabilities (82,243,920,000 MNT) divided by 2023 total assets (133,468,951,000 MNT) from <HISTORICAL_DATA>. This represents the company's leverage target. Trends assume a gradual decrease as equity grows.",
+              "baseline": 0.6236,
+              "justification": "Baseline calculated as 2023 total interest-bearing liabilities (83,227,562,000 MNT) divided by 2023 Total Assets (133,468,951,000 MNT) from <HISTORICAL_DATA>, resulting in 62.36%. This reflects the company's leverage, typical for a financial institution. Trends assume a slight deleveraging or stabilization.",
               "trends": {
-                "short_term": 0.6,
-                "medium_term": 0.58,
-                "terminal": 0.55
+                "short_term": 0.62,
+                "medium_term": 0.61,
+                "terminal": 0.6
               }
             }
           },
           "items": {
             "debt_instrument_1": {
-              "historical_account_key": "balance_sheet.bonds_payable"
+              "historical_account_key": "balance_sheet.loans_payable"
             },
             "debt_instrument_2": {
-              "historical_account_key": "balance_sheet.trust_payables"
+              "historical_account_key": "balance_sheet.bonds_payable"
             },
             "debt_instrument_3": {
+              "historical_account_key": "balance_sheet.trust_payables"
+            },
+            "debt_instrument_4": {
               "historical_account_key": "balance_sheet.asset_backed_securities"
+            },
+            "debt_instrument_5": {
+              "historical_account_key": "balance_sheet.lease_liabilities"
             }
           }
         },
@@ -322,7 +420,7 @@
         "drivers": {
           "net_share_issuance": {
             "baseline": 0.0,
-            "justification": "Baseline set to 0 as there was no change in historical share capital from 2022 to 2023, as per <HISTORICAL_DATA>.",
+            "justification": "Baseline set to 0.0 as there was no change in 'share_capital' from 2022 to 2023 in <HISTORICAL_DATA>. Trends assume no new equity issuance.",
             "trends": {
               "short_term": 0.0,
               "medium_term": 0.0,
@@ -336,11 +434,11 @@
         "drivers": {
           "dividend_payout_ratio": {
             "baseline": 0.0654,
-            "justification": "Baseline calculated as 2023 historical dividends paid (1,293,778,000 MNT) from the cash flow statement divided by 2023 historical net profit (19,795,816,000 MNT), as per <HISTORICAL_DATA>. Trends assume a stable payout ratio.",
+            "justification": "Baseline calculated as 2023 absolute CFS Dividends Paid (1,293,778,000 MNT) divided by 2023 Net Profit (19,795,816,000 MNT) from <HISTORICAL_DATA>, resulting in a payout ratio of 6.54%. Trends assume a slight decrease, indicating more earnings retention for growth.",
             "trends": {
               "short_term": 0.065,
-              "medium_term": 0.065,
-              "terminal": 0.065
+              "medium_term": 0.06,
+              "terminal": 0.05
             }
           }
         }
@@ -363,8 +461,8 @@
             "historical_account_key": "balance_sheet.loans_receivable_net",
             "drivers": {
               "industry_specific_asset_growth_rate": {
-                "baseline": 0.8847,
-                "justification": "Baseline calculated as the historical growth rate of loans receivable net from 2022 (65,506,280,000 MNT) to 2023 (123,462,373,000 MNT) from <HISTORICAL_DATA>. This exceptionally high growth rate is expected to moderate towards industry average growth rates (25.8% in 2023, projected 18.5% in 2024) as per <MACRO_CONTEXT>.",
+                "baseline": 0.25,
+                "justification": "Baseline set to 25% growth for 'loans_receivable_net'. This is a moderation from the company's historical 88.47% growth (2022-2023) but remains significantly higher than the industry's projected market size growth (18.5% for 2024) from <MACRO_CONTEXT>, reflecting the company's high-growth strategy and use of bond proceeds for portfolio expansion as per <BUSINESS_PROFILE>. Trends reflect a gradual moderation towards sustainable long-term growth.",
                 "trends": {
                   "short_term": 0.2,
                   "medium_term": 0.15,
@@ -421,10 +519,10 @@
     }
   },
   "__reasoning_log__": {
-    "Difficult Mappings": "The most difficult mappings involved `depreciation_amortization` which had to be mapped to both `depreciation_expense` and `amortization_expense` due to Rule A.1.2 (Law of Required Duplication). Additionally, `loans_receivable_gross` was challenging as it is an aggregate of a primary asset (`loans_receivable_net`) and a contra-asset (`loan_loss_reserve`), and per Rule A.1.2.1, it had to be mapped to `industry_specific_subtotals` rather than `industry_specific_assets`. Finally, `intangible_additions_annual` required using `cf_from_change_in_intangible_assets` from the cash flow statement as a proxy for additions, which is a net change rather than gross additions, but was the most logical available data point.",
-    "Key Model Selection": "The projection model selected for revenue was 'Asset_Yield_Driven'. This choice was directly justified by the <BUSINESS_PROFILE> which states: 'The issuer is a non-bank financial institution primarily engaged in lending activities. It operates a 100% fintech technology-based digital loan application... The company generates revenue primarily from interest income on its loan portfolio and loan repayments.' This clearly indicates that revenue is generated from a balance sheet asset (loans receivable) and is yield-driven.",
-    "Most Significant Driver": "The single most significant driver baseline value generated is the `industry_specific_asset_growth_rate` for `loans_receivable_net`, with a baseline of 88.47%. This is critical because the company's primary business is lending, and the growth of its loan portfolio directly drives its main revenue stream. I am moderately confident in its calculation as it's a direct historical growth rate. However, its applicability for future projections requires significant moderation, as the historical growth is exceptionally high and unsustainable, necessitating a strong convergence to industry averages as per the trends.",
+    "Difficult Mappings": "The most difficult mappings involved distinguishing between general 'other_assets' and the specific 'other_current_assets' historical items, especially since the latter was consistently zero. 'other_assets' was mapped to 'other_current_asset_1' as the most logical general current asset, and the historical 'other_current_assets' (value 0.0) was mapped to 'other_current_asset_2' to ensure full historical coverage. Additionally, correctly identifying 'net_interest_income' as the equivalent of 'gross_profit' for a lender and mapping 'impairment_loss_on_loans' to 'industry_specific_operating_expenses' were crucial for financial logic. Mapping 'loans_receivable_gross' and 'non_performing_loans_amount' to 'industry_specific_subtotals' rather than assets was also important, adhering to Rule A.1.2.1. Finally, ensuring that 'total_current_liabilities' and 'total_non_current_liabilities' were set to null, as they were not explicitly provided as separate historical line items, was a key correction.",
+    "Key Model Selection": "The projection model selected for revenue_stream_1 (Interest Income) was 'Asset_Yield_Driven'. This choice was directly justified by the <BUSINESS_PROFILE> which states: 'The issuer is a non-bank financial institution primarily engaged in lending activities. It operates a 100% fintech technology-based digital loan application... The company generates revenue primarily from interest income on its loan portfolio and loan repayments.' This clearly indicates that revenue is generated from a balance sheet asset (loan portfolio) and its yield.",
+    "Most Significant Driver": "The single most significant driver baseline value generated is the 'industry_specific_asset_growth_rate' for 'loans_receivable_net', set at 25%. This driver directly dictates the growth of the company's primary earning asset. My confidence in its calculation and applicability is moderately high. While the company's historical loan growth (88.47% from 2022 to 2023) is exceptionally high, a 25% baseline, moderating to 10% in the terminal period, reflects a more sustainable yet still aggressive expansion for a high-growth fintech NBFI, supported by the stated use of bond proceeds for portfolio expansion in the <BUSINESS_PROFILE>. It acknowledges the company's growth trajectory while factoring in eventual market saturation and regulatory pressures mentioned in the <MACRO_CONTEXT>.",
     "Confidence Score": 0.9,
-    "justification": "The populated schema is a financially logical representation of the issuer. All historical financial line items were mapped, adhering to the specific rules for NBFIs (e.g., interest income as primary revenue, interest expense as primary COGS). Drivers were calculated using 2023 historical data and justified with references to the provided context. The model selection for revenue aligns perfectly with the business profile. The main area of lower confidence is the projection of exceptionally high historical growth rates (e.g., loans receivable) to more sustainable levels, which inherently involves judgment beyond direct historical extrapolation, but is necessary for financial logic."
+    "Justification": "The populated schema adheres meticulously to all specified rules, including the strict hierarchy of precedence. Every historical financial line item has been mapped to its most logical slot, ensuring 100% coverage and structural integrity. The primary business model (NBFI lender) was correctly identified, guiding critical mapping decisions (e.g., interest income as revenue, interest expense as COGS) and the mandated 'Asset_Yield_Driven' model selection for revenue. All required drivers have been populated with baselines derived from historical data and contextualized with industry and macroeconomic insights from <MACRO_CONTEXT>, with clear, auditable justifications. The exclusion of the cash flow statement and summation plugs was strictly followed. The only minor uncertainty lies in projecting the precise moderation of the company's exceptionally high historical loan growth, which is inherently subjective but has been addressed with a reasoned approach."
   }
 }

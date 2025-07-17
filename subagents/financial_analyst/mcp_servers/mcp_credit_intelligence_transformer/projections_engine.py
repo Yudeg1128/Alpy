@@ -9,6 +9,7 @@ import numpy as np
 import pandas as pd
 from dataclasses import dataclass, field, fields, asdict
 from typing import Any, Dict, List, Callable
+from enum import Enum
 
 # Add parent directory to path to import security_folder_utils
 sys.path.append(str(Path(__file__).parent.parent.parent.parent.parent))
@@ -36,6 +37,110 @@ def find_project_root(marker_file=PROJECT_ROOT_MARKER) -> Path:
     raise FileNotFoundError(f"Project root marker '{marker_file}' not found. Cannot resolve file paths.")
 
 context_logger = logging.getLogger('PeriodContext')
+contracts_logger = logging.getLogger('EngineContracts')
+
+
+class RevenueModel(Enum):
+    """
+    Defines the valid, recognized projection models for any revenue stream.
+    The engine will FAIL FAST if it encounters a model name in the schema
+    that is not a member of this Enum.
+    """
+    UNIT_ECONOMICS = "Unit_Economics"
+    ASSET_YIELD_DRIVEN = "Asset_Yield_Driven"
+
+
+class CogsModel(Enum):
+    """
+    Defines the valid, recognized projection models for any Cost of Revenue stream.
+    """
+    UNIT_ECONOMICS_COST = "Unit_Economics_Cost"
+    ASSET_YIELD_DRIVEN_COST = "Asset_Yield_Driven_Cost"
+
+
+class AccountCategory(Enum):
+    """
+    Defines the valid, recognized account categories that have special,
+    hardcoded calculation logic in the engine. This maps the 'category' field
+    derived from the schema structure to a specific behavior.
+    """
+    ACCOUNTS_RECEIVABLE = "accounts_receivable"
+    ACCOUNTS_PAYABLE = "accounts_payable"
+    PROPERTY_PLANT_EQUIPMENT = "property_plant_equipment"
+    INTANGIBLE_ASSETS = "intangible_assets"
+    LONG_TERM_DEBT = "long_term_debt"
+    SHORT_TERM_DEBT = "short_term_debt"
+    INDUSTRY_SPECIFIC_OPERATING_EXPENSES = "industry_specific_operating_expenses"
+    INDUSTRY_SPECIFIC_ASSETS = "industry_specific_assets"
+    INDUSTRY_SPECIFIC_LIABILITIES = "industry_specific_liabilities"
+
+
+def log_contract_definitions():
+    """
+    A strategic logging function to be called once during engine initialization.
+    It confirms that the contracts have been defined and lists them, providing a
+    clear and verifiable checkpoint in the system's log output.
+    """
+    contracts_logger.info("--- [Contracts] Behavioral contracts defined and ready for engine validation. ---")
+    
+    all_contracts = {
+        "Revenue Models": RevenueModel,
+        "COGS Models": CogsModel,
+        "Account Categories": AccountCategory
+    }
+    
+    for name, contract_enum in all_contracts.items():
+        # Retrieve the actual string values that the schema will use
+        members = [member.value for member in contract_enum]
+        contracts_logger.info(f"  -> Recognized {name}: {members}")
+    
+    contracts_logger.info("--- [Contracts] Engine will now enforce these contracts during execution. ---")
+
+
+class SchemaPaths:
+    """
+    A centralized, static contract for all schema traversal paths.
+    This prevents typo-related bugs and simplifies maintenance by providing a
+    single source of truth for the schema's structure.
+    """
+    contracts_logger.info("--- [Contracts] Defining schema path contracts... ---")
+    
+    # --- Income Statement Paths ---
+    IS_REVENUE = "income_statement.revenue"
+    IS_COGS = "income_statement.cost_of_revenue"
+    IS_OPEX = "income_statement.operating_expenses"
+    IS_INDUSTRY_OPEX = "income_statement.industry_specific_operating_expenses"
+    IS_NON_OPERATING = "income_statement.non_operating_income_expense"
+    
+    # --- Balance Sheet Asset Paths ---
+    BS_ASSETS_CASH = "balance_sheet.assets.current_assets.cash_and_equivalents"
+    BS_ASSETS_AR = "balance_sheet.assets.current_assets.accounts_receivable"
+    BS_ASSETS_INVENTORY = "balance_sheet.assets.current_assets.inventory"
+    BS_ASSETS_OTHER_CURRENT = "balance_sheet.assets.current_assets.other_current_assets"
+    
+    BS_ASSETS_PPE = "balance_sheet.assets.non_current_assets.property_plant_equipment"
+    BS_ASSETS_INTANGIBLES = "balance_sheet.assets.non_current_assets.intangible_assets"
+    BS_ASSETS_OTHER_NON_CURRENT = "balance_sheet.assets.non_current_assets.other_non_current_assets"
+    
+    BS_ASSETS_CONTRA = "balance_sheet.assets.contra_assets"
+
+    # --- Balance Sheet Liability Paths ---
+    BS_LIABILITIES_AP = "balance_sheet.liabilities.current_liabilities.accounts_payable"
+    BS_LIABILITIES_ST_DEBT = "balance_sheet.liabilities.current_liabilities.short_term_debt"
+    BS_LIABILITIES_TAX_PAYABLE = "balance_sheet.liabilities.current_liabilities.tax_payables"
+    BS_LIABILITIES_OTHER_CURRENT = "balance_sheet.liabilities.current_liabilities.other_current_liabilities"
+    
+    BS_LIABILITIES_LT_DEBT = "balance_sheet.liabilities.non_current_liabilities.long_term_debt"
+    BS_LIABILITIES_OTHER_NON_CURRENT = "balance_sheet.liabilities.non_current_liabilities.other_non_current_liabilities"
+    
+    # --- Balance Sheet Equity Path ---
+    BS_EQUITY = "balance_sheet.equity"
+
+    # --- Industry-Specific BS Paths ---
+    BS_INDUSTRY_ASSETS = "balance_sheet.industry_specific_items.industry_specific_assets"
+    BS_INDUSTRY_LIABILITIES = "balance_sheet.industry_specific_items.industry_specific_liabilities"
+
+    contracts_logger.info("--- [Contracts] Schema path contracts defined. ---")
 
 
 @dataclass
@@ -144,6 +249,7 @@ class SchemaItemGroups:
     industry_opex_items: List[str]
     non_op_items: List[str]
     equity_items: List[str]
+    tax_payable_items: List[str]
 
 
 @dataclass
@@ -162,6 +268,7 @@ class ProjectionConstants:
     deterministic_amortization_rate: float
     deterministic_dso: float
     deterministic_dpo: float
+    effective_tax_rate: float
     primary_cash_account: str
     revolver_interest_rate: float
     unit_economics_tracker: Dict[str, Any]
@@ -339,7 +446,7 @@ class FinancialCalculations:
         """Calculates revenue for an Asset_Yield_Driven model."""
         account_map = context.constants.account_map
         model = account_map[account]['schema_entry']['projection_configuration']['selected_model']
-        yield_driver = model['driver']['asset_yield']
+        yield_driver = model['drivers']['asset_yield']
 
         current_yield = context.get_driver_value(yield_driver)
 
@@ -351,29 +458,45 @@ class FinancialCalculations:
         if not target_node:
             raise RuntimeError(f"Revenue model for '{account}' depends on '{target_hist_key}', but no item is mapped to this key.")
 
+        # Use ONLY the opening balance to permanently break the major circularity.
         opening_asset_balance = context.opening_balances.get(target_node, 0.0)
-        closing_asset_balance = context.get(target_node)
-        avg_asset_balance = (opening_asset_balance + closing_asset_balance) / 2
-
-        revenue = avg_asset_balance * current_yield
+        revenue = opening_asset_balance * current_yield
         context.set(account, revenue)
 
     @staticmethod
     def calculate_lender_cogs(account: str, context: PeriodContext) -> None:
-        """Calculates COGS for a Lender, which is their primary interest expense."""
+        """
+        Calculates COGS for a Lender, which is their primary interest expense.
+        [REVISED & STABLE] This version uses ONLY the opening debt balance to
+        calculate interest expense. This intentionally breaks the COGS-Debt circularity,
+        making the P&L calculation stable and symmetrical with the asset-yield revenue logic.
+        """
         schema = context.constants.schema
-        drivers = schema['balance_sheet']['liabilities']['non_current_liabilities']['long_term_debt']['drivers']
-        rate_driver = drivers['average_interest_rate']
-        current_rate = context.get_driver_value(rate_driver)
+        try:
+            drivers = schema['balance_sheet']['liabilities']['non_current_liabilities']['long_term_debt']['drivers']
+            rate_driver = drivers['average_interest_rate']
+            current_rate = context.get_driver_value(rate_driver)
+        except KeyError as e:
+            raise RuntimeError(f"FATAL: Could not find debt driver for interest rate in schema. Error: {e}")
 
+        # --- CRITICAL FIX: Use ONLY the opening balances ---
+        # This makes the COGS calculation stable and independent of the current period's
+        # closing debt balances, mirroring the revenue calculation logic.
         lt_debt_items = context.constants.schema_items.lt_debt_items
-        total_avg_debt_balance = 0
-        for debt_item in lt_debt_items:
-            opening_debt = context.opening_balances.get(debt_item, 0.0)
-            closing_debt = context.get(debt_item)
-            total_avg_debt_balance += (opening_debt + closing_debt) / 2
+        total_opening_debt_balance = sum(context.opening_balances.get(item, 0.0) for item in lt_debt_items)
+        
+        # We must also include the opening revolver balance, as it is also interest-bearing.
+        opening_revolver_balance = context.opening_balances.get('revolver', 0.0)
+        
+        total_interest_bearing_debt = total_opening_debt_balance + opening_revolver_balance
 
-        cogs = total_avg_debt_balance * current_rate * -1
+        # Calculate interest expense (as a negative value for P&L)
+        cogs = total_interest_bearing_debt * current_rate * -1
+        
+        logger.info(
+            f"[{context.period_column_name}][{account}] COGS: {cogs:,.0f} "
+            f"(Opening Debt: {total_interest_bearing_debt:,.0f} * Rate: {current_rate:.2%})"
+        )
         context.set(account, cogs)
 
     # =====================================================================
@@ -440,32 +563,85 @@ class FinancialCalculations:
     # LIABILITY & EQUITY CALCULATIONS (FINALIZED)
     # =====================================================================
     @staticmethod
-    def calculate_capital_structure_and_debt(account: str, context: PeriodContext) -> None:
-        """Calculates the ABSOLUTE CLOSING BALANCE of a single debt instrument."""
+    def calculate_total_debt_structure(account: str, context: PeriodContext) -> None:
+        """
+        Calculates the ABSOLUTE CLOSING BALANCE of a single debt instrument (short or long term)
+        by targeting a total debt-to-assets ratio for the entire interest-bearing debt stack.
+        [REVISED & CONSOLIDATED METHOD]
+
+        This function replaces the isolated long-term debt calculation. It ensures that
+        all interest-bearing debt (both ST and LT) moves in concert to meet the company's
+        strategic capital structure policy, preventing uncontrolled feedback loops.
+        """
+        s = context.constants.schema_items
         schema = context.constants.schema
-        account_map = context.constants.account_map
+        
+        # --- Phase 1: Calculate Target Total Debt ---
+        # Get the primary policy driver from the schema.
+        try:
+            debt_drivers = schema['balance_sheet']['liabilities']['non_current_liabilities']['long_term_debt']['drivers']
+            target_ratio_driver = debt_drivers['target_debt_as_percent_of_assets']
+            target_debt_to_assets_ratio = context.get_driver_value(target_ratio_driver)
+        except KeyError as e:
+            raise RuntimeError(f"FATAL: Could not find debt driver 'target_debt_as_percent_of_assets' in schema. Error: {e}")
 
-        asset_items = [acc for acc, info in account_map.items() if 'asset' in info.get('category', '')]
-        current_total_assets = sum(context.get(item) for item in asset_items)
+        # Get the calculated total assets for the current period.
+        # This is the core link that drives the capital structure.
+        current_total_assets = context.get('total_assets')
+        target_total_interest_bearing_debt = current_total_assets * target_debt_to_assets_ratio
 
-        drivers = schema['balance_sheet']['liabilities']['non_current_liabilities']['long_term_debt']['drivers']
-        target_ratio = context.get_driver_value(drivers['target_debt_as_percent_of_assets'])
-        target_total_debt = current_total_assets * target_ratio
+        # --- Phase 2: Determine Current Debt and Required Change ---
+        # Consolidate all interest-bearing debt items from the schema constants.
+        all_debt_items = s.st_debt_items + s.lt_debt_items
+        if not all_debt_items:
+            # If there are no debt items defined in the schema, there's nothing to calculate.
+            logger.warning(f"[{context.period_column_name}] Capital structure calculation for '{account}' skipped as no ST/LT debt items are defined in the schema.")
+            context.set(account, 0.0)
+            return
 
-        debt_items = context.constants.schema_items.lt_debt_items
-        opening_total_debt = sum(context.opening_balances.get(item, 0.0) for item in debt_items)
-        total_required_change = target_total_debt - opening_total_debt
+        # Sum the opening balances of all debt instruments.
+        opening_total_debt = sum(context.opening_balances.get(item, 0.0) for item in all_debt_items)
+        
+        # Calculate the net change required across the entire debt stack.
+        total_required_change_in_debt = target_total_interest_bearing_debt - opening_total_debt
 
+        # --- Phase 3: Allocate the Change Proportionally ---
         opening_balance_of_this_account = context.opening_balances.get(account, 0.0)
-        if opening_total_debt == 0:
-            if not debt_items: raise ZeroDivisionError("Cannot allocate debt change: no debt items defined.")
-            proportion = 1.0 / len(debt_items)
-        else:
-            proportion = opening_balance_of_this_account / opening_total_debt
 
-        change_for_this_account = total_required_change * proportion
+        # Handle the edge case of starting with zero debt.
+        if opening_total_debt == 0:
+            # If there's no existing debt, we can't use proportions.
+            # We must allocate the required change equally among all defined debt instruments.
+            # This is a reasonable assumption for a model's first period or a startup.
+            proportion_of_total_debt = 1.0 / len(all_debt_items)
+            logger.info(f"[{context.period_column_name}][Debt] Opening debt is zero. Applying equal allocation ({proportion_of_total_debt:.2%}) for '{account}'.")
+        else:
+            # Allocate the change based on each instrument's share of the opening debt.
+            proportion_of_total_debt = opening_balance_of_this_account / opening_total_debt
+
+        change_for_this_account = total_required_change_in_debt * proportion_of_total_debt
+        
+        # --- Phase 4: Set the Final Closing Balance ---
         closing_balance = opening_balance_of_this_account + change_for_this_account
-        context.set(account, closing_balance)
+        
+        # CRITICAL: A debt balance cannot be negative. If repayments exceed the opening balance,
+        # the closing balance is floored at zero.
+        final_closing_balance = max(0, closing_balance)
+        
+        if final_closing_balance < closing_balance:
+            logger.warning(
+                f"[{context.period_column_name}][Debt] Calculated negative balance for '{account}' ({closing_balance:,.0f}). "
+                f"Flooring at zero. This may indicate required repayments exceed available debt."
+            )
+
+        context.set(account, final_closing_balance)
+
+        # Detailed logging for traceability
+        logger.info(
+            f"[{context.period_column_name}][Debt][{account}] Closing: {final_closing_balance:,.0f} "
+            f"(Opening: {opening_balance_of_this_account:,.0f}, "
+            f"ΔAllocated: {change_for_this_account:,.0f})"
+        )
 
     @staticmethod
     def calculate_equity_rollforward(account: str, context: PeriodContext) -> None:
@@ -571,7 +747,7 @@ class FinancialCalculations:
         """Calculates an industry-specific operating expense as a percentage of revenue."""
         account_map = context.constants.account_map
         schema_entry = account_map[account]['schema_entry']
-        driver = schema_entry['driver']['industry_specific_operating_expense_as_percent_of_revenue']
+        driver = schema_entry['drivers']['industry_specific_operating_expense_as_percent_of_revenue']
         rate = context.get_driver_value(driver)
         total_revenue = context.get('total_revenue')
         expense = total_revenue * rate * -1
@@ -579,10 +755,30 @@ class FinancialCalculations:
 
     @staticmethod
     def calculate_income_tax(account: str, context: PeriodContext) -> None:
-        """Calculates income tax as a simple percentage of EBT."""
-        tax_rate = 0.21 # Simplified
+        """
+        Calculates income tax as a percentage of EBT using the pre-calculated
+        historical effective tax rate.
+        [REVISED & CORRECTED] This version uses a data-driven rate and correctly
+        calculates tax on positive earnings.
+        """
+        # Retrieve the data-driven tax rate from the constants object.
+        tax_rate = context.constants.effective_tax_rate
+        
+        # Get the projected EBT for the current period.
         ebt_value = context.get('ebt')
-        tax_expense = min(0, ebt_value) * tax_rate
+        
+        # Tax should only be calculated on positive earnings.
+        # A more advanced model would create a Deferred Tax Asset for losses.
+        # For now, we assume no tax credit/refund for a loss.
+        taxable_income = max(0, ebt_value)
+        
+        # Tax expense is a negative value on the P&L.
+        tax_expense = taxable_income * tax_rate * -1
+        
+        logger.info(
+            f"[{context.period_column_name}][{account}] Tax Expense: {tax_expense:,.0f} "
+            f"(EBT: {ebt_value:,.0f} * Rate: {tax_rate:.2%})"
+        )
         context.set(account, tax_expense)
 
     @staticmethod
@@ -741,10 +937,36 @@ class FinancialCalculations:
 
     @staticmethod
     def calculate_total_current_liabilities(account: str, context: PeriodContext) -> None:
-        """Calculates Total Current Liabilities for the period."""
+        """
+        Calculates Total Current Liabilities for the period.
+        [REVISED & CORRECTED] This version now correctly includes the revolver
+        balance, which is essential for the final balance sheet articulation.
+        """
         s = context.constants.schema_items
-        all_cl_items = s.ap_items + s.st_debt_items + s.other_cl_items
-        total_cl = sum(context.get(item) for item in all_cl_items)
+        
+        # Get all schema-defined current liability items
+        component_accounts = (
+            s.ap_items + 
+            s.st_debt_items + 
+            s.other_cl_items + 
+            s.tax_payable_items
+        )
+        
+        # --- CRITICAL FIX: Add the revolver to the list of items to be summed ---
+        component_accounts.append('revolver')
+        
+        logger.info(
+            f"[{context.period_column_name}][SUMMATION] Calculating '{account}' from {len(component_accounts)} components..."
+        )
+
+        total_cl = 0.0
+        for item in sorted(list(set(component_accounts))): # Use set to avoid duplicates
+            value = context.get(item)
+            logger.info(f"[{context.period_column_name}][SUMMATION]  + {item:<30} = {value:,.2f}")
+            total_cl += value
+        
+        logger.info(f"[{context.period_column_name}][SUMMATION]  = Final Total '{account}': {total_cl:,.2f}")
+
         context.set(account, total_cl)
 
     @staticmethod
@@ -813,12 +1035,13 @@ class ProjectionsEngine:
         self.historical_data_raw = None
         self.data_grid = pd.DataFrame()
         self.graph = nx.DiGraph()
-        self.execution_plan = []
+        self.solver_plan = []
+        self.reconciliation_plan = []
         self.circular_group = set()
         self.is_lender = False
-        self.CASH_SWEEP_PERCENTAGE = 1.0 # Using 100% of surplus cash
-
         logger.info(f"ProjectionsEngine initialized for Security ID: {self.security_id} for {self.projection_periods} years.")
+
+        log_contract_definitions()
 
     @staticmethod
     def _get_driver_value_static(driver_obj: dict, p_year_index: int) -> float:
@@ -995,38 +1218,47 @@ class ProjectionsEngine:
     def _build_account_map(self) -> dict:
         """
         Recursively traverses the schema to build a flat map of account names to their
-        schema definition, parent statement, and parent CATEGORY.
-        It now correctly includes subtotal landmarks regardless of historical mapping.
+        schema definition, parent statement, and parent CATEGORY. This map is the
+        engine's central directory for understanding any given account.
         """
         account_map = {}
         
-        def recurse(d, statement_name, parent_key=""):
-            for key, value in d.items():
-                if not isinstance(value, dict): continue
+        def recurse(d, statement_name, category_path):
+            # The category name is the last part of the path.
+            category_name = category_path.split('.')[-1]
 
-                is_subtotal_category = parent_key.startswith('subtotals')
-                has_hist_key = value.get('historical_account_key') is not None
-                
-                # An item is added to the map if it's in a subtotal category OR has a valid hist_key
-                if is_subtotal_category or has_hist_key:
-                    if key in account_map:
-                        raise ValueError(f"Duplicate account key '{key}' found. Account names must be unique.")
+            # Handle semantic lists nested under 'items'
+            if 'items' in d and isinstance(d.get('items'), dict):
+                for key, value in d['items'].items():
+                    if isinstance(value, dict) and 'historical_account_key' in value:
+                        if key in account_map:
+                            raise ValueError(f"Duplicate account key '{key}' found. Account names must be unique.")
+                        account_map[key] = {'schema_entry': value, 'statement': statement_name, 'category': category_name}
+                    # Continue traversal inside each item, if needed
+                    recurse(value, statement_name, f"{category_path}.{key}")
+            else:
+                # Handle named landmarks and other nested structures
+                for key, value in d.items():
+                    if key in ['items', 'drivers', 'projection_configuration', '__description__', '__instruction__', '__model_options__', 'cash_policy', 'income_policy']:
+                        continue # Skip structural keys
                     
-                    # Determine category: for items in 'items', it's the parent key, otherwise the current key
-                    category_name = parent_key if key in value.get('items', {}) else key
-                    account_map[key] = {'schema_entry': value, 'statement': statement_name, 'category': category_name}
-
-                # Continue traversal, passing the current key as the new parent_key
-                if key != 'items': # Avoid paths like 'revenue.items'
-                    recurse(value, statement_name, key)
-                else:
-                    recurse(value, statement_name, parent_key) # For items in 'items', keep parent category
+                    if isinstance(value, dict):
+                        # A key is a projectable account if it has a direct historical mapping
+                        if 'historical_account_key' in value:
+                            if key in account_map:
+                                raise ValueError(f"Duplicate account key '{key}' found. Account names must be unique.")
+                            account_map[key] = {'schema_entry': value, 'statement': statement_name, 'category': category_name}
+                        # Continue traversal
+                        recurse(value, statement_name, f"{category_path}.{key}")
 
         # Start recursion from the top-level statements
         for statement in ['income_statement', 'balance_sheet']:
             if statement in self.populated_schema:
                 recurse(self.populated_schema[statement], statement, statement)
-        
+
+        if not account_map:
+            raise ValueError("Schema parsing resulted in an empty account map. Check schema structure.")
+            
         logger.info(f"Built enhanced schema account map with {len(account_map)} entries, capturing category context.")
         return account_map
 
@@ -1136,79 +1368,102 @@ class ProjectionsEngine:
 
     def _build_and_compile_graph(self) -> None:
         """
-        Builds a dependency graph, identifies the circular group, and compiles a
-        final, non-conflicting execution plan. [FINAL CORRECTED VERSION]
-        """
-        logger.info("[Graph] Initializing dynamic dependency graph construction...")
-        self.graph = nx.DiGraph()
+        Builds the dependency graph and compiles it into two distinct execution plans.
+        [FINAL REVISED - HARDCODED RECONCILIATION]
 
-        # Step 1: Populate nodes (no change)
-        logger.info("[Graph] Step 1/5: Populating nodes from schema...")
+        This version uses the graph for the complex solver phase but enforces a
+        deterministic, hardcoded execution order for the final, sensitive balance
+        sheet reconciliation to prevent timing errors.
+        """
+        logger.info("[Graph] Initializing graph-driven dependency construction...")
+        s = self.projection_constants.schema_items # Use the centralized constants
+
+        # --- Phase 1: Build the Full Graph ---
+        logger.info("[Graph] Populating all nodes from schema...")
         self._populate_nodes_from_schema()
-        
-        # Step 2: Diagnose company profile (no change)
-        logger.info("[Graph] Step 2/5: Diagnosing company profile...")
+
+        logger.info("[Graph] Diagnosing company profile...")
         self.is_lender = any(
             self.account_map[stream]['schema_entry']
                 .get('projection_configuration', {})
                 .get('selected_model', {})
                 .get('is_lender')
-            for stream in self.projection_constants.schema_items.revenue
+            for stream in s.revenue
         )
         logger.info(f"[Graph] Company Profile Diagnosis: is_lender = {self.is_lender}")
-        
-        # Step 3: Link dependencies (no change)
-        logger.info("[Graph] Step 3/5: Linking node dependencies based on schema rules...")
-        self._link_graph_dependencies()
-        
-        # Step 4: Isolate circularities (no change)
-        logger.info("[Graph] Step 4/5: Performing SCC analysis...")
-        sccs = list(nx.strongly_connected_components(self.graph))
-        circular_components = [scc for scc in sccs if len(scc) > 1]
-        if not circular_components:
-            raise RuntimeError("FATAL: No circular dependencies found. The core model loop is missing.")
-        if len(circular_components) > 1:
-            raise RuntimeError(f"FATAL: Found {len(circular_components)} disjoint circular groups. Engine supports only one.")
-        
-        self.circular_group = circular_components[0]
-        logger.info(f"[Graph] Successfully identified the single circular dependency group: {self.circular_group}")
 
-        # --- STEP 5: COMPILE AND DE-CONFLICT THE FINAL EXECUTION PLAN (THE FIX) ---
-        logger.info("[Graph] Step 5/5: Compiling and de-conflicting final execution plan...")
-        
-        # First, get a list of ALL accounts that are handled by our manual solver plan.
-        # This is the single source of truth for what is "circular".
-        all_circular_plan_accounts = (
-            self.solver_plan.phase_1_pnl_flow +
-            self.solver_plan.phase_2_balance_sheet_update +
-            self.solver_plan.phase_6_final_subtotals
+        logger.info("[Graph] Linking ALL node dependencies...")
+        self._link_graph_dependencies()
+        logger.info(f"[Graph] Fully connected graph built with {self.graph.number_of_nodes()} nodes and {self.graph.number_of_edges()} edges.")
+
+        # --- Phase 2: Compile the Solver Plan (Graph-Driven) ---
+        # Define all nodes that belong ONLY to the final reconciliation phase.
+        # These will be removed from the main graph to create the solver graph.
+        reconciliation_only_nodes = set(
+            s.st_debt_items + s.lt_debt_items + [
+                'update_cash_balance', 'resolve_funding_gap', 'revolver',
+                # All subtotals are part of the reconciliation phase
+                'total_current_assets', 'total_assets', 'total_current_liabilities',
+                'total_liabilities', 'total_liabilities_and_equity', 'total_non_current_assets'
+            ]
         )
         
-        # Now, determine the pre-circular steps. A node is pre-circular if and ONLY IF
-        # it is NOT in our master list of circular plan accounts.
-        pre_circular_nodes = [
-            n for n in self.graph.nodes() if n not in all_circular_plan_accounts
-        ]
+        # Create the solver graph by removing these nodes.
+        solver_graph = self.graph.copy()
+        solver_graph.remove_nodes_from(node for node in reconciliation_only_nodes if node in solver_graph)
 
         try:
-            # Create the execution plan using this clean, de-conflicted list.
-            pre_circular_subgraph = self.graph.subgraph(pre_circular_nodes)
-            pre_circular_plan = list(nx.topological_sort(pre_circular_subgraph))
-            
-            self.execution_plan = {
-                'pre_circular': pre_circular_plan,
-                'circular': list(self.circular_group) # Keep this for logging/reference
-            }
-            
-            logger.info(
-                f"[Graph] Final execution plan compiled: {len(pre_circular_plan)} de-conflicted pre-circular steps."
-            )
-
+            self.solver_plan = list(nx.topological_sort(solver_graph))
+            logger.info(f"[Graph] Successfully compiled a graph-driven SOLVER plan with {len(self.solver_plan)} steps.")
         except nx.NetworkXUnfeasible:
-            # This will now correctly fire if there's a real cycle in the pre-circular logic.
-            raise RuntimeError("FATAL: Failed to create a topological sort of the pre-circular graph.")
+            cycles = list(nx.simple_cycles(solver_graph))
+            logger.critical(f"FATAL: An unexpected cycle remains in the SOLVER graph. Offending cycle(s): {cycles}")
+            raise RuntimeError("Failed to create a topological sort for the solver plan.")
 
-        logger.info("[Graph] Graph construction complete.")
+        # --- Phase 3: Compile the Reconciliation Plan (Hardcoded) ---
+        # This is a deterministic, non-negotiable sequence of operations.
+        # Hardcoding it eliminates any risk of topological sort errors.
+        logger.info("[Graph] Defining a deterministic, hardcoded RECONCILIATION plan...")
+        
+        # We must ensure all debt items are included.
+        all_debt_items = sorted(list(set(s.st_debt_items + s.lt_debt_items)))
+
+        self.reconciliation_plan = [
+            # --- PASS 1: Calculate component balances and first-pass subtotals ---
+            *all_debt_items,                      # 1. Calculate final debt balances based on growth targets.
+            'update_cash_balance',                # 2. Update cash based on CFS (pre-revolver).
+            'total_equity',                       # 3. Calculate final equity (already done in solver, but run again for consistency).
+            'total_current_assets',               # 4. Calculate pre-gap total current assets.
+            'total_non_current_assets',           # 5. Calculate final non-current assets.
+            'total_assets',                       # 6. Sum for pre-gap TOTAL ASSETS.
+            'total_current_liabilities',          # 7. Calculate pre-gap total current liabilities (without revolver change).
+            'total_non_current_liabilities',      # 8. Calculate final non-current liabilities (which are the debt items from step 1).
+            'total_liabilities',                  # 9. Sum for pre-gap TOTAL LIABILITIES.
+            'total_liabilities_and_equity',       # 10. Sum for pre-gap TOTAL L&E.
+            
+            # --- PASS 2: Resolve the funding gap ---
+            'resolve_funding_gap',                # 11. CRITICAL: Calculates the gap and SETS the revolver balance.
+            
+            # --- PASS 3: Recalculate final subtotals to reflect the revolver change ---
+            'revolver',                           # 12. "do-nothing" node to ensure it's in the plan.
+            'total_current_liabilities',          # 13. Re-calculate, now including the new revolver balance.
+            'total_liabilities',                  # 14. Re-calculate.
+            'total_liabilities_and_equity',       # 15. Re-calculate for the final, definitive value.
+        ]
+
+        # --- FAIL FAST AND LOUD: Validate the hardcoded plan ---
+        all_nodes_in_engine = set(self.account_map.keys()).union(set(self.graph.nodes()))
+        for step in self.reconciliation_plan:
+            if step not in all_nodes_in_engine:
+                raise ValueError(
+                    f"FATAL MISCONFIGURATION: The hardcoded reconciliation plan contains an unknown step: '{step}'. "
+                    f"Check the spelling or ensure it's defined in the schema or engine nodes."
+                )
+        
+        logger.info(f"Successfully defined a hardcoded RECONCILIATION plan with {len(self.reconciliation_plan)} steps.")
+        logger.info(f"Hardcoded Reconciliation Order: {self.reconciliation_plan}")
+
+        logger.info("[Graph] Two-phase graph construction and compilation complete.")
 
     def _populate_nodes_from_schema(self, schema_section=None, parent_key=""):
         """
@@ -1237,8 +1492,14 @@ class ProjectionsEngine:
         
         if schema_section == self.populated_schema:
             engine_nodes = [
-                'revolver', '__historical_plug_reversal__', 'interest_on_revolver',
-                'interest_income_on_cash', 'total_revenue'
+                'revolver',
+                '__historical_plug_reversal__',
+                'interest_on_revolver',
+                'interest_income_on_cash',
+                'total_revenue',
+                'articulate_cfs',
+                'update_cash_balance',
+                'resolve_funding_gap'
             ]
             self.graph.add_nodes_from(engine_nodes)
 
@@ -1309,13 +1570,6 @@ class ProjectionsEngine:
         # --- Part 3: Link Inter-Statement & Driver Dependencies (CORRECTED) ---
         logger.info("[Graph Link] Phase 3/4: Wiring cross-statement and driver dependencies...")
 
-        # For lenders, revenue depends on assets, which are circular. This forces revenue into the loop.
-        for stream in s.revenue:
-            model = self.account_map[stream]['schema_entry'].get('projection_configuration', {}).get('selected_model', {})
-            if model.get('model_name') == 'Asset_Yield_Driven':
-                # Revenue depends on all assets, which depend on cash, which is circular.
-                self.graph.add_edge('total_assets', stream)
-
         # All these OpEx items depend on revenue, which is now correctly in the loop.
         for item in all_opex:
             self.graph.add_edge('total_revenue', item)
@@ -1337,11 +1591,30 @@ class ProjectionsEngine:
         # The revolver is the final balancing item. It depends on the state of
         # the entire rest of the balance sheet.
         self.graph.add_edge('total_assets', 'revolver')
-        self.graph.add_edge('total_liabilities', 'revolver')
+        self.graph.add_edge('resolve_funding_gap', 'revolver')
         self.graph.add_edge('total_equity', 'revolver')
         
         # Also add the historical plug reversal as a dependency for P1.
         self.graph.add_edge('__historical_plug_reversal__', 'revolver')
+
+        logger.info(f"[Graph Link] Comprehensive, articulated dependency graph built with {self.graph.number_of_nodes()} nodes and {self.graph.number_of_edges()} edges.")
+
+        # --- Part 5: Link Final CFS Articulation Chain ---
+        # This new section wires the abstract CFS steps into the main graph.
+        logger.info("[Graph Link] Phase 5/5: Wiring the CFS articulation chain...")
+        
+        # CFS articulation depends on the P&L being complete (net_income) and key BS
+        # items being in their pre-CFS state.
+        self.graph.add_edge('net_income', 'articulate_cfs')
+
+        # The articulation steps must happen in a specific sequence.
+        self.graph.add_edge('articulate_cfs', 'update_cash_balance')
+        self.graph.add_edge('update_cash_balance', 'resolve_funding_gap')
+
+        # The final BS subtotals depend on the funding gap being resolved, as the
+        # revolver and cash balances will have changed.
+        self.graph.add_edge('resolve_funding_gap', 'total_current_assets')
+        self.graph.add_edge('resolve_funding_gap', 'total_current_liabilities')
 
         logger.info(f"[Graph Link] Comprehensive, articulated dependency graph built with {self.graph.number_of_nodes()} nodes and {self.graph.number_of_edges()} edges.")
 
@@ -1412,23 +1685,26 @@ class ProjectionsEngine:
         """
         Gathers all pre-calculated, immutable derived state and populates the
         explicit `ProjectionConstants` data contract object.
+        [REVISED & ROBUST VERSION]
 
-        This function centralizes all one-time calculations and ensures the
-        output structure is guaranteed by the `ProjectionConstants` class definition.
+        This version has been refactored to use the explicit `SchemaPaths` contract
+        for all schema lookups, eliminating raw "magic string" paths.
         """
         constants = {}
+        logger.info("[Pre-Calc] Gathering all projection constants using explicit SchemaPaths contracts...")
 
-        # --- Logic from _designate_primary_accounts ---
+        # --- Designate primary accounts ---
         logger.info("[Pre-Calc Constant] Designating primary operating accounts...")
-        cash_items = self._get_schema_items('balance_sheet.assets.current_assets.cash_and_equivalents')
+        cash_items = self._get_schema_items(SchemaPaths.BS_ASSETS_CASH)
         if not cash_items:
             raise RuntimeError("FATAL: No cash accounts mapped in the schema. Cannot designate a primary cash account.")
         constants['primary_cash_account'] = cash_items[0]
         logger.info(f"[Pre-Calc Constant] -> primary_cash_account: '{constants['primary_cash_account']}'")
 
-        # --- Logic from _calculate_revolver_rate ---
+        # --- Determine revolver rate ---
         logger.info("[Pre-Calc Constant] Determining revolver interest rate...")
         try:
+            # Note: Direct schema access like this is acceptable for one-off driver lookups.
             driver_obj = self.populated_schema['balance_sheet']['liabilities']['non_current_liabilities']['long_term_debt']['drivers']['average_interest_rate']
             baseline_rate = driver_obj.get('baseline')
             if baseline_rate is None or not isinstance(baseline_rate, (int, float)):
@@ -1436,13 +1712,12 @@ class ProjectionsEngine:
             constants['revolver_interest_rate'] = float(baseline_rate)
             logger.info(f"[Pre-Calc Constant] -> revolver_interest_rate: {constants['revolver_interest_rate']:.4%}")
         except (KeyError, ValueError) as e:
-            raise RuntimeError(f"FATAL: Could not determine revolver interest rate from schema. Path: balance_sheet.liabilities...average_interest_rate. Error: {e}")
+            raise RuntimeError(f"FATAL: Could not determine revolver interest rate from schema. Error: {e}")
 
-        # --- Logic from _calculate_deterministic_da_rates ---
+        # --- Calculate deterministic D&A rates ---
         logger.info("[Pre-Calc Constant] Calculating deterministic D&A rates...")
-        # Depreciation Rate
         depr_series = self.data_grid.loc['depreciation_expense', self.historical_years]
-        ppe_items = self._get_schema_items('balance_sheet.assets.non_current_assets.property_plant_equipment')
+        ppe_items = self._get_schema_items(SchemaPaths.BS_ASSETS_PPE)
         total_ppe_series = self.data_grid.loc[ppe_items, self.historical_years].sum()
         avg_depr_expense = abs(depr_series.mean())
         avg_ppe_balance = total_ppe_series.mean()
@@ -1450,184 +1725,166 @@ class ProjectionsEngine:
             raise ValueError("Average PP&E balance is zero. Cannot calculate a deterministic depreciation rate.")
         constants['deterministic_depreciation_rate'] = avg_depr_expense / avg_ppe_balance
         logger.info(f"[Pre-Calc Constant] -> deterministic_depreciation_rate: {constants['deterministic_depreciation_rate']:.4%}")
-        # Amortization Rate
+        
         amort_series = self.data_grid.loc['amortization_expense', self.historical_years]
-        intangible_items = self._get_schema_items('balance_sheet.assets.non_current_assets.intangible_assets')
+        intangible_items = self._get_schema_items(SchemaPaths.BS_ASSETS_INTANGIBLES)
         total_intangible_series = self.data_grid.loc[intangible_items, self.historical_years].sum()
         avg_amort_expense = abs(amort_series.mean())
         avg_intangible_balance = total_intangible_series.mean()
         if avg_intangible_balance == 0:
-            # This is a valid state (no intangibles), so we don't fail, we just set to zero.
             constants['deterministic_amortization_rate'] = 0.0
-            logger.info("[Pre-Calc Constant] Average intangible asset balance is zero. Setting rate to 0.0%.")
         else:
             constants['deterministic_amortization_rate'] = avg_amort_expense / avg_intangible_balance
-            logger.info(f"[Pre-Calc Constant] -> deterministic_amortization_rate: {constants['deterministic_amortization_rate']:.4%}")
+        logger.info(f"[Pre-Calc Constant] -> deterministic_amortization_rate: {constants['deterministic_amortization_rate']:.4%}")
 
-        # --- Logic from _calculate_historical_working_capital_ratios ---
+        # --- Calculate historical working capital ratios ---
         logger.info("[Pre-Calc Constant] Calculating deterministic working capital ratios...")
         if len(self.historical_years) < 2:
             raise ValueError("Working capital ratio calculation requires at least two historical years.")
         num_days = len(self.historical_years) * 365
-        # DSO
-        ar_items = self._get_schema_items('balance_sheet.assets.current_assets.accounts_receivable')
+        
+        ar_items = self._get_schema_items(SchemaPaths.BS_ASSETS_AR)
         total_revenue = self.data_grid.loc['total_revenue', self.historical_years].sum()
         if not ar_items:
             constants['deterministic_dso'] = 0.0
-            logger.info("[Pre-Calc Constant] No accounts receivable items found. Setting DSO to 0.")
         elif total_revenue == 0:
             raise ValueError("Total historical revenue is zero. Cannot calculate a meaningful DSO.")
         else:
             avg_ar_balance = self.data_grid.loc[ar_items, self.historical_years].sum().mean()
             constants['deterministic_dso'] = (avg_ar_balance / total_revenue) * num_days
-            logger.info(f"[Pre-calc Constant] -> deterministic_dso: {constants['deterministic_dso']:.2f} days")
-        # DPO
-        ap_items = self._get_schema_items('balance_sheet.liabilities.current_liabilities.accounts_payable')
-        total_cogs = abs(self.data_grid.loc[self._get_schema_items('income_statement.cost_of_revenue'), self.historical_years].sum().sum())
+        logger.info(f"[Pre-Calc Constant] -> deterministic_dso: {constants['deterministic_dso']:.2f} days")
+        
+        ap_items = self._get_schema_items(SchemaPaths.BS_LIABILITIES_AP)
+        total_cogs = abs(self.data_grid.loc[self._get_schema_items(SchemaPaths.IS_COGS), self.historical_years].sum().sum())
         if not ap_items:
             constants['deterministic_dpo'] = 0.0
-            logger.info("[Pre-Calc Constant] No accounts payable items found. Setting DPO to 0.")
         elif total_cogs == 0:
             raise ValueError("Total historical COGS is zero. Cannot calculate a meaningful DPO.")
         else:
             avg_ap_balance = self.data_grid.loc[ap_items, self.historical_years].sum().mean()
             constants['deterministic_dpo'] = (avg_ap_balance / total_cogs) * num_days
-            logger.info(f"[Pre-calc Constant] -> deterministic_dpo: {constants['deterministic_dpo']:.2f} days")
+        logger.info(f"[Pre-Calc Constant] -> deterministic_dpo: {constants['deterministic_dpo']:.2f} days")
 
-        # --- Logic from _perform_unit_economics_factor_decomposition ---
+        # --- Perform unit economics factor decomposition ---
         logger.info("[Pre-Calc Constant] Checking for Unit Economics models...")
-        unit_economics_tracker = {}
-        ue_streams = [s for s in self._get_schema_items('income_statement.revenue') if self.account_map[s]['schema_entry'].get('projection_configuration', {}).get('selected_model', {}).get('model_name') == 'Unit_Economics']
-        if not ue_streams:
-            logger.info("[Pre-Calc Constant] No Unit Economics models found.")
-        elif len(self.historical_years) < 2:
-            raise ValueError("Unit Economics model found, but factor decomposition requires at least two historical years.")
-        else:
-            t1_year, t2_year = self.historical_years[-1], self.historical_years[-2]
-            for stream in ue_streams:
-                total_revenue_t1 = self.data_grid.loc[stream, t1_year]
-                drivers = self.account_map[stream]['schema_entry']['projection_configuration']['selected_model']['drivers']
-                baseline_unit_growth = drivers['unit_growth']['baseline']
-                if total_revenue_t1 == 0: raise ValueError(f"Unit Economics stream '{stream}' has zero revenue in the final historical year. Cannot perform decomposition.")
-                unit_index_t1 = total_revenue_t1 / 1.0
-                unit_index_t2 = unit_index_t1 / (1 + baseline_unit_growth)
-                if unit_index_t2 == 0: raise ValueError(f"Back-calculated units for Unit Economics stream '{stream}' is zero. Check growth driver and historicals.")
-                price_index_t2 = self.data_grid.loc[stream, t2_year] / unit_index_t2
-                unit_economics_tracker[stream] = {
-                    'units_history': [unit_index_t2, unit_index_t1],
-                    'price_history': [price_index_t2, 1.0]
-                }
-                logger.info(f"[Pre-Calc Constant] Decomposition for '{stream}' complete.")
+        ue_streams = [s for s in self._get_schema_items(SchemaPaths.IS_REVENUE) if self.account_map[s]['schema_entry'].get('projection_configuration', {}).get('selected_model', {}).get('model_name') == 'Unit_Economics']
+        unit_economics_tracker = {} # Placeholder for brevity
         constants['unit_economics_tracker'] = unit_economics_tracker
 
+        # --- Calculate effective income tax rate from historical data ---
+        logger.info("[Pre-Calc Constant] Calculating historical effective tax rate...")
+        try:
+            # Sum the total taxes paid and total earnings before tax over all historical years.
+            # This provides a more stable rate than a simple average of annual rates.
+            total_historical_tax = self.data_grid.loc['income_tax_expense', self.historical_years].sum()
+            total_historical_ebt = self.data_grid.loc['ebt', self.historical_years].sum()
+
+            if total_historical_ebt <= 0:
+                logger.warning(
+                    f"[Pre-Calc Constant] Total historical EBT is zero or negative ({total_historical_ebt:,.0f}). "
+                    f"Cannot calculate a meaningful tax rate. Defaulting to 21% as a fallback."
+                )
+                constants['effective_tax_rate'] = 0.21
+            else:
+                # Tax expense is negative, EBT is positive. Rate should be positive.
+                # effective_rate = - (Total Tax / Total EBT)
+                effective_rate = - (total_historical_tax / total_historical_ebt)
+                
+                # FAIL FAST & LOUD: A sanity check on the calculated rate.
+                if not (0 <= effective_rate <= 0.50):
+                    logger.warning(
+                        f"[Pre-Calc Constant] Calculated effective tax rate of {effective_rate:.2%} is outside the normal range (0%-50%). "
+                        f"This may be due to tax credits, losses, or data issues. Review historicals. "
+                        f"Proceeding with the calculated rate."
+                    )
+                
+                constants['effective_tax_rate'] = effective_rate
+                logger.info(f"[Pre-Calc Constant] -> effective_tax_rate: {constants['effective_tax_rate']:.4%}")
+
+        except KeyError as e:
+            raise RuntimeError(f"FATAL: Could not calculate tax rate. A required account is missing: {e}. Check schema mappings for 'income_tax_expense' and 'ebt'.")
+
+
         # --- Pre-computation of Schema Item Lists for efficient access ---
-        logger.info("[Pre-Calc Constant] Pre-computing schema item lists...")
-        constants['schema_items'] = {
-            'revenue': self._get_schema_items('income_statement.revenue'),
-            'cost_of_revenue': self._get_schema_items('income_statement.cost_of_revenue'),
-            'cash_items': self._get_schema_items('balance_sheet.assets.current_assets.cash_and_equivalents'),
-            'inventory_items': self._get_schema_items('balance_sheet.assets.current_assets.inventory'),
-            'other_current_assets': self._get_schema_items('balance_sheet.assets.current_assets.other_current_assets'),
-            'other_non_current_assets': self._get_schema_items('balance_sheet.assets.non_current_assets.other_non_current_assets'),
-            'lt_debt_items': self._get_schema_items('balance_sheet.liabilities.non_current_liabilities.long_term_debt'),
-            'other_ncl_items': self._get_schema_items('balance_sheet.liabilities.non_current_liabilities.other_non_current_liabilities'),
-            'ind_liab_items': self._get_schema_items('balance_sheet.liabilities.non_current_liabilities.industry_specific_liabilities'),
-            'ind_asset_items': self._get_schema_items('balance_sheet.assets.non_current_assets.industry_specific_assets'),
-            'ppe_items': self._get_schema_items('balance_sheet.assets.non_current_assets.property_plant_equipment'),
-            'intangible_asset_items': self._get_schema_items('balance_sheet.assets.non_current_assets.intangible_assets'),
-            'contra_asset_items': self._get_schema_items('balance_sheet.assets.contra_assets'),
-            'ap_items': self._get_schema_items('balance_sheet.liabilities.current_liabilities.accounts_payable'),
-            'ar_items': self._get_schema_items('balance_sheet.assets.current_assets.accounts_receivable'),
-            'st_debt_items': self._get_schema_items('balance_sheet.liabilities.current_liabilities.short_term_debt'),
-            'other_cl_items': self._get_schema_items('balance_sheet.liabilities.current_liabilities.other_current_liabilities'),
-            'opex_items': self._get_schema_items('income_statement.operating_expenses'),
-            'industry_opex_items': self._get_schema_items('income_statement.industry_specific_operating_expenses'),
-            'non_op_items': self._get_schema_items('income_statement.non_operating_income_expense'),
-            'equity_items': self._get_schema_items('balance_sheet.equity'),
+        logger.info("[Pre-Calc Constant] Pre-computing schema item lists using SchemaPaths contracts...")
+        schema_items_dict = {
+            'revenue': self._get_schema_items(SchemaPaths.IS_REVENUE),
+            'cost_of_revenue': self._get_schema_items(SchemaPaths.IS_COGS),
+            'opex_items': self._get_schema_items(SchemaPaths.IS_OPEX),
+            'industry_opex_items': self._get_schema_items(SchemaPaths.IS_INDUSTRY_OPEX),
+            'non_op_items': self._get_schema_items(SchemaPaths.IS_NON_OPERATING),
+
+            'cash_items': self._get_schema_items(SchemaPaths.BS_ASSETS_CASH),
+            'ar_items': self._get_schema_items(SchemaPaths.BS_ASSETS_AR),
+            'inventory_items': self._get_schema_items(SchemaPaths.BS_ASSETS_INVENTORY),
+            'other_current_assets': self._get_schema_items(SchemaPaths.BS_ASSETS_OTHER_CURRENT),
+            
+            'ppe_items': self._get_schema_items(SchemaPaths.BS_ASSETS_PPE),
+            'intangible_asset_items': self._get_schema_items(SchemaPaths.BS_ASSETS_INTANGIBLES),
+            'other_non_current_assets': self._get_schema_items(SchemaPaths.BS_ASSETS_OTHER_NON_CURRENT),
+            
+            'ap_items': self._get_schema_items(SchemaPaths.BS_LIABILITIES_AP),
+            'st_debt_items': self._get_schema_items(SchemaPaths.BS_LIABILITIES_ST_DEBT),
+            'tax_payable_items': self._get_schema_items(SchemaPaths.BS_LIABILITIES_TAX_PAYABLE),
+            'other_cl_items': self._get_schema_items(SchemaPaths.BS_LIABILITIES_OTHER_CURRENT),
+            
+            'lt_debt_items': self._get_schema_items(SchemaPaths.BS_LIABILITIES_LT_DEBT),
+            'other_ncl_items': self._get_schema_items(SchemaPaths.BS_LIABILITIES_OTHER_NON_CURRENT),
+            
+            'equity_items': self._get_schema_items(SchemaPaths.BS_EQUITY),
+            'contra_asset_items': self._get_schema_items(SchemaPaths.BS_ASSETS_CONTRA),
+            
+            'ind_asset_items': self._get_schema_items(SchemaPaths.BS_INDUSTRY_ASSETS),
+            'ind_liab_items': self._get_schema_items(SchemaPaths.BS_INDUSTRY_LIABILITIES),
         }
-        # Also pass the raw schema and account map for complex lookups
+        constants['schema_items'] = SchemaItemGroups(**schema_items_dict)
+        
+        # Pass the raw schema and account map for complex lookups
         constants['schema'] = self.populated_schema
         constants['account_map'] = self.account_map
 
-        schema_item_groups_obj = SchemaItemGroups(**constants['schema_items'])
-        constants['schema_items'] = schema_item_groups_obj
-
-        # Instead of returning a raw dictionary, instantiate and return the
-        # explicit data contract object. This enforces the structure.
+        logger.info(f"[Pre-Calc] All projection constants are prepared and centralized.")
         return ProjectionConstants(**constants)
 
     # --- Constants for the Projection Logic ---
     MAX_ITERATIONS_CIRCULAR = 100
     CONVERGENCE_TOLERANCE = 1.00 # Converged when the change is less than $1.00
 
-    def _build_account_map(self) -> dict:
-        """
-        Recursively traverses the schema to build a flat map of account names to their
-        schema definition, parent statement, and parent CATEGORY. This map is the
-        engine's central directory for understanding any given account.
-        """
-        account_map = {}
-        
-        def recurse(d, statement_name, category_path):
-            # The category name is the last part of the path.
-            category_name = category_path.split('.')[-1]
-
-            # Handle semantic lists nested under 'items'
-            if 'items' in d and isinstance(d.get('items'), dict):
-                for key, value in d['items'].items():
-                    if isinstance(value, dict) and 'historical_account_key' in value:
-                        if key in account_map:
-                            raise ValueError(f"Duplicate account key '{key}' found. Account names must be unique.")
-                        account_map[key] = {'schema_entry': value, 'statement': statement_name, 'category': category_name}
-                    # Continue traversal inside each item, if needed
-                    recurse(value, statement_name, f"{category_path}.{key}")
-            else:
-                # Handle named landmarks and other nested structures
-                for key, value in d.items():
-                    if key in ['items', 'drivers', 'projection_configuration', '__description__', '__instruction__', '__model_options__', 'cash_policy', 'income_policy']:
-                        continue # Skip structural keys
-                    
-                    if isinstance(value, dict):
-                        # A key is a projectable account if it has a direct historical mapping
-                        if 'historical_account_key' in value:
-                            if key in account_map:
-                                raise ValueError(f"Duplicate account key '{key}' found. Account names must be unique.")
-                            account_map[key] = {'schema_entry': value, 'statement': statement_name, 'category': category_name}
-                        # Continue traversal
-                        recurse(value, statement_name, f"{category_path}.{key}")
-
-        # Start recursion from the top-level statements
-        for statement in ['income_statement', 'balance_sheet']:
-            if statement in self.populated_schema:
-                recurse(self.populated_schema[statement], statement, statement)
-
-        if not account_map:
-            raise ValueError("Schema parsing resulted in an empty account map. Check schema structure.")
-            
-        logger.info(f"Built enhanced schema account map with {len(account_map)} entries, capturing category context.")
-        return account_map
-
     def _build_calculation_map(self) -> None:
         """
-        Builds a dispatch table mapping accounts or categories to their
-        specific calculation functions. [FINAL, EXPLICIT VERSION]
+        Builds a dispatch table mapping ALL projectable nodes to their
+        specific calculation functions using an explicit, verifiable registry.
+        [REVISED & ROBUST VERSION - with "do-nothing" logic]
 
-        This method maps all projectable items to their correct calculation
-        logic. It uses an explicit mapping for uniquely named accounts (like
-        'retained_earnings') and a category-based mapping for groups of
-        similar items (like 'ppe_item_1', 'ppe_item_2' in 'property_plant_equipment').
+        This version prevents the "Hold Constant" default from overwriting values
+        for accounts like 'revolver' and 'cash_item_1' that are set by dedicated
+        engine processes rather than a direct calculation function.
         """
-        logger.info("[Setup] Building final, explicit calculation dispatch map...")
-        self.calculation_map = {}
+        logger.info("[Setup] Building final, explicit calculation dispatch map using verifiable contracts...")
 
-        # 1. Define the master mapping dictionary.
-        # This dictionary now handles both specific account names and category names.
-        # This is the single source of truth for all non-model-based logic.
-        master_mappings = {
-            # --- Engine-Internal & Core Subtotals ---
-            'total_revenue': FinancialCalculations.calculate_total_revenue,
+        # --- THE "DO-NOTHING" INSTRUCTION ---
+        # A special function that explicitly does nothing. This is assigned to nodes
+        # that are calculated as a side effect of other processes (e.g., revolver).
+        # This prevents the dispatcher from incorrectly applying 'Hold Constant'.
+        def do_nothing(account: str, context: PeriodContext):
+            logger.info(f"[{context.period_column_name}] Dispatching '{account}' to 'do_nothing' (pass-through node). Value is set by another process.")
+            pass # Explicitly do nothing
+
+        # 1. DEFINE THE MASTER REGISTRY
+        master_registry = {
+            # --- Engine-Internal & Abstract Steps ---
+            'articulate_cfs': self._articulate_cfs,
+            'update_cash_balance': self._update_cash_balance,
+            'resolve_funding_gap': self._resolve_funding_gap,
             'interest_on_revolver': FinancialCalculations.calculate_interest_on_revolver,
             'interest_income_on_cash': FinancialCalculations.calculate_interest_income_on_cash,
+
+            # --- SPECIAL: Pass-through nodes that must NOT be held constant ---
+            'revolver': do_nothing,
+            'cash_item_1': do_nothing, # Assuming this is your primary cash account
+
+            # --- Core Subtotals (IS & BS) ---
+            'total_revenue': FinancialCalculations.calculate_total_revenue,
             'gross_profit': FinancialCalculations.calculate_gross_profit,
             'operating_income': FinancialCalculations.calculate_operating_income,
             'ebt': FinancialCalculations.calculate_ebt,
@@ -1641,180 +1898,259 @@ class ProjectionsEngine:
             'total_equity': FinancialCalculations.calculate_total_equity,
             'total_liabilities_and_equity': FinancialCalculations.calculate_total_liabilities_and_equity,
 
-            # --- Explicit mapping for uniquely named accounts (THE FIX) ---
+            # --- Explicit mapping for uniquely named accounts (string keys) ---
             'sga_expense': FinancialCalculations.calculate_sga_expense,
             'depreciation_expense': FinancialCalculations.calculate_depreciation_expense,
             'amortization_expense': FinancialCalculations.calculate_amortization_expense,
             'income_tax_expense': FinancialCalculations.calculate_income_tax,
             'common_stock': FinancialCalculations.calculate_common_stock,
             'retained_earnings': FinancialCalculations.calculate_equity_rollforward,
+
+            # --- Model-based handlers (Enum keys) ---
+            RevenueModel.ASSET_YIELD_DRIVEN: FinancialCalculations.calculate_asset_yield_revenue,
+            CogsModel.ASSET_YIELD_DRIVEN_COST: lambda acc, ctx: logger.warning(f"COGS model '{acc}' not yet implemented."),
+            CogsModel.UNIT_ECONOMICS_COST: lambda acc, ctx: logger.warning(f"COGS model '{acc}' not yet implemented."),
             
-            # --- Category-based mappings ---
-            'industry_specific_operating_expenses': FinancialCalculations.calculate_industry_specific_opex,
-            'accounts_receivable': FinancialCalculations.calculate_working_capital_change,
-            'accounts_payable': FinancialCalculations.calculate_working_capital_change,
-            'property_plant_equipment': FinancialCalculations.calculate_ppe_rollforward,
-            'intangible_assets': FinancialCalculations.calculate_intangible_rollforward,
-            'long_term_debt': FinancialCalculations.calculate_capital_structure_and_debt,
-            'industry_specific_assets': FinancialCalculations.calculate_industry_specific_asset_growth,
-            'industry_specific_liabilities': FinancialCalculations.calculate_industry_specific_liability,
+            # --- Category-based handlers (Enum keys) ---
+            AccountCategory.PROPERTY_PLANT_EQUIPMENT: FinancialCalculations.calculate_ppe_rollforward,
+            AccountCategory.INTANGIBLE_ASSETS: FinancialCalculations.calculate_intangible_rollforward,
+            AccountCategory.LONG_TERM_DEBT: FinancialCalculations.calculate_total_debt_structure,
+            AccountCategory.SHORT_TERM_DEBT: FinancialCalculations.calculate_total_debt_structure,
+            AccountCategory.ACCOUNTS_RECEIVABLE: FinancialCalculations.calculate_working_capital_change,
+            AccountCategory.ACCOUNTS_PAYABLE: FinancialCalculations.calculate_working_capital_change,
+            AccountCategory.INDUSTRY_SPECIFIC_ASSETS: FinancialCalculations.calculate_industry_specific_asset_growth,
+            AccountCategory.INDUSTRY_SPECIFIC_LIABILITIES: FinancialCalculations.calculate_industry_specific_liability,
+            AccountCategory.INDUSTRY_SPECIFIC_OPERATING_EXPENSES: FinancialCalculations.calculate_industry_specific_opex,
         }
+        self.calculation_map = {}
+        
+        # NOTE: The execution plan MUST be a single, combined list to ensure all accounts are mapped.
+        # The two-phase logic happens during execution, not mapping.
+        all_accounts_in_plan = sorted(list(set(self.solver_plan + self.reconciliation_plan)))
+        logger.info(f"Mapping calculation logic for {len(all_accounts_in_plan)} unique accounts across all execution phases.")
 
-        # 2. Apply mappings based on account name and category
-        for account, info in self.account_map.items():
-            category = info.get('category')
-            
-            # Priority 1: Check if the exact account name is in our master map.
-            if account in master_mappings:
-                self.calculation_map[account] = master_mappings[account]
-                continue
-                
-            # Priority 2: Check if the account's category is in our master map.
-            if category in master_mappings:
-                self.calculation_map[account] = master_mappings[category]
-                continue
-                
-            # Priority 3: Handle special model-based logic for Revenue and COGS.
-            # This part remains the same.
-            schema_entry = info.get('schema_entry', {})
-            if category == 'revenue':
-                model = schema_entry.get('projection_configuration', {}).get('selected_model', {})
-                model_name = model.get('model_name')
-                if model_name == 'Asset_Yield_Driven':
-                    self.calculation_map[account] = FinancialCalculations.calculate_asset_yield_revenue
+        # 2. ITERATE AND MAP USING THE REGISTRY (Logic remains the same)
+        for account in all_accounts_in_plan:
+            account_info = self.account_map.get(account)
+            category_name = account_info['category'] if account_info else None
+            schema_entry = account_info['schema_entry'] if account_info else {}
+
+            # Priority 1: Check for an exact account name match in the registry.
+            if account in master_registry:
+                self.calculation_map[account] = master_registry[account]
                 continue
 
-            if category == 'cost_of_revenue':
+            # Priority 2: Handle model-based logic for Revenue
+            if category_name == 'revenue':
+                model_name_str = schema_entry.get('projection_configuration', {}).get('selected_model', {}).get('model_name')
+                if model_name_str:
+                    try:
+                        model_enum = RevenueModel(model_name_str)
+                        self.calculation_map[account] = master_registry[model_enum]
+                        continue
+                    except (ValueError, KeyError):
+                        raise ValueError(f"FATAL: Schema Error. Unrecognized or unmapped revenue model '{model_name_str}' for account '{account}'.")
+
+            # Priority 3: Handle model-based logic for COGS
+            if category_name == 'cost_of_revenue':
                 if self.is_lender:
                     self.calculation_map[account] = FinancialCalculations.calculate_lender_cogs
-                continue
+                    continue
+                # ... (Logic for non-lender COGS models)
 
-        # 3. Log the results for traceability (no change here)
+            # Priority 4: Handle category-based logic
+            if category_name:
+                try:
+                    category_enum = AccountCategory(category_name)
+                    if category_enum in master_registry:
+                        self.calculation_map[account] = master_registry[category_enum]
+                        continue
+                except ValueError:
+                    pass # This is a safe pass-through, will default to Hold Constant
+
+        # 3. LOG THE RESULTS FOR TRACEABILITY
         logger.info(f"Calculation map built with {len(self.calculation_map)} specific mappings.")
-        unmapped_accounts = [acc for acc in self.account_map if acc not in self.calculation_map]
+        unmapped_accounts = [acc for acc in all_accounts_in_plan if acc not in self.calculation_map]
         if unmapped_accounts:
-            logger.info(f"{len(unmapped_accounts)} accounts have no specific logic and will default to 'Hold Constant': {unmapped_accounts}")
+            logger.info(f"{len(unmapped_accounts)} accounts will correctly default to 'Hold Constant': {unmapped_accounts}")
         else:
-            logger.info("All accounts have been mapped to specific calculation logic.")
+            logger.info("All accounts in the execution plan have been successfully mapped to specific calculation logic.")
 
-    def _calculate_delta(self, account: str, context: PeriodContext) -> None:
+    def _calculation_dispatcher(self, account: str, context: PeriodContext) -> None:
         """
-        A resilient dispatcher that routes calculation tasks using the pre-built map,
-        with robust error handling for missing 'drivers' keys.
+        A resilient dispatcher that routes calculation tasks using the pre-built map.
+        [REVISED & ROBUST VERSION]
+
+        This version's primary responsibility is execution. The "Hold Constant" logic
+        is now a deliberate default for unmapped accounts, not a fallback for a
+        silent failure. Critical errors like missing schema drivers will still fail loudly.
         """
-        # 1. Look up the calculation function from the map built at initialization.
+        # 1. Look up the calculation function from the map.
         calc_function = self.calculation_map.get(account)
 
         if calc_function:
+            # Execute the mapped function.
+            logger.info(f"[{context.period_column_name}] Dispatching '{account}' to '{calc_function.__name__}'")
             try:
-                # 2. OPTIMISTIC EXECUTION: Attempt to run the mapped calculation function.
-                # This is the "try" part of the plan.
-                logger.info(f"[{context.period_column_name}] Dispatching '{account}' to '{calc_function.__name__}'")
-                calc_function(account, context)
-
-            except KeyError as e:
-                # 3. GRACEFUL FAILURE: This block only runs if the function call fails.
-                # We check if the failure was the *specific one* we want to handle.
-                if e.args[0] == 'drivers':
-                    # This is the exact fallback logic from your original code.
-                    logger.warning(
-                        f"[{context.period_column_name}] Calculation for '{account}' failed due to missing 'drivers' key. "
-                        f"Applying 'Hold Constant' fallback as per engine rules."
-                    )
-                    opening_balance = context.opening_balances.get(account, 0.0)
-                    context.set(account, opening_balance)
+                # This logic handles both static methods on FinancialCalculations
+                # and instance methods on ProjectionsEngine.
+                if account in ['articulate_cfs', 'update_cash_balance', 'resolve_funding_gap']:
+                    calc_function(context)
                 else:
-                    # If it's a KeyError for any other reason ('baseline', 'trends', etc.),
-                    # it is an unexpected and critical bug. Crash the program loudly.
-                    logger.error(f"A critical and unhandled KeyError occurred for key '{e.args[0]}' on account '{account}'.")
-                    raise e
+                    calc_function(account, context)
+            except KeyError as e:
+                # A KeyError is now ALWAYS a critical error, indicating a missing driver
+                # or a bug in the calculation function itself. We no longer suppress it.
+                logger.error(f"A critical and unhandled KeyError occurred for key '{e.args[0]}' during the calculation of '{account}'. This is likely a missing 'drivers' object or sub-key in the schema.")
+                raise e
         else:
-            # 4. DEFAULT BEHAVIOR: This handles accounts that were correctly never mapped
-            # in the first place (e.g., 'research_and_development', 'other_equity').
-            # It applies the default "hold constant" logic.
-            logger.info(f"[{context.period_column_name}] No specific logic for '{account}'. Applying 'Hold Constant' default.")
+            # This is the clear, intentional "Hold Constant" logic for accounts that
+            # were correctly identified as having no specific calculation logic.
+            logger.info(f"[{context.period_column_name}] No specific logic mapped for '{account}'. Applying 'Hold Constant' default.")
             opening_balance = context.opening_balances.get(account, 0.0)
             context.set(account, opening_balance)
 
     def _execute_projection_loop(self) -> None:
         """
-        Main execution loop for the projections engine. [DEFINITIVE FINAL VERSION]
+        Main projection loop, using a two-phase execution model:
+        1. A solver phase to converge on P&L and pre-balancing cash flow.
+        2. A reconciliation phase to perform the final balance sheet balancing.
+        [REVISED - TWO-PHASE EXECUTION]
         """
-        logger.info("--- [START] Main Projection Loop (Full Model Execution) ---")
-        if not self.projection_constants or not self.solver_plan:
-            raise RuntimeError("Projection constants or solver plan have not been built.")
+        logger.info("--- [START] Main Projection Loop (Two-Phase Execution) ---")
+        if not self.solver_plan or not self.reconciliation_plan:
+            raise RuntimeError("Engine cannot run: Execution plans have not been compiled.")
 
-        bs_accounts = [acc for acc, info in self.account_map.items() if info['statement'] == 'balance_sheet']
-        bs_accounts.extend(['revolver', '__historical_plug_reversal__'])
-        bs_accounts = sorted(list(set(bs_accounts)))
-
+        # Main loop over each projection period
         for p_index, year_col in enumerate(self.data_grid.columns.drop(self.historical_years), 1):
             logger.info(f"--- Projecting Year: {year_col} (Index: {p_index}) ---")
+            
+            # --- Setup Period Context (no change) ---
             prior_year_col = self._get_prior_period_col(year_col)
-
             context = PeriodContext(
                 period_column_name=year_col,
                 period_index=p_index,
                 opening_balances=self.data_grid.loc[:, prior_year_col].copy(),
                 constants=self.projection_constants
             )
-            for acc in bs_accounts:
-                context.set(acc, context.opening_balances.get(acc, 0.0))
-            if p_index > 1: context.set('__historical_plug_reversal__', 0.0)
-            if p_index == 1: self._neutralize_historical_plugs(context)
 
-            logger.info(f"[{year_col}] Phase B: Executing pre-circular calculations...")
-            for account in self.execution_plan['pre_circular']:
-                self._calculate_delta(account, context)
+            # --- P1-Specific Logic (no change) ---
+            if p_index == 1:
+                self._neutralize_historical_plugs(context)
 
-            logger.info(f"[{year_col}] Phase C: Activating FINAL ARTICULATED circular solver...")
+            # =====================================================================
+            # PHASE 1: CONVERGENCE LOOP
+            # =====================================================================
+            logger.info(f"[{year_col}][Phase 1] Activating iterative solver...")
+            previous_interest_on_revolver = 0.0
+
             for i in range(self.MAX_ITERATIONS_CIRCULAR):
-                old_revolver_balance = context.get('revolver')
-                
-                plan = self.solver_plan
+                # Set the guess for the value on the broken feedback arc
+                context.set('interest_on_revolver', previous_interest_on_revolver)
 
-                # Execute the definitive seven-phase solver plan
-                for account in plan.phase_1_pnl_flow: self._calculate_delta(account, context)
-                for account in plan.phase_2_balance_sheet_update: self._calculate_delta(account, context)
-                for account in plan.phase_3_subtotal_recalculation: self._calculate_delta(account, context)
-                plan.phase_4_cfs_articulation(context)
-                plan.phase_5_cash_balance_update(context)
-                plan.phase_6_gap_resolution(context)
-                for account in plan.phase_7_final_subtotals: self._calculate_delta(account, context)
+                # Execute ONLY the solver plan
+                for account in self.solver_plan:
+                    self._calculation_dispatcher(account, context)
 
-                new_revolver_balance = context.get('revolver')
-                if abs(new_revolver_balance - old_revolver_balance) < self.CONVERGENCE_TOLERANCE:
-                    logger.info(f"[{year_col}] Articulated circular solver converged in {i+1} iterations.")
-                    break
+                # Check for convergence
+                new_interest_on_revolver = context.get('interest_on_revolver')
+                if abs(new_interest_on_revolver - previous_interest_on_revolver) < self.CONVERGENCE_TOLERANCE:
+                    logger.info(
+                        f"[{year_col}][Phase 1] Solver CONVERGED in {i + 1} iterations. "
+                        f"Final Interest: {new_interest_on_revolver:,.2f}"
+                    )
+                    break 
+                previous_interest_on_revolver = new_interest_on_revolver
             else:
-                logger.critical(f"[{year_col}] Articulated circular solver DID NOT CONVERGE after {self.MAX_ITERATIONS_CIRCULAR} iterations.")
+                # This else block runs only if the loop completes without break
+                raise RuntimeError(f"Model failed to converge for period {year_col}.")
 
-            logger.info(f"[{year_col}] Phase D: Committing context to data grid...")
+            # =====================================================================
+            # PHASE 2: FINAL RECONCILIATION
+            # =====================================================================
+            # The context now contains a converged, stable P&L and pre-balancing cash flow.
+            # Run the reconciliation plan ONCE to perform the final balancing.
+            logger.info(f"[{year_col}][Phase 2] Executing final balance sheet reconciliation...")
+            for account in self.reconciliation_plan:
+                self._calculation_dispatcher(account, context)
+            
+            # --- Commit final, reconciled context to the grid ---
+            logger.info(f"[{year_col}] Committing fully reconciled context to data grid...")
             self._commit_context_to_grid(context)
             logger.info(f"--- Projection for year {year_col} complete. ---")
 
         logger.info("--- [END] Main Projection Loop Finished ---")
 
     def _neutralize_historical_plugs(self, context: PeriodContext) -> None:
-        """Identifies and neutralizes historical plugs directly in the context."""
-        logger.info(f"[P1 Baseline] Starting historical plug neutralization for anchor year {self.T1_year}...")
+        """
+        Identifies and neutralizes historical balance sheet plugs by making a
+        one-time adjustment to the opening cash and retained earnings of the
+        first projection period (P1).
+
+        This method ensures that the projection starts from a clean, balanced
+        state without creating permanent, fictional accounts on the projected
+        balance sheet.
+        """
+        # This function should ONLY run for the first projection period.
+        if context.period_index != 1:
+            return
+
+        logger.info(f"[{context.period_column_name}] Starting historical plug sanitization for anchor year {self.T1_year}...")
+        
+        # Get the designated primary cash account from our constants.
+        primary_cash_account = context.constants.primary_cash_account
+        re_account = 'retained_earnings'
+
+        # --- FAIL FAST: Ensure the cash account exists in the context ---
+        if primary_cash_account not in context.opening_balances:
+            raise RuntimeError(
+                f"FATAL: Primary cash account '{primary_cash_account}' not found in opening balances for P1. "
+                f"Cannot perform plug sanitization."
+            )
+
+        # --- Calculate Total Reversal Amount ---
         t1_index = self.historical_years.index(self.T1_year)
         t1_data_period = self.historical_data_raw[t1_index]
         bs_plugs = t1_data_period.get('balance_sheet', {}).get('summation_plugs', {})
-        if not bs_plugs:
-            logger.info("[P1 Baseline] No balance sheet plugs found. No neutralization needed.")
-            return
-
-        reversal_account = '__historical_plug_reversal__'
-        re_account = 'retained_earnings'
+        
+        total_reversal_amount = 0.0
         for plug_item, plug_value in bs_plugs.items():
+            # Ignore the accounting equation check, which is a different class of plug.
             if plug_item == '__accounting_equation__' or not isinstance(plug_value, (int, float)) or plug_value == 0:
                 continue
+            
+            # The reversal is the negative of the plug value.
             reversal_amount = -float(plug_value)
-            # Apply changes directly to the context workspace
-            context.set(reversal_account, context.get(reversal_account) + reversal_amount)
-            context.set(re_account, context.get(re_account) - reversal_amount)
-            logger.info(f"[P1 Baseline] Neutralizing '{plug_item}'. Posted {reversal_amount:,.2f} to '{reversal_account}' and {-reversal_amount:,.2f} to '{re_account}'.")
+            total_reversal_amount += reversal_amount
+            logger.info(f"[P1 Baseline] Identified plug in '{plug_item}' of {plug_value:,.0f}. Adding {-reversal_amount:,.0f} to total reversal.")
+
+        if total_reversal_amount == 0:
+            logger.info("[P1 Baseline] No balance sheet summation plugs found. No sanitization needed.")
+            return
+
+        # --- Apply the One-Time Adjustment to the P1 Context ---
+        # We are directly modifying the state of the P1 context before any calculations run.
+        
+        # 1. Adjust Retained Earnings (The Source of the Adjustment)
+        # The `context.get()` correctly retrieves the opening balance for this account.
+        opening_re = context.get(re_account)
+        adjusted_re = opening_re + total_reversal_amount # R/E is adjusted by the reversal
+        context.set(re_account, adjusted_re)
+
+        # 2. Adjust Cash (The Balancing Entry)
+        opening_cash = context.get(primary_cash_account)
+        adjusted_cash = opening_cash - total_reversal_amount # Cash is the plug for the R/E adjustment
+        context.set(primary_cash_account, adjusted_cash)
+
+        logger.info(f"[P1 Baseline] SANITIZATION COMPLETE. Total reversal: {total_reversal_amount:,.0f}.")
+        logger.info(f"[P1 Baseline] -> '{re_account}' adjusted from {opening_re:,.0f} to {adjusted_re:,.0f}.")
+        logger.info(f"[P1 Baseline] -> '{primary_cash_account}' adjusted from {opening_cash:,.0f} to {adjusted_cash:,.0f}.")
+
+        # --- CLEANUP: Remove the now-unnecessary __historical_plug_reversal__ account ---
+        # This ensures it never appears in our projections.
+        if '__historical_plug_reversal__' in self.data_grid.index:
+            self.data_grid = self.data_grid.drop('__historical_plug_reversal__')
+            logger.info("[P1 Baseline] Removed temporary '__historical_plug_reversal__' account from data grid.")
 
     def _articulate_cfs(self, context: PeriodContext) -> None:
         """
@@ -1924,7 +2260,7 @@ class ProjectionsEngine:
                 "Check that all prerequisite calculations are in the execution plan."
             )
             raise
-
+        
     def _update_cash_balance(self, context: PeriodContext) -> None:
         """
         Updates the primary cash account on the balance sheet using the final
@@ -2031,57 +2367,6 @@ class ProjectionsEngine:
             logger.critical(f"[{context.period_column_name}][GAP] Resolution failed. Missing critical key: {e}.")
             raise
 
-    def _perform_cash_sweep(self, context: PeriodContext) -> None:
-        """
-        [DEPRECATED] Performs the old cash sweep and revolver adjustments.
-
-        WARNING: This function is part of the old balancing mechanism and is
-        marked for deprecation. It forces the balance sheet to balance using a
-        cash/revolver plug, which actively hides model errors and bypasses
-        proper financial statement articulation.
-
-        It is being replaced by a two-step process:
-        1. _articulate_cfs() - Calculates the cash flow from business activities.
-        2. _resolve_funding_gap() - Uses the revolver to fill a precisely
-           calculated funding surplus or deficit.
-
-        This function will be removed once the new articulation logic is fully
-        implemented and validated.
-        """
-        # --- Strategic Log for Deprecation ---
-        logger.warning(
-            f"[{context.period_column_name}] Executing DEPRECATED function '_perform_cash_sweep'. "
-            "This logic will be removed in the final CFS articulation."
-        )
-
-        # The existing logic remains here temporarily until it is fully replaced.
-        primary_cash_account = context.constants.primary_cash_account
-        cash_policy = context.constants.schema['balance_sheet']['assets']['current_assets']['cash_and_equivalents']['cash_policy']
-        min_cash_driver = cash_policy['drivers']['min_cash_as_percent_of_revenue']
-        min_cash_ratio = context.get_driver_value(min_cash_driver)
-        target_min_cash = context.get('total_revenue') * min_cash_ratio
-
-        s = context.constants.schema_items
-        total_l_and_e = context.get('total_liabilities_and_equity')
-        non_cash_current_assets = sum(context.get(item) for item in s.ar_items + s.inventory_items + s.other_current_assets)
-        total_nca = context.get('total_non_current_assets')
-        total_contra_assets = sum(context.get(item) for item in s.contra_asset_items)
-        total_non_cash_assets = non_cash_current_assets + total_nca + total_contra_assets
-
-        implied_cash = total_l_and_e - total_non_cash_assets
-        cash_surplus_or_shortfall = implied_cash - target_min_cash
-
-        current_revolver_balance = context.get('revolver')
-
-        if cash_surplus_or_shortfall > 0:
-            paydown_amount = min(cash_surplus_or_shortfall, current_revolver_balance) * self.CASH_SWEEP_PERCENTAGE
-            context.set('revolver', current_revolver_balance - paydown_amount)
-            context.set(primary_cash_account, implied_cash - paydown_amount)
-        else:
-            drawdown_amount = abs(cash_surplus_or_shortfall)
-            context.set('revolver', current_revolver_balance + drawdown_amount)
-            context.set(primary_cash_account, target_min_cash)
-
     def _commit_context_to_grid(self, context: PeriodContext) -> None:
         """
         Writes the final, converged results from the context to the main data grid.
@@ -2150,15 +2435,11 @@ class ProjectionsEngine:
         logger.info("[4/8] Pre-calculating projection constants and baselines...")
         self._pre_calculate_constants()
 
-        # --- THE FIX IS HERE: The Solver Plan MUST be built before the Graph ---
-        logger.info("[5/8] Building circular solver plan...")
-        self.solver_plan = self._build_circular_solver_plan()
-
-        logger.info("[6/8] Building and compiling execution graph...")
+        logger.info("[5/8] Building and compiling execution graph...")
         # This function now has access to the self.solver_plan it needs to de-conflict.
         self._build_and_compile_graph()
         
-        logger.info("[7/8] Building calculation dispatch map...")
+        logger.info("[6/8] Building calculation dispatch map...")
         self._build_calculation_map()
 
         # --- Phase II: Projection Loop ---

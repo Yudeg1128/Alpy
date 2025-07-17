@@ -50,7 +50,7 @@
                   "model_name": "Asset_Yield_Driven",
                   "is_lender": null,
                   "target_asset_account": null,
-                  "driver": {
+                  "drivers": {
                     "asset_yield": {
                       "baseline": 0.0,
                       "justification": "Rationale for the asset yield, referencing historical yield, interest rates, or portfolio composition.",
@@ -92,7 +92,7 @@
                   "model_name": "Asset_Yield_Driven_Cost",
                   "target_asset_account": null,
                   "is_lender": null,
-                  "driver": {
+                  "drivers": {
                     "cost_rate_on_asset": {
                       "baseline": 0.0,
                       "justification": "Rationale for the cost rate, e.g., 'This is the depreciation rate based on the asset's useful life.'",
@@ -138,7 +138,7 @@
       "items": {
         "industry_specific_operating_expense_1": {
           "historical_account_key": null,
-          "driver": {
+          "drivers": {
             "industry_specific_operating_expense_as_percent_of_revenue": {
               "baseline": 0.0,
               "justification": null,
