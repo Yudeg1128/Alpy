@@ -167,7 +167,14 @@
       }
     },
     "income_tax_expense": {
-      "historical_account_key": null
+      "historical_account_key": null,
+      "drivers": {
+        "income_tax_expense_as_percent_of_ebt": {
+          "baseline": 0.0,
+          "justification": null,
+          "trends": { "short_term": 0.0, "medium_term": 0.0, "terminal": 0.0 }
+        }
+      }
     },
     "subtotals_income_statement": {
       "__description__": "These are key subtotals. The engine calculates them, but the LLM must map the historical values for reconciliation and display.",
@@ -360,7 +367,7 @@
           }
         }
       },
-      "industry_specific_liabilities": {
+      " ": {
         "items": {
           "industry_specific_liability_1": { 
             "historical_account_key": null,           
@@ -371,9 +378,11 @@
         } 
       },
       "industry_specific_subtotals": {
+        "__description__": "A generic category for significant assets or liabilities or balance sheet subtotals that are specific to an industry model and do not fit into standard universal categories. This signals to the engine that they may have unique projection logic. Use the summation_of key to define the components as historical_account_key.",
         "items": {
           "industry_specific_subtotal_1": {
-            "historical_account_key": null
+            "historical_account_key": null,
+            "summation_of": []
           }
         }
       }      

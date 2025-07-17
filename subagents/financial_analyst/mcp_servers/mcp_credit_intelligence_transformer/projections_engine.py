@@ -66,10 +66,18 @@ class AccountCategory(Enum):
     """
     ACCOUNTS_RECEIVABLE = "accounts_receivable"
     ACCOUNTS_PAYABLE = "accounts_payable"
+    INVENTORY = "inventory"
+    TAX_PAYABLES = "tax_payables"
     PROPERTY_PLANT_EQUIPMENT = "property_plant_equipment"
     INTANGIBLE_ASSETS = "intangible_assets"
+    CONTRA_ASSETS = "contra_assets"
+    INDUSTRY_SPECIFIC_SUBTOTALS = "industry_specific_subtotals"
     LONG_TERM_DEBT = "long_term_debt"
     SHORT_TERM_DEBT = "short_term_debt"
+    OTHER_CURRENT_ASSETS = "other_current_assets"
+    OTHER_NON_CURRENT_ASSETS = "other_non_current_assets"
+    OTHER_CURRENT_LIABILITIES = "other_current_liabilities"
+    OTHER_NON_CURRENT_LIABILITIES = "other_non_current_liabilities"
     INDUSTRY_SPECIFIC_OPERATING_EXPENSES = "industry_specific_operating_expenses"
     INDUSTRY_SPECIFIC_ASSETS = "industry_specific_assets"
     INDUSTRY_SPECIFIC_LIABILITIES = "industry_specific_liabilities"
@@ -139,6 +147,7 @@ class SchemaPaths:
     # --- Industry-Specific BS Paths ---
     BS_INDUSTRY_ASSETS = "balance_sheet.industry_specific_items.industry_specific_assets"
     BS_INDUSTRY_LIABILITIES = "balance_sheet.industry_specific_items.industry_specific_liabilities"
+    BS_INDUSTRY_SUBTOTALS = "balance_sheet.industry_specific_items.industry_specific_subtotals"
 
     contracts_logger.info("--- [Contracts] Schema path contracts defined. ---")
 
@@ -175,6 +184,9 @@ class CashFlowStatement:
     change_in_other_current_assets: float = 0.0
     change_in_accounts_payable: float = 0.0
     change_in_other_current_liabilities: float = 0.0
+
+    # This is calculated based on prior period's tax expense. It's a cash outflow.
+    cash_taxes_paid: float = 0.0
 
     # Subtotal for the CFO section.
     cash_from_operations: float = 0.0
@@ -267,8 +279,11 @@ class ProjectionConstants:
     deterministic_depreciation_rate: float
     deterministic_amortization_rate: float
     deterministic_dso: float
+    deterministic_dio: float
     deterministic_dpo: float
-    effective_tax_rate: float
+    avg_historical_revenue_growth: float
+    avg_historical_op_cost_growth: float
+    avg_historical_asset_growth: float
     primary_cash_account: str
     revolver_interest_rate: float
     unit_economics_tracker: Dict[str, Any]
@@ -442,26 +457,173 @@ class FinancialCalculations:
     # REVENUE & COGS
     # =====================================================================
     @staticmethod
+    def calculate_unit_economics_revenue(account: str, context: PeriodContext) -> None:
+        """
+        Calculates revenue for a Unit_Economics model by applying growth rates
+        for volume and price to the prior period's revenue.
+        This method is designed to be robust and fail loudly if drivers are missing.
+        """
+        logger.info(f"[{context.period_column_name}][{account}] Calculating Unit Economics Revenue...")
+        account_map = context.constants.account_map
+
+        # --- Fail Fast: Ensure model configuration exists ---
+        try:
+            model_config = account_map[account]['schema_entry']['projection_configuration']['selected_model']
+            drivers = model_config['drivers']
+            unit_growth_driver = drivers['unit_growth']
+            price_growth_driver = drivers['price_per_unit_growth']
+        except KeyError as e:
+            raise KeyError(
+                f"FATAL SCHEMA ERROR for account '{account}': The 'selected_model' or its 'drivers' object is "
+                f"missing or malformed. A required key is missing: {e}. Check the populated schema."
+            )
+
+        # --- Get current period's growth rates from drivers ---
+        unit_growth_rate = context.get_driver_value(unit_growth_driver)
+        price_growth_rate = context.get_driver_value(price_growth_driver)
+
+        # --- Get the base revenue from the prior period ---
+        opening_revenue = context.opening_balances.get(account)
+        if opening_revenue is None:
+            # This should theoretically never happen if an account is mapped, but it's a critical check.
+            raise ValueError(f"Could not find opening balance for revenue account '{account}' in period {context.period_column_name}.")
+
+        # --- Calculate the projected revenue ---
+        # Revenue(t) = Revenue(t-1) * (1 + Unit Growth Rate) * (1 + Price Growth Rate)
+        projected_revenue = opening_revenue * (1 + unit_growth_rate) * (1 + price_growth_rate)
+        context.set(account, projected_revenue)
+
+        # --- Informative Logging for Traceability ---
+        logger.info(
+            f"[{context.period_column_name}][{account}] Projected Revenue: {projected_revenue:,.0f} "
+            f"(Opening: {opening_revenue:,.0f} * (1 + Unit Growth: {unit_growth_rate:.2%}) * (1 + Price Growth: {price_growth_rate:.2%}))"
+        )
+
+    @staticmethod
     def calculate_asset_yield_revenue(account: str, context: PeriodContext) -> None:
         """Calculates revenue for an Asset_Yield_Driven model."""
         account_map = context.constants.account_map
         model = account_map[account]['schema_entry']['projection_configuration']['selected_model']
-        yield_driver = model['drivers']['asset_yield']
+        
+        # --- Fail Fast: Ensure drivers and target account exist ---
+        try:
+            yield_driver = model['drivers']['asset_yield']
+            target_hist_key = model['target_asset_account']
+        except KeyError as e:
+            raise KeyError(f"FATAL SCHEMA ERROR for account '{account}': Revenue model is missing a required key: {e}.")
+
+        if not target_hist_key:
+             raise ValueError(f"FATAL SCHEMA ERROR for account '{account}': 'target_asset_account' cannot be null or empty.")
 
         current_yield = context.get_driver_value(yield_driver)
 
-        target_hist_key = model.get('target_asset_account')
-        if not target_hist_key:
-            raise KeyError(f"Revenue model for '{account}' is missing 'target_asset_account'.")
-
         target_node = next((name for name, entry in account_map.items() if entry['schema_entry'].get('historical_account_key') == target_hist_key), None)
         if not target_node:
-            raise RuntimeError(f"Revenue model for '{account}' depends on '{target_hist_key}', but no item is mapped to this key.")
+            raise RuntimeError(f"Engine Configuration Error: Revenue model for '{account}' depends on historical key '{target_hist_key}', but no item in the account_map is mapped to this key.")
 
         # Use ONLY the opening balance to permanently break the major circularity.
         opening_asset_balance = context.opening_balances.get(target_node, 0.0)
         revenue = opening_asset_balance * current_yield
         context.set(account, revenue)
+        
+        # --- Informative Logging for Traceability ---
+        logger.info(
+            f"[{context.period_column_name}][{account}] Projected Revenue: {revenue:,.0f} "
+            f"(Opening Asset '{target_node}': {opening_asset_balance:,.0f} * Yield: {current_yield:.2%})"
+        )
+
+    @staticmethod
+    def calculate_unit_economics_cogs(account: str, context: PeriodContext) -> None:
+        """
+        Calculates COGS for a non-lender Unit Economics model.
+        COGS is projected as a percentage of the current period's revenue, where the
+        underlying margin is adjusted by a cost growth driver.
+        COGS(t) = Revenue(t) * [ (COGS(t-1) / Revenue(t-1)) * (1 + CostGrowth(t)) ]
+        """
+        logger.info(f"[{context.period_column_name}][{account}] Calculating Unit Economics COGS...")
+        account_map = context.constants.account_map
+
+        # --- Fail Fast: Ensure model configuration and drivers exist ---
+        try:
+            model_config = account_map[account]['schema_entry']['projection_configuration']['selected_model']
+            cost_growth_driver = model_config['drivers']['cost_per_unit_growth']
+        except KeyError as e:
+            raise KeyError(f"FATAL SCHEMA ERROR for '{account}': COGS model config is missing a required key: {e}.")
+
+        # --- Get the current period's cost growth rate ---
+        cost_growth_rate = context.get_driver_value(cost_growth_driver)
+
+        # --- Calculate the prior period's gross margin ---
+        opening_cogs = context.opening_balances.get(account, 0.0)
+        
+        # We need the corresponding revenue stream's opening balance. For simplicity,
+        # we assume a 1-to-1 link or use total revenue. Using total revenue is more robust.
+        opening_total_revenue = context.opening_balances.get('total_revenue', 0.0)
+
+        if opening_total_revenue == 0:
+            logger.warning(f"Opening total revenue for period {context.period_column_name} is zero. Cannot calculate historical COGS margin. Defaulting margin to 0.")
+            prior_period_cogs_margin = 0.0
+        else:
+            # COGS is negative, so the margin will be a negative percentage.
+            prior_period_cogs_margin = opening_cogs / opening_total_revenue
+
+        # --- Project the new COGS margin and calculate final COGS ---
+        projected_cogs_margin = prior_period_cogs_margin * (1 + cost_growth_rate)
+        current_total_revenue = context.get('total_revenue')
+        
+        # Projected COGS is a negative value on the P&L
+        projected_cogs = current_total_revenue * projected_cogs_margin
+        context.set(account, projected_cogs)
+
+        # --- Informative Logging for Traceability ---
+        logger.info(
+            f"[{context.period_column_name}][{account}] Projected COGS: {projected_cogs:,.0f} "
+            f"(Current Revenue: {current_total_revenue:,.0f} * Proj. Margin: {projected_cogs_margin:.2%})"
+        )
+        logger.info(
+            f"[{context.period_column_name}][{account}] -> Margin Detail: Prior Margin: {prior_period_cogs_margin:.2%} * (1 + Cost Growth: {cost_growth_rate:.2%})"
+        )
+
+    @staticmethod
+    def calculate_asset_yield_driven_cogs(account: str, context: PeriodContext) -> None:
+        """
+        Calculates COGS for a non-lender Asset Yield Driven model.
+        This mirrors the revenue logic, where COGS is a function of an opening asset balance.
+        Example: Depreciation on leased assets classified as COGS.
+        """
+        logger.info(f"[{context.period_column_name}][{account}] Calculating Asset Yield Driven COGS...")
+        account_map = context.constants.account_map
+
+        # --- Fail Fast: Ensure model configuration and drivers exist ---
+        try:
+            model_config = account_map[account]['schema_entry']['projection_configuration']['selected_model']
+            cost_rate_driver = model_config['drivers']['cost_rate_on_asset']
+            target_hist_key = model_config['target_asset_account']
+        except KeyError as e:
+            raise KeyError(f"FATAL SCHEMA ERROR for '{account}': COGS model config is missing a required key: {e}.")
+
+        if not target_hist_key:
+             raise ValueError(f"FATAL SCHEMA ERROR for account '{account}': 'target_asset_account' cannot be null or empty.")
+
+        current_cost_rate = context.get_driver_value(cost_rate_driver)
+
+        # --- Find the target asset and calculate COGS ---
+        target_node = next((name for name, entry in account_map.items() if entry['schema_entry'].get('historical_account_key') == target_hist_key), None)
+        if not target_node:
+            raise RuntimeError(f"Engine Configuration Error: COGS model for '{account}' depends on historical key '{target_hist_key}', but no item in the account_map is mapped to this key.")
+
+        # Use ONLY the opening balance to prevent circular dependencies
+        opening_asset_balance = context.opening_balances.get(target_node, 0.0)
+        
+        # Projected COGS is a negative value on the P&L
+        projected_cogs = opening_asset_balance * current_cost_rate * -1
+        context.set(account, projected_cogs)
+
+        # --- Informative Logging for Traceability ---
+        logger.info(
+            f"[{context.period_column_name}][{account}] Projected COGS: {projected_cogs:,.0f} "
+            f"(Opening Asset '{target_node}': {opening_asset_balance:,.0f} * Cost Rate: {current_cost_rate:.2%})"
+        )
 
     @staticmethod
     def calculate_lender_cogs(account: str, context: PeriodContext) -> None:
@@ -545,6 +707,56 @@ class FinancialCalculations:
         closing_balance = opening_balance + additions_amount - amortization_amount
         context.set(account, closing_balance)
         logger.info(f"[{context.period_column_name}][{account}] Closing Balance: {closing_balance:,.0f} (Opening: {opening_balance:,.0f} + Additions: {additions_amount:,.0f} - Amort: {amortization_amount:,.0f})")
+
+    @staticmethod
+    def calculate_other_asset_growth(account: str, context: PeriodContext) -> None:
+        """
+        Calculates the closing balance of an account by growing it at the
+        pre-calculated average historical revenue growth rate. This is a generic,
+        simple, and guaranteed non-circular method.
+
+        The logic is: Balance(t) = Balance(t-1) * (1 + avg_hist_rev_growth)
+        """
+        # --- 1. Get the account's opening balance (Balance(t-1)) ---
+        opening_account_balance = context.opening_balances.get(account, 0.0)
+
+        # --- 2. Get the pre-calculated constant growth rate ---
+        growth_rate = context.constants.avg_historical_revenue_growth
+
+        # --- 3. Calculate the new closing balance ---
+        closing_balance = opening_account_balance * (1 + growth_rate)
+        
+        context.set(account, closing_balance)
+
+        # --- 4. Detailed logging for traceability ---
+        logger.info(
+            f"[{context.period_column_name}][{account}] Closing Balance: {closing_balance:,.0f} "
+            f"(Opening: {opening_account_balance:,.0f} * (1 + Avg Hist. Revenue Growth: {growth_rate:.2%}))"
+        )
+
+    @staticmethod
+    def calculate_contra_asset_growth(account: str, context: PeriodContext) -> None:
+        """
+        Calculates the closing balance of a contra-asset account by growing it
+        at the pre-calculated average historical total asset growth rate. This
+        is a universal, simple, and guaranteed non-circular method.
+        """
+        # --- 1. Get the account's opening balance (Balance at t-1) ---
+        opening_account_balance = context.opening_balances.get(account, 0.0)
+
+        # --- 2. Get the pre-calculated constant growth rate ---
+        growth_rate = context.constants.avg_historical_asset_growth
+
+        # --- 3. Calculate the new closing balance ---
+        closing_balance = opening_account_balance * (1 + growth_rate)
+        
+        context.set(account, closing_balance)
+
+        # --- 4. Detailed logging for traceability ---
+        logger.info(
+            f"[{context.period_column_name}][{account}] Closing Balance: {closing_balance:,.0f} "
+            f"(Opening: {opening_account_balance:,.0f} * (1 + Avg Hist. Asset Growth: {growth_rate:.2%}))"
+        )
 
     @staticmethod
     def calculate_industry_specific_asset_growth(account: str, context: PeriodContext) -> None:
@@ -644,6 +856,65 @@ class FinancialCalculations:
         )
 
     @staticmethod
+    def calculate_tax_payables(account: str, context: PeriodContext) -> None:
+        """
+        Calculates the closing balance of a tax payable account using a roll-forward logic.
+        Closing Payable = Opening Payable + Incurred Tax Expense - Cash Taxes Paid.
+        Cash Taxes Paid is assumed to be the prior period's tax expense.
+        """
+        logger.info(f"[{context.period_column_name}][{account}] Calculating tax payables roll-forward...")
+        
+        # --- 1. Get the three components of the roll-forward ---
+        opening_balance = context.opening_balances.get(account, 0.0)
+        
+        # Current period's tax expense (this is a negative P&L value)
+        current_tax_expense = context.get('income_tax_expense')
+
+        # Assumption: Cash paid this period equals tax expense from the prior period.
+        # This is also a negative P&L value from the prior period.
+        prior_period_tax_expense = context.opening_balances.get('income_tax_expense', 0.0)
+        
+        # --- 2. Publish the cash payment amount for the CFS ---
+        # The cash outflow is the absolute value of the prior period's expense.
+        cash_taxes_paid_outflow = abs(prior_period_tax_expense)
+        context.add_to_aggregate('total_cash_taxes_paid', cash_taxes_paid_outflow)
+
+        # --- 3. Calculate the closing balance with correct sign handling ---
+        # Liability increases by the expense incurred (absolute value of a negative expense).
+        # Liability decreases by the cash paid (absolute value of a negative prior expense).
+        change_in_payables = abs(current_tax_expense) - cash_taxes_paid_outflow
+        closing_balance = opening_balance + change_in_payables
+        
+        context.set(account, closing_balance)
+        
+        # --- 4. Detailed logging for traceability ---
+        logger.info(
+            f"[{context.period_column_name}][{account}] Closing Balance: {closing_balance:,.0f}"
+        )
+        logger.info(
+            f"  -> Roll-Forward: Opening: {opening_balance:,.0f} + "
+            f"Incurred (abs): {abs(current_tax_expense):,.0f} - "
+            f"Cash Paid (abs): {cash_taxes_paid_outflow:,.0f} = Closing: {closing_balance:,.0f}"
+        )
+
+    @staticmethod
+    def calculate_other_liability_growth(account: str, context: PeriodContext) -> None:
+        """
+        Calculates the closing balance of a liability account by growing it at the
+        pre-calculated average historical operating cost growth rate.
+        """
+        opening_account_balance = context.opening_balances.get(account, 0.0)
+        growth_rate = context.constants.avg_historical_op_cost_growth
+        closing_balance = opening_account_balance * (1 + growth_rate)
+        
+        context.set(account, closing_balance)
+
+        logger.info(
+            f"[{context.period_column_name}][{account}] Closing Balance: {closing_balance:,.0f} "
+            f"(Opening: {opening_account_balance:,.0f} * (1 + Avg Hist. OpCost Growth: {growth_rate:.2%}))"
+        )
+
+    @staticmethod
     def calculate_equity_rollforward(account: str, context: PeriodContext) -> None:
         """
         Calculates the ABSOLUTE CLOSING BALANCE for 'retained_earnings' and publishes
@@ -728,6 +999,53 @@ class FinancialCalculations:
         else:
             raise NotImplementedError(f"Working capital logic not implemented for account '{account}' in category '{category}'")
 
+    @staticmethod
+    def calculate_inventory(account: str, context: PeriodContext) -> None:
+        """
+        Calculates the ABSOLUTE CLOSING BALANCE of an inventory item based on
+        a target Days Inventory Outstanding (DIO). This calculation is non-circular.
+        """
+        s = context.constants.schema_items # Schema items alias
+        
+        # --- 1. Calculate the total target inventory balance for the period ---
+        dio = context.constants.deterministic_dio
+        if dio == 0:
+            # If DIO is zero, inventory must also be zero.
+            context.set(account, 0.0)
+            logger.info(f"[{context.period_column_name}][{account}] DIO is 0. Setting inventory balance to 0.")
+            return
+
+        # This depends on the *current period's* projected COGS, which must be calculated first.
+        try:
+            projected_cogs = abs(sum(context.get(item) for item in s.cost_of_revenue))
+        except KeyError as e:
+            raise RuntimeError(f"FATAL DEPENDENCY ERROR: Inventory calculation failed. A prerequisite COGS account is missing: {e}. Check execution order.")
+
+        total_target_inventory = (projected_cogs * dio) / 365.0
+
+        # --- 2. Allocate the total target balance proportionally across all inventory items ---
+        all_inventory_items = s.inventory_items
+        opening_total_inventory = sum(context.opening_balances.get(item, 0.0) for item in all_inventory_items)
+        opening_balance_of_this_account = context.opening_balances.get(account, 0.0)
+
+        if opening_total_inventory == 0:
+            # If starting from zero, allocate the new target balance equally.
+            proportion = 1.0 / len(all_inventory_items) if all_inventory_items else 1.0
+        else:
+            # Allocate based on this account's share of the opening inventory.
+            proportion = opening_balance_of_this_account / opening_total_inventory
+        
+        closing_balance = total_target_inventory * proportion
+        context.set(account, closing_balance)
+
+        logger.info(
+            f"[{context.period_column_name}][{account}] Closing Balance: {closing_balance:,.0f} "
+            f"(Total Target: {total_target_inventory:,.0f} * Proportion: {proportion:.2%})"
+        )
+        logger.info(
+            f"[{context.period_column_name}][{account}] -> Target driven by Proj. COGS: {projected_cogs:,.0f} and DIO: {dio:.2f}"
+        )
+
     # =====================================================================
     # AGGREGATED & CORE P&L ITEMS (from embedded logic)
     # =====================================================================
@@ -756,28 +1074,40 @@ class FinancialCalculations:
     @staticmethod
     def calculate_income_tax(account: str, context: PeriodContext) -> None:
         """
-        Calculates income tax as a percentage of EBT using the pre-calculated
-        historical effective tax rate.
-        [REVISED & CORRECTED] This version uses a data-driven rate and correctly
-        calculates tax on positive earnings.
+        Calculates income tax as a percentage of EBT using an explicit driver
+        from the schema. This provides maximum transparency and control.
         """
-        # Retrieve the data-driven tax rate from the constants object.
-        tax_rate = context.constants.effective_tax_rate
-        
-        # Get the projected EBT for the current period.
+        logger.info(f"[{context.period_column_name}][{account}] Calculating driver-based income tax...")
+        account_map = context.constants.account_map
+
+        # --- 1. Fail Fast: Get the tax rate driver from the schema ---
+        try:
+            schema_entry = account_map[account]['schema_entry']
+            tax_rate_driver = schema_entry['drivers']['income_tax_expense_as_percent_of_ebt']
+        except KeyError as e:
+            raise KeyError(
+                f"FATAL SCHEMA ERROR for account '{account}': The 'drivers' object or the "
+                f"'income_tax_expense_as_percent_of_ebt' key is missing: {e}. Check the populated schema."
+            )
+
+        # --- 2. Get the correct tax rate for the current projection period ---
+        current_tax_rate = context.get_driver_value(tax_rate_driver)
+
+        # --- 3. Get the projected EBT for the current period ---
         ebt_value = context.get('ebt')
         
-        # Tax should only be calculated on positive earnings.
-        # A more advanced model would create a Deferred Tax Asset for losses.
-        # For now, we assume no tax credit/refund for a loss.
+        # --- 4. Calculate Tax (No change in this logic) ---
+        # Tax should only be calculated on positive earnings. A more advanced model
+        # would create a Deferred Tax Asset for losses. For now, we assume no tax credit.
         taxable_income = max(0, ebt_value)
         
         # Tax expense is a negative value on the P&L.
-        tax_expense = taxable_income * tax_rate * -1
+        tax_expense = taxable_income * current_tax_rate * -1
         
+        # --- 5. Log and Set the Value ---
         logger.info(
             f"[{context.period_column_name}][{account}] Tax Expense: {tax_expense:,.0f} "
-            f"(EBT: {ebt_value:,.0f} * Rate: {tax_rate:.2%})"
+            f"(EBT: {ebt_value:,.0f} * Driver Rate: {current_tax_rate:.2%})"
         )
         context.set(account, tax_expense)
 
@@ -792,6 +1122,85 @@ class FinancialCalculations:
         """Retrieves the aggregated amortization for the period."""
         total_amortization = context.get_aggregate('aggregated_amortization')
         context.set(account, total_amortization)
+
+    @staticmethod
+    def calculate_other_opex_growth(account: str, context: PeriodContext) -> None:
+        """
+        Calculates the closing balance of an operating expense account by growing
+        it at the pre-calculated average historical operating cost growth rate.
+        This is used for miscellaneous OpEx items to ensure they scale with the
+        overall cost base of the business.
+        """
+        # --- 1. Get the account's opening balance (a negative P&L value) ---
+        opening_account_balance = context.opening_balances.get(account, 0.0)
+
+        # --- 2. Get the pre-calculated constant growth rate ---
+        growth_rate = context.constants.avg_historical_op_cost_growth
+
+        # --- 3. Calculate the new closing balance ---
+        # The expense grows at the specified rate. Since the balance is negative,
+        # it will become more negative if the growth rate is positive.
+        closing_balance = opening_account_balance * (1 + growth_rate)
+        
+        context.set(account, closing_balance)
+
+        # --- 4. Detailed logging for traceability ---
+        logger.info(
+            f"[{context.period_column_name}][{account}] Closing Balance: {closing_balance:,.0f} "
+            f"(Opening: {opening_account_balance:,.0f} * (1 + Avg Hist. OpCost Growth: {growth_rate:.2%}))"
+        )
+
+    @staticmethod
+    def calculate_interest_expense_non_lender(account: str, context: PeriodContext) -> None:
+        """
+        Calculates interest expense for a NON-LENDER. For these companies, interest
+        is a non-operating expense. This logic sums all interest-bearing debt
+        from the balance sheet and applies the average interest rate.
+
+        It uses the AVERAGE of opening and closing debt balances for a more
+        accurate interest calculation.
+        """
+        logger.info(f"[{context.period_column_name}][{account}] Calculating Non-Lender Interest Expense...")
+        s = context.constants.schema_items # Schema items alias
+
+        # --- 1. Get the average interest rate from the schema driver ---
+        try:
+            drivers = context.constants.schema['balance_sheet']['liabilities']['non_current_liabilities']['long_term_debt']['drivers']
+            rate_driver = drivers['average_interest_rate']
+            current_rate = context.get_driver_value(rate_driver)
+        except KeyError as e:
+            raise RuntimeError(f"FATAL: Could not find debt driver for interest rate in schema. Error: {e}")
+
+        # --- 2. Get the average balance of all interest-bearing debt for the period ---
+        
+        # Consolidate all debt items, including the revolver
+        all_debt_items = s.st_debt_items + s.lt_debt_items + ['revolver']
+        
+        # Calculate total opening debt
+        total_opening_debt = sum(context.opening_balances.get(item, 0.0) for item in all_debt_items)
+        
+        # Calculate total closing debt
+        # This creates a dependency on the closing debt balances being calculated first.
+        # This is ACCEPTABLE because for a non-lender, there is no circularity between
+        # P&L interest and the debt balance itself.
+        try:
+            total_closing_debt = sum(context.get(item) for item in all_debt_items)
+        except KeyError as e:
+            raise RuntimeError(f"FATAL DEPENDENCY ERROR: Calculation for '{account}' failed because a closing debt balance is missing: {e}. Check execution order.")
+
+        # Use the average balance for the period for a more accurate interest calculation
+        average_debt_balance = (total_opening_debt + total_closing_debt) / 2.0
+
+        # --- 3. Calculate and set the interest expense ---
+        # Interest expense is a negative value on the P&L
+        interest_expense = average_debt_balance * current_rate * -1
+        context.set(account, interest_expense)
+
+        # --- 4. Detailed logging ---
+        logger.info(
+            f"[{context.period_column_name}][{account}] Interest Expense: {interest_expense:,.0f} "
+            f"(Avg Debt: {average_debt_balance:,.0f} * Rate: {current_rate:.2%})"
+        )
 
     # =====================================================================
     # ENGINE-INTERNAL ITEMS (from embedded logic)
@@ -871,6 +1280,55 @@ class FinancialCalculations:
         tax_expense = context.get('income_tax_expense')
         net_income = ebt + tax_expense
         context.set(account, net_income)
+
+    @staticmethod
+    def calculate_custom_subtotal(account: str, context: PeriodContext) -> None:
+        """
+        Calculates a custom subtotal by summing the values of its component accounts,
+        as defined by the 'summation_of' key in the schema.
+        If the 'summation_of' list is empty, it holds the account constant.
+        """
+        account_map = context.constants.account_map
+        
+        # --- 1. Get the list of components from the schema ---
+        try:
+            schema_entry = account_map[account]['schema_entry']
+            component_hist_keys = schema_entry.get('summation_of', [])
+        except KeyError:
+            logger.error(f"Could not find schema entry for subtotal account '{account}'. Holding constant.")
+            context.set(account, context.opening_balances.get(account, 0.0))
+            return
+            
+        # --- 2. Handle the case of an empty summation list ---
+        if not component_hist_keys:
+            logger.info(f"[{context.period_column_name}][{account}] 'summation_of' is empty. Holding account constant.")
+            opening_balance = context.opening_balances.get(account, 0.0)
+            context.set(account, opening_balance)
+            return
+
+        # --- 3. Find component account names and sum their current values ---
+        subtotal_value = 0.0
+        component_details = []
+
+        for hist_key in component_hist_keys:
+            # Find the corresponding schema account name for the historical key
+            target_node = next((name for name, entry in account_map.items() if entry['schema_entry'].get('historical_account_key') == hist_key), None)
+            
+            if target_node:
+                try:
+                    value = context.get(target_node)
+                    subtotal_value += value
+                    component_details.append(f"{target_node}: {value:,.0f}")
+                except KeyError:
+                    logger.warning(f"Component '{target_node}' for subtotal '{account}' not yet calculated. This may indicate a graph dependency issue.")
+                    # Skip this component, the sum will be incomplete
+            else:
+                logger.warning(f"Component with historical key '{hist_key}' for subtotal '{account}' not found. It will be excluded from the sum.")
+
+        # --- 4. Set the final value and log ---
+        context.set(account, subtotal_value)
+        logger.info(f"[{context.period_column_name}][{account}] Calculated Subtotal: {subtotal_value:,.0f}")
+        logger.info(f"  -> Components: [ {', '.join(component_details)} ]")
 
     @staticmethod
     def calculate_total_current_assets(account: str, context: PeriodContext) -> None:
@@ -1567,6 +2025,35 @@ class ProjectionsEngine:
         self.graph.add_edge('total_liabilities', 'total_liabilities_and_equity')
         self.graph.add_edge('total_equity', 'total_liabilities_and_equity')
 
+        logger.info("[Graph Link] Wiring custom industry-specific subtotals...")
+        subtotal_items = self._get_schema_items(SchemaPaths.BS_INDUSTRY_SUBTOTALS) # Assuming you add this to SchemaPaths
+
+        for subtotal_account in subtotal_items:
+            # Get the list of component historical keys from the schema
+            try:
+                schema_entry = self.account_map[subtotal_account]['schema_entry']
+                component_hist_keys = schema_entry.get('summation_of', [])
+            except KeyError:
+                continue # Should not happen if account map is built correctly
+
+            if not component_hist_keys:
+                continue # Skip subtotals with empty summation lists
+
+            # Find the schema account names that correspond to these historical keys
+            component_accounts = []
+            for hist_key in component_hist_keys:
+                target_node = next((name for name, entry in self.account_map.items() if entry['schema_entry'].get('historical_account_key') == hist_key), None)
+                if target_node:
+                    component_accounts.append(target_node)
+                else:
+                    logger.warning(f"Component with historical key '{hist_key}' for subtotal '{subtotal_account}' not found in account map.")
+
+            # Add the dependency edges
+            for component in component_accounts:
+                if self.graph.has_node(component) and self.graph.has_node(subtotal_account):
+                    self.graph.add_edge(component, subtotal_account)
+                    logger.info(f"[Graph Link]  -> Edge: {component} -> {subtotal_account}")
+
         # --- Part 3: Link Inter-Statement & Driver Dependencies (CORRECTED) ---
         logger.info("[Graph Link] Phase 3/4: Wiring cross-statement and driver dependencies...")
 
@@ -1577,6 +2064,12 @@ class ProjectionsEngine:
         # COGS for non-lenders also depends on revenue.
         if not self.is_lender:
             for cogs_item in s.cost_of_revenue: self.graph.add_edge('total_revenue', cogs_item)
+            # Link all debt items to interest expense
+            all_debt_items = s.st_debt_items + s.lt_debt_items + ['revolver']
+            for debt_item in all_debt_items:
+                if self.graph.has_node('interest_expense') and self.graph.has_node(debt_item):
+                    self.graph.add_edge(debt_item, 'interest_expense')
+            logger.info("[Graph Link] Added Non-Lender Interest Expense dependencies on all debt items.")
 
         # Core BS -> IS links
         self.graph.add_edge('revolver', 'interest_on_revolver') # Interest on debt depends on debt
@@ -1681,170 +2174,247 @@ class ProjectionsEngine:
         constants_summary = ", ".join(vars(self.projection_constants).keys())
         logger.info(f"[Pre-Calc] All projection constants are prepared and centralized. Keys: [{constants_summary}]")
 
+    def _perform_revenue_factor_decomposition(self, revenue_streams: List[str], account_map: dict) -> dict:
+        """
+        Performs factor decomposition for all 'Unit_Economics' revenue streams.
+        This is a pure helper function that receives its dependencies as arguments.
+        """
+        logger.info("[Pre-Calc] Performing revenue factor decomposition for Unit Economics models...")
+        
+        unit_economics_tracker = {}
+        if len(self.historical_years) < 2:
+            logger.warning("[Pre-Calc] Not enough historical data (< 2 years) to perform factor decomposition. Skipping.")
+            return unit_economics_tracker
+
+        t1_col = self.historical_years[-1]
+        t2_col = self.historical_years[-2]
+
+        for stream in revenue_streams:
+            account_info = account_map.get(stream, {})
+            model_name = account_info.get('schema_entry', {}).get('projection_configuration', {}).get('selected_model', {}).get('model_name')
+
+            if model_name != RevenueModel.UNIT_ECONOMICS.value:
+                continue
+            
+            # ... The rest of the logic inside the loop is identical ...
+            # ... No changes needed here ...
+            logger.info(f"[Pre-Calc]  -> Decomposing factors for revenue stream: '{stream}'")
+            
+            try:
+                revenue_t1 = self.data_grid.loc[stream, t1_col]
+                revenue_t2 = self.data_grid.loc[stream, t2_col]
+            except KeyError:
+                logger.error(f"Could not find historical revenue data for '{stream}'. Skipping decomposition.")
+                continue
+
+            if revenue_t2 == 0:
+                logger.warning(f"'{stream}' had zero revenue in T-2. Cannot calculate growth rate. Defaulting to 0.")
+                total_hist_revenue_growth = 0.0
+            else:
+                total_hist_revenue_growth = (revenue_t1 / revenue_t2) - 1.0
+
+            if (1 + total_hist_revenue_growth) < 0:
+                 logger.warning(f"Negative revenue growth for '{stream}' resulted in an invalid value for sqrt. Defaulting growth rates to 0.")
+                 inferred_unit_growth = 0.0
+                 inferred_price_growth = 0.0
+            else:
+                growth_factor = (1 + total_hist_revenue_growth)**0.5
+                inferred_unit_growth = growth_factor - 1.0
+                inferred_price_growth = growth_factor - 1.0
+
+            justification = (
+                f"Based on historical revenue growth of {total_hist_revenue_growth:.2%} between {t2_col} and {t1_col}. "
+                f"This growth has been geometrically split 50/50 into inferred unit growth and price growth components, "
+                f"as per standard modeling practice when unit/price data is unavailable."
+            )
+
+            unit_economics_tracker[stream] = {
+                'baseline_unit_growth': inferred_unit_growth,
+                'baseline_price_growth': inferred_price_growth,
+                'justification': justification
+            }
+
+            logger.info(f"[Pre-Calc]  -> For '{stream}': Total Hist. Growth: {total_hist_revenue_growth:.2%}, "
+                        f"Inferred Unit Growth: {inferred_unit_growth:.2%}, "
+                        f"Inferred Price Growth: {inferred_price_growth:.2%}")
+
+        return unit_economics_tracker
+
     def _gather_projection_constants(self) -> ProjectionConstants:
         """
         Gathers all pre-calculated, immutable derived state and populates the
         explicit `ProjectionConstants` data contract object.
-        [REVISED & ROBUST VERSION]
-
-        This version has been refactored to use the explicit `SchemaPaths` contract
-        for all schema lookups, eliminating raw "magic string" paths.
+        [FINAL, CORRECTED VERSION]
         """
-        constants = {}
         logger.info("[Pre-Calc] Gathering all projection constants using explicit SchemaPaths contracts...")
-
-        # --- Designate primary accounts ---
-        logger.info("[Pre-Calc Constant] Designating primary operating accounts...")
-        cash_items = self._get_schema_items(SchemaPaths.BS_ASSETS_CASH)
-        if not cash_items:
-            raise RuntimeError("FATAL: No cash accounts mapped in the schema. Cannot designate a primary cash account.")
-        constants['primary_cash_account'] = cash_items[0]
-        logger.info(f"[Pre-Calc Constant] -> primary_cash_account: '{constants['primary_cash_account']}'")
-
-        # --- Determine revolver rate ---
-        logger.info("[Pre-Calc Constant] Determining revolver interest rate...")
-        try:
-            # Note: Direct schema access like this is acceptable for one-off driver lookups.
-            driver_obj = self.populated_schema['balance_sheet']['liabilities']['non_current_liabilities']['long_term_debt']['drivers']['average_interest_rate']
-            baseline_rate = driver_obj.get('baseline')
-            if baseline_rate is None or not isinstance(baseline_rate, (int, float)):
-                raise ValueError("'baseline' value is missing or not a number.")
-            constants['revolver_interest_rate'] = float(baseline_rate)
-            logger.info(f"[Pre-Calc Constant] -> revolver_interest_rate: {constants['revolver_interest_rate']:.4%}")
-        except (KeyError, ValueError) as e:
-            raise RuntimeError(f"FATAL: Could not determine revolver interest rate from schema. Error: {e}")
-
-        # --- Calculate deterministic D&A rates ---
-        logger.info("[Pre-Calc Constant] Calculating deterministic D&A rates...")
-        depr_series = self.data_grid.loc['depreciation_expense', self.historical_years]
-        ppe_items = self._get_schema_items(SchemaPaths.BS_ASSETS_PPE)
-        total_ppe_series = self.data_grid.loc[ppe_items, self.historical_years].sum()
-        avg_depr_expense = abs(depr_series.mean())
-        avg_ppe_balance = total_ppe_series.mean()
-        if avg_ppe_balance == 0:
-            raise ValueError("Average PP&E balance is zero. Cannot calculate a deterministic depreciation rate.")
-        constants['deterministic_depreciation_rate'] = avg_depr_expense / avg_ppe_balance
-        logger.info(f"[Pre-Calc Constant] -> deterministic_depreciation_rate: {constants['deterministic_depreciation_rate']:.4%}")
         
-        amort_series = self.data_grid.loc['amortization_expense', self.historical_years]
-        intangible_items = self._get_schema_items(SchemaPaths.BS_ASSETS_INTANGIBLES)
-        total_intangible_series = self.data_grid.loc[intangible_items, self.historical_years].sum()
-        avg_amort_expense = abs(amort_series.mean())
-        avg_intangible_balance = total_intangible_series.mean()
-        if avg_intangible_balance == 0:
-            constants['deterministic_amortization_rate'] = 0.0
-        else:
-            constants['deterministic_amortization_rate'] = avg_amort_expense / avg_intangible_balance
-        logger.info(f"[Pre-Calc Constant] -> deterministic_amortization_rate: {constants['deterministic_amortization_rate']:.4%}")
+        # --- Phase 1: Calculate all individual constants and component dictionaries first ---
 
-        # --- Calculate historical working capital ratios ---
-        logger.info("[Pre-Calc Constant] Calculating deterministic working capital ratios...")
-        if len(self.historical_years) < 2:
-            raise ValueError("Working capital ratio calculation requires at least two historical years.")
-        num_days = len(self.historical_years) * 365
-        
-        ar_items = self._get_schema_items(SchemaPaths.BS_ASSETS_AR)
-        total_revenue = self.data_grid.loc['total_revenue', self.historical_years].sum()
-        if not ar_items:
-            constants['deterministic_dso'] = 0.0
-        elif total_revenue == 0:
-            raise ValueError("Total historical revenue is zero. Cannot calculate a meaningful DSO.")
-        else:
-            avg_ar_balance = self.data_grid.loc[ar_items, self.historical_years].sum().mean()
-            constants['deterministic_dso'] = (avg_ar_balance / total_revenue) * num_days
-        logger.info(f"[Pre-Calc Constant] -> deterministic_dso: {constants['deterministic_dso']:.2f} days")
-        
-        ap_items = self._get_schema_items(SchemaPaths.BS_LIABILITIES_AP)
-        total_cogs = abs(self.data_grid.loc[self._get_schema_items(SchemaPaths.IS_COGS), self.historical_years].sum().sum())
-        if not ap_items:
-            constants['deterministic_dpo'] = 0.0
-        elif total_cogs == 0:
-            raise ValueError("Total historical COGS is zero. Cannot calculate a meaningful DPO.")
-        else:
-            avg_ap_balance = self.data_grid.loc[ap_items, self.historical_years].sum().mean()
-            constants['deterministic_dpo'] = (avg_ap_balance / total_cogs) * num_days
-        logger.info(f"[Pre-Calc Constant] -> deterministic_dpo: {constants['deterministic_dpo']:.2f} days")
-
-        # --- Perform unit economics factor decomposition ---
-        logger.info("[Pre-Calc Constant] Checking for Unit Economics models...")
-        ue_streams = [s for s in self._get_schema_items(SchemaPaths.IS_REVENUE) if self.account_map[s]['schema_entry'].get('projection_configuration', {}).get('selected_model', {}).get('model_name') == 'Unit_Economics']
-        unit_economics_tracker = {} # Placeholder for brevity
-        constants['unit_economics_tracker'] = unit_economics_tracker
-
-        # --- Calculate effective income tax rate from historical data ---
-        logger.info("[Pre-Calc Constant] Calculating historical effective tax rate...")
-        try:
-            # Sum the total taxes paid and total earnings before tax over all historical years.
-            # This provides a more stable rate than a simple average of annual rates.
-            total_historical_tax = self.data_grid.loc['income_tax_expense', self.historical_years].sum()
-            total_historical_ebt = self.data_grid.loc['ebt', self.historical_years].sum()
-
-            if total_historical_ebt <= 0:
-                logger.warning(
-                    f"[Pre-Calc Constant] Total historical EBT is zero or negative ({total_historical_ebt:,.0f}). "
-                    f"Cannot calculate a meaningful tax rate. Defaulting to 21% as a fallback."
-                )
-                constants['effective_tax_rate'] = 0.21
-            else:
-                # Tax expense is negative, EBT is positive. Rate should be positive.
-                # effective_rate = - (Total Tax / Total EBT)
-                effective_rate = - (total_historical_tax / total_historical_ebt)
-                
-                # FAIL FAST & LOUD: A sanity check on the calculated rate.
-                if not (0 <= effective_rate <= 0.50):
-                    logger.warning(
-                        f"[Pre-Calc Constant] Calculated effective tax rate of {effective_rate:.2%} is outside the normal range (0%-50%). "
-                        f"This may be due to tax credits, losses, or data issues. Review historicals. "
-                        f"Proceeding with the calculated rate."
-                    )
-                
-                constants['effective_tax_rate'] = effective_rate
-                logger.info(f"[Pre-Calc Constant] -> effective_tax_rate: {constants['effective_tax_rate']:.4%}")
-
-        except KeyError as e:
-            raise RuntimeError(f"FATAL: Could not calculate tax rate. A required account is missing: {e}. Check schema mappings for 'income_tax_expense' and 'ebt'.")
-
-
-        # --- Pre-computation of Schema Item Lists for efficient access ---
-        logger.info("[Pre-Calc Constant] Pre-computing schema item lists using SchemaPaths contracts...")
+        # Pre-compute schema item lists. This is a dependency for other calculations.
+        logger.info("[Pre-Calc Constant] Pre-computing schema item lists...")
         schema_items_dict = {
             'revenue': self._get_schema_items(SchemaPaths.IS_REVENUE),
             'cost_of_revenue': self._get_schema_items(SchemaPaths.IS_COGS),
             'opex_items': self._get_schema_items(SchemaPaths.IS_OPEX),
             'industry_opex_items': self._get_schema_items(SchemaPaths.IS_INDUSTRY_OPEX),
             'non_op_items': self._get_schema_items(SchemaPaths.IS_NON_OPERATING),
-
             'cash_items': self._get_schema_items(SchemaPaths.BS_ASSETS_CASH),
             'ar_items': self._get_schema_items(SchemaPaths.BS_ASSETS_AR),
             'inventory_items': self._get_schema_items(SchemaPaths.BS_ASSETS_INVENTORY),
             'other_current_assets': self._get_schema_items(SchemaPaths.BS_ASSETS_OTHER_CURRENT),
-            
             'ppe_items': self._get_schema_items(SchemaPaths.BS_ASSETS_PPE),
             'intangible_asset_items': self._get_schema_items(SchemaPaths.BS_ASSETS_INTANGIBLES),
             'other_non_current_assets': self._get_schema_items(SchemaPaths.BS_ASSETS_OTHER_NON_CURRENT),
-            
             'ap_items': self._get_schema_items(SchemaPaths.BS_LIABILITIES_AP),
             'st_debt_items': self._get_schema_items(SchemaPaths.BS_LIABILITIES_ST_DEBT),
             'tax_payable_items': self._get_schema_items(SchemaPaths.BS_LIABILITIES_TAX_PAYABLE),
             'other_cl_items': self._get_schema_items(SchemaPaths.BS_LIABILITIES_OTHER_CURRENT),
-            
             'lt_debt_items': self._get_schema_items(SchemaPaths.BS_LIABILITIES_LT_DEBT),
             'other_ncl_items': self._get_schema_items(SchemaPaths.BS_LIABILITIES_OTHER_NON_CURRENT),
-            
             'equity_items': self._get_schema_items(SchemaPaths.BS_EQUITY),
             'contra_asset_items': self._get_schema_items(SchemaPaths.BS_ASSETS_CONTRA),
-            
             'ind_asset_items': self._get_schema_items(SchemaPaths.BS_INDUSTRY_ASSETS),
             'ind_liab_items': self._get_schema_items(SchemaPaths.BS_INDUSTRY_LIABILITIES),
         }
-        constants['schema_items'] = SchemaItemGroups(**schema_items_dict)
-        
-        # Pass the raw schema and account map for complex lookups
-        constants['schema'] = self.populated_schema
-        constants['account_map'] = self.account_map
+        schema_items = SchemaItemGroups(**schema_items_dict)
 
-        logger.info(f"[Pre-Calc] All projection constants are prepared and centralized.")
-        return ProjectionConstants(**constants)
+        # Now, call the decomposition helper, passing its dependencies explicitly.
+        # This is much cleaner than relying on a temporary self.projection_constants.
+        unit_economics_tracker = self._perform_revenue_factor_decomposition(
+            revenue_streams=schema_items.revenue, 
+            account_map=self.account_map
+        )
+
+        # --- Calculate all remaining simple constants ---
+        logger.info("[Pre-Calc Constant] Calculating remaining deterministic constants...")
+        
+        # Designate primary accounts
+        if not schema_items.cash_items:
+            raise RuntimeError("FATAL: No cash accounts mapped in the schema. Cannot designate a primary cash account.")
+        primary_cash_account = schema_items.cash_items[0]
+        
+        # Determine revolver rate
+        try:
+            driver_obj = self.populated_schema['balance_sheet']['liabilities']['non_current_liabilities']['long_term_debt']['drivers']['average_interest_rate']
+            baseline_rate = driver_obj.get('baseline')
+            if baseline_rate is None or not isinstance(baseline_rate, (int, float)): raise ValueError("Missing baseline rate.")
+            revolver_interest_rate = float(baseline_rate)
+        except (KeyError, ValueError) as e:
+            raise RuntimeError(f"FATAL: Could not determine revolver interest rate from schema. Error: {e}")
+
+        # Calculate D&A rates
+        depr_series = self.data_grid.loc['depreciation_expense', self.historical_years]
+        total_ppe_series = self.data_grid.loc[schema_items.ppe_items, self.historical_years].sum()
+        avg_depr_expense = abs(depr_series.mean())
+        avg_ppe_balance = total_ppe_series.mean()
+        if avg_ppe_balance == 0: raise ValueError("Average PP&E balance is zero.")
+        deterministic_depreciation_rate = avg_depr_expense / avg_ppe_balance
+        
+        amort_series = self.data_grid.loc['amortization_expense', self.historical_years]
+        total_intangible_series = self.data_grid.loc[schema_items.intangible_asset_items, self.historical_years].sum()
+        avg_amort_expense = abs(amort_series.mean())
+        avg_intangible_balance = total_intangible_series.mean()
+        deterministic_amortization_rate = 0.0 if avg_intangible_balance == 0 else avg_amort_expense / avg_intangible_balance
+
+        # Calculate working capital ratios
+        if len(self.historical_years) < 2: raise ValueError("Working capital calculation requires at least two historical years.")
+        num_days = len(self.historical_years) * 365
+        total_revenue = self.data_grid.loc['total_revenue', self.historical_years].sum()
+        if not schema_items.ar_items or total_revenue == 0:
+            deterministic_dso = 0.0
+        else:
+            avg_ar_balance = self.data_grid.loc[schema_items.ar_items, self.historical_years].sum().mean()
+            deterministic_dso = (avg_ar_balance / total_revenue) * num_days
+
+        total_cogs = abs(self.data_grid.loc[schema_items.cost_of_revenue, self.historical_years].sum().sum())
+        if not schema_items.ap_items or total_cogs == 0:
+            deterministic_dpo = 0.0
+        else:
+            avg_ap_balance = self.data_grid.loc[schema_items.ap_items, self.historical_years].sum().mean()
+            deterministic_dpo = (avg_ap_balance / total_cogs) * num_days
+
+        inventory_items = schema_items.inventory_items
+        total_hist_cogs = abs(self.data_grid.loc[schema_items.cost_of_revenue, self.historical_years].sum().sum())
+        
+        if not inventory_items:
+            # If no inventory accounts are mapped, DIO is not applicable.
+            deterministic_dio = 0.0
+            logger.info("[Pre-Calc Constant] -> No inventory accounts found. deterministic_dio: 0.00 days")
+        elif total_hist_cogs == 0:
+            # Cannot calculate DIO if COGS is zero. This is a critical issue.
+            raise ValueError("Total historical COGS is zero. Cannot calculate a meaningful DIO.")
+        else:
+            # Calculate average inventory balance over the historical period.
+            avg_inventory_balance = self.data_grid.loc[inventory_items, self.historical_years].sum().mean()
+            deterministic_dio = (avg_inventory_balance / total_hist_cogs) * num_days_in_history
+        logger.info(f"[Pre-Calc Constant] -> deterministic_dio: {deterministic_dio:.2f} days")
+
+        # --- Calculate average historical revenue growth rate ---
+        logger.info("[Pre-Calc Constant] Calculating average historical revenue growth rate...")
+        revenue_streams = schema_items.revenue
+        hist_revenue_series = self.data_grid.loc[revenue_streams, self.historical_years].sum()
+        
+        # Calculate year-over-year growth rates
+        # .pct_change() calculates growth from the previous element in the series
+        historical_growth_rates = hist_revenue_series.pct_change().dropna() # dropna removes the NaN from the first period
+
+        if historical_growth_rates.empty:
+            logger.warning("Not enough historical data to calculate average revenue growth. Defaulting to 0%.")
+            avg_historical_revenue_growth = 0.0
+        else:
+            avg_historical_revenue_growth = historical_growth_rates.mean()
+
+        logger.info(f"[Pre-Calc Constant] -> avg_historical_revenue_growth: {avg_historical_revenue_growth:.2%}")
+
+        # --- Calculate average historical operating cost growth rate ---
+        logger.info("[Pre-Calc Constant] Calculating average historical operating cost growth rate...")
+        cost_streams = schema_items.cost_of_revenue + schema_items.opex_items
+        hist_op_cost_series = self.data_grid.loc[cost_streams, self.historical_years].sum()
+        
+        historical_cost_growth_rates = hist_op_cost_series.pct_change().dropna()
+
+        if historical_cost_growth_rates.empty:
+            logger.warning("Not enough historical data to calculate average op cost growth. Defaulting to 0%.")
+            avg_historical_op_cost_growth = 0.0
+        else:
+            avg_historical_op_cost_growth = historical_cost_growth_rates.mean()
+
+        logger.info(f"[Pre-Calc Constant] -> avg_historical_op_cost_growth: {avg_historical_op_cost_growth:.2%}")
+
+        # --- Calculate average historical total asset growth rate ---
+        logger.info("[Pre-Calc Constant] Calculating average historical total asset growth rate...")
+        # 'total_assets' is a pre-calculated historical subtotal in the data grid
+        hist_asset_series = self.data_grid.loc['total_assets', self.historical_years]
+        
+        historical_asset_growth_rates = hist_asset_series.pct_change().dropna()
+
+        if historical_asset_growth_rates.empty:
+            logger.warning("Not enough historical data to calculate average asset growth. Defaulting to 0%.")
+            avg_historical_asset_growth = 0.0
+        else:
+            avg_historical_asset_growth = historical_asset_growth_rates.mean()
+
+        logger.info(f"[Pre-Calc Constant] -> avg_historical_asset_growth: {avg_historical_asset_growth:.2%}")
+
+        # --- Phase 2: Assemble the final, immutable ProjectionConstants object ONCE ---
+        logger.info("[Pre-Calc] Assembling final constants object...")
+        
+        return ProjectionConstants(
+            account_map=self.account_map,
+            deterministic_depreciation_rate=deterministic_depreciation_rate,
+            deterministic_amortization_rate=deterministic_amortization_rate,
+            deterministic_dso=deterministic_dso,
+            deterministic_dio=deterministic_dio,
+            deterministic_dpo=deterministic_dpo,
+            avg_historical_revenue_growth=avg_historical_revenue_growth,
+            avg_historical_op_cost_growth=avg_historical_op_cost_growth,
+            avg_historical_asset_growth=avg_historical_asset_growth,
+            primary_cash_account=primary_cash_account,
+            revolver_interest_rate=revolver_interest_rate,
+            unit_economics_tracker=unit_economics_tracker,
+            schema_items=schema_items,
+            schema=self.populated_schema
+        )
 
     # --- Constants for the Projection Logic ---
     MAX_ITERATIONS_CIRCULAR = 100
@@ -1902,22 +2472,32 @@ class ProjectionsEngine:
             'sga_expense': FinancialCalculations.calculate_sga_expense,
             'depreciation_expense': FinancialCalculations.calculate_depreciation_expense,
             'amortization_expense': FinancialCalculations.calculate_amortization_expense,
+            'other_operating_expenses': FinancialCalculations.calculate_other_opex_growth,
             'income_tax_expense': FinancialCalculations.calculate_income_tax,
             'common_stock': FinancialCalculations.calculate_common_stock,
             'retained_earnings': FinancialCalculations.calculate_equity_rollforward,
 
             # --- Model-based handlers (Enum keys) ---
+            RevenueModel.UNIT_ECONOMICS: FinancialCalculations.calculate_unit_economics_revenue,
             RevenueModel.ASSET_YIELD_DRIVEN: FinancialCalculations.calculate_asset_yield_revenue,
-            CogsModel.ASSET_YIELD_DRIVEN_COST: lambda acc, ctx: logger.warning(f"COGS model '{acc}' not yet implemented."),
-            CogsModel.UNIT_ECONOMICS_COST: lambda acc, ctx: logger.warning(f"COGS model '{acc}' not yet implemented."),
+            CogsModel.UNIT_ECONOMICS_COST: FinancialCalculations.calculate_unit_economics_cogs,
+            CogsModel.ASSET_YIELD_DRIVEN_COST: FinancialCalculations.calculate_asset_yield_driven_cogs,
             
             # --- Category-based handlers (Enum keys) ---
             AccountCategory.PROPERTY_PLANT_EQUIPMENT: FinancialCalculations.calculate_ppe_rollforward,
             AccountCategory.INTANGIBLE_ASSETS: FinancialCalculations.calculate_intangible_rollforward,
+            AccountCategory.INVENTORY: FinancialCalculations.calculate_inventory,
+            AccountCategory.TAX_PAYABLES: FinancialCalculations.calculate_tax_payables,
+            AccountCategory.INDUSTRY_SPECIFIC_SUBTOTALS: FinancialCalculations.calculate_custom_subtotal,
             AccountCategory.LONG_TERM_DEBT: FinancialCalculations.calculate_total_debt_structure,
+            AccountCategory.OTHER_CURRENT_ASSETS: FinancialCalculations.calculate_other_asset_growth,
+            AccountCategory.OTHER_NON_CURRENT_ASSETS: FinancialCalculations.calculate_other_asset_growth,
+            AccountCategory.OTHER_CURRENT_LIABILITIES: FinancialCalculations.calculate_other_liability_growth,
+            AccountCategory.OTHER_NON_CURRENT_LIABILITIES: FinancialCalculations.calculate_other_liability_growth,
             AccountCategory.SHORT_TERM_DEBT: FinancialCalculations.calculate_total_debt_structure,
             AccountCategory.ACCOUNTS_RECEIVABLE: FinancialCalculations.calculate_working_capital_change,
             AccountCategory.ACCOUNTS_PAYABLE: FinancialCalculations.calculate_working_capital_change,
+            AccountCategory.CONTRA_ASSETS: FinancialCalculations.calculate_contra_asset_growth,
             AccountCategory.INDUSTRY_SPECIFIC_ASSETS: FinancialCalculations.calculate_industry_specific_asset_growth,
             AccountCategory.INDUSTRY_SPECIFIC_LIABILITIES: FinancialCalculations.calculate_industry_specific_liability,
             AccountCategory.INDUSTRY_SPECIFIC_OPERATING_EXPENSES: FinancialCalculations.calculate_industry_specific_opex,
@@ -1953,10 +2533,28 @@ class ProjectionsEngine:
 
             # Priority 3: Handle model-based logic for COGS
             if category_name == 'cost_of_revenue':
+                # The 'is_lender' flag is the master switch. It overrides any schema selection.
                 if self.is_lender:
                     self.calculation_map[account] = FinancialCalculations.calculate_lender_cogs
+                    logger.info(f"[MAP]'{account}' mapped to 'calculate_lender_cogs' due to is_lender=True flag.")
                     continue
-                # ... (Logic for non-lender COGS models)
+                else:
+                    # For non-lenders, we respect the schema's model selection.
+                    model_name_str = schema_entry.get('projection_configuration', {}).get('selected_model', {}).get('model_name')
+                    if model_name_str:
+                        try:
+                            model_enum = CogsModel(model_name_str)
+                            self.calculation_map[account] = master_registry[model_enum]
+                            logger.info(f"[MAP]'{account}' mapped to handler for model '{model_enum.name}'.")
+                            continue
+                        except (ValueError, KeyError):
+                            raise ValueError(f"FATAL: Schema Error. Unrecognized or unmapped COGS model '{model_name_str}' for account '{account}'.")
+
+            # Priority 3B: Handle Interest Expense for Non-Lenders
+            if account == 'interest_expense' and not self.is_lender:
+                self.calculation_map[account] = FinancialCalculations.calculate_interest_expense_non_lender
+                logger.info(f"[MAP]'{account}' mapped to 'calculate_interest_expense_non_lender' due to is_lender=False flag.")
+                continue
 
             # Priority 4: Handle category-based logic
             if category_name:
@@ -2190,6 +2788,10 @@ class ProjectionsEngine:
             total_opening_ap = sum(context.opening_balances.get(item, 0.0) for item in s.ap_items)
             total_current_ap = sum(context.get(item) for item in s.ap_items)
             context.cfs.change_in_accounts_payable = total_current_ap - total_opening_ap
+
+            # Retrieve the published cash tax payment. It's an outflow, so make it negative.
+            cash_taxes_paid_outflow = -context.get_aggregate('total_cash_taxes_paid')
+            context.cfs.cash_taxes_paid = cash_taxes_paid_outflow
 
             # Sum up CFO
             context.cfs.cash_from_operations = (
